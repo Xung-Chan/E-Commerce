@@ -1,0 +1,27 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "dev": "npx tsx watch src",
+    "build": "tsc --watch",
+    "start": "nodemon ./dist/index.js",
+    "css-mapper": "sass --watch resources/sass:public/css"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "sass": "^1.91.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-handlebars": "^8.0.3",
+    "mongoose": "^8.18.0",
+    "uuid": "^11.1.0"
+  },
+  "type": "module"
+}
