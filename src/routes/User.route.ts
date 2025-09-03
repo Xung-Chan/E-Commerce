@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import User from "../models/User.model";
 const userRouter = express.Router();
 // getall
-userRouter.get("/", async (req, res) => {
+userRouter.get("/", async (req: Request, res: Response) => {
     const users = await User.find({})
     res.status(200).json({ users })
 })
@@ -14,6 +14,8 @@ userRouter.get("/:userId", async (req: Request, res: Response) => {
     }
     res.status(200).json({ user });
 })
+
+
 // create
 userRouter.post("/", async (req: Request, res: Response) => {
     const { fullName, email, addresses, cart, password } = req.body;
@@ -27,7 +29,7 @@ userRouter.post("/", async (req: Request, res: Response) => {
     await user.save();
     res.status(201).json({ message: "User added successfully" });
 })
-
+//! chưa check
 // update
 userRouter.put("/:userId", async (req: Request, res: Response) => {
     const { fullName, email, addresses, cart, password } = req.body;

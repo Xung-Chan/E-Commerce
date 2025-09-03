@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "nodemon": "^3.1.10",
     "sass": "^1.91.0",
     "tsx": "^4.20.5",
