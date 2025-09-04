@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import User from "../models/User.model";
+import userController from "../controllers/User.controller";
 const userRouter = express.Router();
 // getall
 userRouter.get("/", async (req: Request, res: Response) => {
@@ -16,43 +17,5 @@ userRouter.get("/:userId", async (req: Request, res: Response) => {
 })
 
 
-// create
-userRouter.post("/", async (req: Request, res: Response) => {
-    const { fullName, email, addresses, cart, password } = req.body;
-    const user = new User({
-        fullName,
-        email,
-        addresses,
-        cart,
-        password
-    });
-    await user.save();
-    res.status(201).json({ message: "User added successfully" });
-})
-//! chưa check
-// update
-userRouter.put("/:userId", async (req: Request, res: Response) => {
-    const { fullName, email, addresses, cart, password } = req.body;
-    const user = await User.findByIdAndUpdate(req.params.userId, {
-        fullName,
-        email,
-        addresses,
-        cart,
-        password
-    }, { new: true });
-    if (!user) {
-        return res.status(404).json({ message: "User not found" });
-    }
-    res.status(200).json({ message: "User updated successfully", user });
-})
-
-//delete
-userRouter.delete("/:userId", async (req: Request, res: Response) => {
-    const user = await User.findByIdAndDelete(req.params.userId);
-    if (!user) {
-        return res.status(404).json({ message: "User not found" });
-    }
-    res.status(200).json({ message: "User deleted successfully" });
-})
 
 export default userRouter;
