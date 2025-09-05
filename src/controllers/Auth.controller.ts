@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import UserModel from "../models/User.model";
 import expressAsyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
+imp
 const authController = {
 
     login: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
