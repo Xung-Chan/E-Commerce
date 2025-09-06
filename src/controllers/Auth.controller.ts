@@ -1,43 +1,25 @@
 import { Request, Response } from "express";
-import UserModel from "../models/User.model";
 import expressAsyncHandler from "express-async-handler";
-import bcrypt from "bcryptjs";
-imp
+import authService from "../services/Auth.service";
+import ApiResponse from "../utils/Api.response";
+import ApiError from "../utils/ApiError";
 const authController = {
 
     login: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { email, password } = req.body;
-
-        const user = await UserModel.findOne({ email });
-        if (!user) {
-            res.status(404).json({ message: "User not found" });
-            return;
+        if (typeof password !== "string") {
+            throw new ApiError(400, "Bad Request", "User password is invalid");
         }
+        const data = await authService.login(email, password);
 
-        if (typeof user.password !== "string") {
-            res.status(500).json({ message: "User password is invalid" });
-            return;
-        }
-
-        const isMatch = bcrypt.compareSync(password, user.password);
-
-        if (!isMatch) {
-            res.status(401).json({ message: "Password is incorrect" });
-            return;
-        }
-
-        res.status(200).json({ message: "Login successful" });
+        res.status(200).json(new ApiResponse(true, 200, "Login successful", data));
 
     })
     ,
     register: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { email, password, fullName, address } = req.body;
-        const hashedPassword = bcrypt.hashSync(password, 10);
-        await UserModel.create({
-            email, password: hashedPassword, fullName, addresses: [address], cart: []
-        }).then(user => {
-            res.status(201).json({ message: "User registered", user });
-        })
+        const user = await authService.register({ email, password, fullName, address });
+        res.status(201).json(new ApiResponse(true, 201, "User created successfully", user));
     })
 }
 

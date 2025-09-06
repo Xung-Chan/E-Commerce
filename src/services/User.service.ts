@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import expressAsyncHandler from "express-async-handler";
-import UserModel from "../models/User.model";
-export const userService = {
+import UserModel from "../daos/User.dao";
+const userService = {
     createUser: async (data: {
         email: string,
         fullName: string,
@@ -17,4 +17,6 @@ export const userService = {
         return !!user
 
     }
+
 }
+export default userService;

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-const Order = new Schema({
+import CRUD from "../utils/CRUD.interface";
+const OrderSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         require: true
@@ -63,4 +64,22 @@ const Order = new Schema({
     }
 
 })
-export default mongoose.model("Order", Order)
+const Order = mongoose.model("Order", OrderSchema)
+class OrderDao implements CRUD {
+    create(item: any): Promise<any> {
+        throw new Error("Method not implemented.");
+    }
+    readById(id: string): Promise<any | null> {
+        throw new Error("Method not implemented.");
+    }
+    updateById(id: string, item: any): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    deleteById(id: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    list(): Promise<any[]> {
+        throw new Error("Method not implemented.");
+    }
+}
+export default new OrderDao();

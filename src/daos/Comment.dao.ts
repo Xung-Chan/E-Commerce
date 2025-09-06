@@ -1,0 +1,37 @@
+import mongoose, { Schema } from "mongoose";
+import CRUD from "../utils/CRUD.interface";
+const CommentSchema = new Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        require: true
+    },
+    content: {
+        type: String,
+        require: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    }
+}, { versionKey: false })
+
+const Comment = mongoose.model("Comment", CommentSchema);
+class CommentDao implements CRUD {
+    create(item: any): Promise<any> {
+        throw new Error("Method not implemented.");
+    }
+    readById(id: string): Promise<any | null> {
+        throw new Error("Method not implemented.");
+    }
+    updateById(id: string, item: any): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    deleteById(id: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    list(): Promise<any[]> {
+        throw new Error("Method not implemented.");
+    }
+}
+export default new CommentDao();
