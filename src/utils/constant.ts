@@ -1,7 +1,5 @@
-<!-- Change values in the template and pass { {variables} } with API call -->
-<!-- Feel free to adjust it to your needs and delete all these comments-->
-<!-- Also adapt TXT version of this email -->
-<!DOCTYPE html>
+export const reset_mail_template = (user_mail: string, redirectLink: string) => `
+<!DOCTYPE html> 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -99,7 +97,7 @@
                       </tr>
                       <tr>
                         <td style="padding: 0 0 10px 0; font-size: 14px; line-height: 150%; font-weight: 400; color: #000000; letter-spacing: 0.01em;">
-                          We received a password reset request for your account: <span style="color: #4C83EE;">{{user_email}}</span>.
+                          We received a password reset request for your account: <span style="color: #4C83EE;">${user_mail}</span>.
                         </td>
                       </tr>
                       <tr>
@@ -109,7 +107,7 @@
                       </tr>
                       <tr>
                         <td style="padding: 0 0 24px 0;">
-                          <a class="button" href="{{pass_reset_link}}" title="Reset Password" style="width: 100%; background: #22D172; text-decoration: none; display: inline-block; padding: 10px 0; color: #fff; font-size: 14px; line-height: 21px; text-align: center; font-weight: bold; border-radius: 7px;">Reset Password</a>
+                          <a class="button" href="${redirectLink}" title="Reset Password" style="width: 100%; background: #22D172; text-decoration: none; display: inline-block; padding: 10px 0; color: #fff; font-size: 14px; line-height: 21px; text-align: center; font-weight: bold; border-radius: 7px;">Reset Password</a>
                         </td>
                       </tr>
                       <tr>
@@ -149,3 +147,4 @@
   </table>
 </body>
 </html>
+`

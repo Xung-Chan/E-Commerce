@@ -13,15 +13,18 @@ const BrandSchema = new Schema({
 }, { versionKey: false })
 const Brand = mongoose.model("Brand", BrandSchema);
 class BrandDao implements CRUD {
+    patchById(id: string, item: Partial<any>): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    findBy(query: Partial<any>): Promise<any | null> {
+        throw new Error("Method not implemented.");
+    }
     async create(data: { name: string, description: string }) {
         const brand = await Brand.create(data);
         console.log(brand);
         return !!brand
     }
     async readById(id: string): Promise<any | null> {
-        throw new Error("Method not implemented.");
-    }
-    updateById(id: string, item: any): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
     deleteById(id: string): Promise<boolean> {

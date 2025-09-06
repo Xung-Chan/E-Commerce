@@ -33,6 +33,9 @@ const UserSchema = new Schema({
 }, { versionKey: false })
 const User = mongoose.model("User", UserSchema)
 class UserDao implements CRUD {
+    patchById(id: string, item: Partial<any>): Promise<boolean> {
+        return User.updateOne({ _id: id }, { $set: item }).then(result => result.modifiedCount > 0);
+    }
     findBy(query: Partial<any>): Promise<any | null> {
         return User.find(query).exec();
     }
@@ -47,9 +50,6 @@ class UserDao implements CRUD {
         return user;
     }
     readById(id: string): Promise<any | null> {
-        throw new Error("Method not implemented.");
-    }
-    updateById(id: string, item: any): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
     deleteById(id: string): Promise<boolean> {

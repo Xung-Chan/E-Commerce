@@ -21,6 +21,21 @@ const authController = {
         const user = await authService.register({ email, password, fullName, address });
         res.status(201).json(new ApiResponse(true, 201, "User created successfully", user));
     })
+    , forgotPassword: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
+        const { email } = req.body;
+        await authService.forgotPassword(email);
+        res.status(200).json(new ApiResponse(true, 200, "Password reset email sent", null));
+    }),
+    resetPassword: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
+        const { token, newPassword } = req.body;
+        if (typeof newPassword !== "string") {
+            throw new ApiError(400, "Bad Request", "New password is invalid");
+        }
+        await authService.resetPassword(token, newPassword);
+
+        res.status(200).json(new ApiResponse(true, 200, "Password has been reset successfully", null));
+    })
+
 }
 
 export default authController;

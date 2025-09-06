@@ -35,13 +35,16 @@ const ProductSchema = new Schema({
 }, { versionKey: false })
 const Product = mongoose.model("Product", ProductSchema)
 class ProductDao implements CRUD {
+    patchById(id: string, item: Partial<any>): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    findBy(query: Partial<any>): Promise<any | null> {
+        throw new Error("Method not implemented.");
+    }
     create(item: any): Promise<any> {
         throw new Error("Method not implemented.");
     }
     readById(id: string): Promise<any | null> {
-        throw new Error("Method not implemented.");
-    }
-    updateById(id: string, item: any): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
     deleteById(id: string): Promise<boolean> {
