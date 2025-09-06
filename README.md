@@ -1,7 +1,8 @@
-#How to start
-*Start Docker
-**docker-compose up
-*Start Server
-**npm run dev
-*use api
-#List api
+## 📦 How to Start
+
+1. **Start Docker**
+* docker-compose up
+2. ***Start Server***
+* npm run dev
+3. ***use api***
+# List api
