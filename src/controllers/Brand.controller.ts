@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
 import brandService from "../services/Brand.service";
+import ApiResponse from "../utils/Api.response";
+import expressAsyncHandler from "express-async-handler";
 const brandController = {
-    createBrand: async (req: Request, res: Response) => {
-        // const response = await brandService.createBrand(req.body);
-        // if (response) {
-        //     res.status(201).json({ message: "Brand created successfully" });
-        // } else {
-        //     res.status(500).json({ message: "Failed to create brand" });
-        // }
-    }
+    getAllBrands: expressAsyncHandler(async (req: Request, res: Response) => {
+        const response = await brandService.getAllBrands();
+        res.status(200).json(new ApiResponse(true, 200, "Brands retrieved successfully", response));
+
+    })
 }
 export default brandController;

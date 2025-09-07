@@ -34,6 +34,11 @@ const authController = {
         await authService.resetPassword(token, newPassword);
 
         res.status(200).json(new ApiResponse(true, 200, "Password has been reset successfully", null));
+    }),
+    refreshToken: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
+        const { refreshToken } = req.body;
+        const data = await authService.refreshToken(refreshToken);
+        res.status(200).json(new ApiResponse(true, 200, "Token refreshed successfully", data));
     })
 
 }

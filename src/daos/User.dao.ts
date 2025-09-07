@@ -33,13 +33,13 @@ const UserSchema = new Schema({
 }, { versionKey: false })
 const User = mongoose.model("User", UserSchema)
 class UserDao implements CRUD {
-    patchById(id: string, item: Partial<any>): Promise<boolean> {
-        return User.updateOne({ _id: id }, { $set: item }).then(result => result.modifiedCount > 0);
+    async patchById(id: string, item: Partial<any>): Promise<boolean> {
+        return await User.updateOne({ _id: id }, { $set: item }).then(result => result.modifiedCount > 0);
     }
-    findBy(query: Partial<any>): Promise<any | null> {
-        return User.find(query).exec();
+    async findBy(query: Partial<any>): Promise<any | null> {
+        return await User.find(query).exec();
     }
-    create(item: CreateUserDto): Promise<any> {
+    async create(item: CreateUserDto): Promise<any> {
         const user = User.create({
             email: item.email,
             password: item.password,
@@ -47,16 +47,17 @@ class UserDao implements CRUD {
             addresses: [item.address],
             cart: [],
         });
-        return user;
+        return await user;
     }
-    readById(id: string): Promise<any | null> {
-        throw new Error("Method not implemented.");
+    async readById(id: string): Promise<any | null> {
+        return await User.findById(id).exec();
     }
-    deleteById(id: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async deleteById(id: string): Promise<boolean> {
+        const result = await User.deleteOne({ _id: id });
+        return result.deletedCount > 0;
     }
-    list(): Promise<any[]> {
-        throw new Error("Method not implemented.");
+    async list(): Promise<any[]> {
+        return await User.find().exec();
     }
 }
 export default new UserDao();

@@ -8,28 +8,57 @@ const CouponSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    didcount: {
+        type: Number,
+        require: true
+    },
+    used: {
+        type: Number,
+        require: true
+    },
+    maxUse: {
+        type: Number,
+        require: true
+    },
+    orders: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Order",
+        }],
+        default: []
     }
+
 })
 const Coupon = mongoose.model("Coupon", CouponSchema)
 class CouponDao implements CRUD {
-    patchById(id: string, item: Partial<any>): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async patchById(id: string, item: Partial<any>): Promise<boolean> {
+        const result = await Coupon.updateOne({
+            _id: id
+        }, { $set: item });
+        return result.modifiedCount > 0;
     }
-    findBy(query: Partial<any>): Promise<any | null> {
-        throw new Error("Method not implemented.");
+    async findBy(query: Partial<any>): Promise<any | null> {
+        return Coupon.find(query).exec();
     }
-    create(item: any): Promise<any> {
-        throw new Error("Method not implemented.");
+    async create(item: {
+        code: string,
+        didcount: number,
+        used: number,
+        maxUse: number,
+    }): Promise<any> {
+        return await Coupon.create(item);
     }
-    readById(id: string): Promise<any | null> {
-        throw new Error("Method not implemented.");
+    async readById(id: string): Promise<any | null> {
+        return await Coupon.findById(id).exec();
     }
 
-    deleteById(id: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async deleteById(id: string): Promise<boolean> {
+        const result = await Coupon.deleteOne({ _id: id });
+        return result.deletedCount > 0;
     }
-    list(): Promise<any[]> {
-        throw new Error("Method not implemented.");
+    async list(): Promise<any[]> {
+        return await Coupon.find().exec();
     }
 
 }

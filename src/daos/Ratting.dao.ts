@@ -20,23 +20,28 @@ const RattingSchema = new Schema({
 
 const Ratting = mongoose.model("Ratting", RattingSchema)
 class RattingDao implements CRUD {
-    patchById(id: string, item: Partial<any>): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async patchById(id: string, item: Partial<any>): Promise<boolean> {
+        const result = await Ratting.updateOne({ _id: id }, { $set: item });
+        return result.modifiedCount > 0;
     }
-    findBy(query: Partial<any>): Promise<any | null> {
-        throw new Error("Method not implemented.");
+    async findBy(query: Partial<any>): Promise<any | null> {
+        return await Ratting.find(query).exec();
     }
-    create(item: any): Promise<any> {
-        throw new Error("Method not implemented.");
+    async create(item: {
+        userId: string,
+        rate: number
+    }): Promise<any> {
+        return await Ratting.create(item);
     }
-    readById(id: string): Promise<any | null> {
-        throw new Error("Method not implemented.");
+    async readById(id: string): Promise<any | null> {
+        return await Ratting.findById(id).exec();
     }
-    deleteById(id: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async deleteById(id: string): Promise<boolean> {
+        const result = await Ratting.deleteOne({ _id: id });
+        return result.deletedCount > 0;
     }
-    list(): Promise<any[]> {
-        throw new Error("Method not implemented.");
+    async list(): Promise<any[]> {
+        return await Ratting.find().exec();
     }
 }
 export default new RattingDao();

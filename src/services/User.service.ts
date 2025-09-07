@@ -11,7 +11,7 @@ const userService = {
     }): Promise<boolean> => {
         const hashedPassword = bcrypt.hashSync(data.password, 10);
         const user = await UserModel.create({
-            email: data.email, password: hashedPassword, fullName: data.fullName, addresses: [data.address], cart: []
+            email: data.email, password: hashedPassword, fullName: data.fullName, address: data.address
         })
 
         return !!user

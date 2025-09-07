@@ -35,23 +35,33 @@ const ProductSchema = new Schema({
 }, { versionKey: false })
 const Product = mongoose.model("Product", ProductSchema)
 class ProductDao implements CRUD {
-    patchById(id: string, item: Partial<any>): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async patchById(id: string, item: Partial<any>): Promise<boolean> {
+        const result = await Product.updateOne({ _id: id }, { $set: item });
+        return result.modifiedCount > 0;
     }
-    findBy(query: Partial<any>): Promise<any | null> {
-        throw new Error("Method not implemented.");
+    async findBy(query: Partial<any>): Promise<any | null> {
+        return Product.find(query).exec();
     }
-    create(item: any): Promise<any> {
-        throw new Error("Method not implemented.");
+    async create(item: {
+        name: string,
+        brandId: string,
+        catalogId: string,
+        description: string,
+        images: string[],
+        variants: { diffTitle: string, price: number, stock: number }[]
+
+    }): Promise<any> {
+        return await Product.create(item);
     }
-    readById(id: string): Promise<any | null> {
-        throw new Error("Method not implemented.");
+    async readById(id: string): Promise<any | null> {
+        return await Product.findById(id).exec();
     }
-    deleteById(id: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async deleteById(id: string): Promise<boolean> {
+        const result = await Product.deleteOne({ _id: id });
+        return result.deletedCount > 0;
     }
-    list(): Promise<any[]> {
-        throw new Error("Method not implemented.");
+    async list(): Promise<any[]> {
+        return await Product.find().exec();
     }
 }
 export default new ProductDao();

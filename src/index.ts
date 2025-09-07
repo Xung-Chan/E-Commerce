@@ -4,6 +4,7 @@ import { connect } from "./config/DB.js";
 import errorHandler from "./middleware/errorHandler.js";
 import authRouter from "./routes/Auth.route.js";
 import userRouter from "./routes/User.route.js";
+import brandRouter from "./routes/Brand.route.js";
 
 const app = express()
 app.engine("hbs", engine({
@@ -21,7 +22,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
-
+app.use("/brands", brandRouter);
 app.use(errorHandler)
 
 
