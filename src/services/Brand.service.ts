@@ -1,5 +1,4 @@
-import { create } from "express-handlebars";
-import brandDao from "../daos/Brand.dao";
+import brandDao from "../daos/Brand.dao.js";
 const brandService = {
     getAllBrands: async () => {
         return brandDao.findBy({});

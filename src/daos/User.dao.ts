@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
-import CRUD from "../utils/CRUD.interface";
-import { CreateUserDto } from "../dto/CreateUser.dto";
+import CRUD from "../utils/CRUD.interface.js";
+import { CreateUserDto } from "../dto/CreateUser.dto.js";
 const UserSchema = new Schema({
     email: {
         type: String,

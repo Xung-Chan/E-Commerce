@@ -1,5 +1,5 @@
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
-import tokenDao from "../daos/Token.dao";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
+import tokenDao from "../daos/Token.dao.js";
 export const tokenService = {
     generateTokens: (payload: object) => {
         const accessToken = generateAccessToken(payload);

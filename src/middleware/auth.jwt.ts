@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import ApiError from "../utils/ApiError";
-import { verifyToken } from "../utils/jwt";
+import ApiError from "../utils/ApiError.js";
+import { verifyToken } from "../utils/jwt.js";
 import { TokenExpiredError } from "jsonwebtoken";
 export const authJwt = (req: Request, res: Response, next: NextFunction): void => {
     try {

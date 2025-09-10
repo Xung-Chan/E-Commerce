@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import CRUD from "../utils/CRUD.interface";
+import CRUD from "../utils/CRUD.interface.js";
 const CommentSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,

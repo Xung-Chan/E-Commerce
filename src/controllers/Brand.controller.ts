@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import brandService from "../services/Brand.service";
-import ApiResponse from "../utils/Api.response";
+import brandService from "../services/Brand.service.js";
+import ApiResponse from "../utils/Api.response.js";
 import expressAsyncHandler from "express-async-handler";
 const brandController = {
     getAllBrands: expressAsyncHandler(async (req: Request, res: Response) => {

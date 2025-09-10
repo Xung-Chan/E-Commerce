@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
-import authService from "../services/Auth.service";
-import ApiResponse from "../utils/Api.response";
-import ApiError from "../utils/ApiError";
+import authService from "../services/Auth.service.js";
+import ApiResponse from "../utils/Api.response.js";
+import ApiError from "../utils/ApiError.js";
 const authController = {
 
     login: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {

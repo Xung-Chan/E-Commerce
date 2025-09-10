@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import CRUD from "../utils/CRUD.interface";
+import CRUD from "../utils/CRUD.interface.js";
 const CouponSchema = new Schema({
     code: {
         type: String,

@@ -1,15 +1,13 @@
 import bcrypt from "bcryptjs";
-import userDao from "../daos/User.dao";
-import { CreateUserDto } from "../dto/CreateUser.dto";
-import LoginResponseDto from "../dto/LoginResponse.dto";
-import ApiError from "../utils/ApiError";
-import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { Resend } from "resend";
-import { reset_mail_template } from "../utils/constant";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
-import { tokenService } from "./Token.service";
-import tokenDao from "../daos/Token.dao";
+import jwt from "jsonwebtoken";
+import tokenDao from "../daos/Token.dao.js";
+import userDao from "../daos/User.dao.js";
+import { CreateUserDto } from "../dto/CreateUser.dto.js";
+import LoginResponseDto from "../dto/LoginResponse.dto.js";
+import ApiError from "../utils/ApiError.js";
+import { sendMail } from "./Mail.service.js";
+import { tokenService } from "./Token.service.js";
 const authService = {
     login: async (email: string, password: string): Promise<LoginResponseDto> => {
         const result = await userDao.findBy({ email });
@@ -44,13 +42,7 @@ const authService = {
         }, process.env.SECRET_KEY as string, { expiresIn: '15m' });
         const link = `${process.env.BASE_URL}/auth/reset-password?token=${token}`;
         await tokenService.saveToken(user.id, token);
-        const resend = new Resend(process.env.MAIL_TOKEN as string);
-        resend.emails.send({
-            from: 'onboarding@resend.dev',
-            to: email,
-            subject: 'Reset Password Request',
-            html: reset_mail_template(email, link),
-        });
+        sendMail(email, link);
     },
     resetPassword: async (token: string, newPassword: string): Promise<void> => {
         try {
