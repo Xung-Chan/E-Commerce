@@ -11,19 +11,14 @@ services:
       MONGO_INITDB_DATABASE: e_commerce
     # volumes:
     #   - ./data/db:/data/db
-
-  app:
-    build:
-      context: .
-    container_name: e_commerce_app
-    restart: always
-    ports:
-      - "8000:8000"
-    environment:
-      MONGO_URI: mongodb://mongodb:27017/e_commerce
-    depends_on:
-      - mongodb
-    command: npm start
-
-  # volumes:
-  #   - .:/usr/src/app
+#! open on deploy
+# app:
+#   build:
+#     context: .
+#   container_name: e_commerce_app
+#   restart: always
+#   ports:
+#     - "8000:8000"
+#   depends_on:
+#     - mongodb
+#   command: npm start

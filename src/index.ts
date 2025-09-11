@@ -40,7 +40,7 @@ app.use("/ratings", rattingRouter);
 app.use("/users", userRouter);
 
 
-app.get("/wtf", async (req: Request, res: Response) => {
+app.get("/wth", async (req: Request, res: Response) => {
     await axios.get("http://localhost:8000/users")
         .then(response => {
             res.json(response.data);
