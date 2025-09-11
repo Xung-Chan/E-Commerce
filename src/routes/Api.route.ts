@@ -1,0 +1,23 @@
+import { Router } from "express";
+import authRouter from "./Auth.route";
+import brandRouter from "./Brand.route";
+import catalogRouter from "./Catalog.route";
+import categoryRouter from "./Category.route";
+import commentRouter from "./Comment.route";
+import couponRouter from "./Coupon.route";
+import orderRouter from "./Order.route";
+import productRouter from "./Product.route";
+import rattingRouter from "./Ratting.route";
+import userRouter from "./User.route";
+const apiRouter = Router()
+apiRouter.use("/auth", authRouter);
+apiRouter.use("/brands", brandRouter);
+apiRouter.use("/catalogs", catalogRouter);
+apiRouter.use("/categories", categoryRouter);
+apiRouter.use("/comments", commentRouter);
+apiRouter.use("/coupons", couponRouter);
+apiRouter.use("/orders", orderRouter);
+apiRouter.use("/products", productRouter);
+apiRouter.use("/ratings", rattingRouter);
+apiRouter.use("/users", userRouter);
+export default apiRouter;

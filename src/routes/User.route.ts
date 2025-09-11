@@ -1,8 +1,9 @@
 import express from "express";
 import userController from "../controllers/User.controller.js";
+import { authJwt } from "../middleware/auth.jwt.js";
 const userRouter = express.Router();
 // getall
-userRouter.get("/", userController.getAllUsers);
+userRouter.get("/", authJwt, userController.getAllUsers);
 //get single
 userRouter.get("/:userId", userController.getUserById);
 //update

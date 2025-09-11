@@ -13,7 +13,6 @@ export const authJwt = (req: Request, res: Response, next: NextFunction): void =
         (req as any).user = decoded;
         next();
     } catch (error) {
-
         throw new ApiError(401, "Unauthorized", "Invalid token");
     }
 }
