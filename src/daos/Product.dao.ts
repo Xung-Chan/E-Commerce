@@ -33,6 +33,7 @@ const ProductSchema = new Schema({
 
     }
 }, { versionKey: false })
+
 const Product = mongoose.model("Product", ProductSchema)
 class ProductDao implements CRUD {
     async patchById(id: string, item: Partial<any>): Promise<boolean> {

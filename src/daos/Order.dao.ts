@@ -67,6 +67,7 @@ const OrderSchema = new Schema({
     }
 
 })
+
 const Order = mongoose.model("Order", OrderSchema)
 class OrderDao implements CRUD {
     async patchById(id: string, item: Partial<any>): Promise<boolean> {

@@ -10,6 +10,7 @@ const CategorySchema = new Schema({
         require: true
     },
 }, { versionKey: false })
+
 const Category = mongoose.model("Category", CategorySchema)
 class CategoryDao implements CRUD {
     async patchById(id: string, item: Partial<any>): Promise<boolean> {

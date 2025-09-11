@@ -13,7 +13,8 @@
                 <div class="row align-items-center">
                     <div class="col-md-6 mb-3 mb-md-0">
                         <a href="{{this.link}}" class="d-block">
-                            <img src="{{this.image}}" class="d-block w-100 rounded" alt="{{this.name}}">
+                            <img src="{{images.[0]}}" class="card-img-top" alt=""
+                                onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                         </a>
                     </div>
                     <div class="col-md-6">
@@ -21,30 +22,10 @@
                             <a href="{{this.link}}" class="text-decoration-none text-primary">{{this.name}}</a>
                         </h2>
                         <div class="mb-3">
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <div class="text-muted small">Loại</div>
-                                    <div class="fw-semibold">{{this.type}}</div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-muted small">CPU</div>
-                                    <div class="fw-semibold">{{this.cpu}}</div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-muted small">GPU</div>
-                                    <div class="fw-semibold">{{this.gpu}}</div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-muted small">RAM</div>
-                                    <div class="fw-semibold">{{this.ram}}</div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="text-muted small">Storage</div>
-                                    <div class="fw-semibold">{{this.storage}}</div>
-                                </div>
-                            </div>
+                            <div class="small text-muted mb-1">{{this.description}}</div>
+                            <div class="small text-dark mb-1">{{this.variants.[0].diffTitle}}</div>
                         </div>
-                        <span class="text-danger fs-4 fw-bold">{{this.price}}</span>
+                        <span class="text-danger fs-4 fw-bold">{{formatPrice this.variants.[0].price}} VNĐ</span>
                         <div class="mt-4">
                             <a href="{{this.link}}" class="btn btn-primary">Xem chi tiết</a>
                         </div>
@@ -73,19 +54,22 @@
                 <div class="carousel-inner">
                     {{#each windowNewProducts}}
                     <div class="carousel-item {{#if @first}}active{{/if}}">
-                        <div class="row g-4 px-3">
+                        <div class="row g-4 px-3 new-products-row">
                             {{#each this}}
                             <div class="col-md-3 col-6">
-                                <div class="card new-product-card product-elevate h-100">
+                                <div class="card new-product-card product-elevate h-100 d-flex flex-column">
                                     <a href="{{link}}" class="ratio ratio-4x3 rounded-top overflow-hidden d-block">
-                                        <img src="{{image}}" alt="{{name}}" class="w-100 h-100 object-fit-cover">
+                                        <img src="{{images.[0]}}" alt=""
+                                            onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';"
+                                            class="w-100 h-100 object-fit-cover">
                                     </a>
-                                    <div class="card-body">
-                                        <h6 class="card-title product-title text-primary fw-bold mb-2">
+                                    <div class="card-body d-flex flex-column">
+                                        <h6 class="card-title product-title text-primary fw-bold mb-1">
                                             <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
                                         </h6>
-                                        <div class="small text-muted mb-1">{{cpu}} - {{gpu}} - {{ram}}</div>
-                                        <div class="price fw-bold text-danger">{{price}}</div>
+                                        <div class="small text-muted mb-1">{{description}}</div>
+                                        <div class="small text-dark mb-1">{{variants.[0].diffTitle}}</div>
+                                        <div class="price fw-bold text-danger mt-auto">{{formatPrice variants.[0].price}} VNĐ</div>
                                     </div>
                                 </div>
                             </div>
@@ -112,7 +96,7 @@
             <i class="bi bi-controller me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
             <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">Gaming PC</h4>
         </div>
-        <a href="/catalog?type=gaming" class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
+        <a href="#" class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
             Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
         </a>
     </div>
@@ -124,16 +108,18 @@
                 <div class="row g-4">
                     {{#each this}}
                     <div class="col-md-2 col-6">
-                        <div class="card h-100">
+                        <div class="card h-100 d-flex flex-column">
                             <a href="{{link}}" class="d-block">
-                                <img src="{{image}}" class="card-img-top" alt="{{name}}">
+                                <img src="{{images.[0]}}" class="card-img-top" alt=""
+                                    onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                             </a>
-                            <div class="card-body p-2">
+                            <div class="card-body p-2 d-flex flex-column h-100">
                                 <h6 class="card-title mb-2 fw-bold">
                                     <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
                                 </h6>
-                                <div class="small text-muted mb-1">{{cpu}} - {{gpu}} - {{ram}}</div>
-                                <div class="fw-bold text-danger fs-6 mt-2">{{price}}</div>
+                                <div class="small text-muted mb-1">{{description}}</div>
+                                <div class="small text-dark mb-1">{{variants.[0].diffTitle}}</div>
+                                <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ</div>
                             </div>
                         </div>
                     </div>
@@ -171,16 +157,18 @@
                 <div class="row g-4">
                     {{#each this}}
                     <div class="col-md-2 col-6">
-                        <div class="card h-100">
+                        <div class="card h-100 d-flex flex-column">
                             <a href="{{link}}" class="d-block">
-                                <img src="{{image}}" class="card-img-top" alt="{{name}}">
+                                <img src="{{images.[0]}}" class="card-img-top" alt=""
+                                    onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                             </a>
-                            <div class="card-body p-2">
+                            <div class="card-body p-2 d-flex flex-column h-100">
                                 <h6 class="card-title mb-2 fw-bold">
                                     <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
                                 </h6>
-                                <div class="small text-muted mb-1">{{cpu}} - {{gpu}} - {{ram}}</div>
-                                <div class="fw-bold text-danger fs-6 mt-2">{{price}}</div>
+                                <div class="small text-muted mb-1">{{description}}</div>
+                                <div class="small text-dark mb-1">{{variants.[0].diffTitle}}</div>
+                                <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ</div>
                             </div>
                         </div>
                     </div>
@@ -218,16 +206,18 @@
                 <div class="row g-4">
                     {{#each this}}
                     <div class="col-md-2 col-6">
-                        <div class="card h-100">
+                        <div class="card h-100 d-flex flex-column">
                             <a href="{{link}}" class="d-block">
-                                <img src="{{image}}" class="card-img-top" alt="{{name}}">
+                                <img src="{{images.[0]}}" class="card-img-top" alt=""
+                                    onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                             </a>
-                            <div class="card-body p-2">
+                            <div class="card-body p-2 d-flex flex-column h-100">
                                 <h6 class="card-title mb-2 fw-bold">
                                     <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
                                 </h6>
-                                <div class="small text-muted mb-1">{{type}} - {{spec}}</div>
-                                <div class="fw-bold text-danger fs-6 mt-2">{{price}}</div>
+                                <div class="small text-muted mb-1">{{description}}</div>
+                                <div class="small text-dark mb-1">{{variants.[0].diffTitle}}</div>
+                                <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ</div>
                             </div>
                         </div>
                     </div>

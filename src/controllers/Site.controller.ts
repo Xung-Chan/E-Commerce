@@ -1,9 +1,17 @@
 //Front-end
 import siteRouter from "../routes/Site.route.js";
-import { bestSellersProducts, newProducts, pcGamingProducts, workstationProducts, componentsProducts, products } from "../sampleData.js";
+import { products } from "../sampleData.js";
 import { Request, Response } from "express";
 const siteController = {
     home: (req: Request, res: Response) => {
+        // Lấy dữ liệu mẫu
+        const newProducts = products.slice(-10);
+
+        const bestSellersProducts = products.slice(0, 10);
+        const pcGamingProducts = products.filter(p => p.type === "PC Gaming").slice(0, 10);
+        const workstationProducts = products.filter(p => p.type === "Workstation").slice(0, 10);
+        const componentsProducts = products.filter(p => p.type === "RAM" || p.type === "Storage" || p.type === "Power" || p.type === "Mainboard" || p.type === "VGA").slice(0, 10);
+
         // New Products
         const newProductsWindowSize = 4;
         const windowNewProducts = [];
@@ -69,7 +77,9 @@ const siteController = {
     catalog: (req: Request, res: Response) => {
         res.render('catalog', {
             title: 'Danh mục sản phẩm | CoreStation',
-            products
+            
+            // Sample
+            products_catalog: products.slice(0, 9)
         });
     }
 }

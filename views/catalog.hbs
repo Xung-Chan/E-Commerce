@@ -543,56 +543,32 @@
         <main class="col-md-9 d-flex flex-column" style="min-height: 80vh;">
             <div class="flex-grow-1 px-4 py-3">
                 <div class="row row-cols-1 row-cols-md-3 g-4">
-                    {{#if products.length}}
-                    {{#each products}}
+                    {{#if products_catalog.length}}
+                    {{#each products_catalog}}
                     <div class="col">
-                        <div class="card h-100 shadow-sm">
+                        <div class="card h-100 shadow-sm d-flex flex-column">
                             <a href="{{link}}" class="text-decoration-none">
-                                <img src="{{image}}" class="card-img-top" alt="{{name}}">
-                                <div class="card-body p-2">
-                                    <h6 class="card-title fw-bold text-primary mb-0" style="font-size:1.2rem;">{{name}}
+                                <img src="{{images.[0]}}" class="card-img-top" alt="{{name}}"
+                                    onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
+                                <div class="card-body p-2 d-flex flex-column h-100">
+                                    <h6 class="card-title fw-bold text-primary mb-1" style="font-size:1.2rem;">
+                                        <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
                                     </h6>
-                                    {{#if cpu}}
-                                    <div class="product-info mb-2">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <span class="me-1 text-primary"><i class="bi bi-cpu"></i></span>
-                                            <span class="fw-semibold">CPU:</span>
-                                            <span class="ms-1">{{cpu}}</span>
-                                        </div>
-                                        <div class="d-flex align-items-center mb-1">
-                                            <span class="me-1 text-success"><i class="bi bi-gpu-card"></i></span>
-                                            <span class="fw-semibold">GPU:</span>
-                                            <span class="ms-1">{{gpu}}</span>
-                                        </div>
-                                        <div class="d-flex align-items-center mb-1">
-                                            <span class="me-1 text-warning"><i class="bi bi-memory"></i></span>
-                                            <span class="fw-semibold">RAM:</span>
-                                            <span class="ms-1">{{ram}}</span>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <span class="me-1 text-info"><i class="bi bi-hdd"></i></span>
-                                            <span class="fw-semibold">Storage:</span>
-                                            <span class="ms-1">{{storage}}</span>
-                                        </div>
-                                        {{#if shortDescription}}
-                                        <div class="text-muted small mt-1">{{shortDescription}}</div>
+                                    <div class="small text-muted mb-1">{{description}}</div>
+                                    <div class="small text-dark mb-1">
+                                        {{#if variants}}
+                                        {{variants.[0].diffTitle}}
+                                        {{else if spec}}
+                                        {{spec}}
                                         {{/if}}
                                     </div>
-                                    {{else}}
-                                    <div class="product-info mb-2">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <span class="fw-semibold text-primary">Loại:</span>
-                                            <span class="ms-1">{{type}}</span>
-                                        </div>
-                                        {{#if spec}}
-                                        <div class="d-flex align-items-center">
-                                            <span class="fw-semibold text-success">Spec:</span>
-                                            <span class="ms-1">{{spec}}</span>
-                                        </div>
+                                    <div class="fw-bold text-danger mt-auto" style="font-size:1rem;">
+                                        {{#if variants}}
+                                        {{formatPrice variants.[0].price}} VNĐ
+                                        {{else}}
+                                        {{formatPrice price}} VNĐ
                                         {{/if}}
                                     </div>
-                                    {{/if}}
-                                    <div class="fw-bold text-danger" style="font-size:1rem;">{{price}}</div>
                                 </div>
                             </a>
                         </div>

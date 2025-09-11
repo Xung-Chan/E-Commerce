@@ -11,6 +11,7 @@ const BrandSchema = new Schema({
     }
 
 }, { versionKey: false })
+
 const Brand = mongoose.model("Brand", BrandSchema);
 class BrandDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {

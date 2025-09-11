@@ -31,6 +31,7 @@ const UserSchema = new Schema({
 
     }
 }, { versionKey: false })
+
 const User = mongoose.model("User", UserSchema)
 class UserDao implements CRUD {
     async patchById(id: string, item: Partial<any>): Promise<boolean> {

@@ -1,6 +1,6 @@
 @use "sass:color";
-@import 'variables';
-
+@use 'variables' as *;
+ 
 // LOGO
 .main-logo {
   padding-left: 1rem;
@@ -27,7 +27,7 @@
 // HEADER
 // Categories Dropdown
 .dropdown:hover>.dropdown-menu {
-  display: block;
+  display: block; 
 }
 
 .dropdown-menu .dropend:hover>.dropdown-menu {
@@ -218,6 +218,38 @@
   width: 24px;
   height: 24px;
 }
+
+.new-product-card {
+  min-height: 340px; 
+  display: flex;
+  flex-direction: column;
+}
+
+.new-products-row {
+  min-height: 450px;
+}
+
+
+.card-title {
+  min-height: 40px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-body .small.text-muted {
+  min-height: 40px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 .product-elevate {
   border: 1px solid #dde6f2;

@@ -30,6 +30,7 @@ const CouponSchema = new Schema({
     }
 
 })
+
 const Coupon = mongoose.model("Coupon", CouponSchema)
 class CouponDao implements CRUD {
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
