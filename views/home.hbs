@@ -1,1 +1,248 @@
-<div>This is home page</div>
+{{! Best Sellers + New Products + Other Carousels }}
+<div class="container mt-3">
+
+    <!-- Best Sellers -->
+    <div class="carousel-title-bar d-flex align-items-center mb-2 px-4 py-3">
+        <i class="bi bi-star-fill me-2" style="color:#ffc107;font-size:2rem;"></i>
+        <h3 class="fw-bold text-primary mb-0 flex-grow-1">Bán chạy nhất</h3>
+    </div>
+    <div id="bestSellersCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {{#each bestSellersProducts}}
+            <div class="carousel-item {{#if @first}}active{{/if}}">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <a href="{{this.link}}" class="d-block">
+                            <img src="{{this.image}}" class="d-block w-100 rounded" alt="{{this.name}}">
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="fw-bold mb-3">
+                            <a href="{{this.link}}" class="text-decoration-none text-primary">{{this.name}}</a>
+                        </h2>
+                        <div class="mb-3">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="text-muted small">Loại</div>
+                                    <div class="fw-semibold">{{this.type}}</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-muted small">CPU</div>
+                                    <div class="fw-semibold">{{this.cpu}}</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-muted small">GPU</div>
+                                    <div class="fw-semibold">{{this.gpu}}</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-muted small">RAM</div>
+                                    <div class="fw-semibold">{{this.ram}}</div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-muted small">Storage</div>
+                                    <div class="fw-semibold">{{this.storage}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="text-danger fs-4 fw-bold">{{this.price}}</span>
+                        <div class="mt-4">
+                            <a href="{{this.link}}" class="btn btn-primary">Xem chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#bestSellersCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#bestSellersCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- New Products -->
+    <div class="d-flex align-items-center mb-1 pe-4 ps-0">
+        <i class="bi bi-box-seam me-2" style="color:#3a86ff;font-size:2rem;"></i>
+        <h3 class="fw-bold text-primary mb-0 flex-grow-1">Sản phẩm mới</h3>
+    </div>
+    <div class="card shadow mb-5 new-products-card">
+        <div class="card-body py-4">
+            <div id="newProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true"
+                data-bs-interval="3000">
+                <div class="carousel-inner">
+                    {{#each windowNewProducts}}
+                    <div class="carousel-item {{#if @first}}active{{/if}}">
+                        <div class="row g-4 px-3">
+                            {{#each this}}
+                            <div class="col-md-3 col-6">
+                                <div class="card new-product-card product-elevate h-100">
+                                    <a href="{{link}}" class="ratio ratio-4x3 rounded-top overflow-hidden d-block">
+                                        <img src="{{image}}" alt="{{name}}" class="w-100 h-100 object-fit-cover">
+                                    </a>
+                                    <div class="card-body">
+                                        <h6 class="card-title product-title text-primary fw-bold mb-2">
+                                            <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
+                                        </h6>
+                                        <div class="small text-muted mb-1">{{cpu}} - {{gpu}} - {{ram}}</div>
+                                        <div class="price fw-bold text-danger">{{price}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#newProductsCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#newProductsCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gaming PC -->
+    <div class="d-flex align-items-center mb-3 px-1 py-0 justify-content-between">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-controller me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
+            <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">Gaming PC</h4>
+        </div>
+        <a href="/catalog?type=gaming" class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
+            Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
+        </a>
+    </div>
+    <div id="gamingProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
+        data-bs-interval="3000">
+        <div class="carousel-inner">
+            {{#each windowPCGamingProducts}}
+            <div class="carousel-item {{#if @first}}active{{/if}}">
+                <div class="row g-4">
+                    {{#each this}}
+                    <div class="col-md-2 col-6">
+                        <div class="card h-100">
+                            <a href="{{link}}" class="d-block">
+                                <img src="{{image}}" class="card-img-top" alt="{{name}}">
+                            </a>
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-2 fw-bold">
+                                    <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
+                                </h6>
+                                <div class="small text-muted mb-1">{{cpu}} - {{gpu}} - {{ram}}</div>
+                                <div class="fw-bold text-danger fs-6 mt-2">{{price}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#gamingProductsCarousel"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#gamingProductsCarousel"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Workstation -->
+    <div class="d-flex align-items-center mb-3 px-1 py-0 justify-content-between">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-diagram-3-fill me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
+            <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">Workstation</h4>
+        </div>
+        <a href="/catalog?type=workstation"
+            class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
+            Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
+        </a>
+    </div>
+    <div id="workstationProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
+        data-bs-interval="3000">
+        <div class="carousel-inner">
+            {{#each windowWorkstationsProducts}}
+            <div class="carousel-item {{#if @first}}active{{/if}}">
+                <div class="row g-4">
+                    {{#each this}}
+                    <div class="col-md-2 col-6">
+                        <div class="card h-100">
+                            <a href="{{link}}" class="d-block">
+                                <img src="{{image}}" class="card-img-top" alt="{{name}}">
+                            </a>
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-2 fw-bold">
+                                    <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
+                                </h6>
+                                <div class="small text-muted mb-1">{{cpu}} - {{gpu}} - {{ram}}</div>
+                                <div class="fw-bold text-danger fs-6 mt-2">{{price}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#workstationProductsCarousel"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#workstationProductsCarousel"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Components -->
+    <div class="d-flex align-items-center mb-3 px-1 py-0 justify-content-between">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-pc-display-horizontal me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
+            <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">Linh kiện máy tính</h4>
+        </div>
+        <a href="/catalog?type=component"
+            class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
+            Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
+        </a>
+    </div>
+    <div id="componentsProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
+        data-bs-interval="3000">
+        <div class="carousel-inner">
+            {{#each windowComponentsProducts}}
+            <div class="carousel-item {{#if @first}}active{{/if}}">
+                <div class="row g-4">
+                    {{#each this}}
+                    <div class="col-md-2 col-6">
+                        <div class="card h-100">
+                            <a href="{{link}}" class="d-block">
+                                <img src="{{image}}" class="card-img-top" alt="{{name}}">
+                            </a>
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-2 fw-bold">
+                                    <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
+                                </h6>
+                                <div class="small text-muted mb-1">{{type}} - {{spec}}</div>
+                                <div class="fw-bold text-danger fs-6 mt-2">{{price}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#componentsProductsCarousel"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#componentsProductsCarousel"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
