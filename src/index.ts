@@ -39,6 +39,9 @@ app.engine(
         helpers: {
             json: (context: unknown) => JSON.stringify(context),
             formatPrice: (price: number) => price.toLocaleString('vi-VN'),
+            truncate: (str: string, len: number) =>
+                str && str.length > len ? str.substring(0, len) + '...' : str,
+            eq: (a:any,b:any)=> a===b
         }
     })
 );
@@ -47,6 +50,8 @@ app.set("view engine", "hbs")
 app.set("views", "./views")
 
 app.use(siteRouter)
+app.use(productRouter);
+
 app.use("/api", apiRouter);
 
 

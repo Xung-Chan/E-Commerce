@@ -9,9 +9,9 @@ const ProductSchema = new Schema({
         ref: "Brand",
         require: true
     },
-    catalogId: {
+    categoryId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Catalog",
+        ref: "Category",
         require: true
     },
     description: {
@@ -46,7 +46,7 @@ class ProductDao implements CRUD {
     async create(item: {
         name: string,
         brandId: string,
-        catalogId: string,
+        categoryId: string,
         description: string,
         images: string[],
         variants: { diffTitle: string, price: number, stock: number }[]

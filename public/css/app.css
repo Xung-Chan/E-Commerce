@@ -337,4 +337,15 @@
   color: #1c1c1c;
 }
 
+.thumb-btn {
+  flex: 1;
+  margin: 0 5px;
+  max-width: 100px;
+  height: 100px;
+}
+
+.thumb-btn img {
+  object-fit: cover;
+}
+
 /*# sourceMappingURL=app.css.map */

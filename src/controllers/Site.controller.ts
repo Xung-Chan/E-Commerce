@@ -1,16 +1,15 @@
 //Front-end
-import siteRouter from "../routes/Site.route.js";
-import { products } from "../sampleData.js";
+import { product, products, categories } from "../sampleData.js";
 import { Request, Response } from "express";
+
 const siteController = {
     home: (req: Request, res: Response) => {
         // Lấy dữ liệu mẫu
         const newProducts = products.slice(-10);
-
         const bestSellersProducts = products.slice(0, 10);
-        const pcGamingProducts = products.filter(p => p.type === "PC Gaming").slice(0, 10);
-        const workstationProducts = products.filter(p => p.type === "Workstation").slice(0, 10);
-        const componentsProducts = products.filter(p => p.type === "RAM" || p.type === "Storage" || p.type === "Power" || p.type === "Mainboard" || p.type === "VGA").slice(0, 10);
+        const pcGamingProducts = products.filter(p => p.categoryId.name === "PC Gaming");
+        const workstationProducts = products.filter(p => p.categoryId.name === "Workstation");
+        const componentsProducts = products.filter(p => p.categoryId.name === "CPU" || p.categoryId.name === "VGA" || p.categoryId.name === "RAM" || p.categoryId.name === "Storage" || p.categoryId.name === "Power Supply" || p.categoryId.name === "Mainboard");
 
         // New Products
         const newProductsWindowSize = 4;
@@ -77,10 +76,29 @@ const siteController = {
     catalog: (req: Request, res: Response) => {
         res.render('catalog', {
             title: 'Danh mục sản phẩm | CoreStation',
-            
-            // Sample
+            categories: categories,
             products_catalog: products.slice(0, 9)
+        });
+    },
+    productBySlug: (req: Request, res: Response) => {
+        const { productSlug, variantSlug } = req.params;
+        console.log("Product request:", productSlug, variantSlug);
+        const product = products.find(p => p.slug === productSlug);
+        if (!product) return res.status(404).send("Not found");
+
+        let selectedVariant = product.variants?.[0];
+        if (variantSlug) {
+            const found = product.variants.find(v => v.slug === variantSlug);
+            if (!found) return res.redirect(`/product/${product.slug}`);
+            selectedVariant = found;
+        }
+
+        res.render("product", {
+            title: product.name,
+            product,
+            selectedVariant
         });
     }
 }
+
 export default siteController;

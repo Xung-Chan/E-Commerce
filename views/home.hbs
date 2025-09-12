@@ -18,15 +18,14 @@
                         </a>
                     </div>
                     <div class="col-md-6">
-                        <h2 class="fw-bold mb-3">
+                        <h2 class="fw-bold mb-2">
                             <a href="{{this.link}}" class="text-decoration-none text-primary">{{this.name}}</a>
                         </h2>
-                        <div class="mb-3">
-                            <div class="small text-muted mb-1">{{this.description}}</div>
-                            <div class="small text-dark mb-1">{{this.variants.[0].diffTitle}}</div>
+                        <div class="mb-5">
+                            <div class="small text-muted mb-1">{{truncate this.description 100}}</div>
                         </div>
                         <span class="text-danger fs-4 fw-bold">{{formatPrice this.variants.[0].price}} VNĐ</span>
-                        <div class="mt-4">
+                        <div class="mt-2">
                             <a href="{{this.link}}" class="btn btn-primary">Xem chi tiết</a>
                         </div>
                     </div>
@@ -67,8 +66,7 @@
                                         <h6 class="card-title product-title text-primary fw-bold mb-1">
                                             <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
                                         </h6>
-                                        <div class="small text-muted mb-1">{{description}}</div>
-                                        <div class="small text-dark mb-1">{{variants.[0].diffTitle}}</div>
+                                        <div class="small text-muted mb-1">{{truncate description 100}}</div>
                                         <div class="price fw-bold text-danger mt-auto">{{formatPrice variants.[0].price}} VNĐ</div>
                                     </div>
                                 </div>
@@ -117,8 +115,7 @@
                                 <h6 class="card-title mb-2 fw-bold">
                                     <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
                                 </h6>
-                                <div class="small text-muted mb-1">{{description}}</div>
-                                <div class="small text-dark mb-1">{{variants.[0].diffTitle}}</div>
+                                <div class="small text-muted mb-1">{{truncate description 100}}</div>
                                 <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ</div>
                             </div>
                         </div>
@@ -166,8 +163,7 @@
                                 <h6 class="card-title mb-2 fw-bold">
                                     <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
                                 </h6>
-                                <div class="small text-muted mb-1">{{description}}</div>
-                                <div class="small text-dark mb-1">{{variants.[0].diffTitle}}</div>
+                                <div class="small text-muted mb-1">{{truncate description 100}}</div>
                                 <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ</div>
                             </div>
                         </div>
@@ -215,8 +211,7 @@
                                 <h6 class="card-title mb-2 fw-bold">
                                     <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
                                 </h6>
-                                <div class="small text-muted mb-1">{{description}}</div>
-                                <div class="small text-dark mb-1">{{variants.[0].diffTitle}}</div>
+                                <div class="small text-muted mb-1">{{truncate description 100}}</div>
                                 <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ</div>
                             </div>
                         </div>

@@ -1,0 +1,216 @@
+<div class="container py-4 product-page">
+    <div class="row g-4">
+        <!-- Left: Images -->
+        <div class="col-lg-6">
+            <div class="ratio ratio-4x3 border rounded mb-3 bg-white d-flex align-items-center justify-content-center">
+                <img id="mainImage" src="{{product.images.[0]}}" alt="{{product.name}}"
+                    class="w-100 h-100 object-fit-contain p-2"
+                    onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{product.name}}';">
+            </div>
+            <div class="d-flex justify-content-between mt-3" style="width: 100%;">
+                {{#each product.images}}
+                <button type="button" class="p-0 border rounded thumb-btn"
+                    style="width: 100px; height: 100px; overflow: hidden; background: #fff;">
+                    <img src="{{this}}" alt="{{../product.name}}" class="w-100 h-100 object-fit-cover"
+                        onerror="this.onerror=null;this.src='https://placehold.co/100x100?text=No+Img';">
+                </button>
+                {{/each}}
+            </div>
+        </div>
+
+        <!-- Right: Info -->
+        <div class="col-lg-6 d-flex flex-column">
+            <h2 class="fw-bold mb-2">{{product.name}}</h2>
+            <div class="mb-2">
+                <span class="text-muted">Brand:</span>
+                <strong>{{product.brandId.name}}</strong>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-2">Chọn cấu hình</h6>
+                    <div class="d-flex flex-column gap-2">
+                        {{#each product.variants}}
+                        <a href="/product/{{../product.slug}}/{{this.slug}}"
+                            class="variant-link btn btn-sm w-100 text-start {{#if (eq this.slug ../selectedVariant.slug)}}btn-primary active{{else}}btn-outline-primary{{/if}}"
+                            data-price="{{this.price}}">
+                            {{this.diffTitle}}
+                        </a>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-3">
+                <span class="text-muted">Giá:</span>
+                <span id="productPrice" class="fs-4 fw-bold text-danger">
+                    {{#if selectedVariant}}{{formatPrice selectedVariant.price}} VNĐ{{/if}}
+                </span>
+            </div>
+            <!-- Actions -->
+            <div class="d-flex gap-3 mb-4">
+                <button class="btn btn-success px-4">Đặt hàng</button>
+                <button class="btn btn-outline-primary px-4">Thêm vào giỏ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="mt-5">
+        <h4 class="fw-bold mb-3">Mô tả sản phẩm</h4>
+        <div class="card">
+            <div class="card-body">
+                <p class="mb-0">{{product.description}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments & Rating -->
+    <div class="mt-5">
+        <h4 class="fw-bold mb-3">Đánh giá & Bình luận</h4>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="display-5 fw-bold" id="avgRating">0.0</div>
+                        <div class="text-warning mb-2" id="avgStars" style="letter-spacing:2px;">★★★★★</div>
+                        <div class="text-muted small">Chưa có đánh giá</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <form id="commentForm" class="card mb-3">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">Viết đánh giá</h6>
+                        <div class="mb-3">
+                            <label class="form-label">Chọn sao</label>
+                            <div id="ratingSelect" class="d-flex gap-1">
+                                {{#each (json [1,2,3,4,5])}}
+                                <button type="button" class="btn btn-outline-warning btn-sm star-select"
+                                    data-value="{{this}}">★</button>
+                                {{/each}}
+                            </div>
+                            <input type="hidden" name="rating" id="ratingValue" value="0">
+                        </div>
+                        <div class="mb-3">
+                            <textarea name="comment" class="form-control" rows="3"
+                                placeholder="Nhập bình luận..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Gửi</button>
+                    </div>
+                </form>
+                <div id="commentsList" class="d-flex flex-column gap-3">
+                    <div class="text-muted small">Chưa có bình luận.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        // Thumbnail switching
+        const mainImg = document.getElementById('mainImage');
+        document.querySelectorAll('.thumb-btn img').forEach(img => {
+            img.parentElement.addEventListener('click', () => {
+                mainImg.src = img.src;
+                document.querySelectorAll('.thumb-btn').forEach(b => b.classList.remove('border-primary'));
+                img.parentElement.classList.add('border-primary');
+            });
+        });
+
+        // Variant selection & price update
+        const priceEl = document.getElementById('productPrice');
+        const variantLinks = document.querySelectorAll('.variant-link');
+        const productSlug = "{{product.slug}}"; // Lấy slug sản phẩm từ server
+
+        variantLinks.forEach(a => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Cập nhật giao diện nút variant
+                variantLinks.forEach(x => {
+                    x.classList.remove('btn-primary', 'active');
+                    x.classList.add('btn-outline-primary');
+                });
+                a.classList.remove('btn-outline-primary');
+                a.classList.add('btn-primary', 'active');
+
+                // Cập nhật giá
+                const price = Number(a.dataset.price || 0);
+                if (!isNaN(price)) priceEl.textContent = price.toLocaleString('vi-VN') + ' VNĐ';
+
+                // Cập nhật URL
+                const variantSlug = a.getAttribute('href').split('/').pop(); // Lấy slug của variant
+                const newUrl = `/product/${productSlug}/${variantSlug}`;
+                history.pushState({ variant: variantSlug }, '', newUrl); // Cập nhật URL mà không reload
+            });
+        });
+
+        // Lắng nghe sự kiện popstate (khi người dùng bấm nút Back/Forward)
+        window.addEventListener('popstate', (e) => {
+            const variantSlug = e.state?.variant || variantLinks[0].getAttribute('href').split('/').pop();
+            const targetLink = Array.from(variantLinks).find(a => a.getAttribute('href').endsWith(variantSlug));
+
+            if (targetLink) {
+                // Cập nhật giao diện nút variant
+                variantLinks.forEach(x => {
+                    x.classList.remove('btn-primary', 'active');
+                    x.classList.add('btn-outline-primary');
+                });
+                targetLink.classList.remove('btn-outline-primary');
+                targetLink.classList.add('btn-primary', 'active');
+
+                // Cập nhật giá
+                const price = Number(targetLink.dataset.price || 0);
+                if (!isNaN(price)) priceEl.textContent = price.toLocaleString('vi-VN') + ' VNĐ';
+            }
+        });
+
+        // Rating selection
+        const starBtns = document.querySelectorAll('.star-select');
+        const ratingInput = document.getElementById('ratingValue');
+        starBtns.forEach(star => {
+            star.addEventListener('click', () => {
+                const val = Number(star.dataset.value);
+                ratingInput.value = val;
+                starBtns.forEach(s => s.classList.remove('btn-warning'));
+                starBtns.forEach(s => {
+                    if (Number(s.dataset.value) <= val) {
+                        s.classList.add('btn-warning');
+                    }
+                });
+            });
+        });
+
+        // Comment submit (demo)
+        const form = document.getElementById('commentForm');
+        const list = document.getElementById('commentsList');
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const rating = Number(ratingInput.value);
+            const comment = form.querySelector('textarea').value.trim();
+            if (!rating || !comment) return;
+            if (list.querySelector('.text-muted')) list.innerHTML = '';
+            const item = document.createElement('div');
+            item.className = 'p-3 border rounded';
+            item.innerHTML = `
+                <div class="d-flex justify-content-between mb-1">
+                    <strong>Người dùng ẩn danh</strong>
+                    <span class="text-warning">${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}</span>
+                </div>
+                <div class="small">${comment}</div>
+            `;
+            list.prepend(item);
+            const ratings = Array.from(list.querySelectorAll('.text-warning'))
+                .map(el => el.textContent.replace(/☆/g, '').length);
+            const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+            document.getElementById('avgRating').textContent = avg.toFixed(1);
+            document.getElementById('avgStars').textContent =
+                '★★★★★'.split('').map((_, i) => i < Math.round(avg) ? '★' : '☆').join('');
+            form.reset();
+            ratingInput.value = 0;
+            starBtns.forEach(s => s.classList.remove('btn-warning'));
+        });
+    })();
+</script>
