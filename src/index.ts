@@ -46,90 +46,7 @@ app.set("view engine", "hbs")
 app.set("views", "./views")
 
 app.use(siteRouter)
-// -------------------------------------------------------------------------------------------------------
-// UI
-// Landing Page
-
-// app.get("/", (req: Request, res: Response) => {
-//     // New Products
-//     const newProductsWindowSize = 4;
-//     const windowNewProducts = [];
-//     for (let i = 0; i < newProducts.length; i += newProductsWindowSize) {
-//         let window = newProducts.slice(i, i + newProductsWindowSize);
-//         if (window.length < newProductsWindowSize) {
-//             window = window.concat(newProducts.slice(0, newProductsWindowSize - window.length));
-//         }
-//         windowNewProducts.push(window);
-//     }
-
-//     // Các Carousel khác
-//     const windowSize = 6;
-//     // PC Gaming
-//     const windowPCGamingProducts = [];
-//     for (let i = 0; i < pcGamingProducts.length; i += windowSize) {
-//         let window = pcGamingProducts.slice(i, i + windowSize);
-//         if (window.length < windowSize) {
-//             window = window.concat(pcGamingProducts.slice(0, windowSize - window.length));
-//         }
-//         windowPCGamingProducts.push(window);
-//     }
-//     // Workstations
-//     const windowWorkstationProducts = [];
-//     for (let i = 0; i < workstationProducts.length; i += windowSize) {
-//         let window = workstationProducts.slice(i, i + windowSize);
-//         if (window.length < windowSize) {
-//             window = window.concat(workstationProducts.slice(0, windowSize - window.length));
-//         }
-//         windowWorkstationProducts.push(window);
-//     }
-//     // Components
-//     const windowComponentsProducts = [];
-//     for (let i = 0; i < componentsProducts.length; i += windowSize) {
-//         let window = componentsProducts.slice(i, i + windowSize);
-//         if (window.length < windowSize) {
-//             window = window.concat(componentsProducts.slice(0, windowSize - window.length));
-//         }
-//         windowComponentsProducts.push(window);
-//     }
-
-//     // Render
-//     res.render('home', {
-//         title: 'CoreStation - PC và linh kiện máy tính',
-
-//         bestSellersProducts: bestSellersProducts,
-//         windowNewProducts: windowNewProducts,
-//         windowPCGamingProducts: windowPCGamingProducts,
-//         windowWorkstationsProducts: windowWorkstationProducts,
-//         windowComponentsProducts: windowComponentsProducts
-//     });
-// })
-
-// // Login
-// app.get('/login', (req, res) => {
-//     res.render('login', {
-//         title: 'Đăng nhập | CoreStation'
-//     });
-// });
-
-// // Register
-// app.get('/register', (req, res) => {
-//     res.render('register', {
-//         title: 'Đăng ký | CoreStation'
-//     });
-// });
-
-// // Catalog
-// app.get('/catalog', (req, res) => {
-//     res.render('catalog', {
-//         title: 'Danh mục sản phẩm | CoreStation',
-//         products
-//     });
-// });
-
-// -------------------------------------------------------------------------------------------------------
 app.use("/api", apiRouter);
-
-
 app.use(errorHandler)
 
 
@@ -137,7 +54,7 @@ connect()
     .then(() =>
 
         app.listen(8000, () => {
-            console.log("Server is running...")
+            console.log(`🚀 Server running at http://localhost:8000`);
         })
 
 

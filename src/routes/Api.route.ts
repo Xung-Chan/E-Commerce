@@ -1,14 +1,14 @@
 import { Router } from "express";
-import authRouter from "./Auth.route";
-import brandRouter from "./Brand.route";
-import catalogRouter from "./Catalog.route";
-import categoryRouter from "./Category.route";
-import commentRouter from "./Comment.route";
-import couponRouter from "./Coupon.route";
-import orderRouter from "./Order.route";
-import productRouter from "./Product.route";
-import rattingRouter from "./Ratting.route";
-import userRouter from "./User.route";
+import authRouter from "./Auth.route.js";
+import brandRouter from "./Brand.route.js";
+import catalogRouter from "./Catalog.route.js";
+import categoryRouter from "./Category.route.js";
+import commentRouter from "./Comment.route.js";
+import couponRouter from "./Coupon.route.js";
+import orderRouter from "./Order.route.js";
+import productRouter from "./Product.route.js";
+import rattingRouter from "./Ratting.route.js";
+import userRouter from "./User.route.js";
 const apiRouter = Router()
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/brands", brandRouter);

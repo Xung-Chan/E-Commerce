@@ -1,5 +1,5 @@
 import { Router } from "express";
-import siteController from "../controllers/Site.controller";
+import siteController from "../controllers/Site.controller.js";
 const siteRouter = Router();
 //landing Page
 siteRouter.get("/", siteController.home);

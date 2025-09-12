@@ -1,0 +1,217 @@
+{
+	"info": {
+		"_postman_id": "77819c9a-8ecc-41c7-8df6-975430493cd1",
+		"name": "E-Commerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "35309463"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "get single",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base}}/users/68b9604576d77f005203e8d3"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base}}/users/68b7eb6a201aac997b5c7c6b"
+					},
+					"response": []
+				},
+				{
+					"name": "get all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzI1YjZhYjYyMWU5NzcwNjg2MTAyOCIsImVtYWlsIjoibm1kdHJ1b25nMTgwMzIwMDRAZ21haWwuY29tIiwiaWF0IjoxNzU3NTY3ODYyLCJleHAiOjE3NTc1Njg3NjJ9.WhCZoy9adq2oBUB73Zi0W8jN3PYsB2xk7mnaApjK2JA"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{base}}/users"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"nmdtruong18032004@gmail.com\",\r\n    \"password\":\"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"nmdtruong18032004@gmail.com\",\r\n    \"password\":\"123456\",\r\n    \"fullName\":\"XungChan\",\r\n    \"address\":\"Tonducthang\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base}}/auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "forgot-password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Api-Token",
+								"value": "254307857fdae4d3fee549d6146f39f7",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"nmdtruong18032004@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base}}/auth/forgot-password"
+					},
+					"response": []
+				},
+				{
+					"name": "reset password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Api-Token",
+								"value": "254307857fdae4d3fee549d6146f39f7",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGJjOGFjN2VkNzA3YTQyMjg4NWI5NmYiLCJpYXQiOjE3NTcyMzE4MjgsImV4cCI6MTc1NzIzMjcyOH0.TRkJsyBpJdEF6aqRswxkHX9xBB7bx-rCgT4sJu_rn-U\",\r\n    \"newPassword\":\"123456a\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base}}/auth/reset-password"
+					},
+					"response": []
+				},
+				{
+					"name": "refresh token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzI1YjZhYjYyMWU5NzcwNjg2MTAyOCIsImVtYWlsIjoibm1kdHJ1b25nMTgwMzIwMDRAZ21haWwuY29tIiwiaWF0IjoxNzU3NTY3ODYyLCJleHAiOjE3NTgxNzI2NjJ9.u4XQLNaORc7-HDiYxgArBb_W32ba2seB7UPf_4AI47g\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base}}/auth/refresh-token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "brand",
+			"item": [
+				{
+					"name": "create brand",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"abac@gmail.com\",\r\n    \"description\":\"moo ta\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base}}/brand"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{base}}/wth"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base",
+			"value": "http://localhost:8000/api"
+		}
+	]
+}

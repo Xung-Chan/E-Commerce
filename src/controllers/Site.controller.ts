@@ -1,7 +1,6 @@
 //Front-end
-import siteRouter from "../routes/Site.route.js";
-import { bestSellersProducts, newProducts, pcGamingProducts, workstationProducts, componentsProducts, products } from "../sampleData.js";
 import { Request, Response } from "express";
+import { bestSellersProducts, componentsProducts, newProducts, pcGamingProducts, products, workstationProducts } from "../sampleData.js";
 const siteController = {
     home: (req: Request, res: Response) => {
         // New Products

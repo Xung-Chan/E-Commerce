@@ -4,9 +4,9 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "dev": "npx tsx watch src",
+    "dev": "nodemon",
     "build": "tsc --watch",
-    "start": "nodemon ./dist/index.js",
+    "start": "node ./dist/index.js",
     "css-mapper": "sass --watch scss:public/css"
   },
   "author": "",

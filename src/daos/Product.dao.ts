@@ -9,9 +9,9 @@ const ProductSchema = new Schema({
         ref: "Brand",
         require: true
     },
-    catalogId: {
+    categoryId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Catalog",
+        ref: "Category",
         require: true
     },
     description: {
@@ -25,7 +25,7 @@ const ProductSchema = new Schema({
     variants: {
         type: [
             {
-                diffTitle: String,
+                distinctFeature: String,
                 price: Number,
                 stock: Number
             }],
