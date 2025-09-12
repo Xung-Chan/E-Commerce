@@ -10,11 +10,7 @@
 - **Production Environment**
 - docker-compose up --build
 
-2. **_Start Server_**
-
-- npm run dev
-
-3. **_use api_**
+2. **_use api_**
 
 # List api
 
