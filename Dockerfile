@@ -1,6 +1,6 @@
 # Use official Node.js image as the base
 FROM node:20-alpine
-
+RUN apk add --no-cache curl
 # Set working directory
 WORKDIR /app
 
@@ -14,7 +14,4 @@ RUN npm install
 COPY . .
 
 # Expose port (change if your app uses a different port)
-EXPOSE 3000
-
-# Start the application
-# CMD ["npm", "start"]
+EXPOSE 8000

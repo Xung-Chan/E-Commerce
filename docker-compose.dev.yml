@@ -22,9 +22,9 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./dist:/app/dist
+      - ./src:/app/src
       - /app/node_modules
     depends_on:
       mongodb:
         condition: service_healthy
-    command: npm start
+    command: npm run dev

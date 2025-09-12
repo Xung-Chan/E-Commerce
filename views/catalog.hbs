@@ -42,12 +42,13 @@
                     {{#each products_catalog}}
                     <div class="col">
                         <div class="card h-100 shadow-sm d-flex flex-column">
-                            <a href="{{link}}" class="text-decoration-none">
+                            <a href="/product/{{slug}}/{{variants.[0].slug}}" class="text-decoration-none">
                                 <img src="{{images.[0]}}" class="card-img-top" alt="{{name}}"
                                     onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                                 <div class="card-body p-2 d-flex flex-column h-100">
                                     <h6 class="card-title fw-bold text-primary mb-0" style="font-size:1.2rem;">
-                                        <a href="{{link}}" class="text-decoration-none text-primary">{{name}}</a>
+                                        <a href="/product/{{slug}}/{{variants.[0].slug}}"
+                                            class="text-decoration-none text-primary">{{name}}</a>
                                     </h6>
                                     <div class="small text-muted mb-1">{{description}}</div>
                                     <div class="small text-dark mb-3">

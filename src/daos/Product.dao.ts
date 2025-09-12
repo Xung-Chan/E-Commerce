@@ -25,7 +25,7 @@ const ProductSchema = new Schema({
     variants: {
         type: [
             {
-                diffTitle: String,
+                distinctFeature: String,
                 price: Number,
                 stock: Number
             }],

@@ -53,8 +53,6 @@ app.use(siteRouter)
 app.use(productRouter);
 
 app.use("/api", apiRouter);
-
-
 app.use(errorHandler)
 
 
@@ -62,7 +60,7 @@ connect()
     .then(() =>
 
         app.listen(8000, () => {
-            console.log("Server is running...")
+            console.log(`🚀 Server running at http://localhost:8000`);
         })
 
 

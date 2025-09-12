@@ -1,6 +1,6 @@
 <div class="container py-4 product-page">
     <div class="row g-4">
-        <!-- Left: Images -->
+        <!-- Images -->
         <div class="col-lg-6">
             <div class="ratio ratio-4x3 border rounded mb-3 bg-white d-flex align-items-center justify-content-center">
                 <img id="mainImage" src="{{product.images.[0]}}" alt="{{product.name}}"
@@ -18,14 +18,17 @@
             </div>
         </div>
 
-        <!-- Right: Info -->
+        <!-- Info -->
         <div class="col-lg-6 d-flex flex-column">
             <h2 class="fw-bold mb-2">{{product.name}}</h2>
             <div class="mb-2">
                 <span class="text-muted">Brand:</span>
                 <strong>{{product.brandId.name}}</strong>
             </div>
-            <div class="card mb-3">
+            <div class="mb-2">
+                <p>{{product.description}}</p>
+            </div>
+            <div class="card mb-5">
                 <div class="card-body">
                     <h6 class="fw-bold mb-2">Chọn cấu hình</h6>
                     <div class="d-flex flex-column gap-2">
@@ -51,16 +54,6 @@
             <div class="d-flex gap-3 mb-4">
                 <button class="btn btn-success px-4">Đặt hàng</button>
                 <button class="btn btn-outline-primary px-4">Thêm vào giỏ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Description -->
-    <div class="mt-5">
-        <h4 class="fw-bold mb-3">Mô tả sản phẩm</h4>
-        <div class="card">
-            <div class="card-body">
-                <p class="mb-0">{{product.description}}</p>
             </div>
         </div>
     </div>
