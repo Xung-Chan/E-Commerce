@@ -22,7 +22,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./dist:/app/dist
+      - ./:/app
       - /app/node_modules
     depends_on:
       mongodb:
