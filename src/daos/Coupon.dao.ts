@@ -5,21 +5,22 @@ const CouponSchema = new Schema({
         type: String,
         require: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    didcount: {
-        type: Number,
-        require: true
-    },
-    used: {
+    discount: {
         type: Number,
         require: true
     },
     maxUse: {
         type: Number,
         require: true
+    },
+    used: {
+        type: Number,
+        require: true,
+        default: 0
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     },
     orders: {
         type: [{

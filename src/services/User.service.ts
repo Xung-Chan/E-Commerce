@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import userDao from "../daos/User.dao.js";
-import { CreateUserDto } from "../dto/CreateUser.dto.js";
+import { CreateUserDto } from "../dto/Create.dto.js";
+import { UpdateUserDto } from "../dto/Update.dto.js";
 const userService = {
     createUser: async (data: CreateUserDto): Promise<boolean> => {
         const hashedPassword = bcrypt.hashSync(data.password, 10);
@@ -25,7 +26,7 @@ const userService = {
     },
 
     //! except password
-    updateUserById: async (id: string, data: Partial<any>): Promise<boolean> => {
+    updateUserById: async (id: string, data: UpdateUserDto): Promise<boolean> => {
         const result = await userDao.patchById(id, data);
         return result;
     }

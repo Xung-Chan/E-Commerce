@@ -1,23 +1,13 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { engine } from "express-handlebars";
+import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
-import morgan from "morgan";
 
 
 import { connect } from "./config/DB.js";
 import errorHandler from "./middleware/errorHandler.js";
-import authRouter from "./routes/Auth.route.js";
-import brandRouter from "./routes/Brand.route.js";
-import catalogRouter from "./routes/Catalog.route.js";
-import userRouter from "./routes/User.route.js";
-import categoryRouter from "./routes/Category.route.js";
-import commentRouter from "./routes/Comment.route.js";
-import couponRouter from "./routes/Coupon.route.js";
-import orderRouter from "./routes/Order.route.js";
 import productRouter from "./routes/Product.route.js";
-import rattingRouter from "./routes/Ratting.route.js";
-import axios from "axios";
 
 // Lấy Data mẫu (Xóa sau khi có DB)
 import apiRouter from "./routes/Api.route.js";
@@ -41,7 +31,7 @@ app.engine(
             formatPrice: (price: number) => price.toLocaleString('vi-VN'),
             truncate: (str: string, len: number) =>
                 str && str.length > len ? str.substring(0, len) + '...' : str,
-            eq: (a:any,b:any)=> a===b
+            eq: (a: any, b: any) => a === b
         }
     })
 );

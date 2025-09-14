@@ -6,4 +6,4 @@ class LoginResponseDto {
         this.refreshToken = refreshToken;
     }
 }
-export default LoginResponseDto;
+export { LoginResponseDto };

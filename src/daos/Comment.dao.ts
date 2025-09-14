@@ -1,9 +1,15 @@
 import mongoose, { Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
+import { CreateCommentDto } from "../dto/Create.dto.js";
 const CommentSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        require: true
+    },
+    productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
         require: true
     },
     content: {
@@ -25,11 +31,7 @@ class CommentDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {
         return Comment.find(query).exec();
     }
-    async create(item: {
-        userId: string,
-        content: string
-
-    }): Promise<any> {
+    async create(item: CreateCommentDto): Promise<any> {
         return await Comment.create(item);
     }
     async readById(id: string): Promise<any | null> {

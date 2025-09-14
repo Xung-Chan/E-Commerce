@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
-import { UpdateUserDto } from "../dto/UpdateUser.dto.js";
+import { UpdateUserDto } from "../dto/Update.dto.js";
 import userService from "../services/User.service.js";
 import ApiResponse from "../utils/Api.response.js";
 import ApiError from "../utils/ApiError.js";

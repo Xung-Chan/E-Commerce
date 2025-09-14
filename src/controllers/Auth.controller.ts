@@ -11,7 +11,6 @@ const authController = {
             throw new ApiError(400, "Bad Request", "User password is invalid");
         }
         const data = await authService.login(email, password);
-
         res.status(200).json(new ApiResponse(true, 200, "Login successful", data));
 
     })

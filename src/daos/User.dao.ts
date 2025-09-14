@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
-import { CreateUserDto } from "../dto/CreateUser.dto.js";
+import { CreateUserDto } from "../dto/Create.dto.js";
 const UserSchema = new Schema({
     email: {
         type: String,
@@ -15,6 +15,11 @@ const UserSchema = new Schema({
     password: {
         type: String,
         require: true
+    },
+    role: {
+        type: String,
+        enum: ["user", "admin"],
+        default: "user"
     },
     addresses: {
         type: [String],

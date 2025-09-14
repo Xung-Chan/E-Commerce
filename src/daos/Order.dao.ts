@@ -41,7 +41,6 @@ const OrderSchema = new Schema({
         require: true
 
     },
-
     currentStatus: {
         type: String,
         enum: ["pending", "shipped", "delivered"],

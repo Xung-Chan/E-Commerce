@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
+import { CreateBrandDto } from "../dto/Create.dto.js";
 const BrandSchema = new Schema({
     name: {
         type: String,
@@ -17,7 +18,7 @@ class BrandDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {
         return Brand.find(query).exec();
     }
-    async create(data: { name: string, description: string }) {
+    async create(data: CreateBrandDto) {
         const brand = await Brand.create(data);
         console.log(brand);
         return !!brand

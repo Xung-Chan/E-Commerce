@@ -1,7 +1,4 @@
-import brandDao from "../daos/Brand.dao.js";
-import { CreateBrandDto } from "../dto/Create.dto.js";
-import { UpdateBrandDto } from "../dto/Update.dto.js";
-const brandService = {
+const categoryService = {
     createBrand: async (data: CreateBrandDto) => {
         return brandDao.create(data);
     },
@@ -14,9 +11,9 @@ const brandService = {
     deleteBrandById: async (id: string) => {
         return brandDao.deleteById(id);
     },
-    updateBrandById: async (id: string, data: UpdateBrandDto) => {
+    updateBrandById: async (id: string, data: Partial<any>) => {
         return brandDao.patchById(id, data);
     }
 
 }
-export default brandService;
+export default categoryService;
