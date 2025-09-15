@@ -1,5 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
+import { CreateProductDto } from "../dto/Create.dto.js";
+import SortOption from "../utils/SortOption.js";
 const ProductSchema = new Schema({
     name: {
         type: String, require: true
@@ -22,6 +24,22 @@ const ProductSchema = new Schema({
         type: [String],
         require: true
     },
+    soldCount: {
+        type: Number,
+        default: 0
+    },
+    rate: {
+        type: Number,
+        min: 0,
+        max: 5,
+        default: 0
+    },
+    discount: {
+        type: Number,
+        min: 0,
+        max: 50,
+        default: 0
+    },
     variants: {
         type: [
             {
@@ -36,23 +54,17 @@ const ProductSchema = new Schema({
 
 const Product = mongoose.model("Product", ProductSchema)
 class ProductDao implements CRUD {
-    async patchById(id: string, item: Partial<any>): Promise<boolean> {
-        const result = await Product.updateOne({ _id: id }, { $set: item });
-        return result.modifiedCount > 0;
+    async create(item: CreateProductDto): Promise<any> {
+        return await Product.create(item);
+    }
+    async list(): Promise<any[]> {
+        return await Product.find().exec();
+    }
+    async sortBy(sortOption: SortOption): Promise<any[]> {
+        return await Product.find().sort(sortOption.toQuery()).exec();
     }
     async findBy(query: Partial<any>): Promise<any | null> {
         return Product.find(query).exec();
-    }
-    async create(item: {
-        name: string,
-        brandId: string,
-        categoryId: string,
-        description: string,
-        images: string[],
-        variants: { diffTitle: string, price: number, stock: number }[]
-
-    }): Promise<any> {
-        return await Product.create(item);
     }
     async readById(id: string): Promise<any | null> {
         return await Product.findById(id).exec();
@@ -61,8 +73,9 @@ class ProductDao implements CRUD {
         const result = await Product.deleteOne({ _id: id });
         return result.deletedCount > 0;
     }
-    async list(): Promise<any[]> {
-        return await Product.find().exec();
+    async patchById(id: string, item: Partial<any>): Promise<boolean> {
+        const result = await Product.updateOne({ _id: id }, { $set: item });
+        return result.modifiedCount > 0;
     }
 }
 export default new ProductDao();

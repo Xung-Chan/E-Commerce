@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
+import { CreateCouponDto } from "../dto/Create.dto.js";
 const CouponSchema = new Schema({
     code: {
         type: String,
@@ -43,12 +44,7 @@ class CouponDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {
         return Coupon.find(query).exec();
     }
-    async create(item: {
-        code: string,
-        didcount: number,
-        used: number,
-        maxUse: number,
-    }): Promise<any> {
+    async create(item: CreateCouponDto): Promise<any> {
         return await Coupon.create(item);
     }
     async readById(id: string): Promise<any | null> {

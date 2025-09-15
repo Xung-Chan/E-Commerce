@@ -55,4 +55,13 @@ interface CreateRateDto {
     rate: number;
 }
 
-export type { CreateUserDto, CreateBrandDto, CreateCategoryDto, CreateCommentDto, CreateRateDto };
+export type {
+    CreateUserDto,
+    CreateBrandDto,
+    CreateCategoryDto,
+    CreateCommentDto,
+    CreateRateDto,
+    CreateCouponDto,
+    CreateOrderDto,
+    CreateProductDto
+};

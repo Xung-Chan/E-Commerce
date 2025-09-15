@@ -1,19 +1,20 @@
+import categoryDao from "../daos/Category.dao.js";
+import { CreateCategoryDto } from "../dto/Create.dto.js";
 const categoryService = {
-    createBrand: async (data: CreateBrandDto) => {
-        return brandDao.create(data);
+    createCategory: async (data: CreateCategoryDto) => {
+        return categoryDao.create(data);
     },
-    getAllBrands: async () => {
-        return brandDao.findBy({});
+    getAllCategories: async () => {
+        return categoryDao.list();
     },
-    getBrandById: async (id: string) => {
-        return brandDao.readById(id);
+    getCategoryById: async (id: string) => {
+        return categoryDao.readById(id);
     },
-    deleteBrandById: async (id: string) => {
-        return brandDao.deleteById(id);
+    deleteCategoryById: async (id: string) => {
+        return categoryDao.deleteById(id);
     },
-    updateBrandById: async (id: string, data: Partial<any>) => {
-        return brandDao.patchById(id, data);
+    updateCategoryById: async (id: string, data: Partial<CreateCategoryDto>) => {
+        return categoryDao.patchById(id, data);
     }
-
 }
 export default categoryService;

@@ -1,13 +1,14 @@
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
-import tokenDao from "../daos/Token.dao.js";
 import userDao from "../daos/User.dao.js";
 import { CreateUserDto } from "../dto/Create.dto.js";
 import { LoginResponseDto } from "../dto/Response.dto.js";
 import ApiError from "../utils/ApiError.js";
 import { sendMail } from "./Mail.service.js";
 import { tokenService } from "./Token.service.js";
+import tokenDao from "../daos/Token.dao.js";
+import { TokenPayload } from "../utils/jwt.js";
 const authService = {
     login: async (email: string, password: string): Promise<LoginResponseDto> => {
         const result = await userDao.findBy({ email });
@@ -20,7 +21,7 @@ const authService = {
             throw new ApiError(401, "Unauthorized", "Invalid password");
         }
 
-        const { accessToken, refreshToken } = tokenService.generateTokens({ id: user.id, email: user.email });
+        const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user.id, email: user.email, role: user.role });
         await tokenService.saveToken(user.id, refreshToken);
         return new LoginResponseDto(accessToken, refreshToken);
     },
@@ -37,25 +38,31 @@ const authService = {
             throw new ApiError(404, "Not Found", "User not found");
         }
         const user = result[0];
-        const token = jwt.sign({
+        const payload: TokenPayload = {
             userId: user.id,
-        }, process.env.SECRET_KEY as string, { expiresIn: '15m' });
+            email: user.email,
+            role: user.role,
+            type: 'reset'
+        };
+        const token = jwt.sign(payload, process.env.SECRET_KEY as string, { expiresIn: '15m' });
         const link = `${process.env.BASE_URL}/auth/reset-password?token=${token}`;
         await tokenService.saveToken(user.id, token);
         sendMail(email, link);
     },
     resetPassword: async (token: string, newPassword: string): Promise<void> => {
         try {
-            const decoded = jwt.verify(token, process.env.SECRET_KEY as string) as { userId: string };
-
-            const userId = decoded.userId;
-            const isValidated = await tokenDao.findBy({ userId, token, isUsed: false });
-            if (!isValidated) {
+            const payload: TokenPayload = tokenService.verifyToken(token);
+            if (payload.type !== 'reset') {
+                throw new ApiError(400, "Bad Request", "Invalid token type");
+            }
+            const userId = payload.userId;
+            const tokenInstance = await tokenService.findToken({ userId, token, isUsed: false });
+            if (!tokenInstance) {
                 throw new ApiError(401, "Unauthorized", "Invalid or expired token");
             }
             const hashedPassword = bcrypt.hashSync(newPassword, 10);
             const result = await userDao.patchById(userId, { password: hashedPassword });
-            await tokenDao.patchById(isValidated._id, { isUsed: true });
+            await tokenService.markUsedToken(tokenInstance._id);
             if (!result) {
                 throw new ApiError(500, "Internal Server Error", "Failed to update password");
             }
@@ -65,15 +72,18 @@ const authService = {
     },
     refreshToken: async (refreshToken: string): Promise<LoginResponseDto> => {
         try {
-            const decoded = jwt.verify(refreshToken, process.env.SECRET_KEY as string) as { id: string, email: string };
-            const userId = decoded.id;
-            const isValidated = await tokenDao.findBy({ userId, token: refreshToken, isUsed: false });
-            if (!isValidated) {
+            const tokenPayload = tokenService.verifyToken(refreshToken);
+            if (tokenPayload.type !== 'refresh') {
+                throw new ApiError(400, "Bad Request", "Invalid token type");
+            }
+            const userId = tokenPayload.userId;
+            const tokenInstance = await tokenService.findToken({ userId, token: refreshToken, isUsed: false });
+            if (!tokenInstance) {
                 throw new ApiError(401, "Unauthorized", "Invalid refresh token");
             }
-            const { accessToken, refreshToken: newRefreshToken } = tokenService.generateTokens({ id: decoded.id, email: decoded.email });
+            const { accessToken, refreshToken: newRefreshToken } = tokenService.generateTokens(tokenPayload);
             await tokenService.saveToken(userId, newRefreshToken);
-            await tokenDao.patchById(isValidated._id, { isUsed: true });
+            await tokenService.markUsedToken(tokenInstance._id);
             return new LoginResponseDto(accessToken, newRefreshToken);
 
         } catch (err) {

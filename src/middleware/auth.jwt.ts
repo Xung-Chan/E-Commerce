@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import ApiError from "../utils/ApiError.js";
-import { verifyToken } from "../utils/jwt.js";
-import { TokenExpiredError } from "jsonwebtoken";
+import { tokenService } from "../services/Token.service.js";
 export const authJwt = (req: Request, res: Response, next: NextFunction): void => {
     try {
 
@@ -9,8 +8,24 @@ export const authJwt = (req: Request, res: Response, next: NextFunction): void =
         if (!token) {
             throw new ApiError(401, "Unauthorized", "No token provided");
         }
-        const decoded = verifyToken(token);
-        (req as any).user = decoded;
+        const decoded = tokenService.verifyToken(token);
+        (req as any).user = decoded.userId;
+        next();
+    } catch (error) {
+        throw new ApiError(401, "Unauthorized", "Invalid token");
+    }
+}
+export const authJwtAdmin = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+        const token = req.headers["authorization"]?.split(" ")[1];
+        if (!token) {
+            throw new ApiError(401, "Unauthorized", "No token provided");
+        }
+        const decoded = tokenService.verifyToken(token);
+        if (decoded.role !== 'admin') {
+            throw new ApiError(403, "Forbidden", "Admin access required");
+        }
+        (req as any).user = decoded.userId;
         next();
     } catch (error) {
         throw new ApiError(401, "Unauthorized", "Invalid token");

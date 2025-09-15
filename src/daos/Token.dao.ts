@@ -35,5 +35,9 @@ class TokenDao {
     async findBy(query: Partial<any>): Promise<any | null> {
         return await Token.findOne(query);
     }
+    async deleteById(id: string): Promise<boolean> {
+        const result = await Token.deleteOne({ _id: id });
+        return result.deletedCount > 0;
+    }
 }
 export default new TokenDao();

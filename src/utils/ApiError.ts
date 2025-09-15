@@ -1,5 +1,5 @@
 class ApiError extends Error {
-    title?: string
+    title: string
     statusCode: number
     constructor(
         statusCode: number,

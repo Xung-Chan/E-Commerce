@@ -1,5 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
+import { CreateOrderDto } from "../dto/Create.dto.js";
+import { UpdateOrderDto } from "../dto/Update.dto.js";
 const OrderSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -56,7 +58,8 @@ const OrderSchema = new Schema({
                 },
                 date: {
                     type: Date,
-                    require: true
+                    require: true,
+                    default: Date.now
                 }
             }
         ], default: [{
@@ -69,21 +72,14 @@ const OrderSchema = new Schema({
 
 const Order = mongoose.model("Order", OrderSchema)
 class OrderDao implements CRUD {
-    async patchById(id: string, item: Partial<any>): Promise<boolean> {
+    async patchById(id: string, item: UpdateOrderDto): Promise<boolean> {
         const result = await Order.updateOne({ _id: id }, { $set: item });
         return result.modifiedCount > 0;
     }
     async findBy(query: Partial<any>): Promise<any | null> {
         return await Order.find(query).exec();
     }
-    async create(item: {
-        userId: string,
-        products: { productId: string, quantity: number, price: number, discount: number }[],
-        totalPrice: number,
-        totalDiscount: number,
-        taxe: number,
-        totalPay: number,
-    }): Promise<any> {
+    async create(item: CreateOrderDto): Promise<any> {
         return await Order.create(item);
     }
     async readById(id: string): Promise<any | null> {
