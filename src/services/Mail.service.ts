@@ -1,6 +1,8 @@
-import { Resend } from "resend";
 import "dotenv/config";
+import nodemailer from "nodemailer";
 const BRAND = process.env.BRAND || "E-Commerce"
+const USER_EMAIL = process.env.USER_EMAIL || "nmdtruong18032004@gmail.com"
+const USER_PASSWORD = process.env.USER_PASSWORD || "qzgl dnvd ixuu qito"
 const reset_mail_template = (user_mail: string, redirectLink: string) => `
 <!DOCTYPE html> 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -186,12 +188,18 @@ const otp_template = (user_mail: string, otp: string) => `
 
 </html>
 `
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: USER_EMAIL,
+    pass: USER_PASSWORD,
+  },
+})
 export const sendMail = async (email: string, link: string) => {
-  const resend = new Resend(process.env.MAIL_TOKEN as string);
-  resend.emails.send({
-    from: 'onboarding@resend.dev',
+  await transporter.sendMail({
+    from: USER_EMAIL,
     to: email,
-    subject: 'Reset Password Request',
+    subject: "Reset Password Request",
     html: reset_mail_template(email, link),
   });
 }

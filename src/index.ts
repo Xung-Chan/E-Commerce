@@ -45,7 +45,6 @@ app.use(productRouter);
 app.use("/api", apiRouter);
 app.use(errorHandler)
 
-
 connect()
     .then(() =>
 

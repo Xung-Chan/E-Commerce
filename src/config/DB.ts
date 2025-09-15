@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import "dotenv/config";
+import emailjs from "@emailjs/browser";
 export const connect = async (): Promise<mongoose.Mongoose> => {
 
     let url = process.env.DATABASE_URL as string;

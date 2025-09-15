@@ -1,10 +1,14 @@
 import { Router } from "express";
+
 import brandController from "../controllers/Brand.controller.js";
-import { authJwt, authJwtAdmin } from "../middleware/auth.jwt.js";
+import { authJwtAdmin } from "../middleware/auth.jwt.js";
+
 const brandRouter = Router();
+
 brandRouter.get("/", brandController.getAllBrands);
 brandRouter.get("/:id", brandController.getBrandById);
 brandRouter.post("/", authJwtAdmin, brandController.createBrand);
 brandRouter.delete("/:id", authJwtAdmin, brandController.deleteBrandById);
 brandRouter.patch("/:id", authJwtAdmin, brandController.updateBrandById);
+
 export default brandRouter;
