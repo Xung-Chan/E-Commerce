@@ -1,15 +1,24 @@
 //Front-end
+import axios from "axios";
+
 import { product, products, categories } from "../sampleData.js";
 import { Request, Response } from "express";
 
 const siteController = {
-    home: (req: Request, res: Response) => {
+    home: async (req: Request, res: Response) => {
+        // const apiUrl = process.env.API_URL;
+        // const apiRes = await axios.get(`${apiUrl}/products`);
+        // const products = Array.isArray(apiRes.data) ? apiRes.data : apiRes.data.data;
+
         // Lấy dữ liệu mẫu
-        const newProducts = products.slice(-10);
         const bestSellersProducts = products.slice(0, 10);
+        const newProducts = products.slice(-10);
+
         const pcGamingProducts = products.filter(p => p.categoryId.name === "PC Gaming");
         const workstationProducts = products.filter(p => p.categoryId.name === "Workstation");
-        const componentsProducts = products.filter(p => p.categoryId.name === "CPU" || p.categoryId.name === "VGA" || p.categoryId.name === "RAM" || p.categoryId.name === "Storage" || p.categoryId.name === "Power Supply" || p.categoryId.name === "Mainboard");
+        const componentsProducts = products.filter(
+            p => ["CPU", "VGA", "RAM", "Storage", "Power Supply", "Mainboard"].includes(p.categoryId.name)
+        );
 
         // New Products
         const newProductsWindowSize = 4;

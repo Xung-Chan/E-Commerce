@@ -6,9 +6,9 @@ import { authJwtAdmin } from "../middleware/auth.jwt.js";
 const brandRouter = Router();
 
 brandRouter.get("/", brandController.getAllBrands);
-brandRouter.get("/:id", brandController.getBrandById);
+brandRouter.get("/:brandId", brandController.getBrandById);
 brandRouter.post("/", authJwtAdmin, brandController.createBrand);
-brandRouter.delete("/:id", authJwtAdmin, brandController.deleteBrandById);
-brandRouter.patch("/:id", authJwtAdmin, brandController.updateBrandById);
+brandRouter.delete("/:brandId", authJwtAdmin, brandController.deleteBrandById);
+brandRouter.patch("/:brandId", authJwtAdmin, brandController.updateBrandById);
 
 export default brandRouter;

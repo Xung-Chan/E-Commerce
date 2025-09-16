@@ -9,6 +9,9 @@ export const authJwt = (req: Request, res: Response, next: NextFunction): void =
             throw new ApiError(401, "Unauthorized", "No token provided");
         }
         const decoded = tokenService.verifyToken(token);
+        if(decoded.type !== 'access') {
+            throw new ApiError(403, "Forbidden", "Access token required");
+        }
         (req as any).user = decoded.userId;
         next();
     } catch (error) {
@@ -22,6 +25,9 @@ export const authJwtAdmin = (req: Request, res: Response, next: NextFunction): v
             throw new ApiError(401, "Unauthorized", "No token provided");
         }
         const decoded = tokenService.verifyToken(token);
+         if(decoded.type !== 'access') {
+            throw new ApiError(403, "Forbidden", "Access token required");
+        }
         if (decoded.role !== 'admin') {
             throw new ApiError(403, "Forbidden", "Admin access required");
         }
