@@ -4,25 +4,27 @@ import { CreateProductDto } from "../dto/Create.dto.js";
 import SortOption from "../utils/SortOption.js";
 const ProductSchema = new Schema({
     name: {
-        type: String, require: true
+        type: String,
+        required: true,
+        unique: true
     },
     brandId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Brand",
-        require: true
+        required: true
     },
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
-        require: true
+        required: true
     },
     description: {
         type: String,
-        require: true
+        required: true
     },
     images: {
         type: [String],
-        require: true
+        required: true
     },
     soldCount: {
         type: Number,
@@ -47,7 +49,7 @@ const ProductSchema = new Schema({
                 price: Number,
                 stock: Number
             }],
-        require: true
+        required: true
 
     },
     createdAt: {

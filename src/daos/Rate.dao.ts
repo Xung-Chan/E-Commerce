@@ -4,16 +4,20 @@ const RateSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        require: true
+        required: true
+    },
+    fullName: {
+        type: String,
+        required: true
     },
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
-        require: true
+        required: true
     },
     rate: {
         type: Number,
-        require: true,
+        required: true,
         min: 1,
         max: 5
     },
@@ -22,7 +26,7 @@ const RateSchema = new Schema({
         default: Date.now
     }
 }, { versionKey: false })
-
+RateSchema.index({ userId: 1, productId: 1 }, { unique: true });
 const Rate = mongoose.model("Rate", RateSchema)
 class RateDao implements CRUD {
     async patchById(id: string, item: Partial<any>): Promise<boolean> {

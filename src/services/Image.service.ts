@@ -15,11 +15,13 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
+const UPLOAD_DIR = "/uploads/";
 const imageService = {
 
 }
 export {
     imageService,
+    UPLOAD_DIR,
     upload
 
 } 

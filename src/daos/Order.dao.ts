@@ -5,7 +5,7 @@ import { UpdateOrderDto } from "../dto/Update.dto.js";
 const OrderSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        require: true
+        required: true
     },
     orderDate: {
         type: Date,
@@ -16,7 +16,7 @@ const OrderSchema = new Schema({
             productId: mongoose.Schema.Types.ObjectId,
             quantity: {
                 type: Number,
-                require: true,
+                required: true,
                 min: 1
             },
             price: Number,
@@ -26,11 +26,11 @@ const OrderSchema = new Schema({
 
     totalPrice: {
         type: Number,
-        require: true
+        required: true
     },
     totalDiscount: {
         type: Number,
-        require: true
+        required: true
 
     },
     taxe: {
@@ -40,7 +40,7 @@ const OrderSchema = new Schema({
     },
     totalPay: {
         type: Number,
-        require: true
+        required: true
 
     },
     currentStatus: {
@@ -54,11 +54,11 @@ const OrderSchema = new Schema({
                 status: {
                     type: String,
                     enum: ["pending", "shipped", "delivered"],
-                    require: true
+                    required: true
                 },
                 date: {
                     type: Date,
-                    require: true,
+                    required: true,
                     default: Date.now
                 }
             }

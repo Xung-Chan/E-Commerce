@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authJwt, authJwtAdmin } from "../middleware/auth.jwt.js";
+import { authJwt, authJwtAdmin } from "../middleware/authJwt.middleware.js";
 import rateController from "../controllers/Rate.controller.js";
 const rateRouter = Router();
 rateRouter.get("/product/:productId", rateController.getRatesByProductId);

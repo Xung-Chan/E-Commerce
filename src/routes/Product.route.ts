@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { authJwtAdmin } from "../middleware/auth.jwt";
+import { authJwtAdmin } from "../middleware/authJwt.middleware";
 import productController from "../controllers/Product.controller";
+import { uploadMultiple } from "../middleware/multer.middleware";
 const productRouter = Router();
 productRouter.get("/", productController.getAllProducts);
+productRouter.get("/landing", productController.getProuctForLandingPage);
 productRouter.get("/:id", productController.getProductById);
-productRouter.post("/", authJwtAdmin, productController.createProduct);
+productRouter.post("/", authJwtAdmin, uploadMultiple, productController.createProduct);
 productRouter.put("/:id", authJwtAdmin, productController.updateProductById);
 productRouter.delete("/:id", authJwtAdmin, productController.deleteProductById);
-productRouter.post("/many", productController.createManyProducts);
 export default productRouter;

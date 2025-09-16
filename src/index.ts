@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 
 
 import { connect } from "./config/DB.js";
-import errorHandler from "./middleware/errorHandler.js";
+import errorHandler from "./middleware/errorHandler.middleware.js";
 import productRouter from "./routes/Product.route.js";
 
 // Lấy Data mẫu (Xóa sau khi có DB)

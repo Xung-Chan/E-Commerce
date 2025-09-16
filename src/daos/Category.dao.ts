@@ -1,17 +1,19 @@
 import mongoose, { Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
+import { CreateCategoryDto } from "../dto/Create.dto.js";
 const CategorySchema = new Schema({
     name: {
         type: String,
-        require: true
+        unique: true,
+        required: true
     },
     description: {
         type: String,
-        require: true
+        required: true
     },
     image: {
         type: String,
-        require: true
+        required: true
     }
 }, { versionKey: false })
 
@@ -24,10 +26,7 @@ class CategoryDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {
         return Category.find(query).exec();
     }
-    async create(item: {
-        name: string,
-        description: string
-    }): Promise<any> {
+    async create(item: CreateCategoryDto): Promise<any> {
         const category = Category.create(item);
         return await category;
     }

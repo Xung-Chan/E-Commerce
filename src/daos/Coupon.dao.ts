@@ -4,19 +4,20 @@ import { CreateCouponDto } from "../dto/Create.dto.js";
 const CouponSchema = new Schema({
     code: {
         type: String,
-        require: true
+        required: true,
+        unique: true
     },
     discount: {
         type: Number,
-        require: true
+        required: true
     },
     maxUse: {
         type: Number,
-        require: true
+        required: true
     },
     used: {
         type: Number,
-        require: true,
+        required: true,
         default: 0
     },
     createdAt: {

@@ -8,25 +8,23 @@ import { CreateUserDto } from "../dto/Create.dto.js";
 const UserSchema = new Schema({
     email: {
         type: String,
-        require: true,
+        required: true,
         unique: true
     },
     fullName: {
         type: String,
-        require: true
     },
     password: {
         type: String,
-        require: true
     },
     role: {
         type: String,
-        enum: ["user", "admin"],
+        enum: ["user", "admin", "anonymous"],
         default: "user"
     },
     addresses: {
         type: [String],
-        require: true
+        required: true
     },
     cart: [{
         productId: String,

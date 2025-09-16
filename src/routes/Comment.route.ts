@@ -1,6 +1,6 @@
 import { Router } from "express";
 import commentController from "../controllers/Comment.controller.js";
-import { authJwt, authJwtAdmin } from "../middleware/auth.jwt.js";
+import { authJwt, authJwtAdmin } from "../middleware/authJwt.middleware.js";
 
 const commentRouter = Router();
 

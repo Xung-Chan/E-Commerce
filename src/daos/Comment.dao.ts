@@ -5,16 +5,18 @@ const CommentSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        require: true
+    },
+    fullName: {
+        type: String,
     },
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
-        require: true
+        required: true
     },
     content: {
         type: String,
-        require: true
+        required: true
     },
     date: {
         type: Date,

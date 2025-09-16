@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
-import brandService from "../services/Brand.service.js";
-import ApiResponse from "../utils/Api.response.js";
 import expressAsyncHandler from "express-async-handler";
-import { create } from "domain";
-import ApiError from "../utils/ApiError.js";
-import { UpdateBrandDto } from "../dto/Update.dto.js";
 import { CreateBrandDto } from "../dto/Create.dto.js";
+import { UpdateBrandDto } from "../dto/Update.dto.js";
+import brandService from "../services/Brand.service.js";
+import { UPLOAD_DIR } from "../services/Image.service.js";
+import ApiResponse from "../utils/Api.response.js";
+import ApiError from "../utils/ApiError.js";
 const brandController = {
     createBrand: expressAsyncHandler(async (req: Request, res: Response) => {
         const data: CreateBrandDto = req.body;
+        data.image = UPLOAD_DIR + req.file?.filename;
         const brand = await brandService.createBrand(data);
         res.status(201).json(new ApiResponse(true, 201, "Brand created successfully", brand));
     }),

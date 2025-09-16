@@ -7,10 +7,11 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
         res.status(err.statusCode || 500).json(err.json())
     }
     else if (err instanceof multer.MulterError) {
+
         res.status(400).json({
             success: false,
             status: 400,
-            title: "Multer Error",
+            title: err.code,
             message: err.message,
             stack: err.stack
         });

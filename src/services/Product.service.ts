@@ -1,19 +1,21 @@
+import brandDao from "../daos/Brand.dao.js";
+import categoryDao from "../daos/Category.dao.js";
 import productDao from "../daos/Product.dao.js";
 import { CreateProductDto } from "../dto/Create.dto";
 import { UpdateProductDto } from "../dto/Update.dto";
 import ApiError from "../utils/ApiError";
-import brandDao from "../daos/Brand.dao.js";
-import categoryDao from "../daos/Category.dao.js";
 import SortOption from "../utils/SortOption.js";
-import { create } from "domain";
 const productService = {
     createProduct: async (data: CreateProductDto) => {
+        const brand = await brandDao.readById(data.brandId);
+        if (!brand) {
+            throw new ApiError(404, "Not Found", "Brand not found");
+        }
+        const category = await categoryDao.readById(data.categoryId);
+        if (!category) {
+            throw new ApiError(404, "Not Found", "Category not found");
+        }
         return productDao.create(data);
-    },
-    //for development use only
-    createManyProducts: async (products: CreateProductDto[]) => {
-        products.forEach(product => productDao.create(product));
-        return;
     },
     getAllProducts: async () => {
         return productDao.list();

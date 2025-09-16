@@ -1,5 +1,7 @@
 import { Router } from "express";
 import productController from "../controllers/Product.controller";
+
+
 const catalogRouter = Router();
 catalogRouter.get("/brand/:brandId", productController.getProductsByBrandId);
 catalogRouter.get("/category/:categoryId", productController.getProductsByCategoryId);

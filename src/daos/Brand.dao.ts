@@ -4,7 +4,8 @@ import { CreateBrandDto } from "../dto/Create.dto.js";
 const BrandSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
     description: {
         type: String,

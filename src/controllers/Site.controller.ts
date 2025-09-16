@@ -64,7 +64,6 @@ const siteController = {
         // Render
         res.render('home', {
             title: 'CoreStation - PC và linh kiện máy tính',
-
             bestSellersProducts: bestSellersProducts,
             windowNewProducts: windowNewProducts,
             windowPCGamingProducts: windowPCGamingProducts,

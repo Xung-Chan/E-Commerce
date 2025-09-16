@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authJwt, authJwtAdmin } from "../middleware/auth.jwt.js";
+import { authJwt, authJwtAdmin } from "../middleware/authJwt.middleware.js";
 import couponController from "../controllers/Coupon.controller.js";
 const couponRouter = Router();
 couponRouter.get("/:id", couponController.getCouponById);

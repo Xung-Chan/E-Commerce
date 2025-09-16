@@ -9,5 +9,13 @@ const imageController = {
         }
         res.status(200).json(new ApiResponse(true, 200, 'Upload successful', req.file));
     }
+    ,
+    uploadMultipleImages: async (req: Request, res: Response) => {
+        if (!req.files) {
+            throw new ApiError(400, 'Upload failed', "No files provided");
+        }
+        const files = req.files as Express.Multer.File[];
+        res.status(200).json(new ApiResponse(true, 200, 'Upload successful', files));
+    }
 }
 export default imageController
