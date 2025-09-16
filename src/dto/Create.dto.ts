@@ -7,10 +7,12 @@ interface CreateUserDto {
 interface CreateBrandDto {
     name: string;
     description: string;
+    image: string;
 }
 interface CreateCategoryDto {
     name: string;
     description: string;
+    image: string;
 }
 interface CreateCommentDto {
     userId: string;

@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+import bcrypt from "bcryptjs";
+import "dotenv/config";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateUserDto } from "../dto/Create.dto.js";
+
 const UserSchema = new Schema({
     email: {
         type: String,
@@ -54,6 +57,22 @@ class UserDao implements CRUD {
             cart: [],
         });
         return await user;
+    }
+    async createAdmin(): Promise<any> {
+        const isExist = await User.findOne({ role: "admin" }).exec();
+        if (isExist) return;
+        const hashedPassword = bcrypt.hashSync("admin", 10);
+        const admin = User.create({
+            email: process.env.USER_EMAIL || "nmdtruong18032004@gmail.com",
+            password: hashedPassword,
+            fullName: "Admin",
+            addresses: ["Admin Address"],
+            role: "admin",
+            cart: [],
+            status: "active"
+
+        });
+
     }
     async readById(id: string): Promise<any | null> {
         return await User.findById(id).exec();

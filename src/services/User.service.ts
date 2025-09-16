@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import userDao from "../daos/User.dao.js";
 import { CreateUserDto } from "../dto/Create.dto.js";
 import { UpdateUserDto } from "../dto/Update.dto.js";
+import { create } from "express-handlebars";
 const userService = {
     createUser: async (data: CreateUserDto): Promise<boolean> => {
         const hashedPassword = bcrypt.hashSync(data.password, 10);

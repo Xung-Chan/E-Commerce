@@ -7,8 +7,9 @@ import commentRouter from "./Comment.route.js";
 import couponRouter from "./Coupon.route.js";
 import orderRouter from "./Order.route.js";
 import productRouter from "./Product.route.js";
-import rattingRouter from "./Ratting.route.js";
+import rattingRouter from "./Rate.route.js";
 import userRouter from "./User.route.js";
+import imageRouter from "./Image.route.js";
 const apiRouter = Router()
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/brands", brandRouter);
@@ -20,4 +21,5 @@ apiRouter.use("/orders", orderRouter);
 apiRouter.use("/products", productRouter);
 apiRouter.use("/ratings", rattingRouter);
 apiRouter.use("/users", userRouter);
+apiRouter.use("/images", imageRouter);
 export default apiRouter;

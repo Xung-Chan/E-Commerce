@@ -10,6 +10,11 @@ const productController = {
         const product = await productService.createProduct(productData);
         res.status(201).json({ success: true, status: 201, message: "Product created successfully", data: product });
     }),
+    createManyProducts: expressAsyncHandler(async (req: Request, res: Response) => {
+        const products: CreateProductDto[] = req.body;
+        await productService.createManyProducts(products);
+        res.status(201).json({ success: true, status: 201, message: "Products created successfully", data: null });
+    }),
     getAllProducts: expressAsyncHandler(async (req: Request, res: Response) => {
         const products = await productService.getAllProducts();
         res.status(200).json({ success: true, status: 200, message: "Products fetched successfully", data: products });

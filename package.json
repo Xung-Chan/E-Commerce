@@ -16,6 +16,7 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.0.0",
     "@types/nodemailer": "^7.0.1",
     "axios": "^1.12.2",
     "dotenv": "^17.2.2",
@@ -32,6 +33,7 @@
     "express-handlebars": "^8.0.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.0",
+    "multer": "^2.0.2",
     "nodemailer": "^7.0.6",
     "uuid": "^11.1.0"
   },

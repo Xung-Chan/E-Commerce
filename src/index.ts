@@ -12,9 +12,10 @@ import productRouter from "./routes/Product.route.js";
 // Lấy Data mẫu (Xóa sau khi có DB)
 import apiRouter from "./routes/Api.route.js";
 import siteRouter from "./routes/Site.route.js";
+import userDao from "./daos/User.dao.js";
 
-const app = express()
 const PORT = process.env.PORT || 8000;
+const app = express()
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -46,14 +47,17 @@ app.use("/api", apiRouter);
 app.use(errorHandler)
 
 connect()
-    .then(() =>
+    .then(() => {
+        userDao.createAdmin()
+        console.log("Admin user created or already exists")
+
+    })
+    .then(() => {
 
         app.listen(8000, () => {
             console.log(`🚀 Server running at http://localhost:8000`);
         })
-
-
-    )
+    })
     .catch(err => {
         console.error("Database connection error:", err)
         process.exit(1);

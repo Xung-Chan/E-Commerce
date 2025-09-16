@@ -9,6 +9,10 @@ const BrandSchema = new Schema({
     description: {
         type: String,
         required: true
+    },
+    image: {
+        type: String,
+        required: true
     }
 
 }, { versionKey: false })
@@ -19,9 +23,9 @@ class BrandDao implements CRUD {
         return Brand.find(query).exec();
     }
     async create(data: CreateBrandDto) {
+        console.log(data);
         const brand = await Brand.create(data);
-        console.log(brand);
-        return !!brand
+        return brand;
     }
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
         const result = await Brand.updateOne({ _id: id }, { $set: item });

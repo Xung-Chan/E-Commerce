@@ -5,9 +5,15 @@ import ApiError from "../utils/ApiError";
 import brandDao from "../daos/Brand.dao.js";
 import categoryDao from "../daos/Category.dao.js";
 import SortOption from "../utils/SortOption.js";
+import { create } from "domain";
 const productService = {
     createProduct: async (data: CreateProductDto) => {
         return productDao.create(data);
+    },
+    //for development use only
+    createManyProducts: async (products: CreateProductDto[]) => {
+        products.forEach(product => productDao.create(product));
+        return;
     },
     getAllProducts: async () => {
         return productDao.list();

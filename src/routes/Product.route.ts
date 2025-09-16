@@ -7,5 +7,5 @@ productRouter.get("/:id", productController.getProductById);
 productRouter.post("/", authJwtAdmin, productController.createProduct);
 productRouter.put("/:id", authJwtAdmin, productController.updateProductById);
 productRouter.delete("/:id", authJwtAdmin, productController.deleteProductById);
-
+productRouter.post("/many", productController.createManyProducts);
 export default productRouter;
