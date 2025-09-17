@@ -1,9 +1,10 @@
 import brandDao from "../daos/Brand.dao.js";
 import categoryDao from "../daos/Category.dao.js";
 import productDao from "../daos/Product.dao.js";
-import { CreateProductDto } from "../dto/Create.dto";
-import { UpdateProductDto } from "../dto/Update.dto";
-import ApiError from "../utils/ApiError";
+import { CreateProductDto } from "../dto/Create.dto.js";
+import { UpdateProductDto } from "../dto/Update.dto.js";
+import ApiError from "../utils/ApiError.js";
+import { Pagination, QueryUrl } from "../utils/Pagination.js";
 import SortOption from "../utils/SortOption.js";
 const productService = {
     createProduct: async (data: CreateProductDto) => {
@@ -19,6 +20,40 @@ const productService = {
     },
     getAllProducts: async () => {
         return productDao.list();
+    },
+    searchProducts: async (query: QueryUrl) => {
+        const filter: any = {};
+        const page = parseInt((query.page || "1"), 10);
+        const limit = parseInt((query.limit || "10"), 10);
+        const sortBy = query.sortBy || "name";
+        const sortOrder = query.sortOrder === "desc" ? -1 : 1;
+        const options = {
+            skip: (page - 1) * limit,
+            limit: limit,
+            sort: { [sortBy]: sortOrder },
+        }
+        if (query.name) {
+            filter.name = { $regex: query.name, $options: "i" };
+        }
+        if (query.categoryId) {
+            filter.categoryId = query.categoryId;
+        }
+        if (query.brandId) {
+            filter.brandId = query.brandId;
+        }
+        if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+            filter.price = {};
+            if (query.minPrice !== undefined) {
+                filter.price.$gte = query.minPrice;
+            }
+            if (query.maxPrice !== undefined) {
+                filter.price.$lte = query.maxPrice;
+            }
+        }
+
+        const data = await productDao.findBy(filter, options);
+        const totalDatas = await productDao.count(filter);
+        return new Pagination(data, page, limit, totalDatas);
     },
     getProductById: async (id: string) => {
         const product = await productDao.readById(id);
@@ -41,7 +76,7 @@ const productService = {
         }
         return productDao.findBy({ categoryId });
     },
-    getProductsByTag: async (tag: string) => {
+    getProductsByTag: async (tag: string, query: QueryUrl = {}) => {
         let sortOption: SortOption;
         switch (tag) {
             case "best-seller":
@@ -56,7 +91,17 @@ const productService = {
             default:
                 throw new ApiError(400, "Bad Request", "Invalid tag");
         }
-        return productDao.sortBy(sortOption);
+        const page = parseInt((query.page || "1"), 10);
+        const limit = parseInt((query.limit || "10"), 10);
+        const options = {
+            skip: (page - 1) * limit,
+            limit: limit,
+            sort: sortOption.toQuery(),
+        }
+
+        const data = await productDao.findBy({}, options);
+        const totalDatas = await productDao.count({});
+        return new Pagination(data, page, limit, totalDatas);
     },
     deleteProductById: async (id: string) => {
         const product = await productDao.readById(id);

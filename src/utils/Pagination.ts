@@ -1,6 +1,6 @@
 import SortOption from "./SortOption";
 
-interface Pagination {
+class Pagination {
     page: number;
     totalPages: number;
     limit: number;
@@ -10,15 +10,38 @@ interface Pagination {
     hasPrevPage: boolean;
     nextPage: number | null;
     prevPage: number | null;
+    constructor(datas: any[], page: number = 1, limit: number = 10, totalDatas: number) {
+        this.page = page;
+        this.limit = limit;
+        this.totalDatas = totalDatas;
+        this.totalPages = Math.ceil(this.totalDatas / this.limit);
+        this.datas = datas;
+        this.hasNextPage = page < this.totalPages;
+        this.hasPrevPage = page > 1;
+        this.nextPage = this.hasNextPage ? page + 1 : null;
+        this.prevPage = this.hasPrevPage ? page - 1 : null;
+    }
 }
-interface QueryOptions {
-    page?: number;
-    limit?: number;
-    sortBy?: SortOption;
+interface QueryUrl {
+    //page
+    page?: string;
+    limit?: string;
+
+    //sort
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+
+    //filter
     name?: string;
     categoryId?: string;
     brandId?: string;
-    minPrice?: number;
-    maxPrice?: number;
+    minPrice?: string;
+    maxPrice?: string;
 }
-export default Pagination;
+export {
+    Pagination,
+}
+
+export type {
+    QueryUrl
+};

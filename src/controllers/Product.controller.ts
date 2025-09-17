@@ -1,14 +1,16 @@
-import expressAsyncHandler from "express-async-handler";
 import { Request, Response } from "express";
-import productService from "../services/Product.service";
-import { CreateProductDto } from "../dto/Create.dto";
-import ApiError from "../utils/ApiError";
-import { UpdateProductDto } from "../dto/Update.dto";
-import { UPLOAD_DIR } from "../services/Image.service";
-import ApiResponse from "../utils/Api.response";
+import expressAsyncHandler from "express-async-handler";
+import { CreateProductDto } from "../dto/Create.dto.js";
+import { UpdateProductDto } from "../dto/Update.dto.js";
+import { UPLOAD_DIR } from "../services/Image.service.js";
+import productService from "../services/Product.service.js";
+import ApiResponse from "../utils/Api.response.js";
+import ApiError from "../utils/ApiError.js";
+import { Pagination, QueryUrl } from "../utils/Pagination.js";
 const productController = {
     createProduct: expressAsyncHandler(async (req: Request, res: Response) => {
         const productData: CreateProductDto = req.body;
+        console.log(req.files);
         productData.images = req.files ? (req.files as Express.Multer.File[]).map(file => UPLOAD_DIR + file.filename) : [];
         const product = await productService.createProduct(productData);
         res.status(201).json(new ApiResponse(true, 201, "Product created successfully", product));
@@ -17,14 +19,11 @@ const productController = {
         const products = await productService.getAllProducts();
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
     }),
-    // searchProducts: expressAsyncHandler(async (req: Request, res: Response) => {
-    //     const query = req.query.q as string;
-    //     if (!query) {
-    //         throw new ApiError(400, "Bad Request", "Search query is required");
-    //     }
-    //     const products = await productService.searchProducts(query);
-    //     res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
-    // }),
+    searchProducts: expressAsyncHandler(async (req: Request, res: Response) => {
+        const query: QueryUrl = req.query;
+        const products = await productService.searchProducts(query);
+        res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
+    }),
     getProductById: expressAsyncHandler(async (req: Request, res: Response) => {
         const productId = req.params.productId;
         if (!productId) {
@@ -51,17 +50,18 @@ const productController = {
     }),
     getProductsByTag: expressAsyncHandler(async (req: Request, res: Response) => {
         const tag = req.params.tag;
+        const query: QueryUrl = req.query;
         if (!tag) {
             throw new ApiError(400, "Bad Request", "Tag is required");
         }
-        const products = await productService.getProductsByTag(tag);
+        const products = await productService.getProductsByTag(tag, query);
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
     }),
-    getProuctForLandingPage: expressAsyncHandler(async (req: Request, res: Response) => {
-        const bestSellers = await productService.getProductsByTag("best-seller");
-        const newArrivals = await productService.getProductsByTag("new-arrival");
-        const topRated = await productService.getProductsByTag("top-rated");
-        res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", { bestSellers, newArrivals, topRated }));
+    getProductForLandingPage: expressAsyncHandler(async (req: Request, res: Response) => {
+        const bestSellers: Pagination = await productService.getProductsByTag("best-seller", { limit: "5" });
+        const newArrivals: Pagination = await productService.getProductsByTag("new-arrival", { limit: "5" });
+        const topRated: Pagination = await productService.getProductsByTag("top-rated", { limit: "5" });
+        res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", { bestSellers: bestSellers.datas, newArrivals: newArrivals.datas, topRated: topRated.datas }));
     }),
     deleteProductById: expressAsyncHandler(async (req: Request, res: Response) => {
         const productId = req.params.productId;

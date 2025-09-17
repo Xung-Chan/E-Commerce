@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { QueryOptions, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateProductDto } from "../dto/Create.dto.js";
 import SortOption from "../utils/SortOption.js";
@@ -69,8 +69,11 @@ class ProductDao implements CRUD {
     async sortBy(sortOption: SortOption): Promise<any[]> {
         return await Product.find().sort(sortOption.toQuery()).exec();
     }
-    async findBy(query: Partial<any>): Promise<any | null> {
-        return Product.find(query).exec();
+    async findBy(query: Partial<any>, option: QueryOptions = {}): Promise<any | null> {
+        return Product.find(query, null, option).exec();
+    }
+    async count(query: Partial<any>): Promise<number> {
+        return await Product.countDocuments(query).exec();
     }
     async readById(id: string): Promise<any | null> {
         return await Product.findById(id).exec();
