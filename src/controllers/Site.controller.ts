@@ -9,6 +9,18 @@ import { Pagination } from "../utils/Pagination.js";
 const apiUrl = process.env.BASE_URL;
 
 const siteController = {
+    login: (req: Request, res: Response) => {
+        res.render('login', {
+            title: 'Đăng nhập | CoreStation'
+        });
+    },
+
+    register: (req: Request, res: Response) => {
+        res.render('register', {
+            title: 'Đăng ký | CoreStation'
+        });
+    },
+
     home: async (req: Request, res: Response) => {
         const landingProductsRes = await axios.get(`${apiUrl}/api/products/landing`);
         const { bestSellers, newArrivals } = Array.isArray(landingProductsRes.data) ? landingProductsRes.data : landingProductsRes.data.data;
@@ -79,50 +91,66 @@ const siteController = {
         });
     },
 
-    login: (req: Request, res: Response) => {
-        res.render('login', {
-            title: 'Đăng nhập | CoreStation'
-        });
-    },
-
-    register: (req: Request, res: Response) => {
-        res.render('register', {
-            title: 'Đăng ký | CoreStation'
-        });
-    },
-
     catalog: async (req: Request, res: Response) => {
-        // Pagination
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 9;
 
-        const allProductsRes = await axios.get(`${apiUrl}/api/products`);
-        const products = Array.isArray(allProductsRes.data) ? allProductsRes.data : allProductsRes.data.data;
-        const totalDatas = products.length;
+        const {
+            sortBy = '',
+            sortOrder = '',
+            categoryId = '',
+            brandId = '',
+            minPrice = '',
+            maxPrice = ''
+        } = req.query as any;
 
-        const start = (page - 1) * limit;
-        const end = start + limit;
-        const datas = products.slice(start, end);
+        const apiParams: any = { page, limit };
+        if (sortBy) apiParams.sortBy = sortBy;
+        if (sortOrder) apiParams.sortOrder = sortOrder;
+        if (categoryId) apiParams.categoryId = categoryId;
+        if (brandId) apiParams.brandId = brandId;
+        if (minPrice) apiParams.minPrice = minPrice;
+        if (maxPrice) apiParams.maxPrice = maxPrice;
 
-        const pagination = new Pagination(datas, page, limit, totalDatas);
+        const productsRes = await axios.get(`${apiUrl}/api/products/search`, { params: apiParams });
+        const paginationData = productsRes.data?.data || productsRes.data;
+        const products_catalog = Array.isArray(paginationData?.datas) ? paginationData.datas : [];
 
-        // Get all categories
+        const totalPages = paginationData?.totalPages || 1;
+        const currentPage = paginationData?.page || page;
+
+        // categories & brands
         const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
         const categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
+        const brandsRes = await axios.get(`${apiUrl}/api/brands`);
+        const brands = Array.isArray(brandsRes.data) ? brandsRes.data : brandsRes.data.data;
+
+        // Lọc query rỗng
+        const rawQuery = { sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice };
+        const filteredQuery: Record<string, string> = {};
+        Object.entries(rawQuery).forEach(([k, v]) => {
+            if (v !== undefined && v !== null && v !== '') filteredQuery[k] = String(v);
+        });
+
+        const baseQueryString = Object.entries(filteredQuery)
+            .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+            .join('&'); // không có page ở đây
 
         res.render('catalog', {
             title: 'Danh mục sản phẩm | CoreStation',
-            categories: categories,
-
-            products_catalog: pagination.datas,
-            pages: Array.from({ length: pagination.totalPages }, (_, i) => ({
+            categories,
+            brands,
+            products_catalog,
+            query: filteredQuery,
+            baseQueryString,
+            pages: Array.from({ length: totalPages }, (_, i) => ({
                 number: i + 1,
-                active: i + 1 === pagination.page
+                active: i + 1 === currentPage
             })),
-            isFirstPage: pagination.page === 1,
-            isLastPage: pagination.page === pagination.totalPages,
-            prevPage: pagination.prevPage,
-            nextPage: pagination.nextPage,
+            isFirstPage: currentPage === 1,
+            isLastPage: currentPage === totalPages,
+            prevPage: currentPage > 1 ? currentPage - 1 : 1,
+            nextPage: currentPage < totalPages ? currentPage + 1 : totalPages
         });
     },
 

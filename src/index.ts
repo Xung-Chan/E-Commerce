@@ -34,6 +34,10 @@ app.engine(
                 str && str.length > len ? str.substring(0, len) + '...' : str,
             eq: (a: any, b: any) => a === b,
             lte: (a: number, b: number) => a <= b,
+            buildQuery: (obj: Record<string, unknown>) => {
+                const params = Object.entries(obj).filter(([, v]) => v !== undefined && v !== '');
+                return params.map(([k, v]) => `${k}=${encodeURIComponent(v as string)}`).join('&');
+            }
         }
     })
 );

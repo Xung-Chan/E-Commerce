@@ -10,22 +10,53 @@
                             <p class="card-text text-muted mb-3 text-center">
                                 Chọn danh mục để lọc sản phẩm phù hợp với nhu cầu của bạn.
                             </p>
-                            <form method="GET" action="/catalog">
+                            <form id="filterForm" method="GET" action="/catalog">
+                                {{#if query.sortBy}}<input type="hidden" name="sortBy" value="{{query.sortBy}}">{{/if}}
+                                {{#if query.sortOrder}}<input type="hidden" name="sortOrder"
+                                    value="{{query.sortOrder}}">{{/if}}
+
+                                <h6 class="fw-semibold text-uppercase small text-secondary mb-2">Tìm theo Category</h6>
                                 <div class="row row-cols-2 gx-3">
                                     {{#each categories}}
                                     <div class="col mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="category"
-                                                id="cat-{{@index}}" value="{{this.name}}">
-                                            <label class="form-check-label" for="cat-{{@index}}">
-                                                {{this.name}}
-                                            </label>
+                                            <input class="form-check-input" type="radio" name="categoryId"
+                                                id="cat-{{@index}}" value="{{_id}}" {{#if (eq ../query.categoryId
+                                                _id)}}checked{{/if}}>
+                                            <label class="form-check-label" for="cat-{{@index}}">{{name}}</label>
                                         </div>
                                     </div>
                                     {{/each}}
                                 </div>
-                                <div class="d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-primary mt-3 px-4 w-100">Lọc</button>
+
+                                <h6 class="fw-semibold text-uppercase small text-secondary mt-3 mb-2">Tìm theo Brand
+                                </h6>
+                                <div class="row row-cols-2 gx-3">
+                                    {{#each brands}}
+                                    <div class="col mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="brandId"
+                                                id="brand-{{@index}}" value="{{_id}}" {{#if (eq ../query.brandId
+                                                _id)}}checked{{/if}}>
+                                            <label class="form-check-label" for="brand-{{@index}}">{{name}}</label>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                </div>
+
+                                <h6 class="fw-semibold text-uppercase small text-secondary mt-3 mb-2">Theo khoảng giá
+                                </h6>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="number" class="form-control form-control-sm" name="minPrice" min="0"
+                                        placeholder="Từ" value="{{query.minPrice}}">
+                                    <span class="text-muted">-</span>
+                                    <input type="number" class="form-control form-control-sm" name="maxPrice" min="0"
+                                        placeholder="Đến" value="{{query.maxPrice}}">
+                                </div>
+
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <button type="submit" class="btn btn-primary mt-3 w-100">Lọc</button>
+                                    <a href="/catalog" class="btn btn-outline-secondary mt-3 w-100">Bỏ lọc</a>
                                 </div>
                             </form>
                         </div>
@@ -33,8 +64,36 @@
                 </div>
         </aside>
 
+
+
         <!-- Danh sách sản phẩm -->
         <main class="col-md-9 d-flex flex-column" style="min-height: 80vh;">
+            {{!-- Sắp xếp sản phẩm theo "rate", "soldCount", "createdAt" với Desc và Asc --}}
+            <form method="GET" class="mb-3">
+                {{#if query.categoryId}}<input type="hidden" name="categoryId" value="{{query.categoryId}}">{{/if}}
+                {{#if query.brandId}}<input type="hidden" name="brandId" value="{{query.brandId}}">{{/if}}
+                {{#if query.minPrice}}<input type="hidden" name="minPrice" value="{{query.minPrice}}">{{/if}}
+                {{#if query.maxPrice}}<input type="hidden" name="maxPrice" value="{{query.maxPrice}}">{{/if}}
+                <div class="d-flex flex-wrap align-items-center gap-2 p-3 bg-light rounded shadow-sm">
+                    <span class="fw-semibold text-primary"><i class="bi bi-funnel me-1"></i>Sắp xếp:</span>
+                    <select class="form-select form-select-sm w-auto" name="sortBy">
+                        <option value="rate" {{#if (eq query.sortBy "rate" )}}selected{{/if}}>Đánh giá</option>
+                        <option value="soldCount" {{#if (eq query.sortBy "soldCount" )}}selected{{/if}}>Bán chạy
+                        </option>
+                        <option value="createdAt" {{#if (eq query.sortBy "createdAt" )}}selected{{/if}}>Mới nhất
+                        </option>
+                    </select>
+                    <select class="form-select form-select-sm w-auto" name="sortOrder">
+                        <option value="desc" {{#if (eq query.sortOrder "desc" )}}selected{{/if}}>Giảm dần</option>
+                        <option value="asc" {{#if (eq query.sortOrder "asc" )}}selected{{/if}}>Tăng dần</option>
+                    </select>
+                    <button class="btn btn-sm btn-primary d-flex align-items-center gap-1">
+                        <i class="bi bi-arrow-down-up"></i> Áp dụng
+                    </button>
+                </div>
+            </form>
+
+
             <div class="flex-grow-1 px-4 py-3">
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                     {{#if products_catalog.length}}
@@ -42,7 +101,8 @@
                     <div class="col">
                         <div class="card h-100 shadow-sm d-flex flex-column">
                             <a href="/product/{{slug}}/{{variants.[0].slug}}" class="text-decoration-none">
-                                <img src="{{images.[0]}}" class="card-img-top" alt="{{name}}" style="height:320px;object-fit:cover;"
+                                <img src="{{images.[0]}}" class="card-img-top" alt="{{name}}"
+                                    style="height:320px;object-fit:cover;"
                                     onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                                 <div class="card-body p-2 d-flex flex-column h-100">
                                     <h6 class="card-title fw-bold text-primary mb-0" style="font-size:1.2rem;">
@@ -77,18 +137,34 @@
             <nav class="mt-4 d-flex justify-content-center">
                 <ul class="pagination">
                     <li class="page-item {{#if isFirstPage}}disabled{{/if}}">
-                        <a class="page-link" href="?page={{prevPage}}">Trước</a>
+                        <a class="page-link"
+                            href="?page={{prevPage}}{{#if baseQueryString}}&{{baseQueryString}}{{/if}}">Trước</a>
                     </li>
                     {{#each pages}}
                     <li class="page-item {{#if active}}active{{/if}}">
-                        <a class="page-link" href="?page={{this.number}}">{{this.number}}</a>
+                        <a class="page-link"
+                            href="?page={{number}}{{#if ../baseQueryString}}&{{../baseQueryString}}{{/if}}">{{number}}</a>
                     </li>
                     {{/each}}
                     <li class="page-item {{#if isLastPage}}disabled{{/if}}">
-                        <a class="page-link" href="?page={{nextPage}}">Tiếp</a>
+                        <a class="page-link"
+                            href="?page={{nextPage}}{{#if baseQueryString}}&{{baseQueryString}}{{/if}}">Tiếp</a>
                     </li>
                 </ul>
             </nav>
         </main>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const f = document.getElementById('filterForm');
+            if (!f) return;
+            f.addEventListener('submit', () => {
+                ['minPrice', 'maxPrice'].forEach(name => {
+                    const el = f.querySelector(`[name="${name}"]`);
+                    if (el && !el.value) el.disabled = true; // không submit nếu rỗng
+                });
+            });
+        });
+    </script>
 </div>
