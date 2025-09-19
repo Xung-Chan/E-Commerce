@@ -22,7 +22,12 @@ const productService = {
         return productDao.list();
     },
     searchProducts: async (query: QueryUrl) => {
-        const filter: any = {};
+        const filter: {
+            name?: { $regex: string, $options: string };
+            categoryId?: string;
+            brandId?: string;
+            "variants.price"?: { $gte?: number, $lte?: number };
+        } = {};
         const page = parseInt((query.page || "1"), 10);
         const limit = parseInt((query.limit || "10"), 10);
         const sortBy = query.sortBy || "name";
@@ -41,16 +46,15 @@ const productService = {
         if (query.brandId) {
             filter.brandId = query.brandId;
         }
-        if (query.minPrice !== undefined || query.maxPrice !== undefined) {
-            filter.price = {};
-            if (query.minPrice !== undefined) {
-                filter.price.$gte = query.minPrice;
-            }
-            if (query.maxPrice !== undefined) {
-                filter.price.$lte = query.maxPrice;
-            }
+        filter["variants.price"] = {};
+        if (query.minPrice !== undefined) {
+            filter["variants.price"].$gte = Number(query.minPrice);
+        }
+        if (query.maxPrice !== undefined) {
+            filter["variants.price"].$lte = Number(query.maxPrice);
         }
 
+        console.log(filter, options);
         const data = await productDao.findBy(filter, options);
         const totalDatas = await productDao.count(filter);
         return new Pagination(data, page, limit, totalDatas);

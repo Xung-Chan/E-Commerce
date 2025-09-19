@@ -3,7 +3,6 @@ import { Router } from "express";
 import brandController from "../controllers/Brand.controller.js";
 import { authJwtAdmin } from "../middleware/authJwt.middleware.js";
 import { uploadSingle } from "../middleware/multer.middleware.js";
-import { upload } from "../services/Image.service.js";
 
 const brandRouter = Router();
 

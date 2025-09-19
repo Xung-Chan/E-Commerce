@@ -10,7 +10,6 @@ import { Pagination, QueryUrl } from "../utils/Pagination.js";
 const productController = {
     createProduct: expressAsyncHandler(async (req: Request, res: Response) => {
         const productData: CreateProductDto = req.body;
-        console.log(req.files);
         productData.images = req.files ? (req.files as Express.Multer.File[]).map(file => UPLOAD_DIR + file.filename) : [];
         const product = await productService.createProduct(productData);
         res.status(201).json(new ApiResponse(true, 201, "Product created successfully", product));

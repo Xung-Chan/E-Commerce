@@ -3,7 +3,7 @@ import { engine } from "express-handlebars";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import fs from "fs";
 
 import { connect } from "./config/DB.js";
 import errorHandler from "./middleware/errorHandler.middleware.js";
@@ -13,6 +13,7 @@ import productRouter from "./routes/Product.route.js";
 import apiRouter from "./routes/Api.route.js";
 import siteRouter from "./routes/Site.route.js";
 import userDao from "./daos/User.dao.js";
+import { uploadDir } from "./services/Image.service.js";
 
 const PORT = process.env.PORT || 8000;
 const app = express()
@@ -45,7 +46,9 @@ app.use(productRouter);
 
 app.use("/api", apiRouter);
 app.use(errorHandler)
-
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 connect()
     .then(() => {
         userDao.createAdmin()
