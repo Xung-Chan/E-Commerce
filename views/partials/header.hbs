@@ -48,7 +48,7 @@
             {{#if categories.length}}
             {{#each categories}}
             <li>
-              <a class="dropdown-item d-flex align-items-center gap-2" href="/catalog?category={{_id}}">
+              <a class="dropdown-item d-flex align-items-center gap-2" href="/catalog?categoryId={{_id}}">
                 {{#if image}}
                 <img src="{{image}}" alt="{{name}}" width="28" height="28" class="rounded object-fit-cover"
                   onerror="this.onerror=null;this.src='https://placehold.co/56x56?text=?';">
