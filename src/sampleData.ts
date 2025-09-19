@@ -23,6 +23,7 @@ export const rawProducts = [
             "https://placehold.co/600x400?text=Product+Placeholder+4",
             "https://placehold.co/600x400?text=Product+Placeholder+5"
         ],
+        rate: 4.3,
         variants: [
             { diffTitle: "i5 12400F/RTX 3060/16GB RAM/512GB SSD", price: 25000000, stock: 10 },
             { diffTitle: "i7 12700H/RTX 3070/32GB RAM/1TB SSD", price: 30000000, stock: 5 }
@@ -1297,3 +1298,36 @@ export const categories = [
         description: "High-speed storage solutions including SSDs and HDDs for all your data needs."
     }
 ];
+
+export const comments = [
+    {
+        userId: new mongoose.Types.ObjectId(),
+        productId: new mongoose.Types.ObjectId(),
+        content: "Great product! Highly recommend.",
+        date: new Date('2023-10-01')
+    },
+    {
+        userId: new mongoose.Types.ObjectId(),
+        productId: new mongoose.Types.ObjectId(),
+        content: "Good value for the price.",
+        date: new Date('2023-10-05')
+    },
+    {
+        userId: new mongoose.Types.ObjectId(),
+        productId: new mongoose.Types.ObjectId(),
+        content: "Performance could be better.",
+        date: new Date('2023-10-10')
+    },
+    {
+        userId: new mongoose.Types.ObjectId(),
+        productId: new mongoose.Types.ObjectId(),
+        content: "Exceeded my expectations!",
+        date: new Date('2023-10-15')
+    },
+    {
+        userId: new mongoose.Types.ObjectId(),
+        productId: new mongoose.Types.ObjectId(),
+        content: "Would buy again.",
+        date: new Date('2023-10-20')
+    }
+]

@@ -1,6 +1,6 @@
 @use "sass:color";
 @use 'variables' as *;
- 
+
 // LOGO
 .main-logo {
   padding-left: 1rem;
@@ -27,7 +27,7 @@
 // HEADER
 // Categories Dropdown
 .dropdown:hover>.dropdown-menu {
-  display: block; 
+  display: block;
 }
 
 .dropdown-menu .dropend:hover>.dropdown-menu {
@@ -220,7 +220,7 @@
 }
 
 .new-product-card {
-  min-height: 340px; 
+  min-height: 340px;
   display: flex;
   flex-direction: column;
 }
@@ -368,12 +368,66 @@
 
 // Product
 .thumb-btn {
-    flex: 1;
-    margin: 0 5px;
-    max-width: 100px;
-    height: 100px; 
+  flex: 1;
+  margin: 0 5px;
+  max-width: 100px;
+  height: 100px;
 }
 
 .thumb-btn img {
-    object-fit: cover;
+  object-fit: cover;
+}
+
+.variant-link.btn:hover {
+  background-color: transparent !important;
+  color: inherit !important;
+  border-color: inherit !important;
+  box-shadow: none !important;
+}
+
+.rating-stars {
+  direction: ltr;
+  unicode-bidi: bidi-override;
+  display: flex;
+  align-items: center;
+}
+
+.star-label {
+  transition: color 0.2s;
+  font-size: 1.7rem;
+}
+
+.rating-stars input:checked~.star-label,
+.rating-stars input:checked+.star-label,
+.rating-stars input:checked~label,
+.rating-stars input:checked+label {
+  color: #ffc107 !important;
+}
+
+.rating-stars input:hover~.star-label,
+.rating-stars input:hover+.star-label,
+.rating-stars input:hover~label,
+.rating-stars input:hover+label {
+  color: #ffc107 !important;
+}
+
+.rating-stars input:checked~.star-label,
+.rating-stars input:checked~label {
+  color: #ffc107 !important;
+}
+
+.rating-stars input:checked~.star-label,
+.rating-stars input:checked~label {
+  color: #ffc107 !important;
+}
+
+.info-col {
+  min-height: 0;
+}
+
+.info-col .desc-scroll {
+  flex-grow: 0;
+  overflow: auto;
+  max-height: 100%;
+  scrollbar-width: thin;
 }

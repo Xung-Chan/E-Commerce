@@ -9,6 +9,9 @@ const CommentSchema = new Schema({
     fullName: {
         type: String,
     },
+    name: {
+        type: String,
+    },
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",

@@ -4,7 +4,6 @@
             <div class="filter-area bg-light h-100 border-end ps-3"
                 style="min-height: 100vh; padding: 32px 16px 32px 0;">
                 <div class="container py-4">
-                    <!-- Card trang trí -->
                     <div class="card mb-4 shadow-sm border-0">
                         <div class="card-body py-4">
                             <h5 class="card-title fw-bold text-primary mb-2 text-center">Danh mục sản phẩm</h5>
@@ -43,7 +42,7 @@
                     <div class="col">
                         <div class="card h-100 shadow-sm d-flex flex-column">
                             <a href="/product/{{slug}}/{{variants.[0].slug}}" class="text-decoration-none">
-                                <img src="{{images.[0]}}" class="card-img-top" alt="{{name}}"
+                                <img src="{{images.[0]}}" class="card-img-top" alt="{{name}}" style="height:320px;object-fit:cover;"
                                     onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                                 <div class="card-body p-2 d-flex flex-column h-100">
                                     <h6 class="card-title fw-bold text-primary mb-0" style="font-size:1.2rem;">
@@ -82,7 +81,7 @@
                     </li>
                     {{#each pages}}
                     <li class="page-item {{#if active}}active{{/if}}">
-                        <a class="page-link" href="?page={{this}}">{{this}}</a>
+                        <a class="page-link" href="?page={{this.number}}">{{this.number}}</a>
                     </li>
                     {{/each}}
                     <li class="page-item {{#if isLastPage}}disabled{{/if}}">
