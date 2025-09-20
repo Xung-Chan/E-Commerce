@@ -1,4 +1,4 @@
-import mongoose, { QueryOptions, Schema } from "mongoose";
+import mongoose, { InferSchemaType, QueryOptions, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateProductDto } from "../dto/Create.dto.js";
 import SortOption from "../utils/SortOption.js";
@@ -43,12 +43,11 @@ const ProductSchema = new Schema({
         default: 0
     },
     variants: {
-        type: [
-            {
-                distinctFeature: String,
-                price: Number,
-                stock: Number
-            }],
+        type: [{
+            distinctFeature: String,
+            price: Number,
+            stock: Number
+        }],
         required: true
 
     },
@@ -87,4 +86,5 @@ class ProductDao implements CRUD {
         return result.modifiedCount > 0;
     }
 }
-export default new ProductDao();
+export const productDao = new ProductDao();
+export type IProduct = InferSchemaType<typeof ProductSchema>;

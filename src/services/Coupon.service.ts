@@ -1,5 +1,5 @@
 import { CreateCouponDto } from '../dto/Create.dto.js';
-import couponDao from '../daos/Coupon.dao.js';
+import { couponDao } from '../daos/Coupon.dao.js';
 const couponService = {
     createCoupon: async (data: CreateCouponDto) => {
         return couponDao.create(data);

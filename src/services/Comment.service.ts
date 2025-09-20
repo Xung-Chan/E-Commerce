@@ -1,4 +1,4 @@
-import commentDao from "../daos/Comment.dao";
+import { commentDao } from "../daos/Comment.dao";
 import { CreateCommentDto } from "../dto/Create.dto";
 const commentService = {
     createComment: async (data: CreateCommentDto) => {

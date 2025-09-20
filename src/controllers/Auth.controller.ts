@@ -19,8 +19,8 @@ const authController = {
         const { email, password, fullName, address } = req.body;
         const user = await authService.register({ email, password, fullName, address });
         res.status(201).json(new ApiResponse(true, 201, "User created successfully", user));
-    })
-    , forgotPassword: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
+    }),
+    forgotPassword: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { email } = req.body;
         await authService.forgotPassword(email);
         res.status(200).json(new ApiResponse(true, 200, "Password reset email sent", null));
@@ -33,6 +33,18 @@ const authController = {
         await authService.resetPassword(token, newPassword);
 
         res.status(200).json(new ApiResponse(true, 200, "Password has been reset successfully", null));
+    }),
+    changePassword: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
+        const userId = (req as any).userId;
+        const { oldPassword, newPassword } = req.body;
+        if (typeof newPassword !== "string" || typeof oldPassword !== "string") {
+            throw new ApiError(400, "Bad Request", "Passwords are invalid");
+        }
+        const result = await authService.changePassword(userId, oldPassword, newPassword);
+        if (!result) {
+            throw new ApiError(500, "Internal Server Error", "Failed to change password");
+        }
+        res.status(200).json(new ApiResponse(true, 200, "Password has been changed successfully", null));
     }),
     refreshToken: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { refreshToken } = req.body;

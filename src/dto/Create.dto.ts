@@ -29,15 +29,16 @@ interface CreateOrderDto {
     products: [
         {
             productId: string;
+            variantId: string;
             quantity: number;
             price: number;
             discount: number;
         }
     ];
-    totalPrice: number;
-    totalDiscount: number;
-    taxe: number;
-    totalPay: number;
+    totalPrice?: number;
+    totalDiscount?: number;
+    taxe?: number;
+    totalPay?: number;
 }
 interface CreateProductDto {
     name: string;

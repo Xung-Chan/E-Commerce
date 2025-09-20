@@ -1,14 +1,13 @@
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
-import userDao from "../daos/User.dao.js";
+import { IUser, userDao } from "../daos/User.dao.js";
 import { CreateUserDto } from "../dto/Create.dto.js";
 import { LoginResponseDto } from "../dto/Response.dto.js";
 import ApiError from "../utils/ApiError.js";
+import { TokenPayload } from "../utils/jwt.js";
 import { sendMail } from "./Mail.service.js";
 import { tokenService } from "./Token.service.js";
-import tokenDao from "../daos/Token.dao.js";
-import { TokenPayload } from "../utils/jwt.js";
 const authService = {
     login: async (email: string, password: string): Promise<LoginResponseDto> => {
         const result = await userDao.findBy({ email });
@@ -69,6 +68,19 @@ const authService = {
         } catch (err) {
             throw new ApiError(400, "Bad Request", "Invalid or expired token");
         }
+    },
+    changePassword: async (userId: string, oldPassword: string, newPassword: string): Promise<boolean> => {
+        const user = await userDao.readById(userId);
+        if (!user) {
+            throw new ApiError(404, "Not Found", "User not found");
+        }
+        const isMatch = await bcrypt.compareSync(oldPassword, user.password);
+        if (!isMatch) {
+            throw new ApiError(401, "Unauthorized", "Invalid old password");
+        }
+        const hashedPassword = bcrypt.hashSync(newPassword, 10);
+        const result = await userDao.patchById(userId, { password: hashedPassword });
+        return result;
     },
     refreshToken: async (refreshToken: string): Promise<LoginResponseDto> => {
         try {

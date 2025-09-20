@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateOrderDto } from "../dto/Create.dto.js";
 import { UpdateOrderDto } from "../dto/Update.dto.js";
@@ -13,11 +13,18 @@ const OrderSchema = new Schema({
     },
     products: {
         type: [{
-            productId: mongoose.Schema.Types.ObjectId,
+            productId: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true
+            },
             quantity: {
                 type: Number,
                 required: true,
                 min: 1
+            },
+            variantId: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true
             },
             price: Number,
             discount: Number
@@ -63,7 +70,7 @@ const OrderSchema = new Schema({
                 }
             }
         ], default: [{
-            status: "Pending",
+            status: "pending",
             date: Date.now()
         }]
     }
@@ -79,7 +86,7 @@ class OrderDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {
         return await Order.find(query).exec();
     }
-    async create(item: CreateOrderDto): Promise<any> {
+    async create(item: CreateOrderDto): Promise<IOrder> {
         return await Order.create(item);
     }
     async readById(id: string): Promise<any | null> {
@@ -93,4 +100,5 @@ class OrderDao implements CRUD {
         return await Order.find().exec();
     }
 }
-export default new OrderDao();
+export const orderDao = new OrderDao();
+export type IOrder = InferSchemaType<typeof OrderSchema>;

@@ -1,9 +1,8 @@
-import mongoose from "mongoose";
-import { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
-import CRUD from "../utils/CRUD.interface.js";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 import { CreateUserDto } from "../dto/Create.dto.js";
+import CRUD from "../utils/CRUD.interface.js";
 
 const UserSchema = new Schema({
     email: {
@@ -13,9 +12,11 @@ const UserSchema = new Schema({
     },
     fullName: {
         type: String,
+        required: true
     },
     password: {
         type: String,
+        required: true
     },
     role: {
         type: String,
@@ -23,7 +24,12 @@ const UserSchema = new Schema({
         default: "user"
     },
     addresses: {
-        type: [String],
+        type: [{
+            address: {
+                type: String,
+                required: true
+            }
+        }],
         required: true
     },
     cart: [{
@@ -37,16 +43,15 @@ const UserSchema = new Schema({
 
     }
 }, { versionKey: false })
-
 const User = mongoose.model("User", UserSchema)
 class UserDao implements CRUD {
-    async patchById(id: string, item: Partial<any>): Promise<boolean> {
+    async patchById(id: string, item: Partial<IUser>): Promise<boolean> {
         return await User.updateOne({ _id: id }, { $set: item }).then(result => result.modifiedCount > 0);
     }
     async findBy(query: Partial<any>): Promise<any | null> {
         return await User.find(query).exec();
     }
-    async create(item: CreateUserDto): Promise<any> {
+    async create(item: CreateUserDto): Promise<IUser> {
         const user = User.create({
             email: item.email,
             password: item.password,
@@ -64,7 +69,7 @@ class UserDao implements CRUD {
             email: process.env.USER_EMAIL || "nmdtruong18032004@gmail.com",
             password: hashedPassword,
             fullName: "Admin",
-            addresses: ["Admin Address"],
+            addresses: [{ address: "Admin Address" }],
             role: "admin",
             cart: [],
             status: "active"
@@ -72,15 +77,17 @@ class UserDao implements CRUD {
         });
 
     }
-    async readById(id: string): Promise<any | null> {
-        return await User.findById(id).exec();
+    async readById(id: string): Promise<IUser | null> {
+        const user = await User.findById(id).exec();
+        return user
     }
     async deleteById(id: string): Promise<boolean> {
         const result = await User.deleteOne({ _id: id });
         return result.deletedCount > 0;
     }
-    async list(): Promise<any[]> {
+    async list(): Promise<IUser[]> {
         return await User.find().exec();
     }
 }
-export default new UserDao();
+export const userDao = new UserDao();
+export type IUser = InferSchemaType<typeof UserSchema>;

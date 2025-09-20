@@ -1,6 +1,6 @@
-import brandDao from "../daos/Brand.dao.js";
-import categoryDao from "../daos/Category.dao.js";
-import productDao from "../daos/Product.dao.js";
+import { brandDao } from "../daos/Brand.dao.js";
+import { categoryDao } from "../daos/Category.dao.js";
+import { productDao } from "../daos/Product.dao.js";
 import { CreateProductDto } from "../dto/Create.dto.js";
 import { UpdateProductDto } from "../dto/Update.dto.js";
 import ApiError from "../utils/ApiError.js";
@@ -46,15 +46,17 @@ const productService = {
         if (query.brandId) {
             filter.brandId = query.brandId;
         }
-        filter["variants.price"] = {};
-        if (query.minPrice !== undefined) {
-            filter["variants.price"].$gte = Number(query.minPrice);
-        }
-        if (query.maxPrice !== undefined) {
-            filter["variants.price"].$lte = Number(query.maxPrice);
-        }
 
-        console.log(filter, options);
+        if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+            filter["variants.price"] = {};
+            if (query.minPrice !== undefined) {
+                filter["variants.price"].$gte = Number(query.minPrice);
+            }
+            if (query.maxPrice !== undefined) {
+                filter["variants.price"].$lte = Number(query.maxPrice);
+            }
+        }
+        console.log(filter);
         const data = await productDao.findBy(filter, options);
         const totalDatas = await productDao.count(filter);
         return new Pagination(data, page, limit, totalDatas);

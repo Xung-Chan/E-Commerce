@@ -12,10 +12,11 @@ import productRouter from "./routes/Product.route.js";
 // Lấy Data mẫu (Xóa sau khi có DB)
 import apiRouter from "./routes/Api.route.js";
 import siteRouter from "./routes/Site.route.js";
-import userDao from "./daos/User.dao.js";
+import { userDao } from "./daos/User.dao.js";
 import { uploadDir } from "./services/Image.service.js";
 
 const PORT = process.env.PORT || 8000;
+const BASE_URL = `http://localhost:${PORT}`;
 const app = express()
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,8 +58,8 @@ connect()
     })
     .then(() => {
 
-        app.listen(8000, () => {
-            console.log(`🚀 Server running at http://localhost:8000`);
+        app.listen(PORT, () => {
+            console.log(`🚀 Server running at ${BASE_URL}`);
         })
     })
     .catch(err => {

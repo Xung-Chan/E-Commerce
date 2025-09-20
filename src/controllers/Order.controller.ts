@@ -8,6 +8,12 @@ import ApiError from '../utils/ApiError';
 const orderController = {
     createOrder: expressAsyncHandler(async (req: Request, res: Response) => {
         const data: CreateOrderDto = req.body;
+        if (!data.userId) {
+            throw new ApiError(400, "Bad Request", "User ID is required");
+        }
+        if (!data.products) {
+            throw new ApiError(400, "Bad Request", "Products are required");
+        }
         const order = await orderService.createOrder(data);
         res.status(201).json(new ApiResponse(true, 201, "Order created successfully", order));
     }),

@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateCategoryDto } from "../dto/Create.dto.js";
 const CategorySchema = new Schema({
@@ -44,4 +44,5 @@ class CategoryDao implements CRUD {
     }
 
 }
-export default new CategoryDao();
+export const categoryDao = new CategoryDao();
+export type ICategory = InferSchemaType<typeof CategorySchema>;

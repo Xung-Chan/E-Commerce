@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateCouponDto } from "../dto/Create.dto.js";
 const CouponSchema = new Schema({
@@ -61,4 +61,5 @@ class CouponDao implements CRUD {
     }
 
 }
-export default new CouponDao();
+export const couponDao = new CouponDao();
+export type ICoupon = InferSchemaType<typeof CouponSchema>;

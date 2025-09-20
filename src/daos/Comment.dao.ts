@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateCommentDto } from "../dto/Create.dto.js";
 const CommentSchema = new Schema({
@@ -48,4 +48,5 @@ class CommentDao implements CRUD {
         return Comment.find().exec();
     }
 }
-export default new CommentDao();
+export const commentDao = new CommentDao();
+export type IComment = InferSchemaType<typeof CommentSchema>;

@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateBrandDto } from "../dto/Create.dto.js";
 const BrandSchema = new Schema({
@@ -17,7 +17,6 @@ const BrandSchema = new Schema({
     }
 
 }, { versionKey: false })
-
 const Brand = mongoose.model("Brand", BrandSchema);
 class BrandDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {
@@ -44,4 +43,5 @@ class BrandDao implements CRUD {
     }
 
 }
-export default new BrandDao();
+export const brandDao = new BrandDao();
+export type IBrand = InferSchemaType<typeof BrandSchema>;

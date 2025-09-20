@@ -1,4 +1,4 @@
-import brandDao from "../daos/Brand.dao.js";
+import { brandDao } from "../daos/Brand.dao.js";
 import { CreateBrandDto } from "../dto/Create.dto.js";
 import { UpdateBrandDto } from "../dto/Update.dto.js";
 import ApiError from "../utils/ApiError.js";

@@ -1,4 +1,4 @@
-import categoryDao from "../daos/Category.dao.js";
+import { categoryDao } from "../daos/Category.dao.js";
 import { CreateCategoryDto } from "../dto/Create.dto.js";
 const categoryService = {
     createCategory: async (data: CreateCategoryDto) => {

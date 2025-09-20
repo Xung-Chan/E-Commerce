@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 const RateSchema = new Schema({
     userId: {
@@ -53,4 +53,5 @@ class RateDao implements CRUD {
         return await Rate.find().exec();
     }
 }
-export default new RateDao();
+export const rateDao = new RateDao();
+export type IRate = InferSchemaType<typeof RateSchema>;

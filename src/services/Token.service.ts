@@ -1,4 +1,4 @@
-import tokenDao from "../daos/Token.dao.js";
+import { tokenDao } from "../daos/Token.dao.js";
 import { TokenPayload } from "../utils/jwt.js";
 import jwt from "jsonwebtoken";
 const SECRET_KEY = process.env.SECRET_KEY as string;

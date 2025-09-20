@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 
 const TokenSchema = new Schema({
     userId: {
@@ -41,4 +41,5 @@ class TokenDao {
         return result.deletedCount > 0;
     }
 }
-export default new TokenDao();
+export const tokenDao = new TokenDao();
+export type IToken = InferSchemaType<typeof TokenSchema>;
