@@ -4,6 +4,7 @@
         <i class="bi bi-star-fill me-2" style="color:#ffc107;font-size:2rem;"></i>
         <h3 class="fw-bold text-primary mb-0 flex-grow-1">Bán chạy nhất</h3>
     </div>
+
     <div id="bestSellersCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
         <div class="carousel-inner">
             {{#each bestSellersProducts}}
@@ -11,7 +12,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-6 mb-3 mb-md-0">
                         <a href="/product/{{slug}}/{{variants.[0].slug}}" class="d-block">
-                            <img src="{{images.[0]}}" class="card-img-top" alt=""
+                            <img src="{{images.[0]}}" class="card-img-top" alt="" style="height:320px;object-fit:cover;"
                                 onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                         </a>
                     </div>
@@ -45,6 +46,7 @@
         <i class="bi bi-box-seam me-2" style="color:#3a86ff;font-size:2rem;"></i>
         <h3 class="fw-bold text-primary mb-0 flex-grow-1">Sản phẩm mới</h3>
     </div>
+
     <div class="card shadow mb-5 new-products-card">
         <div class="card-body py-4">
             <div id="newProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true"
@@ -96,16 +98,17 @@
             <i class="bi bi-controller me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
             <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">Gaming PC</h4>
         </div>
-        <a href="#" class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
+        <a href="/catalog?categoryId=68ca511408e9904136cc0b32" class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
             Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
         </a>
     </div>
+
     <div id="gamingProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
         data-bs-interval="3000">
         <div class="carousel-inner">
             {{#each windowPCGamingProducts}}
             <div class="carousel-item {{#if @first}}active{{/if}}">
-                <div class="row g-4">
+                <div class="row g-4 px-3">
                     {{#each this}}
                     <div class="col-md-2 col-6">
                         <div class="card h-100 d-flex flex-column">
@@ -145,11 +148,12 @@
             <i class="bi bi-diagram-3-fill me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
             <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">Workstation</h4>
         </div>
-        <a href="/catalog?type=workstation"
+        <a href="/catalog?categoryId=68ca511408e9904136cc0b34"
             class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
             Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
         </a>
     </div>
+
     <div id="workstationProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
         data-bs-interval="3000">
         <div class="carousel-inner">
@@ -195,11 +199,12 @@
             <i class="bi bi-pc-display-horizontal me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
             <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">Linh kiện máy tính</h4>
         </div>
-        <a href="/catalog?type=component"
+        <a href="/catalog?categoryId=68ca511408e9904136cc0b35"
             class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
             Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
         </a>
     </div>
+    
     <div id="componentsProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
         data-bs-interval="3000">
         <div class="carousel-inner">

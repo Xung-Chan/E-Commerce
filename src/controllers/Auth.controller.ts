@@ -13,8 +13,7 @@ const authController = {
         const data = await authService.login(email, password);
         res.status(200).json(new ApiResponse(true, 200, "Login successful", data));
 
-    })
-    ,
+    }),
     register: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { email, password, fullName, address } = req.body;
         const user = await authService.register({ email, password, fullName, address });

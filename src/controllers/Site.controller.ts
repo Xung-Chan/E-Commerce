@@ -1,38 +1,52 @@
 //Front-end
 import axios from "axios";
 
-import { product, products, categories } from "../sampleData.js";
+import { products, comments } from "../sampleData.js";
 import { Request, Response } from "express";
+import { verify } from "jsonwebtoken";
+import { Pagination } from "../utils/Pagination.js";
+
+const apiUrl = process.env.BASE_URL;
 
 const siteController = {
+    login: (req: Request, res: Response) => {
+        res.render('login', {
+            title: 'Đăng nhập | CoreStation'
+        });
+    },
+
+    register: (req: Request, res: Response) => {
+        res.render('register', {
+            title: 'Đăng ký | CoreStation'
+        });
+    },
+
     home: async (req: Request, res: Response) => {
-        // const apiUrl = process.env.API_URL;
-        // const apiRes = await axios.get(`${apiUrl}/products`);
-        // const products = Array.isArray(apiRes.data) ? apiRes.data : apiRes.data.data;
+        const landingProductsRes = await axios.get(`${apiUrl}/api/products/landing`);
+        const { bestSellers, newArrivals } = Array.isArray(landingProductsRes.data) ? landingProductsRes.data : landingProductsRes.data.data;
 
-        // Lấy dữ liệu mẫu
-        const bestSellersProducts = products.slice(0, 10);
-        const newProducts = products.slice(-10);
+        const pcGamingProductsRes = await axios.get(`${apiUrl}/api/products/search?categoryId=68ca511408e9904136cc0b32&limit=20`);
+        const pcGamingProducts = Array.isArray(pcGamingProductsRes.data) ? pcGamingProductsRes.data : pcGamingProductsRes.data.data;
 
-        const pcGamingProducts = products.filter(p => p.categoryId.name === "PC Gaming");
-        const workstationProducts = products.filter(p => p.categoryId.name === "Workstation");
-        const componentsProducts = products.filter(
-            p => ["CPU", "VGA", "RAM", "Storage", "Power Supply", "Mainboard"].includes(p.categoryId.name)
-        );
+        const workstationProductsRes = await axios.get(`${apiUrl}/api/products/search?categoryId=68ca511408e9904136cc0b34&limit=20`);
+        const workstationProducts = Array.isArray(workstationProductsRes.data) ? workstationProductsRes.data : workstationProductsRes.data.data;
+
+        const componentsProductsRes = await axios.get(`${apiUrl}/api/products/search?categoryId=68ca511408e9904136cc0b35&limit=20`);
+        const componentsProducts = Array.isArray(componentsProductsRes.data) ? componentsProductsRes.data : componentsProductsRes.data.data;
+
+        // Create windows
+        const newProductsWindowSize = 4;
+        const windowSize = 6;
 
         // New Products
-        const newProductsWindowSize = 4;
         const windowNewProducts = [];
-        for (let i = 0; i < newProducts.length; i += newProductsWindowSize) {
-            let window = newProducts.slice(i, i + newProductsWindowSize);
+        for (let i = 0; i < newArrivals.length; i += newProductsWindowSize) {
+            let window = newArrivals.slice(i, i + newProductsWindowSize);
             if (window.length < newProductsWindowSize) {
-                window = window.concat(newProducts.slice(0, newProductsWindowSize - window.length));
+                window = window.concat(newArrivals.slice(0, newProductsWindowSize - window.length));
             }
             windowNewProducts.push(window);
         }
-
-        // Các Carousel khác
-        const windowSize = 6;
         // PC Gaming
         const windowPCGamingProducts = [];
         for (let i = 0; i < pcGamingProducts.length; i += windowSize) {
@@ -61,33 +75,85 @@ const siteController = {
             windowComponentsProducts.push(window);
         }
 
+        // Get all categories
+        const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
+        const categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
+
         // Render
         res.render('home', {
             title: 'CoreStation - PC và linh kiện máy tính',
-            bestSellersProducts: bestSellersProducts,
+            bestSellersProducts: bestSellers,
             windowNewProducts: windowNewProducts,
             windowPCGamingProducts: windowPCGamingProducts,
             windowWorkstationsProducts: windowWorkstationProducts,
-            windowComponentsProducts: windowComponentsProducts
+            windowComponentsProducts: windowComponentsProducts,
+            categories: categories
         });
     },
-    login: (req: Request, res: Response) => {
-        res.render('login', {
-            title: 'Đăng nhập | CoreStation'
+
+    catalog: async (req: Request, res: Response) => {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 9;
+
+        const {
+            sortBy = '',
+            sortOrder = '',
+            categoryId = '',
+            brandId = '',
+            minPrice = '',
+            maxPrice = ''
+        } = req.query as any;
+
+        const apiParams: any = { page, limit };
+        if (sortBy) apiParams.sortBy = sortBy;
+        if (sortOrder) apiParams.sortOrder = sortOrder;
+        if (categoryId) apiParams.categoryId = categoryId;
+        if (brandId) apiParams.brandId = brandId;
+        if (minPrice) apiParams.minPrice = minPrice;
+        if (maxPrice) apiParams.maxPrice = maxPrice;
+
+        const productsRes = await axios.get(`${apiUrl}/api/products/search`, { params: apiParams });
+        const paginationData = productsRes.data?.data || productsRes.data;
+        const products_catalog = Array.isArray(paginationData?.datas) ? paginationData.datas : [];
+
+        const totalPages = paginationData?.totalPages || 1;
+        const currentPage = paginationData?.page || page;
+
+        // categories & brands
+        const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
+        const categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
+        const brandsRes = await axios.get(`${apiUrl}/api/brands`);
+        const brands = Array.isArray(brandsRes.data) ? brandsRes.data : brandsRes.data.data;
+
+        // Lọc query rỗng
+        const rawQuery = { sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice };
+        const filteredQuery: Record<string, string> = {};
+        Object.entries(rawQuery).forEach(([k, v]) => {
+            if (v !== undefined && v !== null && v !== '') filteredQuery[k] = String(v);
         });
-    },
-    register: (req: Request, res: Response) => {
-        res.render('register', {
-            title: 'Đăng ký | CoreStation'
-        });
-    },
-    catalog: (req: Request, res: Response) => {
+
+        const baseQueryString = Object.entries(filteredQuery)
+            .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+            .join('&'); // không có page ở đây
+
         res.render('catalog', {
             title: 'Danh mục sản phẩm | CoreStation',
-            categories: categories,
-            products_catalog: products.slice(0, 9)
+            categories,
+            brands,
+            products_catalog,
+            query: filteredQuery,
+            baseQueryString,
+            pages: Array.from({ length: totalPages }, (_, i) => ({
+                number: i + 1,
+                active: i + 1 === currentPage
+            })),
+            isFirstPage: currentPage === 1,
+            isLastPage: currentPage === totalPages,
+            prevPage: currentPage > 1 ? currentPage - 1 : 1,
+            nextPage: currentPage < totalPages ? currentPage + 1 : totalPages
         });
     },
+
     productBySlug: (req: Request, res: Response) => {
         const { productSlug, variantSlug } = req.params;
         console.log("Product request:", productSlug, variantSlug);
@@ -101,10 +167,16 @@ const siteController = {
             selectedVariant = found;
         }
 
+        const stars = [1, 2, 3, 4, 5];
         res.render("product", {
             title: product.name,
             product,
-            selectedVariant
+            selectedVariant,
+            comments,
+            verify: true, // chưa mua hàng thì verify = false
+
+
+            stars
         });
     }
 }

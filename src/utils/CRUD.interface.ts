@@ -6,4 +6,5 @@ interface CRUD {
     list(): Promise<any[]>;
     findBy(query: Partial<any>): Promise<any | null>;
 }
+
 export default CRUD;
