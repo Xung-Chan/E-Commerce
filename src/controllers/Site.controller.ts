@@ -1,15 +1,17 @@
 //Front-end
 import axios from "axios";
 
-import { products, comments } from "../sampleData.js";
 import { Request, Response } from "express";
-import { verify } from "jsonwebtoken";
-import { Pagination } from "../utils/Pagination.js";
+import { comments, products } from "../sampleData.js";
 
 const apiUrl = process.env.BASE_URL;
 
 const siteController = {
     login: (req: Request, res: Response) => {
+        console.log((req as any).isLoggedIn)
+        if ((req as any).isLoggedIn) {
+            return res.redirect('/');
+        }
         res.render('login', {
             title: 'Đăng nhập | CoreStation'
         });
