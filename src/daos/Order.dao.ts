@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType, Schema } from "mongoose";
+import mongoose, { InferSchemaType, QueryOptions, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateOrderDto } from "../dto/Create.dto.js";
 import { UpdateOrderDto } from "../dto/Update.dto.js";
@@ -40,11 +40,6 @@ const OrderSchema = new Schema({
         required: true
 
     },
-    taxe: {
-        type: Number,
-        default: 0
-
-    },
     totalPay: {
         type: Number,
         required: true
@@ -52,7 +47,7 @@ const OrderSchema = new Schema({
     },
     currentStatus: {
         type: String,
-        enum: ["pending", "shipped", "delivered"],
+        enum: ["pending", "processing", "shipped", "delivered", "canceled"],
         default: "pending"
     },
     statusHistories: {
@@ -60,19 +55,20 @@ const OrderSchema = new Schema({
             {
                 status: {
                     type: String,
-                    enum: ["pending", "shipped", "delivered"],
+                    enum: ["pending", "processing", "shipped", "delivered", "canceled"],
                     required: true
                 },
                 date: {
                     type: Date,
-                    required: true,
                     default: Date.now
                 }
             }
-        ], default: [{
+        ],
+        default: [{
             status: "pending",
             date: Date.now()
-        }]
+        }],
+        required: true
     }
 
 })
@@ -83,13 +79,13 @@ class OrderDao implements CRUD {
         const result = await Order.updateOne({ _id: id }, { $set: item });
         return result.modifiedCount > 0;
     }
-    async findBy(query: Partial<any>): Promise<any | null> {
-        return await Order.find(query).exec();
+    async findBy(query: Partial<any>, options: QueryOptions = {}): Promise<any | null> {
+        return await Order.find(query, null, options).exec();
     }
     async create(item: CreateOrderDto): Promise<IOrder> {
         return await Order.create(item);
     }
-    async readById(id: string): Promise<any | null> {
+    async readById(id: string): Promise<IOrder | null> {
         return await Order.findById(id).exec();
     }
     async deleteById(id: string): Promise<boolean> {

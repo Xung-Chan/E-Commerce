@@ -5,6 +5,7 @@ import userService from "../services/User.service.js";
 import ApiResponse from "../utils/Api.response.js";
 import ApiError from "../utils/ApiError.js";
 import { tokenService } from "../services/Token.service.js";
+import { get } from "mongoose";
 const userController = {
     getAllUsers: expressAsyncHandler(async (req: Request, res: Response) => {
         const users = await userService.getAllUsers();
@@ -57,18 +58,18 @@ const userController = {
         }
         res.status(200).json(new ApiResponse(true, 200, "User banned successfully", result));
     }),
-    getAddressesByUserId: expressAsyncHandler(async (req: Request, res: Response) => {
-        const userId = req.params.userId;
+    getMyAddresses: expressAsyncHandler(async (req: Request, res: Response) => {
+        const userId = (req as any).userId;
         if (!userId) {
-            throw new ApiError(400, "Bad Request", "User ID is required");
+            throw new ApiError(401, "Unauthorized", "No token provided");
         }
         const addresses = await userService.getAddressesByUserId(userId);
         res.status(200).json(new ApiResponse(true, 200, "Addresses fetched successfully", addresses));
     }),
-    addAddressByUserId: expressAsyncHandler(async (req: Request, res: Response) => {
-        const userId = req.params.userId;
+    addMyAddress: expressAsyncHandler(async (req: Request, res: Response) => {
+        const userId = (req as any).userId;
         if (!userId) {
-            throw new ApiError(400, "Bad Request", "User ID is required");
+            throw new ApiError(401, "Unauthorized", "No token provided");
         }
         const { address } = req.body;
         if (!address) {
@@ -80,8 +81,8 @@ const userController = {
         }
         res.status(200).json(new ApiResponse(true, 200, "Address added successfully", result));
     }),
-    removeAddressById: expressAsyncHandler(async (req: Request, res: Response) => {
-        const userId = req.params.userId;
+    removeMyAddressByAddressId: expressAsyncHandler(async (req: Request, res: Response) => {
+        const userId = (req as any).userId;
         const addressId = req.params.addressId;
         if (!userId || !addressId) {
             throw new ApiError(400, "Bad Request", "User ID and Address ID are required");
@@ -92,8 +93,8 @@ const userController = {
         }
         res.status(200).json(new ApiResponse(true, 200, "Address removed successfully", result));
     }),
-    updateAddressById: expressAsyncHandler(async (req: Request, res: Response) => {
-        const userId = req.params.userId;
+    updateMyAddressByAddressId: expressAsyncHandler(async (req: Request, res: Response) => {
+        const userId = (req as any).userId;
         const addressId = req.params.addressId;
         if (!userId || !addressId) {
             throw new ApiError(400, "Bad Request", "User ID and Address ID are required");
@@ -108,6 +109,53 @@ const userController = {
         }
         res.status(200).json(new ApiResponse(true, 200, "Address updated successfully", result));
     }),
-
+    getMyCart: expressAsyncHandler(async (req: Request, res: Response) => {
+        const userId = (req as any).userId;
+        if (!userId) {
+            throw new ApiError(401, "Unauthorized", "No token provided");
+        }
+        const cart = await userService.getCartByUserId(userId);
+        res.status(200).json(new ApiResponse(true, 200, "Cart fetched successfully", cart));
+    }),
+    addToCart: expressAsyncHandler(async (req: Request, res: Response) => {
+        const userId = (req as any).userId;
+        if (!userId) {
+            throw new ApiError(401, "Unauthorized", "No token provided");
+        }
+        const { productId, variantId, quantity } = req.body;
+        if (!productId || !variantId || !quantity) {
+            throw new ApiError(400, "Bad Request", "Product ID, Variant ID and Quantity are required");
+        }
+        const result = await userService.addToCartByUserId(userId, productId, variantId, quantity);
+        res.status(200).json(new ApiResponse(true, 200, "Product added to cart successfully", result));
+    }),
+    updateMyCartByCartItemId: expressAsyncHandler(async (req: Request, res: Response) => {
+        const userId = (req as any).userId;
+        if (!userId) {
+            throw new ApiError(401, "Unauthorized", "No token provided");
+        }
+        const cartItemId = req.params.cartItemId;
+        if (!cartItemId) {
+            throw new ApiError(400, "Bad Request", "Cart Item ID is required");
+        }
+        const { quantity } = req.body;
+        if (quantity === undefined) {
+            throw new ApiError(400, "Bad Request", "Quantity is required");
+        }
+        const result = await userService.updateCartByCartItemId(cartItemId, quantity);
+        res.status(200).json(new ApiResponse(true, 200, "Cart updated successfully", result));
+    }),
+    removeMyCartByCartItemId: expressAsyncHandler(async (req: Request, res: Response) => {
+        const userId = (req as any).userId
+        if (!userId) {
+            throw new ApiError(401, "Unauthorized", "No token provided");
+        }
+        const cartItemId = req.params.cartItemId;
+        if (!cartItemId) {
+            throw new ApiError(400, "Bad Request", "Cart Item ID is required");
+        }
+        const result = await userService.deleteCartByCartItemId(cartItemId);
+        res.status(200).json(new ApiResponse(true, 200, "Cart item removed successfully", result));
+    }),
 }
 export default userController;

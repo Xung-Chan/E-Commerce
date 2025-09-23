@@ -31,13 +31,10 @@ interface CreateOrderDto {
             productId: string;
             variantId: string;
             quantity: number;
-            price: number;
-            discount: number;
         }
     ];
     totalPrice?: number;
     totalDiscount?: number;
-    taxe?: number;
     totalPay?: number;
 }
 interface CreateProductDto {
@@ -57,7 +54,12 @@ interface CreateRateDto {
     productId: string;
     rate: number;
 }
-
+interface CreateCartItemDto {
+    userId: string;
+    productId: string;
+    variantId: string;
+    quantity: number;
+}
 export type {
     CreateUserDto,
     CreateBrandDto,
@@ -66,5 +68,6 @@ export type {
     CreateRateDto,
     CreateCouponDto,
     CreateOrderDto,
-    CreateProductDto
+    CreateProductDto,
+    CreateCartItemDto
 };

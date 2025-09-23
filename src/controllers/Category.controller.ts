@@ -34,7 +34,24 @@ export const categoryController = {
         }
         await categoryService.deleteCategoryById(categoryId);
         res.status(200).json(new ApiResponse(true, 200, "Category deleted successfully", null));
+    }),
+    updateCategoryById: expressAsyncHandler(async (req: Request, res: Response) => {
+        const categoryId = req.params.categoryId;
+        if (!categoryId) {
+            throw new ApiError(400, "Bad Request", "Category ID is required");
+        }
+        const data = req.body;
+        if (req.file) {
+            data.image = UPLOAD_DIR + req.file.filename;
+        }
+        const updatedCategory = await categoryService.updateCategoryById(categoryId, data);
+        res.status(200).json(new ApiResponse(true, 200, "Category updated successfully", updatedCategory));
+    }),
+    getCategoriesForLandingPage: expressAsyncHandler(async (req: Request, res: Response) => {
+        const categories = await categoryService.getCategoriesForLandingPage();
+        res.status(200).json(new ApiResponse(true, 200, "Categories fetched successfully", categories));
     })
+
 
 
 }

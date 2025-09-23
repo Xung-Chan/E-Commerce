@@ -14,7 +14,11 @@ const CategorySchema = new Schema({
     image: {
         type: String,
         required: true
-    }
+    },
+    landingPageDisplay: {
+        type: Boolean,
+        default: false
+    },
 }, { versionKey: false })
 
 const Category = mongoose.model("Category", CategorySchema)
@@ -45,4 +49,4 @@ class CategoryDao implements CRUD {
 
 }
 export const categoryDao = new CategoryDao();
-export type ICategory = InferSchemaType<typeof CategorySchema>;
+export type ICategory = InferSchemaType<typeof CategorySchema> & { _id: mongoose.Types.ObjectId };

@@ -32,10 +32,6 @@ const UserSchema = new Schema({
         }],
         required: true
     },
-    cart: [{
-        productId: String,
-        quantity: Number
-    }],
     status: {
         type: String,
         enum: ["active", "inactive", "banned"],
@@ -90,4 +86,4 @@ class UserDao implements CRUD {
     }
 }
 export const userDao = new UserDao();
-export type IUser = InferSchemaType<typeof UserSchema>;
+export type IUser = InferSchemaType<typeof UserSchema> & { _id: mongoose.Types.ObjectId };

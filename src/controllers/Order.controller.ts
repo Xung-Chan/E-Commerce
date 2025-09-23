@@ -27,9 +27,6 @@ const orderController = {
             throw new ApiError(400, "Bad Request", "Order ID is required");
         }
         const order = await orderService.getOrderById(orderId);
-        if (!order) {
-            throw new ApiError(404, "Not Found", "Order not found");
-        }
         res.status(200).json(new ApiResponse(true, 200, "Order fetched successfully", order));
     }),
     getOrderByUserId: expressAsyncHandler(async (req: Request, res: Response) => {
@@ -60,7 +57,16 @@ const orderController = {
         }
         const updatedOrder = await orderService.updateStatusById(orderId, status);
         res.status(200).json(new ApiResponse(true, 200, "Order status updated successfully", updatedOrder));
-    })
+    }),
+    getMyOrders: expressAsyncHandler(async (req: Request, res: Response) => {
+        const userId = (req as any).userId;
+        if (!userId) {
+            throw new ApiError(401, "Unauthorized", "No token provided");
+        }
+        const orders = await orderService.getOrderByUserId(userId);
+        res.status(200).json(new ApiResponse(true, 200, "Orders fetched successfully", orders));
+    }),
+
 
 }
 export default orderController;

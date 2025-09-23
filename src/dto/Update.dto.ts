@@ -5,10 +5,18 @@ interface UpdateUserDto {
 interface UpdateBrandDto {
     name?: string;
     description?: string;
+    image?: string;
+
+}
+interface UpdateCategoryDto {
+    name?: string;
+    description?: string;
+    image?: string;
+    landingPageDisplay?: boolean;
 }
 interface UpdateOrderDto {
-    currentStatus?: string;
-    statusHistories?: { status: string; date: Date }[];
+    currentStatus: string;
+    statusHistories: { status: string; date: Date }[];
 }
 interface UpdateProductDto {
     name?: string;
@@ -26,5 +34,6 @@ export type {
     UpdateUserDto,
     UpdateBrandDto,
     UpdateOrderDto,
-    UpdateProductDto
+    UpdateProductDto,
+    UpdateCategoryDto
 };

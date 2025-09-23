@@ -7,6 +7,8 @@ import productService from "../services/Product.service.js";
 import ApiResponse from "../utils/Api.response.js";
 import ApiError from "../utils/ApiError.js";
 import { Pagination, QueryUrl } from "../utils/Pagination.js";
+import categoryService from "../services/Category.service.js";
+import { ICategory } from "../daos/Category.dao.js";
 const productController = {
     createProduct: expressAsyncHandler(async (req: Request, res: Response) => {
         const productData: CreateProductDto = req.body;
@@ -59,8 +61,13 @@ const productController = {
     getProductForLandingPage: expressAsyncHandler(async (req: Request, res: Response) => {
         const bestSellers: Pagination = await productService.getProductsByTag("best-seller", { limit: "5" });
         const newArrivals: Pagination = await productService.getProductsByTag("new-arrival", { limit: "5" });
-        const topRated: Pagination = await productService.getProductsByTag("top-rated", { limit: "5" });
-        res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", { bestSellers: bestSellers.datas, newArrivals: newArrivals.datas, topRated: topRated.datas }));
+        const categories: ICategory[] = await categoryService.getCategoriesForLandingPage();
+        const categoryProducts = [];
+        for (const category of categories) {
+            const products = await productService.getProductsByCategoryId(category._id.toString());
+            categoryProducts.push({ name: category.name, products });
+        }
+        res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", { bestSellers: bestSellers.datas, newArrivals: newArrivals.datas, categoryProducts }));
     }),
     deleteProductById: expressAsyncHandler(async (req: Request, res: Response) => {
         const productId = req.params.productId;

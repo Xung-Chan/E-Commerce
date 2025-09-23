@@ -44,9 +44,11 @@ const ProductSchema = new Schema({
     },
     variants: {
         type: [{
-            distinctFeature: String,
-            price: Number,
-            stock: Number
+            distinctFeature: {
+                type: String, required: true
+            },
+            price: { type: Number, required: true },
+            stock: { type: Number, required: true }
         }],
         required: true
 
@@ -74,7 +76,7 @@ class ProductDao implements CRUD {
     async count(query: Partial<any>): Promise<number> {
         return await Product.countDocuments(query).exec();
     }
-    async readById(id: string): Promise<any | null> {
+    async readById(id: string): Promise<IProduct | null> {
         return await Product.findById(id).exec();
     }
     async deleteById(id: string): Promise<boolean> {
