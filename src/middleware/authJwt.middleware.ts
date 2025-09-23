@@ -37,3 +37,24 @@ export const authJwtAdmin = (req: Request, res: Response, next: NextFunction): v
         throw new ApiError(401, "Unauthorized", "Invalid token");
     }
 }
+export const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+        console.log('cooke  ' + req.cookies?.token)
+        const token = req.cookies?.token || req.headers["authorization"]?.split(" ")[1];
+        if (!token) {
+            (req as any).isLoggedIn = false;
+            return next();
+        }
+        const decoded = tokenService.verifyToken(token);
+        if (decoded.type !== 'access') {
+            (req as any).isLoggedIn = false;
+            return next();
+        }
+        (req as any).isLoggedIn = true;
+        (req as any).userId = decoded.userId;
+        next();
+    } catch (error) {
+        (req as any).isLoggedIn = false;
+        next();
+    }
+}

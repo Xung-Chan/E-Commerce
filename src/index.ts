@@ -4,7 +4,7 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
-
+import cookieParser from "cookie-parser";
 import { connect } from "./config/DB.js";
 import errorHandler from "./middleware/errorHandler.middleware.js";
 
@@ -23,8 +23,9 @@ const __dirname = path.dirname(__filename);
 
 app.use(morgan("dev"));
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, "../public")));
-
+app.use(cookieParser())
 app.engine(
     "hbs",
     engine({

@@ -8,14 +8,15 @@ import ApiError from "../utils/ApiError.js";
 import { TokenPayload } from "../utils/jwt.js";
 import { sendMail } from "./Mail.service.js";
 import { tokenService } from "./Token.service.js";
+import { LoginRequest } from "../dto/Request.dto.js";
 const authService = {
-    login: async (email: string, password: string): Promise<LoginResponseDto> => {
-        const result = await userDao.findBy({ email });
+    login: async (data: LoginRequest): Promise<LoginResponseDto> => {
+        const result = await userDao.findBy({ email: data.email });
         if (result.length === 0) {
             throw new ApiError(404, "Not Found", "User not found");
         }
         const user = result[0];
-        const isMatch = await bcrypt.compareSync(password, user.password);
+        const isMatch = await bcrypt.compareSync(data.password, user.password);
         if (!isMatch) {
             throw new ApiError(401, "Unauthorized", "Invalid password");
         }

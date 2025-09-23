@@ -10,6 +10,10 @@ const apiUrl = 'http://localhost:8000';
 
 const siteController = {
     login: (req: Request, res: Response) => {
+        console.log((req as any).isLoggedIn)
+        if ((req as any).isLoggedIn) {
+            return res.redirect('/');
+        }
         res.render('login', {
             title: 'Đăng nhập | CoreStation'
         });
