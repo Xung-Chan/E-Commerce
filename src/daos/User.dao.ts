@@ -52,7 +52,7 @@ class UserDao implements CRUD {
             email: item.email,
             password: item.password,
             fullName: item.fullName,
-            addresses: [item.address],
+            addresses: [{ address: item.address }],
             cart: [],
         });
         return await user;

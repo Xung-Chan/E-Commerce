@@ -17,13 +17,13 @@ import { slugify } from './utils/slug.js';
 
 const PORT = process.env.PORT || 8000;
 const BASE_URL = `http://localhost:${PORT}`;
-const app = express()
+const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(morgan("dev"));
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(cookieParser())
 app.engine(
@@ -48,6 +48,15 @@ app.engine(
                     chunks.push(array.slice(i, i + size));
                 }
                 return chunks;
+            },
+            hasFieldError: (errors: any[], fieldName: string) => {
+                if (!errors || !Array.isArray(errors)) return false;
+                return errors.some(error => error.field === fieldName);
+            },
+            getFieldError: (errors: any[], fieldName: string) => {
+                if (!errors || !Array.isArray(errors)) return '';
+                const error = errors.find(error => error.field === fieldName);
+                return error ? error.message : '';
             },
             times: (n: number, block: any) => {
                 let result = '';

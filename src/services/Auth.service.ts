@@ -30,8 +30,7 @@ const authService = {
         userData.password = hashedPassword;
         const user = await userDao.create(userData);
         return user;
-    }
-    ,
+    },
     forgotPassword: async (email: string): Promise<void> => {
         const result = await userDao.findBy({ email });
         if (result.length === 0) {

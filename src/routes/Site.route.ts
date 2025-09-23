@@ -11,6 +11,7 @@ siteRouter.get('/login', isLoggedIn, siteController.login);
 
 // Register
 siteRouter.get('/register', siteController.register);
+siteRouter.post('/register', siteController.registerPost);
 
 // Catalog
 siteRouter.get('/catalog', siteController.catalog);

@@ -25,6 +25,85 @@ const siteController = {
         });
     },
 
+    registerPost: async (req: Request, res: Response) => {
+        try {
+            const { email, fullName, password, address } = req.body;
+            const errors: { field: string; message: string }[] = [];
+
+            // Server-side validation
+            if (!email || !email.trim()) {
+                errors.push({ field: 'email', message: 'Email không được để trống' });
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errors.push({ field: 'email', message: 'Email không hợp lệ' });
+            }
+            if (!fullName || !fullName.trim()) {
+                errors.push({ field: 'fullName', message: 'Họ tên không được để trống' });
+            }
+            if (!password || !password.trim()) {
+                errors.push({ field: 'password', message: 'Mật khẩu không được để trống' });
+            } else if (password.length < 6) {
+                errors.push({ field: 'password', message: 'Mật khẩu phải có ít nhất 6 ký tự' });
+            }
+            if (!address || !address.trim()) {
+                errors.push({ field: 'address', message: 'Địa chỉ không được để trống' });
+            }
+            if (errors.length > 0) {
+                return res.render('register', {
+                    title: 'Đăng ký | CoreStation',
+                    errors: errors,
+                    formData: { email, fullName, address },
+                    errorMessage: 'Vui lòng kiểm tra lại thông tin đã nhập'
+                });
+            }
+
+            const response = await axios.post(`${apiUrl}/api/auth/register`, {
+                email: email.trim(),
+                fullName: fullName.trim(),
+                password: password.trim(),
+                address: address.trim()
+            });
+
+            // Đăng ký thành công
+            res.render('register', {
+                title: 'Đăng ký | CoreStation',
+                successMessage: 'Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.',
+                showLoginLink: true
+            });
+
+        } catch (error: any) {
+            console.error('Register error:', error);
+
+            // Xử lý lỗi từ API
+            if (error.response?.data) {
+                const apiError = error.response.data;
+                
+                // Nếu có lỗi validation từ API
+                if (apiError.errors && Array.isArray(apiError.errors)) {
+                    return res.render('register', {
+                        title: 'Đăng ký | CoreStation',
+                        errors: apiError.errors,
+                        formData: { email: req.body.email, fullName: req.body.fullName, address: req.body.address },
+                        errorMessage: apiError.message || 'Có lỗi xảy ra khi đăng ký'
+                    });
+                }
+
+                // Lỗi chung từ API
+                return res.render('register', {
+                    title: 'Đăng ký | CoreStation',
+                    formData: { email: req.body.email, fullName: req.body.fullName, address: req.body.address },
+                    errorMessage: apiError.message || 'Email đã được sử dụng hoặc có lỗi xảy ra'
+                });
+            }
+
+            // Lỗi kết nối
+            res.render('register', {
+                title: 'Đăng ký | CoreStation',
+                formData: { email: req.body.email, fullName: req.body.fullName, address: req.body.address },
+                errorMessage: 'Không thể kết nối đến server. Vui lòng thử lại sau.'
+            });
+        }
+    },
+
     home: async (req: Request, res: Response) => {
         // Get all categories
         const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
