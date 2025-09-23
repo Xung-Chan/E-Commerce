@@ -7,13 +7,13 @@ import fs from "fs";
 
 import { connect } from "./config/DB.js";
 import errorHandler from "./middleware/errorHandler.middleware.js";
-import productRouter from "./routes/Product.route.js";
 
-// Lấy Data mẫu (Xóa sau khi có DB)
 import apiRouter from "./routes/Api.route.js";
 import siteRouter from "./routes/Site.route.js";
 import { userDao } from "./daos/User.dao.js";
 import { uploadDir } from "./services/Image.service.js";
+import { slugify } from './utils/slug.js';
+
 
 const PORT = process.env.PORT || 8000;
 const BASE_URL = `http://localhost:${PORT}`;
@@ -39,6 +39,34 @@ app.engine(
             buildQuery: (obj: Record<string, unknown>) => {
                 const params = Object.entries(obj).filter(([, v]) => v !== undefined && v !== '');
                 return params.map(([k, v]) => `${k}=${encodeURIComponent(v as string)}`).join('&');
+            },
+            chunk: (array: any[], size: number) => {
+                if (!array || !Array.isArray(array)) return [];
+                const chunks = [];
+                for (let i = 0; i < array.length; i += size) {
+                    chunks.push(array.slice(i, i + size));
+                }
+                return chunks;
+            },
+            times: (n: number, block: any) => {
+                let result = '';
+                for (let i = 0; i < n; i++) {
+                    result += block.fn(i);
+                }
+                return result;
+            },
+            getCategoryIcon: (categoryName: string) => {
+                const icons: Record<string, string> = {
+                    'PC Gaming': 'bi-controller',
+                    'PC Văn Phòng': 'bi-pc',
+                    'Workstation': 'bi-diagram-3-fill', 
+                    'Linh kiện máy tính': 'bi-pc-display-horizontal',
+                };
+                return icons[categoryName] || 'bi-box-seam';
+            },
+            slugify: (str: string) => {
+                if (!str) return '';
+                return slugify(str);
             }
         }
     })

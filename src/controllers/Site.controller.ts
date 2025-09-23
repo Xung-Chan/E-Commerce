@@ -1,12 +1,12 @@
 //Front-end
 import axios from "axios";
 
-import { products, comments } from "../sampleData.js";
 import { Request, Response } from "express";
 import { verify } from "jsonwebtoken";
-import { Pagination } from "../utils/Pagination.js";
+import { Pagination, QueryUrl } from "../utils/Pagination.js";
 
-const apiUrl = process.env.BASE_URL;
+// Use localhost for internal API calls
+const apiUrl = 'http://localhost:8000';
 
 const siteController = {
     login: (req: Request, res: Response) => {
@@ -22,23 +22,17 @@ const siteController = {
     },
 
     home: async (req: Request, res: Response) => {
+        // Get all categories
+        const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
+        const categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
+        console.log(categories)
+
+        // Get landing products
         const landingProductsRes = await axios.get(`${apiUrl}/api/products/landing`);
-        const { bestSellers, newArrivals } = Array.isArray(landingProductsRes.data) ? landingProductsRes.data : landingProductsRes.data.data;
-
-        const pcGamingProductsRes = await axios.get(`${apiUrl}/api/products/search?categoryId=68ca511408e9904136cc0b32&limit=20`);
-        const pcGamingProducts = Array.isArray(pcGamingProductsRes.data) ? pcGamingProductsRes.data : pcGamingProductsRes.data.data;
-
-        const workstationProductsRes = await axios.get(`${apiUrl}/api/products/search?categoryId=68ca511408e9904136cc0b34&limit=20`);
-        const workstationProducts = Array.isArray(workstationProductsRes.data) ? workstationProductsRes.data : workstationProductsRes.data.data;
-
-        const componentsProductsRes = await axios.get(`${apiUrl}/api/products/search?categoryId=68ca511408e9904136cc0b35&limit=20`);
-        const componentsProducts = Array.isArray(componentsProductsRes.data) ? componentsProductsRes.data : componentsProductsRes.data.data;
-
-        // Create windows
-        const newProductsWindowSize = 4;
-        const windowSize = 6;
+        const { bestSellers, newArrivals, categoryProducts } = Array.isArray(landingProductsRes.data) ? landingProductsRes.data : landingProductsRes.data.data;
 
         // New Products
+        const newProductsWindowSize = 4;
         const windowNewProducts = [];
         for (let i = 0; i < newArrivals.length; i += newProductsWindowSize) {
             let window = newArrivals.slice(i, i + newProductsWindowSize);
@@ -47,62 +41,74 @@ const siteController = {
             }
             windowNewProducts.push(window);
         }
-        // PC Gaming
-        const windowPCGamingProducts = [];
-        for (let i = 0; i < pcGamingProducts.length; i += windowSize) {
-            let window = pcGamingProducts.slice(i, i + windowSize);
-            if (window.length < windowSize) {
-                window = window.concat(pcGamingProducts.slice(0, windowSize - window.length));
-            }
-            windowPCGamingProducts.push(window);
+
+        // Other Products
+        interface Product {
+            _id: string;
+            name: string;
+            description: string;
+            images: string[];
+            variants: Array<{
+                price: number;
+                distinctFeature: string;
+            }>;
         }
-        // Workstations
-        const windowWorkstationProducts = [];
-        for (let i = 0; i < workstationProducts.length; i += windowSize) {
-            let window = workstationProducts.slice(i, i + windowSize);
-            if (window.length < windowSize) {
-                window = window.concat(workstationProducts.slice(0, windowSize - window.length));
-            }
-            windowWorkstationProducts.push(window);
-        }
-        // Components
-        const windowComponentsProducts = [];
-        for (let i = 0; i < componentsProducts.length; i += windowSize) {
-            let window = componentsProducts.slice(i, i + windowSize);
-            if (window.length < windowSize) {
-                window = window.concat(componentsProducts.slice(0, windowSize - window.length));
-            }
-            windowComponentsProducts.push(window);
+        interface ProcessedCategoryProduct {
+            name: string;
+            categoryId: string;
+            windowProducts: Product[][];
         }
 
-        // Get all categories
-        const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
-        const categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
+        const otherProductsWindowSize = 6;
+        const processedCategoryProducts: ProcessedCategoryProduct[] = [];
+
+        if (categoryProducts && categoryProducts.length > 0) {
+            categoryProducts.forEach((category: any) => {
+                const windowOtherProducts = [];
+                if (category.products && category.products.length > 0) {
+                    for (let i = 0; i < category.products.length; i += otherProductsWindowSize) {
+                        let window = category.products.slice(i, i + otherProductsWindowSize);
+                        if (window.length < otherProductsWindowSize && category.products.length >= otherProductsWindowSize) {
+                            const remaining = otherProductsWindowSize - window.length;
+                            window = window.concat(category.products.slice(0, remaining));
+                        }
+                        windowOtherProducts.push(window);
+                    }
+                }
+
+                processedCategoryProducts.push({
+                    name: category.name,
+                    categoryId: category.categoryId,
+                    windowProducts: windowOtherProducts
+                });
+            });
+        }
 
         // Render
         res.render('home', {
             title: 'CoreStation - PC và linh kiện máy tính',
-            bestSellersProducts: bestSellers,
-            windowNewProducts: windowNewProducts,
-            windowPCGamingProducts: windowPCGamingProducts,
-            windowWorkstationsProducts: windowWorkstationProducts,
-            windowComponentsProducts: windowComponentsProducts,
-            categories: categories
+            categories: categories,
+            bestSellersProducts: bestSellers || [],
+            windowNewProducts: windowNewProducts || [],
+            categoryProducts: processedCategoryProducts || [],
         });
     },
 
     catalog: async (req: Request, res: Response) => {
-        const page = Number(req.query.page) || 1;
-        const limit = Number(req.query.limit) || 9;
+        // Type-safe query parameters using QueryUrl interface
+        const query: QueryUrl = req.query as QueryUrl;
+
+        const page = Number(query.page) || 1;
+        const limit = Number(query.limit) || 9;
 
         const {
             sortBy = '',
-            sortOrder = '',
+            sortOrder = 'desc',
             categoryId = '',
             brandId = '',
             minPrice = '',
             maxPrice = ''
-        } = req.query as any;
+        } = query;
 
         const apiParams: any = { page, limit };
         if (sortBy) apiParams.sortBy = sortBy;
@@ -116,69 +122,73 @@ const siteController = {
         const paginationData = productsRes.data?.data || productsRes.data;
         const products_catalog = Array.isArray(paginationData?.datas) ? paginationData.datas : [];
 
-        const totalPages = paginationData?.totalPages || 1;
-        const currentPage = paginationData?.page || page;
+        const pagination = new Pagination(
+            products_catalog,
+            page,
+            limit,
+            paginationData?.totalDatas || products_catalog.length
+        );
 
-        // categories & brands
         const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
         const categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
         const brandsRes = await axios.get(`${apiUrl}/api/brands`);
         const brands = Array.isArray(brandsRes.data) ? brandsRes.data : brandsRes.data.data;
 
-        // Lọc query rỗng
-        const rawQuery = { sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice };
         const filteredQuery: Record<string, string> = {};
-        Object.entries(rawQuery).forEach(([k, v]) => {
-            if (v !== undefined && v !== null && v !== '') filteredQuery[k] = String(v);
+        Object.entries({ sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice }).forEach(([k, v]) => {
+            if (v !== undefined && v !== null && v !== '') {
+                filteredQuery[k] = String(v);
+            }
         });
 
         const baseQueryString = Object.entries(filteredQuery)
-            .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
-            .join('&'); // không có page ở đây
+            .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
+            .join('&');
 
         res.render('catalog', {
             title: 'Danh mục sản phẩm | CoreStation',
             categories,
             brands,
-            products_catalog,
+            products_catalog: pagination.datas,
             query: filteredQuery,
             baseQueryString,
-            pages: Array.from({ length: totalPages }, (_, i) => ({
+            pages: Array.from({ length: pagination.totalPages }, (_, i) => ({
                 number: i + 1,
-                active: i + 1 === currentPage
+                active: i + 1 === pagination.page
             })),
-            isFirstPage: currentPage === 1,
-            isLastPage: currentPage === totalPages,
-            prevPage: currentPage > 1 ? currentPage - 1 : 1,
-            nextPage: currentPage < totalPages ? currentPage + 1 : totalPages
+            isFirstPage: !pagination.hasPrevPage,
+            isLastPage: !pagination.hasNextPage,
+            prevPage: pagination.prevPage,
+            nextPage: pagination.nextPage
         });
     },
 
-    productBySlug: (req: Request, res: Response) => {
-        const { productSlug, variantSlug } = req.params;
-        console.log("Product request:", productSlug, variantSlug);
-        const product = products.find(p => p.slug === productSlug);
-        if (!product) return res.status(404).send("Not found");
+    product: async (req: Request, res: Response) => {
+        const productRes = await axios.get(`${apiUrl}/api/products/details/${req.params.productId}`);
+        const product = productRes.data?.data || productRes.data;
 
-        let selectedVariant = product.variants?.[0];
-        if (variantSlug) {
-            const found = product.variants.find(v => v.slug === variantSlug);
-            if (!found) return res.redirect(`/product/${product.slug}`);
-            selectedVariant = found;
-        }
+        const categoryRes = await axios.get(`${apiUrl}/api/categories/${product.categoryId}`);
+        const category = categoryRes.data?.data || categoryRes.data;
 
+        const brandRes = await axios.get(`${apiUrl}/api/brands/${product.brandId}`);
+        const brand = brandRes.data?.data || brandRes.data;
+
+        // Chọn variant đầu tiên làm default nếu không có variant nào được chọn
+        const selectedVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
+
+        // Tạo mảng stars cho rating
         const stars = [1, 2, 3, 4, 5];
-        res.render("product", {
-            title: product.name,
-            product,
-            selectedVariant,
-            comments,
-            verify: true, // chưa mua hàng thì verify = false
 
-
-            stars
+        res.render('product', {
+            title: product.name || 'Chi tiết sản phẩm | CoreStation',
+            product: product,
+            category: category,
+            brand: brand,
+            selectedVariant: selectedVariant,
+            stars: stars
         });
     }
+
 }
 
 export default siteController;

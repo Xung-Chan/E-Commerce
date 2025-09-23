@@ -12,6 +12,7 @@ import { ICategory } from "../daos/Category.dao.js";
 const productController = {
     createProduct: expressAsyncHandler(async (req: Request, res: Response) => {
         const productData: CreateProductDto = req.body;
+        console.log(req.files);
         productData.images = req.files ? (req.files as Express.Multer.File[]).map(file => UPLOAD_DIR + file.filename) : [];
         const product = await productService.createProduct(productData);
         res.status(201).json(new ApiResponse(true, 201, "Product created successfully", product));
@@ -65,7 +66,7 @@ const productController = {
         const categoryProducts = [];
         for (const category of categories) {
             const products = await productService.getProductsByCategoryId(category._id.toString());
-            categoryProducts.push({ name: category.name, products });
+            categoryProducts.push({ name: category.name, categoryId: category._id.toString(), products });
         }
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", { bestSellers: bestSellers.datas, newArrivals: newArrivals.datas, categoryProducts }));
     }),

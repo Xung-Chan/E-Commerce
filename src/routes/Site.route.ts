@@ -14,8 +14,7 @@ siteRouter.get('/register', siteController.register);
 // Catalog
 siteRouter.get('/catalog', siteController.catalog);
 
+// Product details
+siteRouter.get('/product/:productId', siteController.product);
 
-
-siteRouter.get("/product/:productSlug", siteController.productBySlug);
-productRouter.get("/product/:productSlug/:variantSlug", siteController.productBySlug);
 export default siteRouter;

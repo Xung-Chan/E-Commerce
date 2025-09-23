@@ -6,6 +6,7 @@ import { UpdateProductDto } from "../dto/Update.dto.js";
 import ApiError from "../utils/ApiError.js";
 import { Pagination, QueryUrl } from "../utils/Pagination.js";
 import SortOption from "../utils/SortOption.js";
+
 const productService = {
     createProduct: async (data: CreateProductDto) => {
         const brand = await brandDao.readById(data.brandId);
@@ -48,6 +49,7 @@ const productService = {
         }
 
         if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+            filter["variants.price"] = {};
             filter["variants.price"] = {};
             if (query.minPrice !== undefined) {
                 filter["variants.price"].$gte = Number(query.minPrice);

@@ -4,29 +4,27 @@
         <i class="bi bi-star-fill me-2" style="color:#ffc107;font-size:2rem;"></i>
         <h3 class="fw-bold text-primary mb-0 flex-grow-1">Bán chạy nhất</h3>
     </div>
-
     <div id="bestSellersCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
         <div class="carousel-inner">
             {{#each bestSellersProducts}}
             <div class="carousel-item {{#if @first}}active{{/if}}">
                 <div class="row align-items-center">
                     <div class="col-md-6 mb-3 mb-md-0">
-                        <a href="/product/{{slug}}/{{variants.[0].slug}}" class="d-block">
+                        <a href="/product/{{_id}}" class="d-block">
                             <img src="{{images.[0]}}" class="card-img-top" alt="" style="height:320px;object-fit:cover;"
                                 onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                         </a>
                     </div>
                     <div class="col-md-6">
                         <h2 class="fw-bold mb-2">
-                            <a href="/product/{{slug}}/{{variants.[0].slug}}"
-                                class="text-decoration-none text-primary">{{name}}</a>
+                            <a href="/product/{{_id}}" class="text-decoration-none text-primary">{{name}}</a>
                         </h2>
                         <div class="mb-5">
                             <div class="small text-muted mb-1">{{truncate this.description 100}}</div>
                         </div>
                         <span class="text-danger fs-4 fw-bold">{{formatPrice this.variants.[0].price}} VNĐ</span>
                         <div class="mt-2">
-                            <a href="/product/{{slug}}/{{variants.[0].slug}}" class="btn btn-primary">Xem chi tiết</a>
+                            <a href="/product/{{_id}}" class="btn btn-primary">Xem chi tiết</a>
                         </div>
                     </div>
                 </div>
@@ -46,7 +44,6 @@
         <i class="bi bi-box-seam me-2" style="color:#3a86ff;font-size:2rem;"></i>
         <h3 class="fw-bold text-primary mb-0 flex-grow-1">Sản phẩm mới</h3>
     </div>
-
     <div class="card shadow mb-5 new-products-card">
         <div class="card-body py-4">
             <div id="newProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true"
@@ -58,16 +55,14 @@
                             {{#each this}}
                             <div class="col-md-3 col-6">
                                 <div class="card new-product-card product-elevate h-100 d-flex flex-column">
-                                    <a href="/product/{{slug}}/{{variants.[0].slug}}"
-                                        class="ratio ratio-4x3 rounded-top overflow-hidden d-block">
+                                    <a href="/product/{{_id}}" class="ratio ratio-4x3 rounded-top overflow-hidden d-block">
                                         <img src="{{images.[0]}}" alt=""
                                             onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';"
                                             class="w-100 h-100 object-fit-cover">
                                     </a>
                                     <div class="card-body d-flex flex-column">
                                         <h6 class="card-title product-title text-primary fw-bold mb-1">
-                                            <a href="/product/{{slug}}/{{variants.[0].slug}}"
-                                                class="text-decoration-none text-primary">{{name}}</a>
+                                            <a href="/product/{{_id}}" class="text-decoration-none text-primary">{{name}}</a>
                                         </h6>
                                         <div class="small text-muted mb-1">{{truncate description 100}}</div>
                                         <div class="price fw-bold text-danger mt-auto">{{formatPrice
@@ -92,34 +87,35 @@
         </div>
     </div>
 
-    <!-- Gaming PC -->
+    <!-- Dynamic Category Products -->
+    {{#each categoryProducts}}
     <div class="d-flex align-items-center mb-3 px-1 py-0 justify-content-between">
         <div class="d-flex align-items-center">
-            <i class="bi bi-controller me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
-            <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">Gaming PC</h4>
+            <i class="{{getCategoryIcon name}} me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
+            <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">{{name}}</h4>
         </div>
-        <a href="/catalog?categoryId=68ca511408e9904136cc0b32" class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
+        <a href="/catalog?categoryId={{categoryId}}"
+            class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
             Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
         </a>
     </div>
-
-    <div id="gamingProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
+    <div id="category{{@index}}ProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
         data-bs-interval="3000">
         <div class="carousel-inner">
-            {{#each windowPCGamingProducts}}
+            {{#each windowProducts}}
             <div class="carousel-item {{#if @first}}active{{/if}}">
                 <div class="row g-4 px-3">
                     {{#each this}}
                     <div class="col-md-2 col-6">
                         <div class="card h-100 d-flex flex-column">
-                            <a href="/product/{{slug}}/{{variants.[0].slug}}" class="d-block">
+                            <a href="/product/{{_id}}" class="d-block">
                                 <img src="{{images.[0]}}" class="card-img-top" alt=""
+                                    style="height: 150px; object-fit: cover;"
                                     onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                             </a>
                             <div class="card-body p-2 d-flex flex-column h-100">
                                 <h6 class="card-title mb-2 fw-bold">
-                                    <a href="/product/{{slug}}/{{variants.[0].slug}}"
-                                        class="text-decoration-none text-primary">{{name}}</a>
+                                    <a href="/product/{{_id}}" class="text-decoration-none text-primary">{{name}}</a>
                                 </h6>
                                 <div class="small text-muted mb-1">{{truncate description 100}}</div>
                                 <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ
@@ -132,115 +128,35 @@
             </div>
             {{/each}}
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#gamingProductsCarousel"
+        <button class="carousel-control-prev" type="button" data-bs-target="#category{{@index}}ProductsCarousel"
             data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#gamingProductsCarousel"
+        <button class="carousel-control-next" type="button" data-bs-target="#category{{@index}}ProductsCarousel"
             data-bs-slide="next">
             <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
         </button>
     </div>
-
-    <!-- Workstation -->
-    <div class="d-flex align-items-center mb-3 px-1 py-0 justify-content-between">
-        <div class="d-flex align-items-center">
-            <i class="bi bi-diagram-3-fill me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
-            <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">Workstation</h4>
-        </div>
-        <a href="/catalog?categoryId=68ca511408e9904136cc0b34"
-            class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
-            Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
-        </a>
-    </div>
-
-    <div id="workstationProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
-        data-bs-interval="3000">
-        <div class="carousel-inner">
-            {{#each windowWorkstationsProducts}}
-            <div class="carousel-item {{#if @first}}active{{/if}}">
-                <div class="row g-4">
-                    {{#each this}}
-                    <div class="col-md-2 col-6">
-                        <div class="card h-100 d-flex flex-column">
-                            <a href="/product/{{slug}}/{{variants.[0].slug}}" class="d-block">
-                                <img src="{{images.[0]}}" class="card-img-top" alt=""
-                                    onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
-                            </a>
-                            <div class="card-body p-2 d-flex flex-column h-100">
-                                <h6 class="card-title mb-2 fw-bold">
-                                    <a href="/product/{{slug}}/{{variants.[0].slug}}"
-                                        class="text-decoration-none text-primary">{{name}}</a>
-                                </h6>
-                                <div class="small text-muted mb-1">{{truncate description 100}}</div>
-                                <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{/each}}
-                </div>
-            </div>
-            {{/each}}
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#workstationProductsCarousel"
-            data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#workstationProductsCarousel"
-            data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
-        </button>
-    </div>
-
-    <!-- Components -->
-    <div class="d-flex align-items-center mb-3 px-1 py-0 justify-content-between">
-        <div class="d-flex align-items-center">
-            <i class="bi bi-pc-display-horizontal me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
-            <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">Linh kiện máy tính</h4>
-        </div>
-        <a href="/catalog?categoryId=68ca511408e9904136cc0b35"
-            class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
-            Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
-        </a>
-    </div>
-    
-    <div id="componentsProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
-        data-bs-interval="3000">
-        <div class="carousel-inner">
-            {{#each windowComponentsProducts}}
-            <div class="carousel-item {{#if @first}}active{{/if}}">
-                <div class="row g-4">
-                    {{#each this}}
-                    <div class="col-md-2 col-6">
-                        <div class="card h-100 d-flex flex-column">
-                            <a href="/product/{{slug}}/{{variants.[0].slug}}" class="d-block">
-                                <img src="{{images.[0]}}" class="card-img-top" alt=""
-                                    onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
-                            </a>
-                            <div class="card-body p-2 d-flex flex-column h-100">
-                                <h6 class="card-title mb-2 fw-bold">
-                                    <a href="/product/{{slug}}/{{variants.[0].slug}}"
-                                        class="text-decoration-none text-primary">{{name}}</a>
-                                </h6>
-                                <div class="small text-muted mb-1">{{truncate description 100}}</div>
-                                <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{/each}}
-                </div>
-            </div>
-            {{/each}}
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#componentsProductsCarousel"
-            data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#componentsProductsCarousel"
-            data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
-        </button>
-    </div>
+    {{/each}}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const carousels = document.querySelectorAll('.carousel');
+        carousels.forEach((carousel, index) => {
+            console.log(`Initializing carousel ${index}:`, carousel.id);
+            new bootstrap.Carousel(carousel, {
+                interval: 3000,
+                wrap: true,
+                keyboard: true,
+                pause: 'hover'
+            });
+        });
+        console.log('Total carousels initialized:', carousels.length);
+        const categoryCarousels = document.querySelectorAll('[id*="category"][id*="ProductsCarousel"]');
+        console.log('Category carousels found:', categoryCarousels.length);
+        categoryCarousels.forEach(carousel => {
+            console.log('Category carousel ID:', carousel.id);
+        });
+    });
+</script>

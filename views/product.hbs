@@ -21,36 +21,57 @@
         <!-- Info -->
         <div class="col-lg-6 d-flex flex-column h-100 info-col">
             <div class="top-info">
-                <h2 class="fw-bold mb-2">{{product.name}}</h2>
-                <div class="mb-2">
-                    <span class="text-muted">Brand:</span>
-                    <strong>{{product.brandId.name}}</strong>
+                <h2 class="fw-bold mb-3">{{product.name}}</h2>
+                <div class="mb-3">
+                    <span class="text-muted">Thương hiệu:</span>
+                    <strong class="ms-2">{{brand.name}}</strong>
                 </div>
-                <div class="desc-scroll mb-2">
-                    {{product.description}}
+                <div class="mb-3">
+                    <span class="text-muted">Danh mục:</span>
+                    <strong class="ms-2">{{category.name}}</strong>
+                </div>
+                <div class="desc-scroll mb-3" style="max-height: 120px; overflow-y: auto;">
+                    <span class="text-muted">Mô tả:</span>
+                    <div class="mt-2">{{product.description}}</div>
                 </div>
             </div>
 
-            <!-- Spacer lấp đầy chiều cao khả dụng -->
-            <div class="flex-grow-1"></div>
-
-            <!-- Variants (phần đáy) -->
-            <div class="btn-group w-100 flex-wrap mb-2 mt-auto" role="group" aria-label="Chọn cấu hình">
-                {{#each product.variants}}
-                <a href="/product/{{../product.slug}}/{{this.slug}}"
-                    class="variant-link btn mb-2 me-2 {{#if (eq this.slug ../selectedVariant.slug)}}btn-primary text-white border-primary{{else}}btn-outline-primary text-primary{{/if}}"
-                    data-price="{{this.price}}" data-variant="{{this.slug}}"
-                    style="min-width:180px; text-align:left; position:relative;">
-                    <i class="bi bi-cpu me-1"></i>{{this.diffTitle}}
-                </a>
-                {{/each}}
+            <!-- Variants -->
+            <div class="mb-3">
+                <span class="text-muted">Cấu hình:</span>
+                <div class="btn-group-vertical w-100 mt-2" role="group" aria-label="Chọn cấu hình">
+                    {{#each product.variants}}
+                    <button type="button"
+                        class="variant-btn btn mb-2 {{#if @first}}btn-primary text-white{{else}}btn-outline-primary{{/if}}"
+                        data-price="{{this.price}}" data-feature="{{this.distinctFeature}}" data-stock="{{this.stock}}"
+                        style="text-align:left; padding: 12px 16px;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="bi bi-cpu me-2"></i>{{this.distinctFeature}}
+                            </div>
+                            <div class="fw-bold text-end">
+                                {{formatPrice this.price}} VNĐ
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-1">Còn lại: {{this.stock}} sản phẩm</small>
+                    </button>
+                    {{/each}}
+                </div>
             </div>
 
             <div class="mb-3">
-                <span class="text-muted">Giá:</span>
-                <span id="productPrice" class="fs-4 fw-bold text-danger">
-                    {{#if selectedVariant}}{{formatPrice selectedVariant.price}} VNĐ{{/if}}
-                </span>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Giá:</span>
+                    <span id="productPrice" class="fs-4 fw-bold text-danger">
+                        {{#if selectedVariant}}{{formatPrice selectedVariant.price}} VNĐ{{else}}{{formatPrice product.variants.[0].price}} VNĐ{{/if}}
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <span class="text-muted">Kho:</span>
+                    <span id="productStock" class="fw-bold">
+                        {{#if selectedVariant}}{{selectedVariant.stock}}{{else}}{{product.variants.[0].stock}}{{/if}} sản phẩm
+                    </span>
+                </div>
             </div>
 
             <div class="d-flex gap-3 mb-4">
@@ -75,8 +96,8 @@
                     </div>
                     <div>
                         <div style="letter-spacing:2px;">
-                            {{#each stars}}
-                            {{#if (lte this ../product.rate)}}
+                            {{#each ../stars}}
+                            {{#if (lte this ../../product.rate)}}
                             <span class="text-warning" style="font-size:1.7rem;">★</span>
                             {{else}}
                             <span class="text-secondary" style="font-size:1.7rem;">★</span>
@@ -96,7 +117,7 @@
                     <div class="card-body d-flex flex-row align-items-center gap-3">
                         <span class="me-2 text-nowrap">Đánh giá của bạn:</span>
                         <div class="rating-stars" style="font-size:1.7rem;">
-                            {{#each stars}}
+                            {{#each ../stars}}
                             <input type="radio" class="d-none" name="rating" id="star{{this}}" value="{{this}}">
                             <label for="star{{this}}" class="star-label"
                                 style="cursor:pointer; color:#ccc; margin:0 2px;">★</label>
@@ -205,6 +226,7 @@
         });
 
         (function () {
+            // Xử lý ảnh thumbnail
             const mainImg = document.getElementById('mainImage');
             document.querySelectorAll('.thumb-btn img').forEach(img => {
                 img.parentElement.addEventListener('click', () => {
@@ -214,47 +236,40 @@
                 });
             });
 
+            // Xử lý variant selection
             const priceEl = document.getElementById('productPrice');
-            const variantLinks = document.querySelectorAll('.variant-link');
-            const productSlug = "{{product.slug}}"; // Lấy slug sản phẩm từ server
+            const stockEl = document.getElementById('productStock');
+            const variantBtns = document.querySelectorAll('.variant-btn');
 
-            variantLinks.forEach(a => {
-                a.addEventListener('click', (e) => {
+            variantBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
                     e.preventDefault();
 
-                    variantLinks.forEach(x => {
-                        x.classList.remove('btn-primary', 'active', 'text-white', 'border-primary');
-                        x.classList.remove('btn-outline-primary', 'text-primary');
-                        x.classList.add('btn-outline-primary', 'text-primary');
+                    // Xóa active state từ tất cả buttons
+                    variantBtns.forEach(b => {
+                        b.classList.remove('btn-primary', 'text-white');
+                        b.classList.add('btn-outline-primary');
                     });
-                    a.classList.remove('btn-outline-primary', 'text-primary');
-                    a.classList.add('btn-primary', 'active', 'text-white', 'border-primary');
 
-                    const price = Number(a.dataset.price || 0);
-                    if (!isNaN(price)) priceEl.textContent = price.toLocaleString('vi-VN') + ' VNĐ';
+                    // Thêm active state cho button được chọn
+                    btn.classList.remove('btn-outline-primary');
+                    btn.classList.add('btn-primary', 'text-white');
 
-                    const variantSlug = a.getAttribute('href').split('/').pop();
-                    const newUrl = `/product/${productSlug}/${variantSlug}`;
-                    history.pushState({ variant: variantSlug }, '', newUrl);
+                    // Cập nhật giá và số lượng kho
+                    const price = Number(btn.dataset.price || 0);
+                    const stock = Number(btn.dataset.stock || 0);
+                    const feature = btn.dataset.feature || '';
+
+                    if (!isNaN(price)) {
+                        priceEl.textContent = price.toLocaleString('vi-VN') + ' VNĐ';
+                    }
+                    
+                    if (!isNaN(stock)) {
+                        stockEl.textContent = stock + ' sản phẩm';
+                    }
+
+                    console.log('Variant selected:', { feature, price, stock });
                 });
-            });
-
-            window.addEventListener('popstate', (e) => {
-                const variantSlug = e.state?.variant || variantLinks[0].getAttribute('href').split('/').pop();
-                const targetLink = Array.from(variantLinks).find(a => a.getAttribute('href').endsWith(variantSlug));
-
-                if (targetLink) {
-                    variantLinks.forEach(x => {
-                        x.classList.remove('btn-primary', 'active', 'text-white', 'border-primary');
-                        x.classList.remove('btn-outline-primary', 'text-primary');
-                        x.classList.add('btn-outline-primary', 'text-primary');
-                    });
-                    targetLink.classList.remove('btn-outline-primary', 'text-primary');
-                    targetLink.classList.add('btn-primary', 'active', 'text-white', 'border-primary');
-
-                    const price = Number(targetLink.dataset.price || 0);
-                    if (!isNaN(price)) priceEl.textContent = price.toLocaleString('vi-VN') + ' VNĐ';
-                }
             });
         })();
     </script>

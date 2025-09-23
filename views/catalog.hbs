@@ -69,7 +69,6 @@
 
         <!-- Danh sách sản phẩm -->
         <main class="col-md-9 d-flex flex-column" style="min-height: 80vh;">
-            {{!-- Sắp xếp sản phẩm theo "rate", "soldCount", "createdAt" với Desc và Asc --}}
             <form method="GET" class="mb-3">
                 {{#if query.categoryId}}<input type="hidden" name="categoryId" value="{{query.categoryId}}">{{/if}}
                 {{#if query.brandId}}<input type="hidden" name="brandId" value="{{query.brandId}}">{{/if}}
