@@ -1,4 +1,6 @@
 import { tokenDao } from "../daos/Token.dao.js";
+import { userDao } from "../daos/User.dao.js";
+import ApiError from "../utils/ApiError.js";
 import { TokenPayload } from "../utils/jwt.js";
 import jwt from "jsonwebtoken";
 const SECRET_KEY = process.env.SECRET_KEY as string;
@@ -33,8 +35,13 @@ export const tokenService = {
     markUsedToken: async (id: string) => {
         return tokenDao.patchById(id, { isUsed: true });
     },
-    verifyToken: (token: string): TokenPayload => {
-        return jwt.verify(token, SECRET_KEY) as TokenPayload;
+    verifyToken: async (token: string): Promise<TokenPayload> => {
+        const payload = jwt.verify(token, SECRET_KEY) as TokenPayload;
+        const user = await userDao.findBy({ id: payload.userId });
+        if (!user ) {
+            throw new ApiError(401, "Unauthorized", "User not found");
+        }
+        return payload;
     },
 
 

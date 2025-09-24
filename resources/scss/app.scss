@@ -1,27 +1,6 @@
-// ============================================================================
-// CoreStation SCSS
-// File: app.scss
-// Purpose: Global styles grouping for layout, components & page sections.
-// ----------------------------------------------------------------------------
-// TABLE OF CONTENTS (TOC)
-//  1. Imports & Variables
-//  2. Foundations / Utilities
-//  3. Layout: Header & Navigation
-//  4. Layout: Footer
-//  5. Components: Carousel
-//  6. Components: Product Cards
-//  7. Components: Sidebar Filter / Switch
-//  8. Components: Product Detail (thumbs, rating, description)
-//  9. Section Specific (Home highlights)
-// 10. Helpers / Line Clamp
-// 11. Deprecated / Legacy (commented reference)
-// ============================================================================
-
-// 1. IMPORTS & VARIABLES -----------------------------------------------------
 @use "sass:color";
 @use 'variables' as *;
 
-// 2. FOUNDATIONS / UTILITIES -------------------------------------------------
 .main-logo {
   padding-left: 1rem;
 }
@@ -29,11 +8,9 @@
 .bg-primary {
   background-color: $primary !important;
 }
-
 .bg-primary-dark {
   background-color: color.scale($primary, $lightness: -30%) !important;
 }
-
 .text-primary {
   color: $primary !important;
 }
@@ -43,7 +20,6 @@
   border-radius: 1rem;
 }
 
-// 3. LAYOUT: HEADER & NAVIGATION ---------------------------------------------
 .dropdown:hover>.dropdown-menu {
   display: block;
 }
@@ -109,8 +85,27 @@
   padding: 0.35em 0.6em;
 }
 
+.btn.btn-user {
+  background: #fff;
+  color: $primary;
+  transition: box-shadow 0.2s, background 0.2s;
+  text-decoration: none;
+  border: 1px solid rgba($primary, 0.2);
+}
 
-// 4. LAYOUT: FOOTER ----------------------------------------------------------
+.btn-user:hover,
+.btn-user:focus {
+  background-color: color.scale($primary, $lightness: +95%);
+  color: $primary !important;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba($primary, 0.15);
+}
+
+.user-label {
+  font-weight: 500;
+}
+
+
 .footer-custom {
   background: #f8f9fa;
   border-top: 2px solid #edf1ff;
@@ -146,54 +141,367 @@
   vertical-align: middle;
 }
 
+// BASE: Carousel navigation (refactored to use inline SVG .carousel-icon)
 .carousel {
+  > .carousel-control-prev,
+  > .carousel-control-next {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
 
-  >.carousel-control-prev,
-  // 5. COMPONENTS: CAROUSEL ----------------------------------------------------
-  .carousel {
+// Unified button style
+.carousel-nav {
+  width: 3.25rem;
+  height: 3.25rem;
+  background: transparent !important;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  opacity: 1 !important;
+  // remove transition để không có cảm giác đổi trạng thái khi hover
+  transition: none;
+  color: $primary;
+}
+
+// Giữ icon cố định
+.carousel-nav .carousel-icon { width: 2rem; height: 2rem; display: block; }
+
+// Loại bỏ mọi thay đổi ở hover/focus/active (một màu tuyệt đối)
+.carousel-nav:hover,
+.carousel-nav:focus,
+.carousel-nav:active {
+  background: transparent !important;
+  opacity: 1 !important;
+  color: $primary !important;
+  outline: none !important;
+  transform: none !important;
+}
+
+// Ghi đè rule mặc định Bootstrap làm mờ khi hover
+.carousel-control-prev:hover,
+.carousel-control-prev:focus,
+.carousel-control-next:hover,
+.carousel-control-next:focus {
+  opacity: 1 !important;
+}
+
+// Smaller on mobile
+@media (max-width: 576px) {
+  .carousel-nav {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+  .carousel-nav .carousel-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+// Best Sellers specific wrapper & controls
+.best-sellers-wrapper {
+  position: relative;
+  background: linear-gradient(135deg, #edf3ff 0%, #ffffff 60%);
+  border: 1px solid rgba($primary, 0.12);
+  border-radius: 1.25rem;
+  padding: 0.75rem 0 1.5rem;
+  box-shadow: 0 4px 18px -4px rgba($primary, 0.18), 0 2px 6px -2px rgba($primary, 0.12);
+
+  #bestSellersCarousel {
+    .carousel-inner {
+      padding: 0 2rem; // spacing so content not hidden by outer negative arrows
+    }
 
     >.carousel-control-prev,
     >.carousel-control-next {
+      position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 32px !important;
-      height: 32px;
-      border-radius: 50%;
+      width: 3.5rem;
+      height: 3.5rem;
       opacity: 1;
-      z-index: 2;
-      padding: 0;
-      background: transparent;
-      transition: background .2s, box-shadow .2s;
+      background: transparent !important;
+      border-radius: 50%;
+      box-shadow: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
+    // Wider edge placement for desktop
     >.carousel-control-prev {
-      left: -50px;
+      left: -3.25rem;
     }
 
     >.carousel-control-next {
-      right: -50px;
+      right: -3.25rem;
     }
 
     >.carousel-control-prev-icon,
     >.carousel-control-next-icon {
-      background-color: transparent;
-      filter: brightness(.4) saturate(100%);
-      width: 24px;
-      height: 24px;
-    }
-
-    >.carousel-control-prev:hover,
-    >.carousel-control-next:hover {
-      background: #fff;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, .18);
+      filter: none !important;
+      width: 2rem;
+      height: 2rem;
     }
   }
 
-  #bestSellersCarousel {
+  @media (max-width: 1200px) {
+
+    // large desktops narrower spacing
+    #bestSellersCarousel {
+      >.carousel-control-prev {
+        left: -2.5rem;
+      }
+
+      >.carousel-control-next {
+        right: -2.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 992px) {
+
+    // tablets
+    #bestSellersCarousel {
+      .carousel-inner {
+        padding: 0 1rem;
+      }
+
+      >.carousel-control-prev,
+      >.carousel-control-next {
+        width: 2.75rem;
+        height: 2.75rem;
+      }
+
+      >.carousel-control-prev {
+        left: -1.5rem;
+      }
+
+      >.carousel-control-next {
+        right: -1.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    #bestSellersCarousel {
+      .carousel-inner {
+        padding: 0 .5rem;
+      }
+
+      >.carousel-control-prev,
+      >.carousel-control-next {
+        width: 2.4rem;
+        height: 2.4rem;
+      }
+
+      >.carousel-control-prev {
+        left: -0.75rem;
+      }
+
+      >.carousel-control-next {
+        right: -0.75rem;
+      }
+    }
+  }
+}
+
+// New Products wrapper & controls
+.new-products-wrapper {
+  position: relative;
+
+  #newProductsCarousel {
+    .carousel-inner {
+      padding: 0 2rem; // spacing for outer controls
+    }
+
+    >.carousel-control-prev,
+    >.carousel-control-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3.5rem;
+      height: 3.5rem;
+      opacity: 1;
+      background: transparent !important;
+      border-radius: 50%;
+      box-shadow: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    >.carousel-control-prev {
+      left: -3.25rem;
+    }
+
+    >.carousel-control-next {
+      right: -3.25rem;
+    }
 
     >.carousel-control-prev-icon,
     >.carousel-control-next-icon {
-      filter: brightness(0) saturate(100%);
+      filter: none !important;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    #newProductsCarousel {
+      >.carousel-control-prev {
+        left: -2.5rem;
+      }
+
+      >.carousel-control-next {
+        right: -2.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 992px) {
+    #newProductsCarousel {
+      .carousel-inner {
+        padding: 0 1rem;
+      }
+
+      >.carousel-control-prev,
+      >.carousel-control-next {
+        width: 2.75rem;
+        height: 2.75rem;
+      }
+
+      >.carousel-control-prev {
+        left: -1.5rem;
+      }
+
+      >.carousel-control-next {
+        right: -1.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    #newProductsCarousel {
+      .carousel-inner {
+        padding: 0 .5rem;
+      }
+
+      >.carousel-control-prev,
+      >.carousel-control-next {
+        width: 2.4rem;
+        height: 2.4rem;
+      }
+
+      >.carousel-control-prev {
+        left: -0.75rem;
+      }
+
+      >.carousel-control-next {
+        right: -0.75rem;
+      }
+    }
+  }
+}
+
+// Category Products wrapper & controls
+.category-products-wrapper {
+  position: relative;
+
+  .carousel {
+    .carousel-inner {
+      padding: 0 2rem; // spacing for outer controls
+    }
+
+    >.carousel-control-prev,
+    >.carousel-control-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3.5rem;
+      height: 3.5rem;
+      opacity: 1;
+      background: transparent !important;
+      border-radius: 50%;
+      box-shadow: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    >.carousel-control-prev {
+      left: -3.25rem;
+    }
+
+    >.carousel-control-next {
+      right: -3.25rem;
+    }
+
+    >.carousel-control-prev-icon,
+    >.carousel-control-next-icon {
+      filter: none !important;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    .carousel {
+      >.carousel-control-prev {
+        left: -2.5rem;
+      }
+
+      >.carousel-control-next {
+        right: -2.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 992px) {
+    .carousel {
+      .carousel-inner {
+        padding: 0 1rem;
+      }
+
+      >.carousel-control-prev,
+      >.carousel-control-next {
+        width: 2.75rem;
+        height: 2.75rem;
+      }
+
+      >.carousel-control-prev {
+        left: -1.5rem;
+      }
+
+      >.carousel-control-next {
+        right: -1.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .carousel {
+      .carousel-inner {
+        padding: 0 .5rem;
+      }
+
+      >.carousel-control-prev,
+      >.carousel-control-next {
+        width: 2.4rem;
+        height: 2.4rem;
+      }
+
+      >.carousel-control-prev {
+        left: -0.75rem;
+      }
+
+      >.carousel-control-next {
+        right: -0.75rem;
+      }
     }
   }
 
@@ -429,3 +737,59 @@
     scrollbar-width: thin;
   }
 }
+
+// OVERRIDE: Widen New Products carousel nav buttons (requested)
+.new-products-wrapper {
+  #newProductsCarousel {
+    > .carousel-control-prev.carousel-nav,
+    > .carousel-control-next.carousel-nav {
+      width: 3.9rem; // broader click target
+      height: 3.9rem;
+      z-index: 5; // ensure above card edges
+    }
+    > .carousel-control-prev.carousel-nav { left: -4.1rem; }
+    > .carousel-control-next.carousel-nav { right: -4.1rem; }
+  }
+
+  // Tablet: reduce a bit so không tràn quá xa
+  @media (max-width: 992px) {
+    #newProductsCarousel {
+      > .carousel-control-prev.carousel-nav,
+      > .carousel-control-next.carousel-nav {
+        width: 3.1rem;
+        height: 3.1rem;
+      }
+      > .carousel-control-prev.carousel-nav { left: -2.2rem; }
+      > .carousel-control-next.carousel-nav { right: -2.2rem; }
+    }
+  }
+
+  // Mobile: keep compact
+  @media (max-width: 576px) {
+    #newProductsCarousel {
+      > .carousel-control-prev.carousel-nav,
+      > .carousel-control-next.carousel-nav {
+        width: 2.6rem;
+        height: 2.6rem;
+      }
+      > .carousel-control-prev.carousel-nav { left: -1rem; }
+      > .carousel-control-next.carousel-nav { right: -1rem; }
+    }
+  }
+} 
+
+// FINAL OVERRIDE: Khóa tuyệt đối trạng thái nút carousel (tránh dịch chuyển khi hover/active)
+.carousel-nav,
+.carousel-nav:hover,
+.carousel-nav:focus,
+.carousel-nav:active {
+  background: transparent !important;
+  opacity: 1 !important;
+  transform: none !important;
+  outline: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+// Đảm bảo icon không bị dịch kích thước khi reflow
+.carousel-nav .carousel-icon { display: block; line-height: 1; }

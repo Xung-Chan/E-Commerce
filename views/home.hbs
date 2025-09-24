@@ -1,10 +1,12 @@
 <div class="container mt-3">
     <!-- Best Sellers -->
-    <div class="carousel-title-bar d-flex align-items-center mb-2 px-4 py-3">
-        <i class="bi bi-star-fill me-2" style="color:#ffc107;font-size:2rem;"></i>
-        <h3 class="fw-bold text-primary mb-0 flex-grow-1">Bán chạy nhất</h3>
-    </div>
-    <div id="bestSellersCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+    <div class="best-sellers-wrapper mb-5">
+      <div class="carousel-title-bar d-flex align-items-center mb-2 px-4 py-3">
+          <i class="bi bi-star-fill me-2" style="color:#ffc107;font-size:2rem;"></i>
+          <h3 class="fw-bold text-primary mb-0 flex-grow-1">Bán chạy nhất</h3>
+      </div>
+
+      <div id="bestSellersCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             {{#each bestSellersProducts}}
             <div class="carousel-item {{#if @first}}active{{/if}}">
@@ -31,23 +33,32 @@
             </div>
             {{/each}}
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#bestSellersCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#bestSellersCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
-        </button>
+                <button class="carousel-control-prev carousel-nav" type="button" data-bs-target="#bestSellersCarousel" data-bs-slide="prev" aria-label="Previous">
+                        <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                            <path fill="currentColor" d="M11.354 1.646a.5.5 0 0 1 0 .708L6.707 8l4.647 5.646a.5.5 0 0 1-.708.708l-5-6a.5.5 0 0 1 0-.708l5-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                        <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next carousel-nav" type="button" data-bs-target="#bestSellersCarousel" data-bs-slide="next" aria-label="Next">
+                        <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                            <path fill="currentColor" d="M4.646 1.646a.5.5 0 0 1 .708 0l5 6a.5.5 0 0 1 0 .708l-5 6a.5.5 0 0 1-.708-.708L9.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                        <span class="visually-hidden">Next</span>
+                </button>
+      </div>
     </div>
 
     <!-- New Products -->
-    <div class="d-flex align-items-center mb-1 pe-4 ps-0">
-        <i class="bi bi-box-seam me-2" style="color:#3a86ff;font-size:2rem;"></i>
-        <h3 class="fw-bold text-primary mb-0 flex-grow-1">Sản phẩm mới</h3>
-    </div>
-    <div class="card shadow mb-5 new-products-card">
-        <div class="card-body py-4">
-            <div id="newProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true"
-                data-bs-interval="3000">
+    <div class="new-products-wrapper mb-5">
+        <div class="d-flex align-items-center mb-1 pe-4 ps-0">
+            <i class="bi bi-box-seam me-2" style="color:#3a86ff;font-size:2rem;"></i>
+            <h3 class="fw-bold text-primary mb-0 flex-growth-1">Sản phẩm mới</h3>
+        </div>
+
+        <div class="card shadow new-products-card">
+            <div class="card-body py-4">
+                <div id="newProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true"
+                    data-bs-interval="3000">
                 <div class="carousel-inner">
                     {{#each windowNewProducts}}
                     <div class="carousel-item {{#if @first}}active{{/if}}">
@@ -75,36 +86,45 @@
                     </div>
                     {{/each}}
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#newProductsCarousel"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#newProductsCarousel"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
-                </button>
+                                <button class="carousel-control-prev carousel-nav" type="button" data-bs-target="#newProductsCarousel"
+                                        data-bs-slide="prev" aria-label="Previous">
+                                        <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                            <path fill="currentColor" d="M11.354 1.646a.5.5 0 0 1 0 .708L6.707 8l4.647 5.646a.5.5 0 0 1-.708.708l-5-6a.5.5 0 0 1 0-.708l5-6a.5.5 0 0 1 .708 0z"/>
+                                        </svg>
+                                        <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next carousel-nav" type="button" data-bs-target="#newProductsCarousel"
+                                        data-bs-slide="next" aria-label="Next">
+                                        <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                            <path fill="currentColor" d="M4.646 1.646a.5.5 0 0 1 .708 0l5 6a.5.5 0 0 1 0 .708l-5 6a.5.5 0 0 1-.708-.708L9.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                        <span class="visually-hidden">Next</span>
+                                </button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Dynamic Category Products -->
     {{#each categoryProducts}}
-    <div class="d-flex align-items-center mb-3 px-1 py-0 justify-content-between">
-        <div class="d-flex align-items-center">
-            <i class="{{getCategoryIcon name}} me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
-            <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">{{name}}</h4>
+    <div class="category-products-wrapper mb-5">
+        <div class="d-flex align-items-center mb-3 px-1 py-0 justify-content-between">
+            <div class="d-flex align-items-center">
+                <i class="{{getCategoryIcon name}} me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
+                <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">{{name}}</h4>
+            </div>
+            <a href="/catalog?categoryId={{categoryId}}"
+                class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
+                Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
+            </a>
         </div>
-        <a href="/catalog?categoryId={{categoryId}}"
-            class="text-primary fw-semibold text-decoration-none d-flex align-items-center">
-            Xem tất cả <i class="bi bi-chevron-right ms-1" style="font-size:1.1rem;"></i>
-        </a>
-    </div>
-    <div id="category{{@index}}ProductsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-wrap="true"
-        data-bs-interval="3000">
+
+        <div id="category{{@index}}ProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true"
+            data-bs-interval="3000">
         <div class="carousel-inner">
             {{#each windowProducts}}
             <div class="carousel-item {{#if @first}}active{{/if}}">
-                <div class="row g-4 px-3">
+                <div class="row g-4 px-3" style="height: 400px;">
                     {{#each this}}
                     <div class="col-md-2 col-6">
                         <div class="card h-100 d-flex flex-column">
@@ -113,7 +133,7 @@
                                     style="height: 150px; object-fit: cover;"
                                     onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                             </a>
-                            <div class="card-body p-2 d-flex flex-column h-100">
+                            <div class="card-body p-2 d-flex flex-column h-100" style="min-height: 150px;">
                                 <h6 class="card-title mb-2 fw-bold">
                                     <a href="/product/{{_id}}" class="text-decoration-none text-primary">{{name}}</a>
                                 </h6>
@@ -128,14 +148,21 @@
             </div>
             {{/each}}
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#category{{@index}}ProductsCarousel"
-            data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#category{{@index}}ProductsCarousel"
-            data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
-        </button>
+                <button class="carousel-control-prev carousel-nav" type="button" data-bs-target="#category{{@index}}ProductsCarousel"
+                        data-bs-slide="prev" aria-label="Previous">
+                        <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                            <path fill="currentColor" d="M11.354 1.646a.5.5 0 0 1 0 .708L6.707 8l4.647 5.646a.5.5 0 0 1-.708.708l-5-6a.5.5 0 0 1 0-.708l5-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                        <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next carousel-nav" type="button" data-bs-target="#category{{@index}}ProductsCarousel"
+                        data-bs-slide="next" aria-label="Next">
+                        <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                            <path fill="currentColor" d="M4.646 1.646a.5.5 0 0 1 .708 0l5 6a.5.5 0 0 1 0 .708l-5 6a.5.5 0 0 1-.708-.708L9.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                        <span class="visually-hidden">Next</span>
+                </button>
+        </div>
     </div>
     {{/each}}
 </div>

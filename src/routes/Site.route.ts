@@ -11,16 +11,20 @@ siteRouter.get('/login', isLoggedIn, siteController.login);
 siteRouter.post('/login', siteController.loginPost);
 
 // Logout
+siteRouter.get('/logout', siteController.logout);
 siteRouter.post('/logout', siteController.logout);
 
 // Register
-siteRouter.get('/register', siteController.register);
+siteRouter.get('/register', isLoggedIn, siteController.register);
 siteRouter.post('/register', siteController.registerPost);
 
+// Profile
+siteRouter.get('/profile', isLoggedIn, siteController.profile);
+
 // Catalog
-siteRouter.get('/catalog', siteController.catalog);
+siteRouter.get('/catalog', isLoggedIn, siteController.catalog);
 
 // Product details
-siteRouter.get('/product/:productId', siteController.product);
+siteRouter.get('/product/:productId', isLoggedIn, siteController.product);
 
 export default siteRouter;

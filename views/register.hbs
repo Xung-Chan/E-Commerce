@@ -52,10 +52,10 @@
                             {{/if}}
                         </div>
                         <div class="mb-3">
-                            <label for="fullName" class="form-label fw-semibold">Họ tên người dùng</label>
+                            <label for="fullName" class="form-label fw-semibold">Họ và tên</label>
                             <input type="text"
                                 class="form-control {{#if (hasFieldError errors 'fullName')}}is-invalid{{/if}}"
-                                id="fullName" name="fullName" placeholder="Nhập họ tên"
+                                id="fullName" name="fullName" placeholder="Nhập họ và tên"
                                 value="{{#if formData}}{{formData.fullName}}{{/if}}" required>
                             {{#if (getFieldError errors 'fullName')}}
                             <div class="invalid-feedback">{{getFieldError errors 'fullName'}}</div>

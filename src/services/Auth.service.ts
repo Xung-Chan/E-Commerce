@@ -50,7 +50,7 @@ const authService = {
     },
     resetPassword: async (token: string, newPassword: string): Promise<void> => {
         try {
-            const payload: TokenPayload = tokenService.verifyToken(token);
+            const payload: TokenPayload = await tokenService.verifyToken(token);
             if (payload.type !== 'reset') {
                 throw new ApiError(400, "Bad Request", "Invalid token type");
             }
@@ -84,7 +84,7 @@ const authService = {
     },
     refreshToken: async (refreshToken: string): Promise<LoginResponseDto> => {
         try {
-            const tokenPayload = tokenService.verifyToken(refreshToken);
+            const tokenPayload =await tokenService.verifyToken(refreshToken);
             if (tokenPayload.type !== 'refresh') {
                 throw new ApiError(400, "Bad Request", "Invalid token type");
             }

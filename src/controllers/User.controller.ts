@@ -20,7 +20,7 @@ const userController = {
         if (!token) {
             throw new ApiError(401, "Unauthorized", "No token provided");
         }
-        const payload = tokenService.verifyToken(token);
+        const payload = await tokenService.verifyToken(token);  
         if (payload.userId !== userId && payload.role !== 'admin') {
             throw new ApiError(403, "Forbidden", "Access denied");
         }

@@ -8,15 +8,61 @@ import { Pagination, QueryUrl } from "../utils/Pagination.js";
 // Use localhost for internal API calls
 const apiUrl = 'http://localhost:8000';
 
+// Helper function to prepare common data for all views (especially header)
+const getCommonViewData = async (req: Request) => {
+    const isLoggedIn = (req as any).isLoggedIn || false;
+    const userId = (req as any).userId || null;
+    
+    let user = null;
+    let categories = [];
+    
+    try {
+        // Get categories for navigation
+        const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
+        categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
+        
+        // Get user data if logged in
+        if (isLoggedIn && userId) {
+            const token = req.cookies?.token;
+            if (token) {
+                try {
+                    const userRes = await axios.get(`${apiUrl}/api/users/profile/me`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    user = userRes.data?.data || userRes.data;
+                } catch (userError) {
+                    console.log('Could not fetch user data');
+                    return {
+                        isLoggedIn,
+                        categories
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching common view data:', error);
+    }
+    
+    return {
+        isLoggedIn,
+        user,
+        categories,
+        userId
+    };
+};
+
 const siteController = {
 
-    login: (req: Request, res: Response) => {
-        const isLoggedIn = (req as any).isLoggedIn || false;
-        if (isLoggedIn) {
+    login: async (req: Request, res: Response) => {
+        const commonData = await getCommonViewData(req);
+        
+        if (commonData.isLoggedIn) {
             return res.redirect('/');
         }
+        
         res.render('login', {
-            title: 'Đăng nhập | CoreStation'
+            title: 'Đăng nhập | CoreStation',
+            ...commonData
         });
     },
 
@@ -47,26 +93,17 @@ const siteController = {
                 password: password.trim()
             });
 
-            // if (response.data && response.data.success) {
-            //     const token = response.data.data?.accessToken || response.data.data?.token;
-                
-            //     if (token) {
-            //         // Set cookie với token
-            //         res.cookie('token', token, {
-            //             httpOnly: true,
-            //             secure: process.env.NODE_ENV === 'production',
-            //             maxAge: 2 * 60 * 60 * 1000, // 24 hours
-            //             sameSite: 'lax'
-            //         });
-            //     }
-            //     return res.redirect('/');
-            // } else {
-            //     return res.render('login', {
-            //         title: 'Đăng nhập | CoreStation',
-            //         formData: { email },
-            //         errorMessage: response.data?.message || 'Đăng nhập thất bại'
-            //     });
-            // }
+            if (response.data && response.data.success) {
+                const token = response.data.data?.accessToken || response.data.data?.token;
+                if (token) { res.cookie('token', token); }
+                return res.redirect('/');
+            } else {
+                return res.render('login', {
+                    title: 'Đăng nhập | CoreStation',
+                    formData: { email },
+                    errorMessage: response.data?.message || 'Đăng nhập thất bại'
+                });
+            }
             res.redirect('/');
 
         } catch (error: any) {
@@ -102,9 +139,12 @@ const siteController = {
         }
     },
 
-    register: (req: Request, res: Response) => {
+    register: async (req: Request, res: Response) => {
+        const commonData = await getCommonViewData(req);
+        
         res.render('register', {
-            title: 'Đăng ký | CoreStation'
+            title: 'Đăng ký | CoreStation',
+            ...commonData // Spread common data for header
         });
     },
 
@@ -180,17 +220,18 @@ const siteController = {
         }
     },
 
+    profile: async (req: Request, res: Response) => {
+        const commonData = await getCommonViewData(req);
+        if (!commonData.isLoggedIn) {
+            return res.redirect('/login');
+        }
+        res.render('profile', {
+            title: 'Thông tin cá nhân | CoreStation',
+            ...commonData
+        });
+    },
+
     home: async (req: Request, res: Response) => {
-        // Kiểm tra trạng thái đăng nhập từ middleware
-        const isLoggedIn = (req as any).isLoggedIn || false;
-        const userId = (req as any).userId || null;
-        console.log('User login status:', isLoggedIn);
-        console.log('User ID:', userId);
-
-        // Get all categories
-        const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
-        const categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
-
         // Get landing products
         const landingProductsRes = await axios.get(`${apiUrl}/api/products/landing`);
         const { bestSellers, newArrivals, categoryProducts } = Array.isArray(landingProductsRes.data) ? landingProductsRes.data : landingProductsRes.data.data;
@@ -248,44 +289,16 @@ const siteController = {
             });
         }
 
-        // // Lấy thông tin user nếu đã đăng nhập
-        // let user = null;
-        // if (isLoggedIn && userId) {
-        //     const token = req.cookies?.token;
-        //     console.log('🎫 Getting user data for ID:', userId);
-            
-        //     // Try to get user data with token
-        //     user = await getUserData(userId, token);
-            
-        //     // Fallback: If API call fails, create basic user object from token
-        //     if (!user && token) {
-        //         try {
-        //             // Decode token to get basic user info
-        //             const { tokenService } = await import('../services/Token.service.js');
-        //             const decoded = tokenService.verifyToken(token);
-        //             user = {
-        //                 _id: decoded.userId,
-        //                 id: decoded.userId,
-        //                 email: decoded.email,
-        //                 fullName: decoded.email.split('@')[0], // Use email prefix as fallback name
-        //                 role: decoded.role
-        //             };
-        //             console.log('📋 Using token decoded user info:', user.email);
-        //         } catch (decodeError) {
-        //             console.error('💥 Token decode failed:', decodeError);
-        //         }
-        //     }
-        // }
+        // Get common data for header
+        const commonData = await getCommonViewData(req);
 
-        // Render
+        // Render với common data cho header
         res.render('home', {
-            isLoggedIn: isLoggedIn,
-            // user: user,
             title: 'CoreStation - PC và linh kiện máy tính',
-            categories: categories,
             bestSellersProducts: bestSellers || [],
             windowNewProducts: windowNewProducts || [],
             categoryProducts: processedCategoryProducts || [],
+            ...commonData
         });
     },
 
@@ -324,8 +337,6 @@ const siteController = {
             paginationData?.totalDatas || products_catalog.length
         );
 
-        const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
-        const categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
         const brandsRes = await axios.get(`${apiUrl}/api/brands`);
         const brands = Array.isArray(brandsRes.data) ? brandsRes.data : brandsRes.data.data;
 
@@ -340,9 +351,11 @@ const siteController = {
             .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
             .join('&');
 
+        // Get common data for header
+        const commonData = await getCommonViewData(req);
+
         res.render('catalog', {
             title: 'Danh mục sản phẩm | CoreStation',
-            categories,
             brands,
             products_catalog: pagination.datas,
             query: filteredQuery,
@@ -354,7 +367,8 @@ const siteController = {
             isFirstPage: !pagination.hasPrevPage,
             isLastPage: !pagination.hasNextPage,
             prevPage: pagination.prevPage,
-            nextPage: pagination.nextPage
+            nextPage: pagination.nextPage,
+            ...commonData
         });
     },
 
@@ -374,13 +388,18 @@ const siteController = {
         // Tạo mảng stars cho rating
         const stars = [1, 2, 3, 4, 5];
 
+        // Get common data for header
+        const commonData = await getCommonViewData(req);
+        console.log('Common Data:', commonData);
+
         res.render('product', {
             title: product.name || 'Chi tiết sản phẩm | CoreStation',
             product: product,
             category: category,
             brand: brand,
             selectedVariant: selectedVariant,
-            stars: stars
+            stars: stars,
+            ...commonData 
         });
     },
 

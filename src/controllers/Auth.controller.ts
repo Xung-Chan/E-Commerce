@@ -9,8 +9,6 @@ const authController = {
     login: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const data: LoginRequest = req.body;
         const result = await authService.login(data);
-        console.log('Login successful, setting cookie with token:', result.accessToken);
-        res.cookie("token", result.accessToken);
         res.status(200).json(new ApiResponse(true, 200, "Login successful", result));
     }),
     register: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
