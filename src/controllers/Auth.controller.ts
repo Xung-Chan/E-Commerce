@@ -4,15 +4,14 @@ import authService from "../services/Auth.service.js";
 import ApiResponse from "../utils/Api.response.js";
 import ApiError from "../utils/ApiError.js";
 import { LoginRequest } from "../dto/Request.dto.js";
-const authController = {
 
+const authController = {
     login: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
-        console.log(req.body)
         const data: LoginRequest = req.body;
         const result = await authService.login(data);
+        console.log('Login successful, setting cookie with token:', result.accessToken);
         res.cookie("token", result.accessToken);
         res.status(200).json(new ApiResponse(true, 200, "Login successful", result));
-
     }),
     register: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { email, password, fullName, address } = req.body;

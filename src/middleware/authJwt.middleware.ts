@@ -3,7 +3,6 @@ import ApiError from "../utils/ApiError.js";
 import { tokenService } from "../services/Token.service.js";
 export const authJwt = (req: Request, res: Response, next: NextFunction): void => {
     try {
-
         const token = req.headers["authorization"]?.split(" ")[1];
         if (!token) {
             throw new ApiError(401, "Unauthorized", "No token provided");
@@ -39,8 +38,8 @@ export const authJwtAdmin = (req: Request, res: Response, next: NextFunction): v
 }
 export const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
     try {
-        console.log('cooke  ' + req.cookies?.token)
         const token = req.cookies?.token || req.headers["authorization"]?.split(" ")[1];
+        console.log('Token log from middleware: ' + token);
         if (!token) {
             (req as any).isLoggedIn = false;
             return next();

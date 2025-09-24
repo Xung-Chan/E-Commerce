@@ -4,10 +4,14 @@ import productRouter from "./Product.route.js";
 import { isLoggedIn } from "../middleware/authJwt.middleware.js";
 const siteRouter = Router();
 //landing Page
-siteRouter.get("/", siteController.home);
+siteRouter.get("/", isLoggedIn, siteController.home);
 
 // Login
 siteRouter.get('/login', isLoggedIn, siteController.login);
+siteRouter.post('/login', siteController.loginPost);
+
+// Logout
+siteRouter.post('/logout', siteController.logout);
 
 // Register
 siteRouter.get('/register', siteController.register);

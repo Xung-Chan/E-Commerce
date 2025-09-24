@@ -9,14 +9,97 @@ import { Pagination, QueryUrl } from "../utils/Pagination.js";
 const apiUrl = 'http://localhost:8000';
 
 const siteController = {
+
     login: (req: Request, res: Response) => {
-        console.log((req as any).isLoggedIn)
-        if ((req as any).isLoggedIn) {
+        const isLoggedIn = (req as any).isLoggedIn || false;
+        if (isLoggedIn) {
             return res.redirect('/');
         }
         res.render('login', {
             title: 'Đăng nhập | CoreStation'
         });
+    },
+
+    loginPost: async (req: Request, res: Response) => {
+        try {
+            const { email, password } = req.body;
+            const errors: { field: string; message: string }[] = [];
+
+            // Server-side validation
+            if (!email || !email.trim()) {
+                errors.push({ field: 'email', message: 'Email/Số điện thoại không được để trống' });
+            }
+            if (!password || !password.trim()) {
+                errors.push({ field: 'password', message: 'Mật khẩu không được để trống' });
+            }
+            if (errors.length > 0) {
+                return res.render('login', {
+                    title: 'Đăng nhập | CoreStation',
+                    errors: errors,
+                    formData: { email },
+                    errorMessage: 'Vui lòng kiểm tra lại thông tin đăng nhập'
+                });
+            }
+
+            // Gọi API để đăng nhập
+            const response = await axios.post(`${apiUrl}/api/auth/login`, {
+                email: email.trim(),
+                password: password.trim()
+            });
+
+            // if (response.data && response.data.success) {
+            //     const token = response.data.data?.accessToken || response.data.data?.token;
+                
+            //     if (token) {
+            //         // Set cookie với token
+            //         res.cookie('token', token, {
+            //             httpOnly: true,
+            //             secure: process.env.NODE_ENV === 'production',
+            //             maxAge: 2 * 60 * 60 * 1000, // 24 hours
+            //             sameSite: 'lax'
+            //         });
+            //     }
+            //     return res.redirect('/');
+            // } else {
+            //     return res.render('login', {
+            //         title: 'Đăng nhập | CoreStation',
+            //         formData: { email },
+            //         errorMessage: response.data?.message || 'Đăng nhập thất bại'
+            //     });
+            // }
+            res.redirect('/');
+
+        } catch (error: any) {
+            console.error('Login error:', error);
+            if (error.response?.data) {
+                const apiError = error.response.data;
+                if (error.response.status === 401) {
+                    return res.render('login', {
+                        title: 'Đăng nhập | CoreStation',
+                        formData: { email: req.body.email },
+                        errorMessage: 'Email/số điện thoại hoặc mật khẩu không đúng'
+                    });
+                }
+                if (apiError.errors && Array.isArray(apiError.errors)) {
+                    return res.render('login', {
+                        title: 'Đăng nhập | CoreStation',
+                        errors: apiError.errors,
+                        formData: { email: req.body.email },
+                        errorMessage: apiError.message || 'Có lỗi xảy ra khi đăng nhập'
+                    });
+                }
+                return res.render('login', {
+                    title: 'Đăng nhập | CoreStation',
+                    formData: { email: req.body.email },
+                    errorMessage: apiError.message || 'Có lỗi xảy ra khi đăng nhập'
+                });
+            }
+            res.render('login', {
+                title: 'Đăng nhập | CoreStation',
+                formData: { email: req.body.email },
+                errorMessage: 'Không thể kết nối đến server. Vui lòng thử lại sau.'
+            });
+        }
     },
 
     register: (req: Request, res: Response) => {
@@ -56,6 +139,7 @@ const siteController = {
                 });
             }
 
+            // Gọi API để đăng ký
             const response = await axios.post(`${apiUrl}/api/auth/register`, {
                 email: email.trim(),
                 fullName: fullName.trim(),
@@ -72,12 +156,8 @@ const siteController = {
 
         } catch (error: any) {
             console.error('Register error:', error);
-
-            // Xử lý lỗi từ API
             if (error.response?.data) {
                 const apiError = error.response.data;
-                
-                // Nếu có lỗi validation từ API
                 if (apiError.errors && Array.isArray(apiError.errors)) {
                     return res.render('register', {
                         title: 'Đăng ký | CoreStation',
@@ -86,16 +166,12 @@ const siteController = {
                         errorMessage: apiError.message || 'Có lỗi xảy ra khi đăng ký'
                     });
                 }
-
-                // Lỗi chung từ API
                 return res.render('register', {
                     title: 'Đăng ký | CoreStation',
                     formData: { email: req.body.email, fullName: req.body.fullName, address: req.body.address },
                     errorMessage: apiError.message || 'Email đã được sử dụng hoặc có lỗi xảy ra'
                 });
             }
-
-            // Lỗi kết nối
             res.render('register', {
                 title: 'Đăng ký | CoreStation',
                 formData: { email: req.body.email, fullName: req.body.fullName, address: req.body.address },
@@ -105,10 +181,15 @@ const siteController = {
     },
 
     home: async (req: Request, res: Response) => {
+        // Kiểm tra trạng thái đăng nhập từ middleware
+        const isLoggedIn = (req as any).isLoggedIn || false;
+        const userId = (req as any).userId || null;
+        console.log('User login status:', isLoggedIn);
+        console.log('User ID:', userId);
+
         // Get all categories
         const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
         const categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
-        console.log(categories)
 
         // Get landing products
         const landingProductsRes = await axios.get(`${apiUrl}/api/products/landing`);
@@ -167,8 +248,39 @@ const siteController = {
             });
         }
 
+        // // Lấy thông tin user nếu đã đăng nhập
+        // let user = null;
+        // if (isLoggedIn && userId) {
+        //     const token = req.cookies?.token;
+        //     console.log('🎫 Getting user data for ID:', userId);
+            
+        //     // Try to get user data with token
+        //     user = await getUserData(userId, token);
+            
+        //     // Fallback: If API call fails, create basic user object from token
+        //     if (!user && token) {
+        //         try {
+        //             // Decode token to get basic user info
+        //             const { tokenService } = await import('../services/Token.service.js');
+        //             const decoded = tokenService.verifyToken(token);
+        //             user = {
+        //                 _id: decoded.userId,
+        //                 id: decoded.userId,
+        //                 email: decoded.email,
+        //                 fullName: decoded.email.split('@')[0], // Use email prefix as fallback name
+        //                 role: decoded.role
+        //             };
+        //             console.log('📋 Using token decoded user info:', user.email);
+        //         } catch (decodeError) {
+        //             console.error('💥 Token decode failed:', decodeError);
+        //         }
+        //     }
+        // }
+
         // Render
         res.render('home', {
+            isLoggedIn: isLoggedIn,
+            // user: user,
             title: 'CoreStation - PC và linh kiện máy tính',
             categories: categories,
             bestSellersProducts: bestSellers || [],
@@ -270,8 +382,12 @@ const siteController = {
             selectedVariant: selectedVariant,
             stars: stars
         });
-    }
+    },
 
+    logout: (req: Request, res: Response) => {
+        res.clearCookie('token');
+        res.redirect('/');
+    }
 }
 
 export default siteController;
