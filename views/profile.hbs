@@ -1,27 +1,37 @@
-
 <div class="container py-4">
 	<h2 class="fw-bold text-primary mb-4">Thông tin cá nhân</h2>
 	<div class="row g-4">
-		<!-- Form chỉnh sửa email/mật khẩu -->
+		<!-- Cập nhật Email + Họ tên -->
 		<div class="col-lg-5">
-			<form id="profileForm" method="POST" action="/profile/update" class="card shadow-sm p-4 mb-4">
+			<form id="emailNameForm" method="POST" action="/profile/update-user" class="card shadow-sm p-4 mb-4">
+				<h5 class="fw-bold mb-3">Cập nhật thông tin</h5>
+				<div class="mb-3">
+					<label for="fullName" class="form-label">Họ và tên</label>
+					<input type="text" class="form-control" id="fullName" name="fullName" value="{{user.fullName}}" required>
+				</div>
 				<div class="mb-3">
 					<label for="email" class="form-label">Email</label>
 					<input type="email" class="form-control" id="email" name="email" value="{{user.email}}" required>
 				</div>
+				<button type="submit" class="btn btn-primary">Lưu</button>
+			</form>
+
+			<!-- Đổi mật khẩu -->
+			<form id="passwordForm" method="POST" action="/profile/update-password" class="card shadow-sm p-4">
+				<h5 class="fw-bold mb-3">Đổi mật khẩu</h5>
 				<div class="mb-3">
-					<label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
-					<input type="password" class="form-control" id="currentPassword" name="currentPassword" placeholder="Nhập mật khẩu hiện tại" required>
+					<label for="oldPassword" class="form-label">Mật khẩu hiện tại</label>
+					<input type="password" class="form-control" id="oldPassword" name="oldPassword" placeholder="Nhập mật khẩu hiện tại" required>
 				</div>
 				<div class="mb-3">
-					<label for="password" class="form-label">Mật khẩu mới</label>
-					<input type="password" class="form-control" id="password" name="password" placeholder="Để trống nếu không đổi">
+					<label for="newPassword" class="form-label">Mật khẩu mới</label>
+					<input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới" required>
 				</div>
 				<div class="mb-3">
 					<label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
-					<input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu mới">
+					<input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" required>
 				</div>
-				<button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+				<button type="submit" class="btn btn-warning">Đổi mật khẩu</button>
 			</form>
 		</div>
 
@@ -30,23 +40,38 @@
 			<div class="card shadow-sm p-4 mb-4">
 				<h5 class="fw-bold mb-3">Địa chỉ giao hàng</h5>
 				{{#if user.addresses.length}}
-					<ul class="list-group mb-3">
-						{{#each user.addresses}}
-							<li class="list-group-item d-flex justify-content-between align-items-center">
-								<span>{{this.address}}</span>
-								<form method="POST" action="/profile/address/delete" class="d-inline">
-									<input type="hidden" name="address" value="{{this}}">
-									<button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
-								</form>
-							</li>
-						{{/each}}
-					</ul>
+				<ul class="list-group mb-3">
+					{{#each user.addresses}}
+					<li class="list-group-item d-flex align-items-center address-item" data-address="{{this.address}}">
+						<!-- Nút sửa/xóa -->
+						<div class="address-view d-flex align-items-center flex-grow-1">
+							<span class="address-text me-2">{{this.address}}</span>
+						</div>
+						<div class="d-flex align-items-center ms-2 gap-2 action-btns">
+							<button type="button" class="btn btn-sm btn-outline-secondary btn-edit-address">Sửa</button>
+							<form method="POST" action="/profile/addresses/me/{{this._id}}" class="d-inline">
+								<input type="hidden" name="address" value="{{this}}">
+								<button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
+							</form>
+						</div>
+						<!-- Chỉnh sửa địa chỉ -->
+						<form method="POST" action="/profile/addresses/me/update/{{this._id}}"
+							class="address-edit-form d-none flex-grow-1 d-flex align-items-center gap-2 mb-0 ms-0">
+							<input type="hidden" name="oldAddress" value="{{this.address}}">
+							<input type="text" name="newAddress" class="form-control form-control-sm"
+								value="{{this.address}}" required style="max-width:320px;">
+							<button type="submit" class="btn btn-sm btn-primary">Lưu</button>
+							<button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-edit">Hủy</button>
+						</form>
+					</li>
+					{{/each}}
+				</ul>
 				{{else}}
-					<div class="text-muted mb-3">Chưa có địa chỉ nào.</div>
+				<div class="text-muted mb-3">Chưa có địa chỉ nào.</div>
 				{{/if}}
 
-				<!-- Form thêm địa chỉ mới -->
-				<form method="POST" action="/addresses/me" class="d-flex gap-2">
+				<!-- Thêm địa chỉ mới -->
+				<form method="POST" action="/profile/addresses/me" class="d-flex gap-2">
 					<input type="text" class="form-control" name="newAddress" placeholder="Nhập địa chỉ mới" required>
 					<button type="submit" class="btn btn-success">Thêm</button>
 				</form>
@@ -54,3 +79,23 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	document.querySelectorAll('.btn-edit-address').forEach(btn => {
+		btn.addEventListener('click', function () {
+			const item = btn.closest('.address-item');
+			item.querySelector('.address-view').classList.add('d-none');
+			item.querySelector('.address-edit-form').classList.remove('d-none');
+			item.querySelector('input[name="newAddress"]').focus();
+			item.querySelector('.action-btns').classList.add('d-none');
+		});
+	});
+	document.querySelectorAll('.btn-cancel-edit').forEach(btn => {
+		btn.addEventListener('click', function () {
+			const item = btn.closest('.address-item');
+			item.querySelector('.address-edit-form').classList.add('d-none');
+			item.querySelector('.address-view').classList.remove('d-none');
+			item.querySelector('.action-btns').classList.remove('d-none');
+		});
+	});
+</script>

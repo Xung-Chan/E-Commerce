@@ -31,6 +31,7 @@ const authController = {
         res.status(200).json(new ApiResponse(true, 200, "Password has been reset successfully", null));
     }),
     changePassword: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
+        console.log('Changing password...');
         const userId = (req as any).userId;
         const { oldPassword, newPassword } = req.body;
         if (typeof newPassword !== "string" || typeof oldPassword !== "string") {

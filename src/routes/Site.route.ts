@@ -20,6 +20,12 @@ siteRouter.post('/register', siteController.registerPost);
 
 // Profile
 siteRouter.get('/profile', isLoggedIn, siteController.profile);
+siteRouter.post('/profile/addresses/me', siteController.profileAddAddress);
+siteRouter.post('/profile/addresses/me/:addressId', siteController.profileDeleteAddress);
+siteRouter.post('/profile/addresses/me/update/:addressId', siteController.profileUpdateAddress);
+siteRouter.post('/profile/update-user', isLoggedIn, siteController.profileUpdateUser);
+siteRouter.post('/profile/update-password', isLoggedIn, siteController.profileChangePassword);
+
 
 // Catalog
 siteRouter.get('/catalog', isLoggedIn, siteController.catalog);
