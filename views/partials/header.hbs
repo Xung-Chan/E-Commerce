@@ -82,22 +82,20 @@
         </div>
 
         <!-- Thanh tìm kiếm -->
-        <form class="d-flex flex-grow-1 my-2 my-lg-0" role="search">
-          <input class="form-control me-2" type="search" placeholder="Tìm kiếm sản phẩm..." aria-label="Search"
-            style="min-width: 180px; max-width: 500px;">
+        <form class="d-flex flex-grow-1 my-2 my-lg-0" role="search" method="GET" action="/catalog">
+          <input class="form-control me-2" type="search" name="name" placeholder="Tìm kiếm sản phẩm..." aria-label="Search"
+            value="{{#if query}}{{query.name}}{{/if}}" style="min-width: 180px; max-width: 500px;">
           <button class="btn btn-search" type="submit">Tìm kiếm</button>
         </form>
 
         <!-- Hotline và Giỏ hàng -->
         <div class="d-flex align-items-center ms-lg-auto" style="gap: 1rem;">
-          <button class="btn btn-cart position-relative me-2 d-flex justify-content-center align-items-center"
-            type="button" style="min-width: 120px;">
+          <a href="/cart" class="btn btn-cart position-relative me-2 d-flex justify-content-center align-items-center"
+            style="min-width: 120px;" title="Giỏ hàng">
             <i class="bi bi-cart3" style="font-size: 1.5rem;"></i>
             <span class="cart-label ms-2">Giỏ hàng</span>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              0
-            </span>
-          </button>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+          </a>
 
           {{#if isLoggedIn}}
           <a href="/profile" class="btn btn-user d-flex justify-content-center align-items-center me-2"

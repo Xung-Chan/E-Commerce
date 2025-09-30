@@ -44,7 +44,7 @@ const authService = {
             type: 'reset'
         };
         const token = jwt.sign(payload, process.env.SECRET_KEY as string, { expiresIn: '15m' });
-        const link = `${process.env.BASE_URL}/auth/reset-password?token=${token}`;
+        const link = `${process.env.BASE_URL}/reset-password?token=${token}`;
         await tokenService.saveToken(user.id, token);
         sendMail(email, link);
     },

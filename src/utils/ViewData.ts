@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { createApi, unwrap } from "./apiClient.js";
+import { createApi, unwrap } from "./ApiClient.js";
 
 export const getCommonViewData = async (req: Request) => {
   const isLoggedIn = (req as any).isLoggedIn || false;

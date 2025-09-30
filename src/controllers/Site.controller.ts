@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Pagination, QueryUrl } from "../utils/Pagination.js";
-import { createApi, unwrap, apiUrl } from "../utils/apiClient.js";
-import { getCommonViewData, renderWithCommon } from "../utils/viewData.js";
+import { getCommonViewData, renderWithCommon } from "../utils/ViewData.js";
+import { apiUrl, createApi, unwrap } from "../utils/ApiClient.js";
 
 const siteController = {
     // LOGIN
@@ -110,6 +110,93 @@ const siteController = {
             }
 
             return renderWithCommon(req, res, "register", payload);
+        }
+    },
+
+    // FORGOT PASSWORD
+    // Forgot Password Page
+    forgotPassword: async (req: Request, res: Response) => {
+        return renderWithCommon(req, res, 'forgot-password', {
+            title: 'Quên mật khẩu | CoreStation'
+        });
+    },
+    // Forgot Password Form
+    forgotPasswordPost: async (req: Request, res: Response) => {
+        try {
+            const { email = '' } = req.body as { email?: string };
+            const value = email.trim();
+            let errorMessage = '';
+            if (!value) errorMessage = 'Vui lòng nhập email của bạn';
+            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errorMessage = 'Email không hợp lệ';
+
+            if (errorMessage) {
+                return renderWithCommon(req, res, 'forgot-password', {
+                    title: 'Quên mật khẩu | CoreStation',
+                    errorMessage,
+                    formData: { email: value }
+                });
+            }
+
+            const api = createApi();
+            await api.post('/api/auth/forgot-password', { email: value });
+
+            return renderWithCommon(req, res, 'forgot-password', {
+                title: 'Quên mật khẩu | CoreStation',
+                successMessage: 'Nếu email tồn tại trong hệ thống, chúng tôi đã gửi liên kết đặt lại mật khẩu cho bạn.'
+            });
+        } catch (e) {
+            const apiErr = (e as any)?.response?.data;
+            return renderWithCommon(req, res, 'forgot-password', {
+                title: 'Quên mật khẩu | CoreStation',
+                errorMessage: apiErr?.message || 'Có lỗi xảy ra khi gửi email. Vui lòng thử lại sau.',
+                formData: { email: req.body?.email }
+            });
+        }
+    },
+    // Reset Password Page
+    resetPassword: async (req: Request, res: Response) => {
+        const { token = '' } = req.query as { token?: string };
+        return renderWithCommon(req, res, 'reset-password', {
+            title: 'Đặt lại mật khẩu | CoreStation',
+            token
+        });
+    },
+    // Reset Password Form
+    resetPasswordPost: async (req: Request, res: Response) => {
+        const { token = '', newPassword = '', confirmPassword = '' } = req.body as any;
+        const t = String(token || '').trim();
+        const next = String(newPassword || '').trim();
+        const confirm = String(confirmPassword || '').trim();
+
+        const errors: { field?: string; message: string }[] = [];
+        if (!t) errors.push({ message: 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.' });
+        if (!next) errors.push({ field: 'newPassword', message: 'Mật khẩu mới không được để trống' });
+        else if (next.length < 6) errors.push({ field: 'newPassword', message: 'Mật khẩu mới phải có ít nhất 6 ký tự' });
+        if (next !== confirm) errors.push({ field: 'confirmPassword', message: 'Xác nhận mật khẩu không khớp' });
+
+        if (errors.length) {
+            return renderWithCommon(req, res, 'reset-password', {
+                title: 'Đặt lại mật khẩu | CoreStation',
+                errors,
+                errorMessage: errors[0]?.message || 'Vui lòng kiểm tra lại thông tin',
+                token: t
+            });
+        }
+
+        try {
+            const api = createApi();
+            await api.post('/api/auth/reset-password', { token: t, newPassword: next });
+            return renderWithCommon(req, res, 'reset-password', {
+                title: 'Đặt lại mật khẩu | CoreStation',
+                successMessage: 'Mật khẩu đã được đặt lại. Bạn có thể đăng nhập bằng mật khẩu mới.'
+            });
+        } catch (e) {
+            const apiErr = (e as any)?.response?.data;
+            return renderWithCommon(req, res, 'reset-password', {
+                title: 'Đặt lại mật khẩu | CoreStation',
+                errorMessage: apiErr?.message || 'Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại sau.',
+                token: t
+            });
         }
     },
 
@@ -306,7 +393,8 @@ const siteController = {
             categoryId = '',
             brandId = '',
             minPrice = '',
-            maxPrice = ''
+            maxPrice = '',
+            name = ''
         } = query;
 
         const apiParams: any = { page, limit };
@@ -315,7 +403,8 @@ const siteController = {
         if (categoryId) apiParams.categoryId = categoryId;
         if (brandId) apiParams.brandId = brandId;
         if (minPrice) apiParams.minPrice = minPrice;
-        if (maxPrice) apiParams.maxPrice = maxPrice;
+    if (maxPrice) apiParams.maxPrice = maxPrice;
+    if (name) apiParams.name = name;
 
         const api = createApi(req);
 
@@ -333,7 +422,7 @@ const siteController = {
         const brands = Array.isArray(brandsRes.data) ? brandsRes.data : brandsRes.data.data;
 
         const filteredQuery: Record<string, string> = {};
-        Object.entries({ sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice }).forEach(([k, v]) => {
+        Object.entries({ sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice, name }).forEach(([k, v]) => {
             if (v !== undefined && v !== null && v !== '') {
                 filteredQuery[k] = String(v);
             }
@@ -399,6 +488,17 @@ const siteController = {
             }
             return res.render('productDetail', { title: 'Chi tiết sản phẩm | CoreStation', errorMessage: message });
         }
+    },
+
+    // CART
+    // Cart page
+    cart: async (req: Request, res: Response) => {
+        const commonData = await getCommonViewData(req);
+
+        return res.render('cart', {
+            title: 'Giỏ hàng | CoreStation',
+            ...commonData
+        });
     }
 };
 
