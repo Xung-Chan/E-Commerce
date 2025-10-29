@@ -1,5 +1,6 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
+import { WithId } from "../utils/WithId.js";
 const RateSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,11 +22,10 @@ const RateSchema = new Schema({
         min: 1,
         max: 5
     },
-    date: {
-        type: Date,
-        default: Date.now
-    }
-}, { versionKey: false })
+}, {
+    versionKey: false,
+    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
+})
 RateSchema.index({ userId: 1, productId: 1 }, { unique: true });
 const Rate = mongoose.model("Rate", RateSchema)
 class RateDao implements CRUD {
@@ -54,4 +54,4 @@ class RateDao implements CRUD {
     }
 }
 export const rateDao = new RateDao();
-export type IRate = InferSchemaType<typeof RateSchema>;
+export type IRate = WithId<InferSchemaType<typeof RateSchema>>;

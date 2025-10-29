@@ -1,4 +1,3 @@
-import SortOption from "./SortOption";
 
 class Pagination {
     page: number;
@@ -39,8 +38,8 @@ interface QueryUrl {
     maxPrice?: string;
 }
 export {
-    Pagination,
-}
+    Pagination
+};
 
 export type {
     QueryUrl

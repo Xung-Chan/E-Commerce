@@ -1,6 +1,7 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateCommentDto } from "../dto/Create.dto.js";
+import { WithId } from "../utils/WithId.js";
 const CommentSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,11 +22,12 @@ const CommentSchema = new Schema({
         type: String,
         required: true
     },
-    date: {
-        type: Date,
-        default: Date.now
+}, {
+    versionKey: false,
+    timestamps: {
+        createdAt: 'createdAt', updatedAt: 'updatedAt'
     }
-}, { versionKey: false })
+})
 
 const Comment = mongoose.model("Comment", CommentSchema);
 class CommentDao implements CRUD {
@@ -52,4 +54,4 @@ class CommentDao implements CRUD {
     }
 }
 export const commentDao = new CommentDao();
-export type IComment = InferSchemaType<typeof CommentSchema>;
+export type IComment = WithId<InferSchemaType<typeof CommentSchema>>;

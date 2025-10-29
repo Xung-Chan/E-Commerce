@@ -3,6 +3,7 @@ import "dotenv/config";
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 import { CreateUserDto } from "../dto/Create.dto.js";
 import CRUD from "../utils/CRUD.interface.js";
+import { WithId } from "../utils/WithId.js";
 
 const UserSchema = new Schema({
     email: {
@@ -38,7 +39,10 @@ const UserSchema = new Schema({
         default: "active"
 
     }
-}, { versionKey: false })
+}, {
+    versionKey: false,
+    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
+})
 const User = mongoose.model("User", UserSchema)
 class UserDao implements CRUD {
     async patchById(id: string, item: Partial<IUser>): Promise<boolean> {
@@ -86,4 +90,4 @@ class UserDao implements CRUD {
     }
 }
 export const userDao = new UserDao();
-export type IUser = InferSchemaType<typeof UserSchema> & { _id: mongoose.Types.ObjectId };
+export type IUser = WithId<InferSchemaType<typeof UserSchema>>;

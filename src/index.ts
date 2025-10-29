@@ -70,7 +70,7 @@ app.engine(
                 const icons: Record<string, string> = {
                     'PC Gaming': 'bi-controller',
                     'PC Văn Phòng': 'bi-pc',
-                    'Workstation': 'bi-diagram-3-fill', 
+                    'Workstation': 'bi-diagram-3-fill',
                     'Linh kiện máy tính': 'bi-pc-display-horizontal',
                 };
                 return icons[categoryName] || 'bi-box-seam';

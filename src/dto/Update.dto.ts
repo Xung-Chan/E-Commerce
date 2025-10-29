@@ -1,3 +1,8 @@
+interface UpdateVariantDto {
+    distinctFeature?: string;
+    price?: number;
+    stock?: number;
+}
 interface UpdateUserDto {
     email?: string;
     fullName?: string;
@@ -30,10 +35,12 @@ interface UpdateProductDto {
         stock: number
     }[];
 }
+
 export type {
     UpdateUserDto,
     UpdateBrandDto,
     UpdateOrderDto,
     UpdateProductDto,
-    UpdateCategoryDto
+    UpdateCategoryDto,
+    UpdateVariantDto
 };

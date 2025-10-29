@@ -5,6 +5,8 @@ import { UpdateUserDto } from "../dto/Update.dto.js";
 import ApiError from "../utils/ApiError.js";
 import { productDao } from "../daos/Product.dao.js";
 import { cartItemDao, ICartItem } from "../daos/CartItem.dao.js";
+import { variantDao } from "../daos/Variant.dao.js";
+import { CartResponse } from "../dto/Response.dto.js";
 const userService = {
     createUser: async (data: CreateUserDto): Promise<boolean> => {
         const hashedPassword = bcrypt.hashSync(data.password, 10);
@@ -80,59 +82,60 @@ const userService = {
         const result = await userDao.patchById(userId, { addresses: user.addresses });
         return result;
     },
-    getCartByUserId: async (userId: string): Promise<any[]> => {
+
+
+    getCartByUserId: async (userId: string): Promise<CartResponse> => {
         const user: IUser | null = await userDao.readById(userId);
         if (!user) {
             throw new ApiError(404, "Not Found", "User not found");
         }
-        const cart = await cartItemDao.findBy({ userId: userId, isPaid: false });
+        const cart = await cartItemDao.findBy({ userId: userId });
         if (!cart) {
-            return [];
+            return { items: [], total: 0 };
         }
-        const cartWithProducts = await Promise.all(
+        const items = await Promise.all(
             cart.map(async (item: ICartItem) => {
-                const product = await productDao.readById(item.productId.toString());
-                if (!product) {
-                    throw new ApiError(404, "Not Found", "Product not found");
-                }
-                const variant = product.variants.find(v => v._id?.toString() === item.variantId.toString());
+                const variant = await variantDao.readById(item.variantId.toString());
                 if (!variant) {
                     throw new ApiError(404, "Not Found", "Variant not found");
                 }
+                const product = await productDao.readById(variant.productId.toString());
+                if (!product) {
+                    throw new ApiError(404, "Not Found", "Product not found");
+                }
                 return {
-                    cartItemId: item._id,
-                    variantId: item.variantId,
-                    productId: item.productId,
+                    cartItemId: item._id.toString(),
+                    variantId: variant._id.toString(),
+                    productId: product._id.toString(),
                     product: product.name,
                     variant: variant.distinctFeature,
                     quantity: item.quantity,
                 };
             })
-
         );
-        return cartWithProducts;
+
+        return {
+            items: [...items],
+            total: items.reduce((sum, item) => sum + item.quantity, 0),
+        };
     },
-    addToCartByUserId: async (userId: string, productId: string, variantId: string, quantity: number): Promise<boolean> => {
+    addToCartByUserId: async (userId: string, variantId: string, quantity: number): Promise<boolean> => {
         const user: IUser | null = await userDao.readById(userId);
         if (!user) {
             throw new ApiError(404, "Not Found", "User not found");
         }
-        const product = await productDao.readById(productId);
-        if (!product) {
-            throw new ApiError(404, "Not Found", "Product not found");
-        }
-        const variant = product.variants.find(v => v._id?.toString() === variantId);
+        const variant = await variantDao.readById(variantId);
         if (!variant) {
             throw new ApiError(404, "Not Found", "Variant not found");
         }
-        let cartItem = await cartItemDao.findOne({ userId: userId, productId: productId, variantId: variantId, isPaid: false });
+        let cartItem = await cartItemDao.findOne({ userId: userId, variantId: variantId });
         if (cartItem) {
             cartItem.quantity += quantity;
             const result = await cartItemDao.updateById(cartItem._id.toString(), { quantity: cartItem.quantity });
             return result;
         }
         else {
-            cartItem = await cartItemDao.create({ userId: userId, productId: productId, variantId: variantId, quantity: quantity });
+            cartItem = await cartItemDao.create({ userId: userId, variantId: variantId, quantity: quantity });
             return !!cartItem;
         }
     },

@@ -56,9 +56,20 @@ interface CreateRateDto {
 }
 interface CreateCartItemDto {
     userId: string;
-    productId: string;
     variantId: string;
     quantity: number;
+}
+interface CreateVariantDto {
+    distinctFeature: string;
+    price: number;
+    stock: number;
+}
+interface CreateOrderItemDto {
+    orderId: string;
+    variantId: string;
+    quantity: number;
+    price: number;
+    discount?: number;
 }
 export type {
     CreateUserDto,
@@ -69,5 +80,7 @@ export type {
     CreateCouponDto,
     CreateOrderDto,
     CreateProductDto,
-    CreateCartItemDto
+    CreateCartItemDto,
+    CreateVariantDto,
+    CreateOrderItemDto
 };

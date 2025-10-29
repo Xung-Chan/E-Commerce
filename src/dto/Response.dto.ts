@@ -6,4 +6,19 @@ class LoginResponseDto {
         this.refreshToken = refreshToken;
     }
 }
-export { LoginResponseDto };
+
+interface CartResponse {
+    items: Array<{
+        cartItemId: string;
+        variantId: string;
+        productId: string;
+        product: string;
+        variant: string;
+        quantity: number;
+    }>;
+    total: number;
+}
+export {
+    LoginResponseDto,
+};
+export type { CartResponse };

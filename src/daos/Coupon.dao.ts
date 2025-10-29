@@ -1,38 +1,41 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateCouponDto } from "../dto/Create.dto.js";
-const CouponSchema = new Schema({
-    code: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    discount: {
-        type: Number,
-        required: true
-    },
-    maxUse: {
-        type: Number,
-        required: true
-    },
-    used: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    orders: {
-        type: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Order",
-        }],
-        default: []
-    }
+import { WithId } from "../utils/WithId.js";
+const CouponSchema = new Schema(
+    {
+        code: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        discount: {
+            type: Number,
+            required: true
+        },
+        maxUse: {
+            type: Number,
+            required: true
+        },
+        used: {
+            type: Number,
+            required: true,
+            default: 0
+        },
+        orders: {
+            type: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Order",
+            }],
+            default: []
+        }
 
-})
+    },
+    {
+        versionKey: false,
+        timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
+    }
+);
 
 const Coupon = mongoose.model("Coupon", CouponSchema)
 class CouponDao implements CRUD {
@@ -62,4 +65,4 @@ class CouponDao implements CRUD {
 
 }
 export const couponDao = new CouponDao();
-export type ICoupon = InferSchemaType<typeof CouponSchema>;
+export type ICoupon = WithId<InferSchemaType<typeof CouponSchema>>;

@@ -1,6 +1,7 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateCategoryDto } from "../dto/Create.dto.js";
+import { WithId } from "../utils/WithId.js";
 const CategorySchema = new Schema({
     name: {
         type: String,
@@ -19,7 +20,12 @@ const CategorySchema = new Schema({
         type: Boolean,
         default: false
     },
-}, { versionKey: false })
+}, {
+    versionKey: false,
+    timestamps: {
+        createdAt: 'createdAt', updatedAt: 'updatedAt'
+    }
+});
 
 const Category = mongoose.model("Category", CategorySchema)
 class CategoryDao implements CRUD {
@@ -49,4 +55,4 @@ class CategoryDao implements CRUD {
 
 }
 export const categoryDao = new CategoryDao();
-export type ICategory = InferSchemaType<typeof CategorySchema> & { _id: mongoose.Types.ObjectId };
+export type ICategory = WithId<InferSchemaType<typeof CategorySchema>>;

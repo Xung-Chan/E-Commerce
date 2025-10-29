@@ -1,4 +1,5 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
+import { WithId } from "../utils/WithId";
 
 const TokenSchema = new Schema({
     userId: {
@@ -11,15 +12,12 @@ const TokenSchema = new Schema({
         required: true,
         unique: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
+
     isUsed: {
         type: Boolean,
         default: false
     }
-}, { versionKey: false })
+}, { versionKey: false, timestamps: { createdAt: 'createdAt' } })
 
 const Token = mongoose.model("Token", TokenSchema)
 class TokenDao {
@@ -42,4 +40,4 @@ class TokenDao {
     }
 }
 export const tokenDao = new TokenDao();
-export type IToken = InferSchemaType<typeof TokenSchema>;
+export type IToken = WithId<InferSchemaType<typeof TokenSchema>>;

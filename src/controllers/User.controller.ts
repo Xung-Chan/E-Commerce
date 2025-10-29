@@ -20,7 +20,7 @@ const userController = {
         if (!token) {
             throw new ApiError(401, "Unauthorized", "No token provided");
         }
-        const payload = await tokenService.verifyToken(token);  
+        const payload = await tokenService.verifyToken(token);
         if (payload.userId !== userId && payload.role !== 'admin') {
             throw new ApiError(403, "Forbidden", "Access denied");
         }
@@ -40,7 +40,10 @@ const userController = {
         if (!userId) {
             throw new ApiError(400, "Bad Request", "User ID is required");
         }
-        const data: UpdateUserDto = req.body;
+        const { email, fullName } = req.body;
+        const data: UpdateUserDto = {
+            email, fullName
+        };
         const result = await userService.updateUserById(userId, data);
         if (!result) {
             throw new ApiError(500, "Internal Server Error", "Failed to update user");
@@ -122,11 +125,11 @@ const userController = {
         if (!userId) {
             throw new ApiError(401, "Unauthorized", "No token provided");
         }
-        const { productId, variantId, quantity } = req.body;
-        if (!productId || !variantId || !quantity) {
-            throw new ApiError(400, "Bad Request", "Product ID, Variant ID and Quantity are required");
+        const { variantId, quantity } = req.body;
+        if (!variantId || !quantity) {
+            throw new ApiError(400, "Bad Request", "Variant ID and Quantity are required");
         }
-        const result = await userService.addToCartByUserId(userId, productId, variantId, quantity);
+        const result = await userService.addToCartByUserId(userId, variantId, quantity);
         res.status(200).json(new ApiResponse(true, 200, "Product added to cart successfully", result));
     }),
     updateMyCartByCartItemId: expressAsyncHandler(async (req: Request, res: Response) => {

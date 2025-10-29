@@ -4,7 +4,7 @@ services:
   mongodb:
     image: mongo:latest
     container_name: mongodb
-    restart: always
+    # restart: always
     ports:
       - "27018:27017"
     environment:
@@ -18,7 +18,7 @@ services:
     build:
       context: .
     container_name: e_commerce_app
-    restart: always
+    # restart: always
     ports:
       - "8000:8000"
     volumes:

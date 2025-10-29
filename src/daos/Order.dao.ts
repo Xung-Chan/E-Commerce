@@ -2,33 +2,21 @@ import mongoose, { InferSchemaType, QueryOptions, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateOrderDto } from "../dto/Create.dto.js";
 import { UpdateOrderDto } from "../dto/Update.dto.js";
+import { WithId } from "../utils/WithId.js";
 const OrderSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    orderDate: {
-        type: Date,
-        default: Date.now
-    },
     products: {
-        type: [{
-            productId: {
+        type: [
+            {
                 type: mongoose.Schema.Types.ObjectId,
-                required: true
-            },
-            quantity: {
-                type: Number,
-                required: true,
-                min: 1
-            },
-            variantId: {
-                type: mongoose.Schema.Types.ObjectId,
-                required: true
-            },
-            price: Number,
-            discount: Number
-        }]
+                ref: "OrderItem"
+            }
+        ],
+        required: true,
+        default: []
     },
 
     totalPrice: {
@@ -53,24 +41,16 @@ const OrderSchema = new Schema({
     statusHistories: {
         type: [
             {
-                status: {
-                    type: String,
-                    enum: ["pending", "processing", "shipped", "delivered", "canceled"],
-                    required: true
-                },
-                date: {
-                    type: Date,
-                    default: Date.now
-                }
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "StatusHistory"
             }
         ],
-        default: [{
-            status: "pending",
-            date: Date.now()
-        }],
         required: true
     }
 
+}, {
+    versionKey: false,
+    timestamps: { createdAt: 'createdAt' }
 })
 
 const Order = mongoose.model("Order", OrderSchema)
@@ -97,4 +77,4 @@ class OrderDao implements CRUD {
     }
 }
 export const orderDao = new OrderDao();
-export type IOrder = InferSchemaType<typeof OrderSchema>;
+export type IOrder = WithId<InferSchemaType<typeof OrderSchema>>;

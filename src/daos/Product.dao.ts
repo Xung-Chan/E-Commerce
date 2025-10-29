@@ -2,6 +2,7 @@ import mongoose, { InferSchemaType, QueryOptions, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateProductDto } from "../dto/Create.dto.js";
 import SortOption from "../utils/SortOption.js";
+import { WithId } from "../utils/WithId.js";
 const ProductSchema = new Schema({
     name: {
         type: String,
@@ -30,7 +31,7 @@ const ProductSchema = new Schema({
         type: Number,
         default: 0
     },
-    rate: {
+    averageRate: {
         type: Number,
         min: 0,
         max: 5,
@@ -44,20 +45,16 @@ const ProductSchema = new Schema({
     },
     variants: {
         type: [{
-            distinctFeature: {
-                type: String, required: true
-            },
-            price: { type: Number, required: true },
-            stock: { type: Number, required: true }
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Variant"
         }],
         required: true
 
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
-}, { versionKey: false })
+}, {
+    versionKey: false,
+    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
+})
 
 const Product = mongoose.model("Product", ProductSchema)
 class ProductDao implements CRUD {
@@ -67,9 +64,9 @@ class ProductDao implements CRUD {
     async list(): Promise<any[]> {
         return await Product.find().exec();
     }
-    async sortBy(sortOption: SortOption): Promise<any[]> {
-        return await Product.find().sort(sortOption.toQuery()).exec();
-    }
+    // async sortBy(sortOption: SortOption): Promise<any[]> {
+    //     return await Product.find().sort(sortOption.toQuery()).exec();
+    // }
     async findBy(query: Partial<any>, option: QueryOptions = {}): Promise<any | null> {
         return Product.find(query, null, option).exec();
     }
@@ -89,4 +86,4 @@ class ProductDao implements CRUD {
     }
 }
 export const productDao = new ProductDao();
-export type IProduct = InferSchemaType<typeof ProductSchema>;
+export type IProduct = WithId<InferSchemaType<typeof ProductSchema>>;
