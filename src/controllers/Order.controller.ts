@@ -4,6 +4,7 @@ import { CreateOrderRequest } from '../dto/Request.dto.js';
 import orderService from '../services/Order.service.js';
 import ApiResponse from '../utils/Api.response.js';
 import ApiError from '../utils/ApiError.js';
+import { OrderQuery } from '../utils/Pagination.js';
 const orderController = {
     createOrder: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = (req as any).userId;
@@ -21,6 +22,13 @@ const orderController = {
 
     getAllOrders: expressAsyncHandler(async (req: Request, res: Response) => {
         const orders = await orderService.getAllOrders();
+        res.status(200).json(new ApiResponse(true, 200, "Orders fetched successfully", orders));
+    }),
+
+    searchOrder: expressAsyncHandler(async (req: Request, res: Response) => {
+        const query: OrderQuery = req.query;
+        console.log(query);
+        const orders = await orderService.getOrdersByQuery(query);
         res.status(200).json(new ApiResponse(true, 200, "Orders fetched successfully", orders));
     }),
 

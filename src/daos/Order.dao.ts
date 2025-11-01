@@ -71,6 +71,9 @@ class OrderDao implements CRUD {
     async list(): Promise<any[]> {
         return await Order.find().exec();
     }
+    async count(query: Partial<any>): Promise<number> {
+        return await Order.countDocuments(query).exec();
+    }
 }
 export const orderDao = new OrderDao();
 export type IOrder = WithId<InferSchemaType<typeof OrderSchema>>;

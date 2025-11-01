@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Pagination, QueryUrl } from "../utils/Pagination.js";
+import { Pagination, ProductQuery } from "../utils/Pagination.js";
 import { getCommonViewData, renderWithCommon } from "../utils/ViewData.js";
 import { apiUrl, createApi, unwrap } from "../utils/ApiClient.js";
 
@@ -384,7 +384,7 @@ const siteController = {
 
     // CATALOG
     catalog: async (req: Request, res: Response) => {
-        const query: QueryUrl = req.query as QueryUrl;
+        const query: ProductQuery = req.query as ProductQuery;
         const page = Number(query.page) || 1;
         const limit = Number(query.limit) || 9;
         const {

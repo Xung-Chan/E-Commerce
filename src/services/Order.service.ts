@@ -1,3 +1,4 @@
+import { get } from "mongoose";
 import { orderDao } from "../daos/Order.dao.js";
 import { orderItemDao } from '../daos/OrderItem.dao.js';
 import { variantDao } from "../daos/Variant.dao.js";
@@ -5,6 +6,7 @@ import { CreateOrderDto } from "../dto/Create.dto.js";
 import { CreateOrderRequest } from '../dto/Request.dto.js';
 import ApiError from "../utils/ApiError.js";
 import { OrderStatus } from "../utils/OrderStatus.enum.js";
+import { OrderQuery, Pagination } from "../utils/Pagination.js";
 import { statusHistoryDao } from './../daos/StatusHistory.dao.js';
 
 const orderService = {
@@ -55,6 +57,31 @@ const orderService = {
 
     getAllOrders: async () => {
         return orderDao.list();
+    },
+
+    getOrdersByQuery: async (query: OrderQuery) => {
+
+        const filter: {
+            userId?: string;
+            currentStatus?: string;
+        } = {};
+
+        if (query.userId) filter.userId = query.userId;
+        if (query.status) filter.currentStatus = query.status;
+
+        const page = parseInt((query.page || "1"), 10);
+        const limit = parseInt((query.limit || "10"), 10);
+        const sortBy = query.sortBy || "updatedAt";
+        const sortOrder = query.sortOrder === "desc" ? -1 : 1;
+
+        const options = {
+            skip: (page - 1) * limit,
+            limit: limit,
+            sort: { [sortBy]: sortOrder },
+        }
+        const data = await orderDao.findBy(filter, options);
+        const totalDatas = await orderDao.count(filter);
+        return new Pagination(data, page, limit, totalDatas);
     },
 
     getOrderById: async (id: string) => {
