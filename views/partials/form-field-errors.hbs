@@ -1,0 +1,4 @@
+{{!-- Helper partial to render error message for a specific field --}}
+{{#if (getFieldError errors name)}}
+  <div class="invalid-feedback">{{getFieldError errors name}}</div>
+{{/if}}

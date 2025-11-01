@@ -1,0 +1,48 @@
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:1080;">
+  {{#if successMessage}}
+  <div class="toast border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+    <div class="toast-header bg-success text-white">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      <strong class="me-auto">Thành công</strong>
+      <small class="text-white-50">Now</small>
+      <button type="button" class="btn-close btn-close-white ms-2 mb-1" data-bs-dismiss="toast"
+        aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      {{successMessage}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{#if errorMessage}}
+  <div class="toast border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+    <div class="toast-header bg-danger text-white">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <strong class="me-auto">Có lỗi</strong>
+      <small class="text-white-50">Now</small>
+      <button type="button" class="btn-close btn-close-white ms-2 mb-1" data-bs-dismiss="toast"
+        aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      {{errorMessage}}
+    </div>
+  </div>
+  {{/if}}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const container = document.querySelector('.toast-container');
+    if (!container) return;
+    const toasts = container.querySelectorAll('.toast');
+    if (!toasts.length) return;
+    toasts.forEach(t => {
+      try {
+        const inst = bootstrap.Toast.getOrCreateInstance(t);
+        inst.show();
+      } catch (e) {
+        t.classList.add('show');
+      }
+    });
+  });
+</script>

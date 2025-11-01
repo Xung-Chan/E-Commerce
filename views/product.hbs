@@ -22,7 +22,7 @@
         <div class="col-lg-6 d-flex flex-column h-100 info-col">
             <div class="top-info">
                 <h2 class="fw-bold mb-3 text-primary">{{product.name}}</h2>
-                <div class="mb-3">      
+                <div class="mb-3">
                     <span class="text-muted">Thương hiệu:</span>
                     <strong class="ms-2">{{brand.name}}</strong>
                 </div>
@@ -63,13 +63,15 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="text-muted">Giá:</span>
                     <span id="productPrice" class="fs-4 fw-bold text-danger">
-                        {{#if selectedVariant}}{{formatPrice selectedVariant.price}} VNĐ{{else}}{{formatPrice product.variants.[0].price}} VNĐ{{/if}}
+                        {{#if selectedVariant}}{{formatPrice selectedVariant.price}} VNĐ{{else}}{{formatPrice
+                        product.variants.[0].price}} VNĐ{{/if}}
                     </span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-2">
                     <span class="text-muted">Kho:</span>
                     <span id="productStock" class="fw-bold">
-                        {{#if selectedVariant}}{{selectedVariant.stock}}{{else}}{{product.variants.[0].stock}}{{/if}} sản phẩm
+                        {{#if selectedVariant}}{{selectedVariant.stock}}{{else}}{{product.variants.[0].stock}}{{/if}}
+                        sản phẩm
                     </span>
                 </div>
             </div>
@@ -263,7 +265,7 @@
                     if (!isNaN(price)) {
                         priceEl.textContent = price.toLocaleString('vi-VN') + ' VNĐ';
                     }
-                    
+
                     if (!isNaN(stock)) {
                         stockEl.textContent = stock + ' sản phẩm';
                     }

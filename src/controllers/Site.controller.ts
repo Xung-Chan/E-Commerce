@@ -1,321 +1,400 @@
-//Front-end
-import axios from "axios";
-
 import { Request, Response } from "express";
-import { verify } from "jsonwebtoken";
-import { Pagination, ProductQuery } from "../utils/Pagination.js";
-
-// Use localhost for internal API calls
-const apiUrl = 'http://localhost:8000';
-
-// Helper function to prepare common data for all views (especially header)
-const getCommonViewData = async (req: Request) => {
-    const isLoggedIn = (req as any).isLoggedIn || false;
-    const userId = (req as any).userId || null;
-
-    let user = null;
-    let categories = [];
-
-    try {
-        // Get categories for navigation
-        const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
-        categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
-
-        // Get user data if logged in
-        if (isLoggedIn && userId) {
-            const token = req.cookies?.token;
-            if (token) {
-                try {
-                    const userRes = await axios.get(`${apiUrl}/api/users/profile/me`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    user = userRes.data?.data || userRes.data;
-                } catch (userError) {
-                    console.log('Could not fetch user data');
-                    return {
-                        isLoggedIn,
-                        categories
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error fetching common view data:', error);
-    }
-
-    return {
-        isLoggedIn,
-        user,
-        categories,
-        userId
-    };
-};
+import { Pagination, QueryUrl } from "../utils/Pagination.js";
+import { getCommonViewData, renderWithCommon } from "../utils/ViewData.js";
+import { apiUrl, createApi, unwrap } from "../utils/ApiClient.js";
 
 const siteController = {
-
+    // LOGIN
+    // Login Page
     login: async (req: Request, res: Response) => {
         const commonData = await getCommonViewData(req);
-
         if (commonData.isLoggedIn) {
             return res.redirect('/');
         }
-
-        res.render('login', {
-            title: 'Đăng nhập | CoreStation',
+        return res.render("login", {
+            title: "Đăng nhập | CoreStation",
             ...commonData
         });
     },
-
+    // Login Form
     loginPost: async (req: Request, res: Response) => {
         try {
             const { email, password } = req.body;
-            const errors: { field: string; message: string }[] = [];
 
-            // Server-side validation
-            if (!email || !email.trim()) {
-                errors.push({ field: 'email', message: 'Email/Số điện thoại không được để trống' });
-            }
-            if (!password || !password.trim()) {
-                errors.push({ field: 'password', message: 'Mật khẩu không được để trống' });
-            }
-            if (errors.length > 0) {
-                return res.render('login', {
-                    title: 'Đăng nhập | CoreStation',
+            const errors = [];
+            if (!email?.trim()) errors.push({ field: "email", message: "Email/Số điện thoại không được để trống" });
+            if (!password?.trim()) errors.push({ field: "password", message: "Mật khẩu không được để trống" });
+            if (errors.length) {
+                return renderWithCommon(req, res, "login", {
+                    title: "Đăng nhập | CoreStation",
                     errors: errors,
                     formData: { email },
-                    errorMessage: 'Vui lòng kiểm tra lại thông tin đăng nhập'
+                    errorMessage: "Vui lòng kiểm tra lại thông tin đăng nhập",
                 });
             }
 
-            // Gọi API để đăng nhập
-            const response = await axios.post(`${apiUrl}/api/auth/login`, {
-                email: email.trim(),
-                password: password.trim()
-            });
+            const api = createApi();
+            const resp = await api.post("/api/auth/login", { email: email.trim(), password: password.trim() });
+            const data = unwrap<{ accessToken?: string; token?: string }>(resp);
+            const token = (data as any)?.accessToken || (data as any)?.token;
+            if (token) res.cookie("token", token, { httpOnly: true });
 
-            if (response.data && response.data.success) {
-                const token = response.data.data?.accessToken || response.data.data?.token;
-                if (token) { res.cookie('token', token); }
-                return res.redirect('/');
-            } else {
-                return res.render('login', {
-                    title: 'Đăng nhập | CoreStation',
-                    formData: { email },
-                    errorMessage: response.data?.message || 'Đăng nhập thất bại'
-                });
-            }
-            res.redirect('/');
-
+            return res.redirect("/");
         } catch (error: any) {
-            console.error('Login error:', error);
-            if (error.response?.data) {
-                const apiError = error.response.data;
-                if (error.response.status === 401) {
-                    return res.render('login', {
-                        title: 'Đăng nhập | CoreStation',
-                        formData: { email: req.body.email },
-                        errorMessage: 'Email/số điện thoại hoặc mật khẩu không đúng'
-                    });
-                }
-                if (apiError.errors && Array.isArray(apiError.errors)) {
-                    return res.render('login', {
-                        title: 'Đăng nhập | CoreStation',
-                        errors: apiError.errors,
-                        formData: { email: req.body.email },
-                        errorMessage: apiError.message || 'Có lỗi xảy ra khi đăng nhập'
-                    });
-                }
-                return res.render('login', {
-                    title: 'Đăng nhập | CoreStation',
-                    formData: { email: req.body.email },
-                    errorMessage: apiError.message || 'Có lỗi xảy ra khi đăng nhập'
-                });
-            }
-            res.render('login', {
-                title: 'Đăng nhập | CoreStation',
-                formData: { email: req.body.email },
-                errorMessage: 'Không thể kết nối đến server. Vui lòng thử lại sau.'
-            });
+            const status = error?.response?.status;
+            const apiErr = error?.response?.data;
+            const payload = {
+                title: "Đăng nhập | CoreStation",
+                formData: { email: req.body?.email },
+                errorMessage:
+                    (status === 401 && "Email/số điện thoại hoặc mật khẩu không đúng") ||
+                    apiErr?.message ||
+                    "Không thể kết nối đến server. Vui lòng thử lại sau.",
+            };
+            return renderWithCommon(req, res, "login", payload);
         }
     },
 
+    // REGISTER
+    // Register page
     register: async (req: Request, res: Response) => {
         const commonData = await getCommonViewData(req);
-
-        res.render('register', {
-            title: 'Đăng ký | CoreStation',
-            ...commonData // Spread common data for header
+        return res.render("register", {
+            title: "Đăng ký | CoreStation",
+            ...commonData
         });
     },
-
+    // Register form
     registerPost: async (req: Request, res: Response) => {
         try {
             const { email, fullName, password, address } = req.body;
-            const errors: { field: string; message: string }[] = [];
 
-            // Server-side validation
-            if (!email || !email.trim()) {
-                errors.push({ field: 'email', message: 'Email không được để trống' });
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                errors.push({ field: 'email', message: 'Email không hợp lệ' });
-            }
-            if (!fullName || !fullName.trim()) {
-                errors.push({ field: 'fullName', message: 'Họ tên không được để trống' });
-            }
-            if (!password || !password.trim()) {
-                errors.push({ field: 'password', message: 'Mật khẩu không được để trống' });
-            } else if (password.length < 6) {
-                errors.push({ field: 'password', message: 'Mật khẩu phải có ít nhất 6 ký tự' });
-            }
-            if (!address || !address.trim()) {
-                errors.push({ field: 'address', message: 'Địa chỉ không được để trống' });
-            }
-            if (errors.length > 0) {
-                return res.render('register', {
-                    title: 'Đăng ký | CoreStation',
+            const errors = [];
+            if (!email?.trim()) errors.push({ field: "email", message: "Email không được để trống" });
+            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push({ field: "email", message: "Email không hợp lệ" });
+            if (!fullName?.trim()) errors.push({ field: "fullName", message: "Họ tên không được để trống" });
+            if (!password?.trim()) errors.push({ field: "password", message: "Mật khẩu không được để trống" });
+            else if (password.length < 6) errors.push({ field: "password", message: "Mật khẩu phải có ít nhất 6 ký tự" });
+            if (!address?.trim()) errors.push({ field: "address", message: "Địa chỉ không được để trống" });
+            if (errors.length) {
+                return renderWithCommon(req, res, "register", {
+                    title: "Đăng ký | CoreStation",
                     errors: errors,
                     formData: { email, fullName, address },
-                    errorMessage: 'Vui lòng kiểm tra lại thông tin đã nhập'
+                    errorMessage: "Vui lòng kiểm tra lại thông tin đã nhập",
                 });
             }
 
-            // Gọi API để đăng ký
-            const response = await axios.post(`${apiUrl}/api/auth/register`, {
+            const api = createApi();
+            await api.post("/api/auth/register", {
                 email: email.trim(),
                 fullName: fullName.trim(),
                 password: password.trim(),
                 address: address.trim()
             });
 
-            // Đăng ký thành công
-            res.render('register', {
-                title: 'Đăng ký | CoreStation',
-                successMessage: 'Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.',
+            return renderWithCommon(req, res, "register", {
+                title: "Đăng ký | CoreStation",
+                successMessage: "Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.",
                 showLoginLink: true
             });
-
         } catch (error: any) {
-            console.error('Register error:', error);
-            if (error.response?.data) {
-                const apiError = error.response.data;
-                if (apiError.errors && Array.isArray(apiError.errors)) {
-                    return res.render('register', {
-                        title: 'Đăng ký | CoreStation',
-                        errors: apiError.errors,
-                        formData: { email: req.body.email, fullName: req.body.fullName, address: req.body.address },
-                        errorMessage: apiError.message || 'Có lỗi xảy ra khi đăng ký'
-                    });
-                }
-                return res.render('register', {
-                    title: 'Đăng ký | CoreStation',
-                    formData: { email: req.body.email, fullName: req.body.fullName, address: req.body.address },
-                    errorMessage: apiError.message || 'Email đã được sử dụng hoặc có lỗi xảy ra'
+            const apiErr = error?.response?.data;
+            const payload = {
+                title: "Đăng ký | CoreStation",
+                formData: { email: req.body?.email, fullName: req.body?.fullName, address: req.body?.address },
+                errorMessage: apiErr?.message || "Có lỗi xảy ra khi đăng ký",
+            };
+            if (apiErr?.errors && Array.isArray(apiErr.errors)) {
+                (payload as any).errors = apiErr.errors;
+            }
+
+            return renderWithCommon(req, res, "register", payload);
+        }
+    },
+
+    // FORGOT PASSWORD
+    // Forgot Password Page
+    forgotPassword: async (req: Request, res: Response) => {
+        return renderWithCommon(req, res, 'forgot-password', {
+            title: 'Quên mật khẩu | CoreStation'
+        });
+    },
+    // Forgot Password Form
+    forgotPasswordPost: async (req: Request, res: Response) => {
+        try {
+            const { email = '' } = req.body as { email?: string };
+            const value = email.trim();
+            let errorMessage = '';
+            if (!value) errorMessage = 'Vui lòng nhập email của bạn';
+            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errorMessage = 'Email không hợp lệ';
+
+            if (errorMessage) {
+                return renderWithCommon(req, res, 'forgot-password', {
+                    title: 'Quên mật khẩu | CoreStation',
+                    errorMessage,
+                    formData: { email: value }
                 });
             }
-            res.render('register', {
-                title: 'Đăng ký | CoreStation',
-                formData: { email: req.body.email, fullName: req.body.fullName, address: req.body.address },
-                errorMessage: 'Không thể kết nối đến server. Vui lòng thử lại sau.'
+
+            const api = createApi();
+            await api.post('/api/auth/forgot-password', { email: value });
+
+            return renderWithCommon(req, res, 'forgot-password', {
+                title: 'Quên mật khẩu | CoreStation',
+                successMessage: 'Nếu email tồn tại trong hệ thống, chúng tôi đã gửi liên kết đặt lại mật khẩu cho bạn.'
+            });
+        } catch (e) {
+            const apiErr = (e as any)?.response?.data;
+            return renderWithCommon(req, res, 'forgot-password', {
+                title: 'Quên mật khẩu | CoreStation',
+                errorMessage: apiErr?.message || 'Có lỗi xảy ra khi gửi email. Vui lòng thử lại sau.',
+                formData: { email: req.body?.email }
+            });
+        }
+    },
+    // Reset Password Page
+    resetPassword: async (req: Request, res: Response) => {
+        const { token = '' } = req.query as { token?: string };
+        return renderWithCommon(req, res, 'reset-password', {
+            title: 'Đặt lại mật khẩu | CoreStation',
+            token
+        });
+    },
+    // Reset Password Form
+    resetPasswordPost: async (req: Request, res: Response) => {
+        const { token = '', newPassword = '', confirmPassword = '' } = req.body as any;
+        const t = String(token || '').trim();
+        const next = String(newPassword || '').trim();
+        const confirm = String(confirmPassword || '').trim();
+
+        const errors: { field?: string; message: string }[] = [];
+        if (!t) errors.push({ message: 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.' });
+        if (!next) errors.push({ field: 'newPassword', message: 'Mật khẩu mới không được để trống' });
+        else if (next.length < 6) errors.push({ field: 'newPassword', message: 'Mật khẩu mới phải có ít nhất 6 ký tự' });
+        if (next !== confirm) errors.push({ field: 'confirmPassword', message: 'Xác nhận mật khẩu không khớp' });
+
+        if (errors.length) {
+            return renderWithCommon(req, res, 'reset-password', {
+                title: 'Đặt lại mật khẩu | CoreStation',
+                errors,
+                errorMessage: errors[0]?.message || 'Vui lòng kiểm tra lại thông tin',
+                token: t
+            });
+        }
+
+        try {
+            const api = createApi();
+            await api.post('/api/auth/reset-password', { token: t, newPassword: next });
+            return renderWithCommon(req, res, 'reset-password', {
+                title: 'Đặt lại mật khẩu | CoreStation',
+                successMessage: 'Mật khẩu đã được đặt lại. Bạn có thể đăng nhập bằng mật khẩu mới.'
+            });
+        } catch (e) {
+            const apiErr = (e as any)?.response?.data;
+            return renderWithCommon(req, res, 'reset-password', {
+                title: 'Đặt lại mật khẩu | CoreStation',
+                errorMessage: apiErr?.message || 'Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại sau.',
+                token: t
             });
         }
     },
 
+    // LOGOUT
+    logout: async (req: Request, res: Response) => {
+        res.clearCookie("token");
+        return res.redirect("/login");
+    },
+
+    // PROFILE
+    // Profile page
     profile: async (req: Request, res: Response) => {
-        const commonData = await getCommonViewData(req);
-        if (!commonData.isLoggedIn) {
-            return res.redirect('/login');
-        }
-        res.render('profile', {
-            title: 'Thông tin cá nhân | CoreStation',
-            ...commonData
-        });
+        const common = await getCommonViewData(req);
+        if (!common.isLoggedIn) return res.redirect("/login");
+        return res.render("profile", { title: "Thông tin cá nhân | CoreStation", ...common });
     },
 
-    home: async (req: Request, res: Response) => {
-        // Get landing products
-        const landingProductsRes = await axios.get(`${apiUrl}/api/products/landing`);
-        const { bestSellers, newArrivals, categoryProducts } = Array.isArray(landingProductsRes.data) ? landingProductsRes.data : landingProductsRes.data.data;
+    // Thêm địa chỉ
+    profileAddAddress: async (req: Request, res: Response) => {
+        const { newAddress } = req.body;
 
-        // New Products
-        const newProductsWindowSize = 4;
-        const windowNewProducts = [];
-        for (let i = 0; i < newArrivals.length; i += newProductsWindowSize) {
-            let window = newArrivals.slice(i, i + newProductsWindowSize);
-            if (window.length < newProductsWindowSize) {
-                window = window.concat(newArrivals.slice(0, newProductsWindowSize - window.length));
-            }
-            windowNewProducts.push(window);
+        if (!newAddress?.trim()) {
+            return renderWithCommon(req, res, "profile", { title: "Thông tin cá nhân | CoreStation", errorMessage: "Địa chỉ không được để trống." });
         }
 
-        // Other Products
-        interface Product {
-            _id: string;
-            name: string;
-            description: string;
-            images: string[];
-            variants: Array<{
-                price: number;
-                distinctFeature: string;
-            }>;
+        try {
+            const api = createApi(req);
+            await api.post("/api/users/addresses/me", { address: newAddress.trim() });
+            return res.redirect("/profile");
+        } catch (e: any) {
+            return renderWithCommon(req, res, "profile", {
+                title: "Thông tin cá nhân | CoreStation",
+                errorMessage: e?.response?.data?.message || "Có lỗi xảy ra khi thêm địa chỉ.",
+            });
         }
-        interface ProcessedCategoryProduct {
-            name: string;
-            categoryId: string;
-            windowProducts: Product[][];
+    },
+
+    // Xóa địa chỉ
+    profileDeleteAddress: async (req: Request, res: Response) => {
+        const { addressId } = req.params;
+
+        if (!addressId) {
+            return renderWithCommon(req, res, "profile", { title: "Thông tin cá nhân | CoreStation", errorMessage: "Địa chỉ không hợp lệ." });
         }
 
-        const otherProductsWindowSize = 6;
-        const processedCategoryProducts: ProcessedCategoryProduct[] = [];
+        try {
+            const api = createApi(req);
+            await api.delete(`/api/users/addresses/me/${addressId}`);
+            return res.redirect("/profile");
+        } catch (e: any) {
+            return renderWithCommon(req, res, "profile", {
+                title: "Thông tin cá nhân | CoreStation",
+                errorMessage: e?.response?.data?.message || "Có lỗi xảy ra khi xóa địa chỉ.",
+            });
+        }
+    },
 
-        if (categoryProducts && categoryProducts.length > 0) {
-            categoryProducts.forEach((category: any) => {
-                const windowOtherProducts = [];
-                if (category.products && category.products.length > 0) {
-                    for (let i = 0; i < category.products.length; i += otherProductsWindowSize) {
-                        let window = category.products.slice(i, i + otherProductsWindowSize);
-                        if (window.length < otherProductsWindowSize && category.products.length >= otherProductsWindowSize) {
-                            const remaining = otherProductsWindowSize - window.length;
-                            window = window.concat(category.products.slice(0, remaining));
-                        }
-                        windowOtherProducts.push(window);
-                    }
-                }
+    // Cập nhật địa chỉ
+    profileUpdateAddress: async (req: Request, res: Response) => {
+        const { addressId } = req.params;
+        const { newAddress } = req.body;
 
-                processedCategoryProducts.push({
-                    name: category.name,
-                    categoryId: category.categoryId,
-                    windowProducts: windowOtherProducts
-                });
+        if (!addressId || !newAddress?.trim()) {
+            return renderWithCommon(req, res, "profile", { title: "Thông tin cá nhân | CoreStation", errorMessage: "Địa chỉ mới không được để trống." });
+        }
+
+        try {
+            const api = createApi(req);
+            await api.patch(`/api/users/addresses/me/${addressId}`, { address: newAddress.trim() });
+            return res.redirect("/profile");
+        } catch (e: any) {
+            return renderWithCommon(req, res, "profile", {
+                title: "Thông tin cá nhân | CoreStation",
+                errorMessage: e?.response?.data?.message || "Có lỗi xảy ra khi cập nhật địa chỉ.",
+            });
+        }
+    },
+
+    // Cập nhật thông tin người dùng
+    profileUpdateUser: async (req: Request, res: Response) => {
+        const { email = "", fullName = "" } = req.body as { email?: string; fullName?: string };
+        const trimmed = { email: email.trim(), fullName: fullName.trim() };
+
+        const errors = [];
+        if (!trimmed.email) errors.push({ field: "email", message: "Email không được để trống" });
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed.email)) errors.push({ field: "email", message: "Email không hợp lệ" });
+        if (!trimmed.fullName) errors.push({ field: "fullName", message: "Họ tên không được để trống" });
+
+        if (errors.length) {
+            return renderWithCommon(req, res, "profile", {
+                title: "Thông tin cá nhân | CoreStation",
+                errors,
+                errorMessage: "Vui lòng kiểm tra lại thông tin",
             });
         }
 
-        // Get common data for header
-        const commonData = await getCommonViewData(req);
+        try {
+            const userId = (req as any).userId;
+            const api = createApi(req);
+            await api.patch(`/api/users/${userId}`, trimmed);
+            return renderWithCommon(req, res, "profile", {
+                title: "Thông tin cá nhân | CoreStation",
+                successMessage: "Đã cập nhật email và họ tên",
+            });
+        } catch (e: any) {
+            return renderWithCommon(req, res, "profile", {
+                title: "Thông tin cá nhân | CoreStation",
+                errorMessage: e?.response?.data?.message || "Có lỗi xảy ra khi cập nhật.",
+            });
+        }
+    },
 
-        // Render với common data cho header
-        res.render('home', {
-            title: 'CoreStation - PC và linh kiện máy tính',
-            bestSellersProducts: bestSellers || [],
-            windowNewProducts: windowNewProducts || [],
-            categoryProducts: processedCategoryProducts || [],
-            ...commonData
+    // Cập nhật mật khẩu
+    profileChangePassword: async (req: Request, res: Response) => {
+        const { oldPassword = "", newPassword = "", confirmPassword = "" } = req.body as any;
+        const curr = oldPassword.trim();
+        const next = newPassword.trim();
+        const confirm = confirmPassword.trim();
+
+        const errors = [];
+        if (!curr) errors.push({ field: "oldPassword", message: "Vui lòng nhập mật khẩu hiện tại" });
+        if (!next) errors.push({ field: "newPassword", message: "Mật khẩu mới không được để trống" });
+        else if (next.length < 6) errors.push({ field: "newPassword", message: "Mật khẩu mới phải có ít nhất 6 ký tự" });
+        if (next !== confirm) errors.push({ field: "confirmPassword", message: "Xác nhận mật khẩu không khớp" });
+        if (errors.length) {
+            return renderWithCommon(req, res, "profile", {
+                title: "Thông tin cá nhân | CoreStation",
+                errors,
+                errorMessage: "Vui lòng kiểm tra lại thông tin",
+            });
+        }
+
+        try {
+            const api = createApi(req);
+            await api.post("/api/auth/change-password", { oldPassword: curr, newPassword: next });
+            return renderWithCommon(req, res, "profile", {
+                title: "Thông tin cá nhân | CoreStation",
+                successMessage: "Đã đổi mật khẩu thành công",
+            });
+        } catch (e: any) {
+            return renderWithCommon(req, res, "profile", {
+                title: "Thông tin cá nhân | CoreStation",
+                errorMessage: e?.response?.data?.message || "Có lỗi xảy ra khi đổi mật khẩu.",
+            });
+        }
+    },
+
+    // Home
+    home: async (req: Request, res: Response) => {
+        const api = createApi(req);
+        const landing = unwrap(await api.get("/api/products/landing"));
+        const bestSellers = landing?.bestSellers || [];
+        const newArrivals = landing?.newArrivals || [];
+        const categoryProducts = landing?.categoryProducts || [];
+
+        // Window new products
+        const windowNewProducts: any[][] = [];
+        for (let i = 0; i < newArrivals.length; i += 4) {
+            let w = newArrivals.slice(i, i + 4);
+            if (w.length < 4) w = w.concat(newArrivals.slice(0, 4 - w.length));
+            windowNewProducts.push(w);
+        }
+
+        // Category windows
+        const otherSize = 6;
+        const processed = categoryProducts.map((c: any) => {
+            const windows: any[][] = [];
+            for (let i = 0; i < (c.products?.length || 0); i += otherSize) {
+                let w = c.products.slice(i, i + otherSize);
+                if (w.length < otherSize && c.products.length >= otherSize) {
+                    w = w.concat(c.products.slice(0, otherSize - w.length));
+                }
+                windows.push(w);
+            }
+            return { name: c.name, categoryId: c.categoryId, windowProducts: windows };
+        });
+
+        return renderWithCommon(req, res, "home", {
+            title: "CoreStation - PC và linh kiện máy tính",
+            bestSellersProducts: bestSellers,
+            windowNewProducts,
+            categoryProducts: processed,
         });
     },
 
+    // CATALOG
     catalog: async (req: Request, res: Response) => {
-        // Type-safe query parameters using ProductQuery interface
-        const query: ProductQuery = req.query as ProductQuery;
-
+        const query: QueryUrl = req.query as QueryUrl;
         const page = Number(query.page) || 1;
         const limit = Number(query.limit) || 9;
-
         const {
             sortBy = '',
             sortOrder = 'desc',
             categoryId = '',
             brandId = '',
             minPrice = '',
-            maxPrice = ''
+            maxPrice = '',
+            name = ''
         } = query;
 
         const apiParams: any = { page, limit };
@@ -325,11 +404,13 @@ const siteController = {
         if (brandId) apiParams.brandId = brandId;
         if (minPrice) apiParams.minPrice = minPrice;
         if (maxPrice) apiParams.maxPrice = maxPrice;
+        if (name) apiParams.name = name;
 
-        const productsRes = await axios.get(`${apiUrl}/api/products/search`, { params: apiParams });
+        const api = createApi(req);
+
+        const productsRes = await api.get(`${apiUrl}/api/products/search`, { params: apiParams });
         const paginationData = productsRes.data?.data || productsRes.data;
         const products_catalog = Array.isArray(paginationData?.datas) ? paginationData.datas : [];
-
         const pagination = new Pagination(
             products_catalog,
             page,
@@ -337,24 +418,21 @@ const siteController = {
             paginationData?.totalDatas || products_catalog.length
         );
 
-        const brandsRes = await axios.get(`${apiUrl}/api/brands`);
+        const brandsRes = await api.get(`${apiUrl}/api/brands`);
         const brands = Array.isArray(brandsRes.data) ? brandsRes.data : brandsRes.data.data;
 
         const filteredQuery: Record<string, string> = {};
-        Object.entries({ sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice }).forEach(([k, v]) => {
+        Object.entries({ sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice, name }).forEach(([k, v]) => {
             if (v !== undefined && v !== null && v !== '') {
                 filteredQuery[k] = String(v);
             }
         });
-
         const baseQueryString = Object.entries(filteredQuery)
             .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
             .join('&');
 
-        // Get common data for header
         const commonData = await getCommonViewData(req);
-
-        res.render('catalog', {
+        return res.render('catalog', {
             title: 'Danh mục sản phẩm | CoreStation',
             brands,
             products_catalog: pagination.datas,
@@ -372,41 +450,56 @@ const siteController = {
         });
     },
 
+    // PRODUCT DETAIL
     product: async (req: Request, res: Response) => {
-        const productRes = await axios.get(`${apiUrl}/api/products/details/${req.params.productId}`);
-        const product = productRes.data?.data || productRes.data;
-
-        const categoryRes = await axios.get(`${apiUrl}/api/categories/${product.categoryId}`);
-        const category = categoryRes.data?.data || categoryRes.data;
-
-        const brandRes = await axios.get(`${apiUrl}/api/brands/${product.brandId}`);
-        const brand = brandRes.data?.data || brandRes.data;
-
-        // Chọn variant đầu tiên làm default nếu không có variant nào được chọn
-        const selectedVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
-
-        // Tạo mảng stars cho rating
-        const stars = [1, 2, 3, 4, 5];
-
-        // Get common data for header
+        const { productId } = req.params;
         const commonData = await getCommonViewData(req);
-        console.log('Common Data:', commonData);
 
-        res.render('product', {
-            title: product.name || 'Chi tiết sản phẩm | CoreStation',
-            product: product,
-            category: category,
-            brand: brand,
-            selectedVariant: selectedVariant,
-            stars: stars,
-            ...commonData
-        });
+        const api = createApi(req);
+        try {
+            const productRes = await api.get(`${apiUrl}/api/products/${productId}`);
+            const product = unwrap(productRes);
+
+            const categoryRes = await api.get(`${apiUrl}/api/categories/${product.categoryId}`);
+            const category = unwrap(categoryRes);
+
+            const brandRes = await api.get(`${apiUrl}/api/brands/${product.brandId}`);
+            const brand = unwrap(brandRes);
+
+            const selectedVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
+
+            // TODO: TEMP STARS
+            const stars = [1, 2, 3, 4, 5];
+
+            return res.render('productDetail', {
+                title: `${product.name} | CoreStation`,
+                product,
+                category,
+                brand,
+                selectedVariant,
+                stars,
+                ...commonData
+            });
+        } catch (error: any) {
+            const status = error?.response?.status;
+            const message = error?.response?.data?.message || "Không thể kết nối đến server. Vui lòng thử lại sau.";
+            if (status === 404) {
+                return res.status(404).render('404', { title: 'Không tìm thấy | CoreStation', errorMessage: message });
+            }
+            return res.render('productDetail', { title: 'Chi tiết sản phẩm | CoreStation', errorMessage: message });
+        }
     },
 
-    logout: (req: Request, res: Response) => {
-        res.clearCookie('token');
-        res.redirect('/');
+    // CART
+    // Cart page
+    cart: async (req: Request, res: Response) => {
+        const commonData = await getCommonViewData(req);
+
+        return res.render('cart', {
+            title: 'Giỏ hàng | CoreStation',
+            ...commonData
+        });
     }
-}
+};
 
 export default siteController;

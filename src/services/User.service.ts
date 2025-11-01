@@ -34,7 +34,6 @@ const userService = {
     },
 
     updateUserById: async (id: string, data: UpdateUserDto): Promise<boolean> => {
-
         const result = await userDao.patchById(id, data);
         return result;
 
