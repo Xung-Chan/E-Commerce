@@ -6,14 +6,18 @@ import { UPLOAD_DIR } from "../services/Image.service.js";
 import productService from "../services/Product.service.js";
 import ApiResponse from "../utils/Api.response.js";
 import ApiError from "../utils/ApiError.js";
-import { Pagination, QueryUrl } from "../utils/Pagination.js";
+import { Pagination, ProductQuery } from "../utils/Pagination.js";
 import categoryService from "../services/Category.service.js";
 import { ICategory } from "../daos/Category.dao.js";
+import { CreateProductRequest } from "../dto/Request.dto.js";
 const productController = {
     createProduct: expressAsyncHandler(async (req: Request, res: Response) => {
-        const productData: CreateProductDto = req.body;
-        console.log(req.files);
-        productData.images = req.files ? (req.files as Express.Multer.File[]).map(file => UPLOAD_DIR + file.filename) : [];
+        const productData: CreateProductRequest = req.body;
+        const images = req.files as Express.Multer.File[];
+        if (!images || images.length === 0) {
+            throw new ApiError(400, "Bad Request", "At least one product image is required");
+        }
+        productData.images = images.map(file => UPLOAD_DIR + file.filename);
         const product = await productService.createProduct(productData);
         res.status(201).json(new ApiResponse(true, 201, "Product created successfully", product));
     }),
@@ -22,7 +26,7 @@ const productController = {
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
     }),
     searchProducts: expressAsyncHandler(async (req: Request, res: Response) => {
-        const query: QueryUrl = req.query;
+        const query: ProductQuery = req.query;
         const products = await productService.searchProducts(query);
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
     }),
@@ -52,7 +56,7 @@ const productController = {
     }),
     getProductsByTag: expressAsyncHandler(async (req: Request, res: Response) => {
         const tag = req.params.tag;
-        const query: QueryUrl = req.query;
+        const query: ProductQuery = req.query;
         if (!tag) {
             throw new ApiError(400, "Bad Request", "Tag is required");
         }

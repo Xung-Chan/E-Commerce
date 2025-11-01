@@ -1,14 +1,16 @@
 import { brandDao } from "../daos/Brand.dao.js";
 import { categoryDao } from "../daos/Category.dao.js";
 import { productDao } from "../daos/Product.dao.js";
-import { CreateProductDto } from "../dto/Create.dto.js";
+import { CreateVariantDto } from '../dto/Create.dto.js';
+import { CreateProductRequest } from "../dto/Request.dto.js";
 import { UpdateProductDto } from "../dto/Update.dto.js";
 import ApiError from "../utils/ApiError.js";
-import { Pagination, QueryUrl } from "../utils/Pagination.js";
+import { Pagination, ProductQuery } from "../utils/Pagination.js";
 import SortOption from "../utils/SortOption.js";
+import variantService from "./Variant.service.js";
 
 const productService = {
-    createProduct: async (data: CreateProductDto) => {
+    createProduct: async (data: CreateProductRequest) => {
         const brand = await brandDao.readById(data.brandId);
         if (!brand) {
             throw new ApiError(404, "Not Found", "Brand not found");
@@ -17,12 +19,23 @@ const productService = {
         if (!category) {
             throw new ApiError(404, "Not Found", "Category not found");
         }
-        return productDao.create(data);
+        const product = await productDao.create(data);
+        data.variants.forEach(async (variant) => {
+            const variantData: CreateVariantDto = {
+                productId: product._id.toString(),
+                distinctFeature: variant.distinctFeature,
+                price: variant.price,
+                stock: variant.stock,
+                discount: variant.discount || 0
+            };
+            await variantService.createVariant(variantData);
+        });
+        return product;
     },
     getAllProducts: async () => {
         return productDao.list();
     },
-    searchProducts: async (query: QueryUrl) => {
+    searchProducts: async (query: ProductQuery) => {
         const filter: {
             name?: { $regex: string, $options: string };
             categoryId?: string;
@@ -84,7 +97,7 @@ const productService = {
         }
         return productDao.findBy({ categoryId });
     },
-    getProductsByTag: async (tag: string, query: QueryUrl = {}) => {
+    getProductsByTag: async (tag: string, query: ProductQuery = {}) => {
         let sortOption: SortOption;
         switch (tag) {
             case "best-seller":

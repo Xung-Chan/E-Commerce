@@ -26,16 +26,14 @@ interface CreateCouponDto {
 }
 interface CreateOrderDto {
     userId: string;
-    products: [
-        {
-            productId: string;
-            variantId: string;
-            quantity: number;
-        }
-    ];
+    shippingMethod: string;
+    paymentMethod: string;
+
+    couponId?: string | null;
     totalPrice?: number;
     totalDiscount?: number;
     totalPay?: number;
+
 }
 interface CreateProductDto {
     name: string;
@@ -43,11 +41,6 @@ interface CreateProductDto {
     categoryId: string;
     description: string;
     images: string[];
-    variants: {
-        distinctFeature: string;
-        price: number;
-        stock: number
-    }[];
 }
 interface CreateRateDto {
     userId: string;
@@ -60,12 +53,14 @@ interface CreateCartItemDto {
     quantity: number;
 }
 interface CreateVariantDto {
+    productId: string;
     distinctFeature: string;
     price: number;
+    discount?: number;
     stock: number;
 }
 interface CreateOrderItemDto {
-    orderId: string;
+    orderId?: string | null;
     variantId: string;
     quantity: number;
     price: number;

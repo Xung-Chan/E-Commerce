@@ -1,8 +1,11 @@
 import { Router } from "express";
 import { authJwt, authJwtAdmin } from "../middleware/authJwt.middleware.js";
 import couponController from "../controllers/Coupon.controller.js";
+import { upload } from "../services/Image.service.js";
 const couponRouter = Router();
-couponRouter.get("/:id", couponController.getCouponById);
-couponRouter.post("/", authJwtAdmin, couponController.createCoupon);
-couponRouter.delete("/:id", authJwtAdmin, couponController.deleteCouponById);
+couponRouter.get("/", couponController.getAllCoupons);
+couponRouter.get("/:couponId", couponController.getCouponById);
+couponRouter.post("/", authJwtAdmin, upload.none(), couponController.createCoupon);
+couponRouter.delete("/:couponId", authJwtAdmin, couponController.deleteCouponById);
+
 export default couponRouter;

@@ -89,7 +89,9 @@ app.set("views", "./views")
 app.use(siteRouter)
 
 app.use("/api", apiRouter);
+
 app.use(errorHandler)
+
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }

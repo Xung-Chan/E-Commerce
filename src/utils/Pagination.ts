@@ -30,6 +30,9 @@ interface QueryUrl {
     sortBy?: string;
     sortOrder?: "asc" | "desc";
 
+
+}
+interface ProductQuery extends QueryUrl {
     //filter
     name?: string;
     categoryId?: string;
@@ -43,4 +46,5 @@ export {
 
 export type {
     QueryUrl
+    , ProductQuery
 };

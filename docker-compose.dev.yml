@@ -6,9 +6,9 @@ services:
     container_name: mongodb
     # restart: always
     ports:
-      - "27018:27017"
+      - "${MONGODB_PORT}:27017"
     environment:
-      MONGO_INITDB_DATABASE: e_commerce
+      MONGO_INITDB_DATABASE: ${DB_NAME}
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 30s
@@ -28,3 +28,10 @@ services:
       mongodb:
         condition: service_healthy
     command: npm run dev
+    environment:
+      - USER_EMAIL: ${USER_EMAIL}
+      - USER_PASSWORD: ${USER_PASSWORD}
+      - SECRET_KEY: ${SECRET_KEY}
+      - PORT: ${PORT}
+      - BRAND: ${BRAND}
+      - DB_NAME: ${DB_NAME}

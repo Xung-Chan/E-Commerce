@@ -1,38 +1,62 @@
 import { orderDao } from "../daos/Order.dao.js";
-import { productDao } from "../daos/Product.dao.js";
-import { CreateOrderDto } from "../dto/Create.dto";
-import ApiError from "../utils/ApiError";
+import { orderItemDao } from '../daos/OrderItem.dao.js';
+import { variantDao } from "../daos/Variant.dao.js";
+import { CreateOrderDto } from "../dto/Create.dto.js";
+import { CreateOrderRequest } from '../dto/Request.dto.js';
+import ApiError from "../utils/ApiError.js";
 import { OrderStatus } from "../utils/OrderStatus.enum.js";
+import { statusHistoryDao } from './../daos/StatusHistory.dao.js';
 
 const orderService = {
-    createOrder: async (data: CreateOrderDto) => {
+    createOrder: async (data: CreateOrderRequest) => {
         let totalPrice = 0;
         let totalDiscount = 0;
         let totalPay = 0;
-        for (const item of data.products) {
-            const product = await productDao.readById(item.productId);
-            if (product === null) {
-                throw new ApiError(404, "Not Found", `Product with ID ${item.productId} not found`);
-            }
-            const variant = product.variants.id(item.variantId);
+        const orderItems = await Promise.all(data.variants.map(async (item) => {
+            const variant = await variantDao.readById(item.variantId);
             if (variant === null) {
                 throw new ApiError(404, "Not Found", `Variant with ID ${item.variantId} not found`);
             }
+
             totalPrice += variant.price * item.quantity;
-            totalDiscount += item.quantity * variant.price * product.discount / 100;
-        }
+            const discountAmount = variant.price * variant.discount / 100;
+            totalDiscount += item.quantity * discountAmount;
+            const orderItem = await orderItemDao.create({
+                variantId: item.variantId,
+                quantity: item.quantity,
+                price: variant.price,
+                discount: discountAmount,
+            });
+            return orderItem;
+        }));
         totalPay = totalPrice - totalDiscount;
-        data.totalPrice = totalPrice;
-        data.totalDiscount = totalDiscount;
-        data.totalPay = totalPay;
-        return orderDao.create(data);
+        const orderData: CreateOrderDto = {
+            userId: data.userId,
+            couponId: data.couponId || null,
+            shippingMethod: data.shippingMethod,
+            paymentMethod: data.paymentMethod,
+            totalPrice,
+            totalDiscount,
+            totalPay,
+        };
+        const order = await orderDao.create(orderData);
+        await statusHistoryDao.create({
+            orderId: order._id.toString(),
+            status: OrderStatus.PENDING
+        });
+        orderItems.forEach(async (item) => {
+            orderItemDao.patchById(item._id.toString(), {
+                orderId: order._id
+            })
+        });
+        return order;
+
     },
 
-
-    //GET
     getAllOrders: async () => {
         return orderDao.list();
     },
+
     getOrderById: async (id: string) => {
         const order = await orderDao.readById(id);
         if (!order) {
@@ -40,6 +64,7 @@ const orderService = {
         }
         return order;
     },
+
     getOrderByUserId: async (userId: string) => {
         return orderDao.findBy({ userId }, { sort: { orderDate: -1 } });
     },
@@ -56,21 +81,19 @@ const orderService = {
         if (!validStatuses.includes(status)) {
             throw new ApiError(400, "Bad Request", `Invalid status. Valid statuses are: ${validStatuses.join(", ")}`);
         }
+
         const order = await orderDao.readById(id);
         if (!order) {
             throw new ApiError(404, "Not Found", "Order not found");
         }
-        const statusHistories = order.statusHistories.map(s => s.status.toString());
-        if (statusHistories.includes(status)) {
-            throw new ApiError(400, "Bad Request", `Order is already in status ${status}`);
-        }
 
-
-        const data = {
-            currentStatus: status,
-            statusHistories: [{ status, date: new Date() }, ...order.statusHistories]
-        };
-        return orderDao.patchById(id, data);
+        await statusHistoryDao.create({
+            orderId: id,
+            status: status
+        });
+        const updated = await orderDao.patchById(id, { currentStatus: status });
+        return updated;
     }
+
 };
 export default orderService;

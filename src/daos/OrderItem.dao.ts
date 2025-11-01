@@ -1,11 +1,10 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
-import { CreateOrderItemDto } from "../dto/Create.dto";
-import { WithId } from "../utils/WithId";
+import { CreateOrderItemDto } from "../dto/Create.dto.js";
+import { WithId } from "../utils/WithId.js";
 const OrderItemSchema = new Schema({
     orderId: {
         type: Schema.Types.ObjectId,
         ref: "Order",
-        required: true
     },
     variantId: {
         type: Schema.Types.ObjectId,
@@ -49,6 +48,10 @@ class OrderItemDao {
     async findOne(query: Partial<any>): Promise<IOrderItem | null> {
         return OrderItem.findOne(query).exec();
 
+    }
+    async patchById(id: string, item: Partial<any>): Promise<boolean> {
+        const result = await OrderItem.updateOne({ _id: id }, { $set: item });
+        return result.modifiedCount > 0;
     }
 }
 export const orderItemDao = new OrderItemDao();

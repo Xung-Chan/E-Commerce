@@ -1,22 +1,17 @@
 import mongoose, { InferSchemaType, QueryOptions, Schema } from "mongoose";
-import CRUD from "../utils/CRUD.interface.js";
 import { CreateOrderDto } from "../dto/Create.dto.js";
-import { UpdateOrderDto } from "../dto/Update.dto.js";
+import CRUD from "../utils/CRUD.interface.js";
 import { WithId } from "../utils/WithId.js";
+import e from "express";
 const OrderSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
-    products: {
-        type: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "OrderItem"
-            }
-        ],
-        required: true,
-        default: []
+    couponId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Coupon",
     },
 
     totalPrice: {
@@ -33,20 +28,21 @@ const OrderSchema = new Schema({
         required: true
 
     },
+    shippingMethod: {
+        type: String,
+        enum: ["standard", "express"],
+        required: true
+    },
+    paymentMethod: {
+        type: String,
+        enum: ["credit", "cash_on_delivery"],
+        required: true
+    },
     currentStatus: {
         type: String,
-        enum: ["pending", "processing", "shipped", "delivered", "canceled"],
+        enum: ["pending", "processing", "delivered", "shipped", "canceled"],
         default: "pending"
     },
-    statusHistories: {
-        type: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "StatusHistory"
-            }
-        ],
-        required: true
-    }
 
 }, {
     versionKey: false,
@@ -55,8 +51,8 @@ const OrderSchema = new Schema({
 
 const Order = mongoose.model("Order", OrderSchema)
 class OrderDao implements CRUD {
-    async patchById(id: string, item: UpdateOrderDto): Promise<boolean> {
-        const result = await Order.updateOne({ _id: id }, { $set: item });
+    async patchById(id: string, part: Partial<any>): Promise<boolean> {
+        const result = await Order.updateOne({ _id: id }, { $set: part });
         return result.modifiedCount > 0;
     }
     async findBy(query: Partial<any>, options: QueryOptions = {}): Promise<any | null> {

@@ -1,26 +1,29 @@
 import { Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
-import { create } from 'express-handlebars';
-import { CreateOrderDto } from '../dto/Create.dto';
-import orderService from '../services/Order.service';
-import ApiResponse from '../utils/Api.response';
-import ApiError from '../utils/ApiError';
+import { CreateOrderRequest } from '../dto/Request.dto.js';
+import orderService from '../services/Order.service.js';
+import ApiResponse from '../utils/Api.response.js';
+import ApiError from '../utils/ApiError.js';
 const orderController = {
     createOrder: expressAsyncHandler(async (req: Request, res: Response) => {
-        const data: CreateOrderDto = req.body;
-        if (!data.userId) {
-            throw new ApiError(400, "Bad Request", "User ID is required");
+        const userId = (req as any).userId;
+        if (!userId) {
+            throw new ApiError(401, "Unauthorized", "No token provided");
         }
-        if (!data.products) {
-            throw new ApiError(400, "Bad Request", "Products are required");
+        const data: CreateOrderRequest = req.body;
+        data.userId = userId;
+        if (!data.variants || data.variants.length === 0) {
+            throw new ApiError(400, "Bad Request", "Variants are required");
         }
         const order = await orderService.createOrder(data);
         res.status(201).json(new ApiResponse(true, 201, "Order created successfully", order));
     }),
+
     getAllOrders: expressAsyncHandler(async (req: Request, res: Response) => {
         const orders = await orderService.getAllOrders();
         res.status(200).json(new ApiResponse(true, 200, "Orders fetched successfully", orders));
     }),
+
     getOrderById: expressAsyncHandler(async (req: Request, res: Response) => {
         const orderId = req.params.orderId;
         if (!orderId) {
@@ -29,6 +32,7 @@ const orderController = {
         const order = await orderService.getOrderById(orderId);
         res.status(200).json(new ApiResponse(true, 200, "Order fetched successfully", order));
     }),
+
     getOrderByUserId: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = req.params.userId;
         if (!userId) {
@@ -37,6 +41,7 @@ const orderController = {
         const orders = await orderService.getOrderByUserId(userId);
         res.status(200).json(new ApiResponse(true, 200, "Orders fetched successfully", orders));
     }),
+
     deleteOrderById: expressAsyncHandler(async (req: Request, res: Response) => {
         const orderId = req.params.orderId;
         if (!orderId) {
@@ -58,6 +63,7 @@ const orderController = {
         const updatedOrder = await orderService.updateStatusById(orderId, status);
         res.status(200).json(new ApiResponse(true, 200, "Order status updated successfully", updatedOrder));
     }),
+
     getMyOrders: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = (req as any).userId;
         if (!userId) {

@@ -11,11 +11,13 @@ const CouponSchema = new Schema(
         },
         discount: {
             type: Number,
-            required: true
+            required: true,
+            min: 1
         },
         maxUse: {
             type: Number,
-            required: true
+            required: true,
+            min: 1
         },
         used: {
             type: Number,
@@ -45,8 +47,11 @@ class CouponDao implements CRUD {
         }, { $set: item });
         return result.modifiedCount > 0;
     }
-    async findBy(query: Partial<any>): Promise<any | null> {
+    async findBy(query: Partial<any>): Promise<ICoupon[] | null> {
         return Coupon.find(query).exec();
+    }
+    async findOneBy(query: Partial<any>): Promise<ICoupon | null> {
+        return await Coupon.findOne(query).exec();
     }
     async create(item: CreateCouponDto): Promise<any> {
         return await Coupon.create(item);

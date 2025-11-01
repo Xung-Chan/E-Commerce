@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { Request, Response } from "express";
 import { verify } from "jsonwebtoken";
-import { Pagination, QueryUrl } from "../utils/Pagination.js";
+import { Pagination, ProductQuery } from "../utils/Pagination.js";
 
 // Use localhost for internal API calls
 const apiUrl = 'http://localhost:8000';
@@ -12,15 +12,15 @@ const apiUrl = 'http://localhost:8000';
 const getCommonViewData = async (req: Request) => {
     const isLoggedIn = (req as any).isLoggedIn || false;
     const userId = (req as any).userId || null;
-    
+
     let user = null;
     let categories = [];
-    
+
     try {
         // Get categories for navigation
         const categoriesRes = await axios.get(`${apiUrl}/api/categories`);
         categories = Array.isArray(categoriesRes.data) ? categoriesRes.data : categoriesRes.data.data;
-        
+
         // Get user data if logged in
         if (isLoggedIn && userId) {
             const token = req.cookies?.token;
@@ -42,7 +42,7 @@ const getCommonViewData = async (req: Request) => {
     } catch (error) {
         console.error('Error fetching common view data:', error);
     }
-    
+
     return {
         isLoggedIn,
         user,
@@ -55,11 +55,11 @@ const siteController = {
 
     login: async (req: Request, res: Response) => {
         const commonData = await getCommonViewData(req);
-        
+
         if (commonData.isLoggedIn) {
             return res.redirect('/');
         }
-        
+
         res.render('login', {
             title: 'Đăng nhập | CoreStation',
             ...commonData
@@ -141,7 +141,7 @@ const siteController = {
 
     register: async (req: Request, res: Response) => {
         const commonData = await getCommonViewData(req);
-        
+
         res.render('register', {
             title: 'Đăng ký | CoreStation',
             ...commonData // Spread common data for header
@@ -303,8 +303,8 @@ const siteController = {
     },
 
     catalog: async (req: Request, res: Response) => {
-        // Type-safe query parameters using QueryUrl interface
-        const query: QueryUrl = req.query as QueryUrl;
+        // Type-safe query parameters using ProductQuery interface
+        const query: ProductQuery = req.query as ProductQuery;
 
         const page = Number(query.page) || 1;
         const limit = Number(query.limit) || 9;
@@ -399,7 +399,7 @@ const siteController = {
             brand: brand,
             selectedVariant: selectedVariant,
             stars: stars,
-            ...commonData 
+            ...commonData
         });
     },
 

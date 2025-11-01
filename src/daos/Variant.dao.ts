@@ -11,10 +11,23 @@ const VariantSchema = new Schema({
     distinctFeature: {
         type: String,
         required: true,
-        unique: true,
     },
-    price: { type: Number, required: true },
-    stock: { type: Number, required: true }
+    price: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    discount: {
+        type: Number,
+        min: 0,
+        max: 50,
+        default: 0
+    },
+    stock: {
+        type: Number,
+        required: true,
+        min: 0
+    }
 
 }, {
     versionKey: false,
@@ -25,7 +38,7 @@ class VariantDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {
         return Variant.find(query).exec();
     }
-    async create(data: CreateVariantDto) {
+    async create(data: CreateVariantDto): Promise<IVariant> {
         const variant = await Variant.create(data);
         return variant;
     }

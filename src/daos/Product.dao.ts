@@ -37,20 +37,7 @@ const ProductSchema = new Schema({
         max: 5,
         default: 0
     },
-    discount: {
-        type: Number,
-        min: 0,
-        max: 50,
-        default: 0
-    },
-    variants: {
-        type: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Variant"
-        }],
-        required: true
 
-    },
 }, {
     versionKey: false,
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }

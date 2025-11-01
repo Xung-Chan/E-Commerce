@@ -1,10 +1,18 @@
-import { variantDao } from "../daos/Variant.dao";
-import { CreateVariantDto } from "../dto/Create.dto";
-import { UpdateVariantDto } from "../dto/Update.dto";
-import ApiError from "../utils/ApiError";
+import { variantDao } from "../daos/Variant.dao.js";
+import { CreateVariantDto } from "../dto/Create.dto.js";
+import { UpdateVariantDto } from "../dto/Update.dto.js";
+import ApiError from "../utils/ApiError.js";
 
 const variantService = {
     createVariant: async (data: CreateVariantDto) => {
+        const productExists = await variantDao.findBy({ productId: data.productId });
+        if (!productExists) {
+            throw new ApiError(404, "Not Found", "Product not found");
+        }
+        const existingVariant = await variantDao.findBy({ productId: data.productId, distinctFeature: data.distinctFeature });
+        if (existingVariant && existingVariant.length > 0) {
+            throw new ApiError(409, "Conflict", "Variant with the same distinct feature already exists for this product");
+        }
         return variantDao.create(data);
     },
     getAllVariants: async () => {
