@@ -1,7 +1,7 @@
-import { CreateRateDto } from "../dto/Create.dto";
+import { CreateRateDto } from "../dto/Create.dto.js";
 import { rateDao } from "../daos/Rate.dao.js";
 import { productDao } from "../daos/Product.dao.js";
-import ApiError from "../utils/ApiError";
+import ApiError from "../utils/ApiError.js";
 const rateService = {
     createRate: async (data: CreateRateDto) => {
         return rateDao.create(data);

@@ -2,7 +2,6 @@ import mongoose, { InferSchemaType, QueryOptions, Schema } from "mongoose";
 import { CreateOrderDto } from "../dto/Create.dto.js";
 import CRUD from "../utils/CRUD.interface.js";
 import { WithId } from "../utils/WithId.js";
-import e from "express";
 const OrderSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -43,12 +42,14 @@ const OrderSchema = new Schema({
         enum: ["pending", "processing", "delivered", "shipped", "canceled"],
         default: "pending"
     },
-
+    deletedAt: {
+        type: Date,
+        default: null
+    }
 }, {
     versionKey: false,
-    timestamps: { createdAt: 'createdAt' }
+    timestamps: { createdAt: 'createdAt' },
 })
-
 const Order = mongoose.model("Order", OrderSchema)
 class OrderDao implements CRUD {
     async patchById(id: string, part: Partial<any>): Promise<boolean> {
@@ -56,7 +57,10 @@ class OrderDao implements CRUD {
         return result.modifiedCount > 0;
     }
     async findBy(query: Partial<any>, options: QueryOptions = {}): Promise<any | null> {
-        return await Order.find(query, null, options).exec();
+        return await Order.find({
+            ...query,
+            deletedAt: null
+        }, null, options).exec();
     }
     async create(item: CreateOrderDto): Promise<IOrder> {
         return await Order.create(item);
@@ -65,14 +69,14 @@ class OrderDao implements CRUD {
         return await Order.findById(id).exec();
     }
     async deleteById(id: string): Promise<boolean> {
-        const result = await Order.deleteOne({ _id: id });
-        return result.deletedCount > 0;
+        const result = await Order.updateOne({ _id: id }, { $set: { deletedAt: new Date() } });
+        return result.modifiedCount > 0;
     }
     async list(): Promise<any[]> {
         return await Order.find().exec();
     }
     async count(query: Partial<any>): Promise<number> {
-        return await Order.countDocuments(query).exec();
+        return await Order.countDocuments({ ...query, deletedAt: null }).exec();
     }
 }
 export const orderDao = new OrderDao();

@@ -98,6 +98,10 @@ const orderService = {
 
     //DELETE
     deleteOrderById: async (id: string) => {
+        const order = await orderDao.readById(id);
+        if (!order) {
+            throw new ApiError(404, "Not Found", "Order not found");
+        }
         return orderDao.deleteById(id);
     },
 
