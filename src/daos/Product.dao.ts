@@ -37,7 +37,10 @@ const ProductSchema = new Schema({
         max: 5,
         default: 0
     },
-
+    deletedAt: {
+        type: Date,
+        default: null
+    }
 }, {
     versionKey: false,
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
@@ -51,24 +54,21 @@ class ProductDao implements CRUD {
     async list(): Promise<any[]> {
         return await Product.find().exec();
     }
-    // async sortBy(sortOption: SortOption): Promise<any[]> {
-    //     return await Product.find().sort(sortOption.toQuery()).exec();
-    // }
-    async findBy(query: Partial<any>, option: QueryOptions = {}): Promise<any | null> {
-        return Product.find(query, null, option).exec();
+    async findBy(query: Partial<any>, option: QueryOptions = {}): Promise<IProduct[]> {
+        return Product.find({ ...query, deletedAt: null }, null, option).exec();
     }
     async count(query: Partial<any>): Promise<number> {
-        return await Product.countDocuments(query).exec();
+        return await Product.countDocuments({ ...query, deletedAt: null }).exec();
     }
     async readById(id: string): Promise<IProduct | null> {
         return await Product.findById(id).exec();
     }
     async deleteById(id: string): Promise<boolean> {
-        const result = await Product.deleteOne({ _id: id });
-        return result.deletedCount > 0;
+        const result = await Product.updateOne({ _id: id, deletedAt: null }, { $set: { deletedAt: new Date() } });
+        return result.modifiedCount > 0;
     }
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
-        const result = await Product.updateOne({ _id: id }, { $set: item });
+        const result = await Product.updateOne({ _id: id, deletedAt: null }, { $set: item });
         return result.modifiedCount > 0;
     }
 }

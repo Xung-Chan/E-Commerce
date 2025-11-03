@@ -1,5 +1,5 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
-import { WithId } from "../utils/WithId";
+import { WithId } from "../utils/WithId.js";
 
 const TokenSchema = new Schema({
     userId: {

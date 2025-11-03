@@ -1,7 +1,7 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
-import CRUD from "../utils/CRUD.interface";
-import { CreateCartItemDto } from "../dto/Create.dto";
-import { WithId } from "../utils/WithId";
+import CRUD from "../utils/CRUD.interface.js";
+import { CreateCartItemDto } from "../dto/Create.dto.js";
+import { WithId } from "../utils/WithId.js";
 
 const CartItemSchema = new Schema({
     userId: {

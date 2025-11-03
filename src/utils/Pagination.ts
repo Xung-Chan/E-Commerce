@@ -42,14 +42,22 @@ interface ProductQuery extends QueryUrl {
 }
 interface OrderQuery extends QueryUrl {
     userId?: string;
+    couponId?: string;
     status?: string;
 }
-export {
-    Pagination
-};
+
+interface CouponQuery extends QueryUrl {
+    code?: string;
+    status?: string;
+}
 
 export type {
     QueryUrl,
     ProductQuery,
-    OrderQuery
+    OrderQuery,
+    CouponQuery
+};
+
+export {
+    Pagination
 };

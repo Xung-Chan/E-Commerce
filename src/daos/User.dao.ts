@@ -38,19 +38,26 @@ const UserSchema = new Schema({
         enum: ["active", "inactive", "banned"],
         default: "active"
 
-    }
+    },
+    deletedAt: {
+        type: Date,
+        default: null
+    },
 }, {
     versionKey: false,
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 })
 const User = mongoose.model("User", UserSchema)
 class UserDao implements CRUD {
+
     async patchById(id: string, item: Partial<IUser>): Promise<boolean> {
-        return await User.updateOne({ _id: id }, { $set: item }).then(result => result.modifiedCount > 0);
+        return await User.updateOne({ _id: id, deletedAt: null }, { $set: item }).then(result => result.modifiedCount > 0);
     }
+
     async findBy(query: Partial<any>): Promise<any | null> {
-        return await User.find(query).exec();
+        return await User.find({ ...query, deletedAt: null }).exec();
     }
+
     async create(item: CreateUserDto): Promise<IUser> {
         const user = User.create({
             email: item.email,
@@ -61,6 +68,7 @@ class UserDao implements CRUD {
         });
         return await user;
     }
+
     async createAdmin(): Promise<any> {
         const isExist = await User.findOne({ role: "admin" }).exec();
         if (isExist) return;
@@ -77,17 +85,25 @@ class UserDao implements CRUD {
         });
 
     }
+
     async readById(id: string): Promise<IUser | null> {
         const user = await User.findById(id).exec();
         return user
     }
+
     async deleteById(id: string): Promise<boolean> {
-        const result = await User.deleteOne({ _id: id });
-        return result.deletedCount > 0;
+        const result = await User.updateOne({ _id: id, deletedAt: null }, { $set: { deletedAt: new Date() } });
+        return result.modifiedCount > 0;
     }
+
     async list(): Promise<IUser[]> {
-        return await User.find().exec();
+        return await User.find({ deletedAt: null }).exec();
     }
+
+    async count(query: Partial<any>): Promise<number> {
+        return await User.countDocuments({ ...query, deletedAt: null }).exec();
+    }
+
 }
 export const userDao = new UserDao();
 export type IUser = WithId<InferSchemaType<typeof UserSchema>>;

@@ -22,6 +22,10 @@ const CommentSchema = new Schema({
         type: String,
         required: true
     },
+    deletedAt: {
+        type: Date,
+        default: null
+    }
 }, {
     versionKey: false,
     timestamps: {
@@ -32,11 +36,14 @@ const CommentSchema = new Schema({
 const Comment = mongoose.model("Comment", CommentSchema);
 class CommentDao implements CRUD {
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
-        const result = await Comment.updateOne({ _id: id }, { $set: item });
+        const result = await Comment.updateOne({ _id: id, deletedAt: null }, { $set: item });
         return result.modifiedCount > 0;
     }
     async findBy(query: Partial<any>): Promise<any | null> {
-        return Comment.find(query).exec();
+        return Comment.find({
+            ...query,
+            deletedAt: null
+        }).exec();
     }
     async create(item: CreateCommentDto): Promise<any> {
         return await Comment.create(item);
@@ -46,8 +53,8 @@ class CommentDao implements CRUD {
     }
 
     async deleteById(id: string): Promise<boolean> {
-        const result = await Comment.deleteOne({ _id: id });
-        return result.deletedCount > 0;
+        const result = await Comment.updateOne({ _id: id, deletedAt: null }, { $set: { deletedAt: new Date() } });
+        return result.modifiedCount > 0;
     }
     async list(): Promise<any[]> {
         return Comment.find().exec();

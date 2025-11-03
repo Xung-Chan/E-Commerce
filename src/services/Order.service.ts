@@ -1,10 +1,9 @@
-import { get } from "mongoose";
+import ApiError from "../utils/ApiError.js";
 import { orderDao } from "../daos/Order.dao.js";
-import { orderItemDao } from '../daos/OrderItem.dao.js';
 import { variantDao } from "../daos/Variant.dao.js";
 import { CreateOrderDto } from "../dto/Create.dto.js";
+import { orderItemDao } from '../daos/OrderItem.dao.js';
 import { CreateOrderRequest } from '../dto/Request.dto.js';
-import ApiError from "../utils/ApiError.js";
 import { OrderStatus } from "../utils/OrderStatus.enum.js";
 import { OrderQuery, Pagination } from "../utils/Pagination.js";
 import { statusHistoryDao } from './../daos/StatusHistory.dao.js';
@@ -124,6 +123,11 @@ const orderService = {
         });
         const updated = await orderDao.patchById(id, { currentStatus: status });
         return updated;
+    },
+
+    getRevenue: async () => {
+        const totalRevenue = await orderDao.sumRevenue();
+        return totalRevenue;
     }
 
 };
