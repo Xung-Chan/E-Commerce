@@ -1,6 +1,7 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { WithId } from "../utils/WithId.js";
+import { CreateRateDto } from "../dto/Create.dto.js";
 const RateSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -40,10 +41,7 @@ class RateDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {
         return await Rate.find({ ...query, deletedAt: null }).exec();
     }
-    async create(item: {
-        userId: string,
-        rate: number
-    }): Promise<any> {
+    async create(item: CreateRateDto): Promise<any> {
         return await Rate.create(item);
     }
     async readById(id: string): Promise<any | null> {

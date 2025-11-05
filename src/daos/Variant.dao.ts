@@ -38,7 +38,7 @@ const VariantSchema = new Schema({
 })
 const Variant = mongoose.model("Variant", VariantSchema);
 class VariantDao implements CRUD {
-    async findBy(query: Partial<any>): Promise<any | null> {
+    async findBy(query: Partial<any>): Promise<IVariant[]> {
         return Variant.find({ ...query, deletedAt: null }).exec();
     }
     async create(data: CreateVariantDto): Promise<IVariant> {

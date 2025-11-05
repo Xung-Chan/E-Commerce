@@ -84,7 +84,11 @@ const productService = {
         if (!product) {
             throw new ApiError(404, "Not Found", "Product not found");
         }
-        return product;
+        const variants = await variantService.getVariantsByProductId(id);
+        return {
+            ...product,
+            variants: variants
+        };
     },
 
     getProductsByBrandId: async (brandId: string) => {

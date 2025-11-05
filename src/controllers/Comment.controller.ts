@@ -1,18 +1,35 @@
 import expressAsyncHandler from "express-async-handler";
 import { Request, Response } from "express";
-import { CreateCommentDto } from "../dto/Create.dto";
-import commentService from "../services/Comment.service";
-import ApiResponse from "../utils/Api.response";
+import { CreateCommentDto } from "../dto/Create.dto.js";
+import commentService from "../services/Comment.service.js";
+import ApiResponse from "../utils/Api.response.js";
+import ApiError from "../utils/ApiError.js";
+import { CreateCommentRequest } from "../dto/Request.dto.js";
 const commentController = {
+
     createComment: expressAsyncHandler(async (req: Request, res: Response) => {
-        const data: CreateCommentDto = req.body;
+        const userId = (req as any).userId;
+        if (!userId) {
+            throw new ApiError(401, "Unauthorized", "No token provided");
+        }
+        const {
+            productId,
+            content
+        } = req.body;
+        const data: CreateCommentRequest = {
+            userId: userId,
+            productId: productId,
+            content: content
+        };
         const comment = await commentService.createComment(data);
         res.status(201).json(new ApiResponse(true, 201, "Comment created successfully", comment));
     }),
+
     getAllComments: expressAsyncHandler(async (req: Request, res: Response) => {
         const comments = await commentService.getAllComments();
         res.status(200).json(new ApiResponse(true, 200, "Comments fetched successfully", comments));
     }),
+
     getCommentsByProductId: expressAsyncHandler(async (req: Request, res: Response) => {
         const productId = req.params.productId;
         if (!productId) {
@@ -22,6 +39,7 @@ const commentController = {
         const comments = await commentService.getCommentsByProductId(productId);
         res.status(200).json(new ApiResponse(true, 200, "Comments fetched successfully", comments));
     }),
+
     deleteCommentById: expressAsyncHandler(async (req: Request, res: Response) => {
         const commentId = req.params.commentId;
         if (!commentId) {
@@ -37,5 +55,6 @@ const commentController = {
 
         res.status(200).json(new ApiResponse(true, 200, "Comment deleted successfully", null));
     })
+
 };
 export default commentController;

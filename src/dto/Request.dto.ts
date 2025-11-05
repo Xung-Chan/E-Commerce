@@ -25,8 +25,23 @@ interface CreateOrderRequest {
     shippingMethod: string;
     paymentMethod: string;
 }
+
+interface CreateCommentRequest {
+    userId: string;
+    productId: string;
+    content: string;
+}
+
+interface CreateRatingRequest {
+    userId: string;
+    productId: string;
+    rate: number;
+}
+
 export type {
     LoginRequest,
     CreateOrderRequest,
-    CreateProductRequest
+    CreateProductRequest,
+    CreateCommentRequest,
+    CreateRatingRequest
 };

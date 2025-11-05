@@ -5,8 +5,8 @@ import { authJwt, authJwtAdmin } from "../middleware/authJwt.middleware.js";
 const commentRouter = Router();
 
 commentRouter.get("/product/:productId", commentController.getCommentsByProductId);
-commentRouter.post("/:productId", commentController.createComment);
+commentRouter.post("/", authJwt, commentController.createComment);
 commentRouter.delete("/:id", authJwtAdmin, commentController.deleteCommentById);
-commentRouter.get("/", authJwtAdmin, commentController.getAllComments);
+commentRouter.get("/", commentController.getAllComments);
 
 export default commentRouter;
