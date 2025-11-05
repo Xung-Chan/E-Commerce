@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 interface CreateUserDto {
     email: string;
     password: string;
@@ -16,6 +18,7 @@ interface CreateCategoryDto {
 }
 interface CreateCommentDto {
     userId: string;
+    fullName: string;
     productId: string;
     content: string;
 }
@@ -44,6 +47,7 @@ interface CreateProductDto {
 }
 interface CreateRateDto {
     userId: string;
+    fullName: string;
     productId: string;
     rate: number;
 }

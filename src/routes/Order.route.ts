@@ -3,6 +3,7 @@ import { authJwt, authJwtAdmin } from "../middleware/authJwt.middleware.js";
 import orderController from "../controllers/Order.controller.js";
 const orderRouter = Router();
 orderRouter.get("/", authJwtAdmin, orderController.getAllOrders);
+orderRouter.get("/search", authJwtAdmin, orderController.searchOrder);
 orderRouter.post("/", authJwt, orderController.createOrder);
 orderRouter.get("/me", authJwt, orderController.getMyOrders);
 orderRouter.get("/:orderId", authJwt, orderController.getOrderById);

@@ -29,9 +29,9 @@ services:
         condition: service_healthy
     command: npm run dev
     environment:
-      - USER_EMAIL: ${USER_EMAIL}
-      - USER_PASSWORD: ${USER_PASSWORD}
-      - SECRET_KEY: ${SECRET_KEY}
-      - PORT: ${PORT}
-      - BRAND: ${BRAND}
-      - DB_NAME: ${DB_NAME}
+      USER_EMAIL: ${USER_EMAIL}
+      USER_PASSWORD: ${USER_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      PORT: ${PORT}
+      BRAND: ${BRAND}
+      DB_NAME: ${DB_NAME}

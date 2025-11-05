@@ -20,6 +20,10 @@ const CategorySchema = new Schema({
         type: Boolean,
         default: false
     },
+    deletedAt: {
+        type: Date,
+        default: null
+    }
 }, {
     versionKey: false,
     timestamps: {
@@ -30,11 +34,14 @@ const CategorySchema = new Schema({
 const Category = mongoose.model("Category", CategorySchema)
 class CategoryDao implements CRUD {
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
-        const result = await Category.updateOne({ _id: id }, { $set: item });
+        const result = await Category.updateOne({ _id: id, deletedAt: null }, { $set: item });
         return result.modifiedCount > 0;
     }
     async findBy(query: Partial<any>): Promise<any | null> {
-        return Category.find(query).exec();
+        return Category.find({
+            ...query,
+            deletedAt: null
+        }).exec();
     }
     async create(item: CreateCategoryDto): Promise<any> {
         const category = Category.create(item);
@@ -45,8 +52,8 @@ class CategoryDao implements CRUD {
     }
 
     async deleteById(id: string): Promise<boolean> {
-        const result = await Category.deleteOne({ _id: id });
-        return result.deletedCount > 0;
+        const result = await Category.updateOne({ _id: id }, { $set: { deletedAt: new Date() } });
+        return result.modifiedCount > 0;
     }
     async list(): Promise<any[]> {
 

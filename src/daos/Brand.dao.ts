@@ -15,13 +15,20 @@ const BrandSchema = new Schema({
     image: {
         type: String,
         required: true
+    },
+    deletedAt: {
+        type: Date,
+        default: null
     }
 
 }, { versionKey: false })
 const Brand = mongoose.model("Brand", BrandSchema);
 class BrandDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {
-        return Brand.find(query).exec();
+        return Brand.find({
+            ...query,
+            deletedAt: null
+        }).exec();
     }
     async create(data: CreateBrandDto) {
         console.log(data);
@@ -29,15 +36,15 @@ class BrandDao implements CRUD {
         return brand;
     }
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
-        const result = await Brand.updateOne({ _id: id }, { $set: item });
+        const result = await Brand.updateOne({ _id: id, deletedAt: null }, { $set: item });
         return result.modifiedCount > 0;
     }
     async readById(id: string): Promise<any | null> {
         return Brand.findById(id).exec();
     }
     async deleteById(id: string): Promise<boolean> {
-        const result = await Brand.deleteOne({ _id: id });
-        return result.deletedCount > 0;
+        const result = await Brand.updateOne({ _id: id, deletedAt: null }, { $set: { deletedAt: new Date() } });
+        return result.modifiedCount > 0;
     }
     async list(): Promise<any[]> {
         return Brand.find().exec();

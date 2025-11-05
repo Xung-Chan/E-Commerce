@@ -21,15 +21,18 @@ const productController = {
         const product = await productService.createProduct(productData);
         res.status(201).json(new ApiResponse(true, 201, "Product created successfully", product));
     }),
+
     getAllProducts: expressAsyncHandler(async (req: Request, res: Response) => {
         const products = await productService.getAllProducts();
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
     }),
+
     searchProducts: expressAsyncHandler(async (req: Request, res: Response) => {
         const query: ProductQuery = req.query;
         const products = await productService.searchProducts(query);
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
     }),
+
     getProductById: expressAsyncHandler(async (req: Request, res: Response) => {
         const productId = req.params.productId;
         if (!productId) {
@@ -38,6 +41,7 @@ const productController = {
         const product = await productService.getProductById(productId);
         res.status(200).json(new ApiResponse(true, 200, "Product fetched successfully", product));
     }),
+
     getProductsByBrandId: expressAsyncHandler(async (req: Request, res: Response) => {
         const brandId = req.params.brandId;
         if (!brandId) {
@@ -46,6 +50,7 @@ const productController = {
         const products = await productService.getProductsByBrandId(brandId);
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
     }),
+
     getProductsByCategoryId: expressAsyncHandler(async (req: Request, res: Response) => {
         const categoryId = req.params.categoryId;
         if (!categoryId) {
@@ -54,6 +59,7 @@ const productController = {
         const products = await productService.getProductsByCategoryId(categoryId);
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
     }),
+
     getProductsByTag: expressAsyncHandler(async (req: Request, res: Response) => {
         const tag = req.params.tag;
         const query: ProductQuery = req.query;
@@ -63,6 +69,7 @@ const productController = {
         const products = await productService.getProductsByTag(tag, query);
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
     }),
+
     getProductForLandingPage: expressAsyncHandler(async (req: Request, res: Response) => {
         const bestSellers: Pagination = await productService.getProductsByTag("best-seller", { limit: "5" });
         const newArrivals: Pagination = await productService.getProductsByTag("new-arrival", { limit: "5" });
@@ -74,6 +81,7 @@ const productController = {
         }
         res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", { bestSellers: bestSellers.datas, newArrivals: newArrivals.datas, categoryProducts }));
     }),
+
     deleteProductById: expressAsyncHandler(async (req: Request, res: Response) => {
         const productId = req.params.productId;
         if (!productId) {
@@ -82,6 +90,7 @@ const productController = {
         await productService.deleteProductById(productId);
         res.status(204).json(new ApiResponse(true, 204, "Product deleted successfully", null));
     }),
+
     updateProductById: expressAsyncHandler(async (req: Request, res: Response) => {
         const productId = req.params.productId;
         const updateData: UpdateProductDto = req.body;

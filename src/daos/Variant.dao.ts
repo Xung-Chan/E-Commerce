@@ -28,33 +28,36 @@ const VariantSchema = new Schema({
         required: true,
         min: 0
     }
-
+    , deletedAt: {
+        type: Date,
+        default: null
+    }
 }, {
     versionKey: false,
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 })
 const Variant = mongoose.model("Variant", VariantSchema);
 class VariantDao implements CRUD {
-    async findBy(query: Partial<any>): Promise<any | null> {
-        return Variant.find(query).exec();
+    async findBy(query: Partial<any>): Promise<IVariant[]> {
+        return Variant.find({ ...query, deletedAt: null }).exec();
     }
     async create(data: CreateVariantDto): Promise<IVariant> {
         const variant = await Variant.create(data);
         return variant;
     }
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
-        const result = await Variant.updateOne({ _id: id }, { $set: item });
+        const result = await Variant.updateOne({ _id: id, deletedAt: null }, { $set: item });
         return result.modifiedCount > 0;
     }
     async readById(id: string): Promise<IVariant | null> {
         return Variant.findById(id).exec();
     }
     async deleteById(id: string): Promise<boolean> {
-        const result = await Variant.deleteOne({ _id: id });
-        return result.deletedCount > 0;
+        const result = await Variant.updateOne({ _id: id, deletedAt: null }, { $set: { deletedAt: new Date() } });
+        return result.modifiedCount > 0;
     }
     async list(): Promise<any[]> {
-        return Variant.find().exec();
+        return Variant.find({ deletedAt: null }).exec();
     }
 
 }

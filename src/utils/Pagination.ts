@@ -40,11 +40,24 @@ interface ProductQuery extends QueryUrl {
     minPrice?: string;
     maxPrice?: string;
 }
-export {
-    Pagination
-};
+interface OrderQuery extends QueryUrl {
+    userId?: string;
+    couponId?: string;
+    status?: string;
+}
+
+interface CouponQuery extends QueryUrl {
+    code?: string;
+    status?: string;
+}
 
 export type {
-    QueryUrl
-    , ProductQuery
+    QueryUrl,
+    ProductQuery,
+    OrderQuery,
+    CouponQuery
+};
+
+export {
+    Pagination
 };

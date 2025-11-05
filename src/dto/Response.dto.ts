@@ -18,7 +18,24 @@ interface CartResponse {
     }>;
     total: number;
 }
+
+interface StatisticResponse {
+    totalUsers: number;
+    newUsers: number;
+    totalOrders: number;
+    revenue: number;
+    topProducts: Array<{
+        productId: string,
+        productName: string,
+        sold: number,
+
+    }>
+}
+
 export {
     LoginResponseDto,
 };
-export type { CartResponse };
+export type {
+    CartResponse,
+    StatisticResponse
+};

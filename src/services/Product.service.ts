@@ -32,9 +32,11 @@ const productService = {
         });
         return product;
     },
+
     getAllProducts: async () => {
         return productDao.list();
     },
+
     searchProducts: async (query: ProductQuery) => {
         const filter: {
             name?: { $regex: string, $options: string };
@@ -76,13 +78,19 @@ const productService = {
         const totalDatas = await productDao.count(filter);
         return new Pagination(data, page, limit, totalDatas);
     },
+
     getProductById: async (id: string) => {
         const product = await productDao.readById(id);
         if (!product) {
             throw new ApiError(404, "Not Found", "Product not found");
         }
-        return product;
+        const variants = await variantService.getVariantsByProductId(id);
+        return {
+            ...product,
+            variants: variants
+        };
     },
+
     getProductsByBrandId: async (brandId: string) => {
         const brand = await brandDao.readById(brandId);
         if (!brand) {
@@ -90,6 +98,7 @@ const productService = {
         }
         return productDao.findBy({ brandId });
     },
+
     getProductsByCategoryId: async (categoryId: string) => {
         const category = await categoryDao.readById(categoryId);
         if (!category) {
@@ -97,6 +106,7 @@ const productService = {
         }
         return productDao.findBy({ categoryId });
     },
+
     getProductsByTag: async (tag: string, query: ProductQuery = {}) => {
         let sortOption: SortOption;
         switch (tag) {
@@ -124,6 +134,7 @@ const productService = {
         const totalDatas = await productDao.count({});
         return new Pagination(data, page, limit, totalDatas);
     },
+
     deleteProductById: async (id: string) => {
         const product = await productDao.readById(id);
         if (!product) {
@@ -131,12 +142,28 @@ const productService = {
         }
         return productDao.deleteById(id);
     },
+
     updateProductById: async (id: string, data: UpdateProductDto) => {
         const product = await productDao.readById(id);
         if (!product) {
             throw new ApiError(404, "Not Found", "Product not found");
         }
         return productDao.patchById(id, data);
+    },
+
+    getBestSellingProducts: async (limit: number = 10) => {
+        const options = {
+            limit: limit,
+            sort: { soldCount: -1 },
+        }
+        const products = await productDao.findBy({}, options);
+
+        return products.map(product => ({
+            productId: product._id.toString(),
+            productName: product.name,
+            sold: product.soldCount
+        }));
     }
+
 };
 export default productService;

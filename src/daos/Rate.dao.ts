@@ -1,6 +1,7 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { WithId } from "../utils/WithId.js";
+import { CreateRateDto } from "../dto/Create.dto.js";
 const RateSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -22,6 +23,10 @@ const RateSchema = new Schema({
         min: 1,
         max: 5
     },
+    deletedAt: {
+        type: Date,
+        default: null
+    }
 }, {
     versionKey: false,
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
@@ -30,24 +35,21 @@ RateSchema.index({ userId: 1, productId: 1 }, { unique: true });
 const Rate = mongoose.model("Rate", RateSchema)
 class RateDao implements CRUD {
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
-        const result = await Rate.updateOne({ _id: id }, { $set: item });
+        const result = await Rate.updateOne({ _id: id, deletedAt: null }, { $set: item });
         return result.modifiedCount > 0;
     }
     async findBy(query: Partial<any>): Promise<any | null> {
-        return await Rate.find(query).exec();
+        return await Rate.find({ ...query, deletedAt: null }).exec();
     }
-    async create(item: {
-        userId: string,
-        rate: number
-    }): Promise<any> {
+    async create(item: CreateRateDto): Promise<any> {
         return await Rate.create(item);
     }
     async readById(id: string): Promise<any | null> {
         return await Rate.findById(id).exec();
     }
     async deleteById(id: string): Promise<boolean> {
-        const result = await Rate.deleteOne({ _id: id });
-        return result.deletedCount > 0;
+        const result = await Rate.updateOne({ _id: id, deletedAt: null }, { $set: { deletedAt: new Date() } });
+        return result.modifiedCount > 0;
     }
     async list(): Promise<any[]> {
         return await Rate.find().exec();

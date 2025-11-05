@@ -31,11 +31,16 @@ interface UpdateProductDto {
         stock: number
     }[];
 }
-
+interface UpdateCouponDto {
+    discount?: number;
+    maxUse?: number;
+    status?: "active" | "inactive";
+}
 export type {
     UpdateUserDto,
     UpdateBrandDto,
     UpdateProductDto,
     UpdateCategoryDto,
-    UpdateVariantDto
+    UpdateVariantDto,
+    UpdateCouponDto,
 };
