@@ -9,8 +9,8 @@ productRouter.get("/", productController.getAllProducts);
 productRouter.get("/landing", productController.getProductForLandingPage);
 productRouter.get("/search", productController.searchProducts);
 productRouter.post("/", authJwtAdmin, uploadMultiple, productController.createProduct);
-productRouter.get("/details/:productId", productController.getProductById);
-productRouter.put("/details/:productId", authJwtAdmin, productController.updateProductById);
-productRouter.delete("/details/:productId", authJwtAdmin, productController.deleteProductById);
+productRouter.get("/:productId", productController.getProductById);
+productRouter.put("/:productId", authJwtAdmin, productController.updateProductById);
+productRouter.delete("/:productId", authJwtAdmin, productController.deleteProductById);
 
 export default productRouter;   

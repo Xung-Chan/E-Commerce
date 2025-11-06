@@ -39,7 +39,13 @@ app.engine(
         extname: ".hbs",
         helpers: {
             json: (context: unknown) => JSON.stringify(context),
-            formatPrice: (price: number) => price.toLocaleString('vi-VN'),
+            formatPrice: (price: unknown) => {
+                // Guard against undefined, null or non-numeric values to avoid runtime errors
+                if (price === undefined || price === null || price === '') return '';
+                const num = typeof price === 'number' ? price : Number(price as any);
+                if (Number.isNaN(num)) return '';
+                return num.toLocaleString('vi-VN');
+            },
             truncate: (str: string, len: number) =>
                 str && str.length > len ? str.substring(0, len) + '...' : str,
             eq: (a: any, b: any) => a === b,

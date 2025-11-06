@@ -30,12 +30,12 @@ Open CMD at root
 
 **_Dev Environment_**
 
-```bash
+```cmd
 docker-compose -f docker-compose.dev.yml up --build
 ```
 **_Production Environment_**
 
-```bash
+```cmd
 docker-compose up --build
 ```
 

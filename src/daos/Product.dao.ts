@@ -52,16 +52,16 @@ class ProductDao implements CRUD {
         return await Product.create(item);
     }
     async list(): Promise<any[]> {
-        return await Product.find().exec();
+        return await Product.find().lean().exec();
     }
     async findBy(query: Partial<any>, option: QueryOptions = {}): Promise<IProduct[]> {
-        return Product.find({ ...query, deletedAt: null }, null, option).exec();
+        return await Product.find({ ...query, deletedAt: null }, null, option).lean().exec();
     }
     async count(query: Partial<any>): Promise<number> {
-        return await Product.countDocuments({ ...query, deletedAt: null }).exec();
+        return await Product.countDocuments({ ...query, deletedAt: null }).lean().exec();
     }
     async readById(id: string): Promise<IProduct | null> {
-        return await Product.findById(id).exec();
+        return await Product.findById(id).lean().exec();
     }
     async deleteById(id: string): Promise<boolean> {
         const result = await Product.updateOne({ _id: id, deletedAt: null }, { $set: { deletedAt: new Date() } });

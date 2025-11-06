@@ -471,7 +471,7 @@ const siteController = {
             // TODO: TEMP STARS
             const stars = [1, 2, 3, 4, 5];
 
-            return res.render('productDetail', {
+            return res.render('product', {
                 title: `${product.name} | CoreStation`,
                 product,
                 category,

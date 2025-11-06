@@ -9,6 +9,14 @@
   },
   {
     "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb1"
+    },
+    "distinctFeature": "Intel Core i5 12400F / RTX 4070 12GB / RAM 16GB / SSD 512GB",
+    "price": 26680000,
+    "stock": 5
+  },
+  {
+    "productId": {
       "$oid": "68cbff992bdc353b4acc3fa9"
     },
     "distinctFeature": "Intel Core i7 13400F / RTX 4070 12GB / RAM 32GB / SSD 512GB",

@@ -130,9 +130,17 @@ const productService = {
             sort: sortOption.toQuery(),
         }
 
-        const data = await productDao.findBy({}, options);
+        const products = await productDao.findBy({}, options);
+        const datas = await Promise.all(products.map(async product => {
+            const variants = await variantService.getVariantsByProductId(product._id.toString());
+            return {
+                ...product,
+                variants: variants
+            };
+        }))
+        console.log(datas);
         const totalDatas = await productDao.count({});
-        return new Pagination(data, page, limit, totalDatas);
+        return new Pagination(datas, page, limit, totalDatas);
     },
 
     deleteProductById: async (id: string) => {
@@ -157,12 +165,15 @@ const productService = {
             sort: { soldCount: -1 },
         }
         const products = await productDao.findBy({}, options);
+        const datas = products.map(async product => {
+            const variants = await variantService.getVariantsByProductId(product._id.toString());
+            return {
+                ...product,
+                variants: variants
+            };
+        })
 
-        return products.map(product => ({
-            productId: product._id.toString(),
-            productName: product.name,
-            sold: product.soldCount
-        }));
+        return datas
     }
 
 };

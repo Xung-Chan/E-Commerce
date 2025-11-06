@@ -218,30 +218,6 @@
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fb2"
-    },
-    "name": "PC AMD GAMING SUPER LUXURY",
-    "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1f"
-    },
-    "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
-    },
-    "description": "Mẫu PC Gaming siêu cao cấp sử dụng CPU AMD Ryzen 7 9800X3D, card đồ họa NVIDIA GeForce RTX 5080 16GB, RAM 32GB và SSD 512GB, mang lại trải nghiệm chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
-    "images": [
-      "/img/product_pc_amd_gaming_super_luxury_1.jpg",
-      "/img/product_pc_amd_gaming_super_luxury_2.jpg",
-      "/img/product_pc_amd_gaming_super_luxury_3.jpg",
-      "/img/product_pc_amd_gaming_super_luxury_4.jpg",
-      "/img/product_pc_amd_gaming_super_luxury_5.jpg"
-    ],
-    "soldCount": 0,
-    "rate": 0,
-    "discount": 0,
-    "createdAt": "2025-09-17T00:00:10.000Z"
-  },
-  {
-    "_id": {
       "$oid": "68cbff992bdc353b4acc3fb3"
     },
     "name": "Workstation Đồ Họa 2D - Edit Video Cơ Bản",
