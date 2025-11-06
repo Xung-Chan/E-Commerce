@@ -1,0 +1,375 @@
+[
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fa9"
+    },
+    "name": "PC GAMING HIGH PERFORMANCE",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1b"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming cao cấp với cấu hình mạnh mẽ, card đồ họa rời và thiết kế tối ưu cho trải nghiệm chơi game mượt mà bao gồm các linh kiện chất lượng cao như CPU Intel Core i5, card đồ họa NVIDIA GeForce RTX 4070, RAM 16GB và SSD 512GB với khả năng nâng cấp linh hoạt.",
+    "images": [
+      "/img/product_pc_gaming_high_performance_1.jpg",
+      "/img/product_pc_gaming_high_performance_2.jpg",
+      "/img/product_pc_gaming_high_performance_3.jpg",
+      "/img/product_pc_gaming_high_performance_4.jpg",
+      "/img/product_pc_gaming_high_performance_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:01.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3faa"
+    },
+    "name": "PC GAMING RX 6600 CHALENGER 8GB",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1b"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming với card đồ họa AMD Radeon RX 6600 8GB, CPU AMD Ryzen 5 3600, RAM 16GB và SSD 512GB, mang lại hiệu suất chơi game mượt mà và khả năng xử lý đa nhiệm tốt với giá cả phải chăng và khả năng nâng cấp linh hoạt.",
+    "images": [
+      "/img/product_pc_gaming_rx6600_challenger_1.jpg",
+      "/img/product_pc_gaming_rx6600_challenger_2.jpg",
+      "/img/product_pc_gaming_rx6600_challenger_3.jpg",
+      "/img/product_pc_gaming_rx6600_challenger_4.jpg",
+      "/img/product_pc_gaming_rx6600_challenger_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+
+    "createdAt": "2025-09-17T00:00:02.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fab"
+    },
+    "name": "PC GAMING ULTRA PERFORMANCE",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1f"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming cao cấp với cấu hình siêu khỏe, card đồ họa NVIDIA GeForce RTX 5080 16GB, CPU Intel Core Ultra 7 265KF, RAM 32GB và SSD 512GB, mang lại trải nghiệm chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
+    "images": [
+      "/img/product_pc_gaming_ultra_performance_1.jpg",
+      "/img/product_pc_gaming_ultra_performance_2.jpg",
+      "/img/product_pc_gaming_ultra_performance_3.jpg",
+      "/img/product_pc_gaming_ultra_performance_4.jpg",
+      "/img/product_pc_gaming_ultra_performance_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:03.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fac"
+    },
+    "name": "PC GAMING MINIMAL EXPERIENCE",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1a"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming giá rẻ với cấu hình cơ bản, card đồ họa NVIDIA GeForce RTX 3050 6GB, CPU Intel Core i5-11400F, RAM 16GB và SSD 256GB, mang lại trải nghiệm chơi game mượt mà ở độ phân giải Full HD với khả năng nâng cấp linh hoạt trong tương lai.",
+    "images": [
+      "/img/product_pc_gaming_minimal_experience_1.jpg",
+      "/img/product_pc_gaming_minimal_experience_2.jpg",
+      "/img/product_pc_gaming_minimal_experience_3.jpg",
+      "/img/product_pc_gaming_minimal_experience_4.jpg",
+      "/img/product_pc_gaming_minimal_experience_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:04.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fad"
+    },
+    "name": "PC GAMING PERFORMANCE BALANCE",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1b"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming với cấu hình cân bằng, card đồ họa NVIDIA GeForce RTX 4060 8GB, CPU Intel Core i5-12400F, RAM 16GB và SSD 512GB, mang lại trải nghiệm chơi game mượt mà và khả năng nâng cấp linh hoạt trong tương lai.",
+    "images": [
+      "/img/product_pc_gaming_performance_balance_1.jpg",
+      "/img/product_pc_gaming_performance_balance_2.jpg",
+      "/img/product_pc_gaming_performance_balance_3.jpg",
+      "/img/product_pc_gaming_performance_balance_4.jpg",
+      "/img/product_pc_gaming_performance_balance_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:05.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fae"
+    },
+    "name": "PC GAMING ULTRA 5",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b24"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming với cấu hình cân bằng, trang bị CPU Core Ultra 5 245KF thế hệ mới, card đồ họa NVIDIA GeForce RTX 5060 8GB, RAM 16GB và SSD 512GB, mang lại trải nghiệm chơi game mượt mà, đáp ứng mọi nhu cầu giải trí và làm việc đa nhiệm.",
+    "images": [
+      "/img/product_pc_gaming_ultra_5_1.jpg",
+      "/img/product_pc_gaming_ultra_5_2.jpg",
+      "/img/product_pc_gaming_ultra_5_3.jpg",
+      "/img/product_pc_gaming_ultra_5_4.jpg",
+      "/img/product_pc_gaming_ultra_5_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:06.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3faf"
+    },
+    "name": "PC ULTRA GAMING",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b24"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming cao cấp với cấu hình siêu khỏe, card đồ họa NVIDIA GeForce RTX 5070 Ti 16GB, CPU Intel Core i5 14600KF, RAM 16GB và SSD 512GB, mang lại trải nghiệm chơi game mượt mà, đáp ứng mọi nhu cầu giải trí và làm việc đa nhiệm.",
+    "images": [
+      "/img/product_pc_ultra_gaming_1.jpg",
+      "/img/product_pc_ultra_gaming_2.jpg",
+      "/img/product_pc_ultra_gaming_3.jpg",
+      "/img/product_pc_ultra_gaming_4.jpg",
+      "/img/product_pc_ultra_gaming_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:07.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fb0"
+    },
+    "name": "PC AMD GAMING PRO",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1b"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming sử dụng CPU AMD Ryzen 7 7700, card đồ họa NVIDIA GeForce RTX 5070 12GB, RAM 16GB và SSD 512GB, mang lại hiệu suất chơi game mượt mà và khả năng xử lý đa nhiệm tốt với giá cả phải chăng và khả năng nâng cấp linh hoạt.",
+    "images": [
+      "/img/product_pc_amd_gaming_pro_1.jpg",
+      "/img/product_pc_amd_gaming_pro_2.jpg",
+      "/img/product_pc_amd_gaming_pro_3.jpg",
+      "/img/product_pc_amd_gaming_pro_4.jpg",
+      "/img/product_pc_amd_gaming_pro_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:08.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fb1"
+    },
+    "name": "PC AMD ULTRA GAMING",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1b"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming cao cấp sử dụng CPU AMD Ryzen 9 9950X, card đồ họa NVIDIA GeForce RTX 5080 16GB, RAM 32GB và SSD 1TB, mang lại hiệu suất chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
+    "images": [
+      "/img/product_pc_amd_ultra_gaming_1.jpg",
+      "/img/product_pc_amd_ultra_gaming_2.jpg",
+      "/img/product_pc_amd_ultra_gaming_3.jpg",
+      "/img/product_pc_amd_ultra_gaming_4.jpg",
+      "/img/product_pc_amd_ultra_gaming_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:09.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fb2"
+    },
+    "name": "PC AMD GAMING SUPER LUXURY",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1f"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming siêu cao cấp sử dụng CPU AMD Ryzen 7 9800X3D, card đồ họa NVIDIA GeForce RTX 5080 16GB, RAM 32GB và SSD 512GB, mang lại trải nghiệm chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
+    "images": [
+      "/img/product_pc_amd_gaming_super_luxury_1.jpg",
+      "/img/product_pc_amd_gaming_super_luxury_2.jpg",
+      "/img/product_pc_amd_gaming_super_luxury_3.jpg",
+      "/img/product_pc_amd_gaming_super_luxury_4.jpg",
+      "/img/product_pc_amd_gaming_super_luxury_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:10.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fb3"
+    },
+    "name": "Workstation Đồ Họa 2D - Edit Video Cơ Bản",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1b"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b34"
+    },
+    "description": "Workstation chuyên dụng cho đồ họa 2D và chỉnh sửa video cơ bản, trang bị CPU Intel Core i5-12400F, RAM 16GB, ổ cứng SSD 512GB và card đồ họa NVIDIA RTX 3060 12GB, mang lại hiệu suất ổn định và khả năng xử lý mượt mà các tác vụ thiết kế và chỉnh sửa hình ảnh.",
+    "images": [
+      "/img/product_workstation_graphics_2d_1.jpg",
+      "/img/product_workstation_graphics_2d_2.jpg",
+      "/img/product_workstation_graphics_2d_3.jpg",
+      "/img/product_workstation_graphics_2d_4.jpg",
+      "/img/product_workstation_graphics_2d_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:01.100Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fb4"
+    },
+    "name": "Workstation Đồ Họa 3D - Render Cơ Bản",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b24"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b34"
+    },
+    "description": "Workstation chuyên dụng cho đồ họa 3D và render cơ bản, trang bị CPU Intel Core i5-14600KF, RAM 16GB, ổ cứng SSD 512GB và card đồ họa NVIDIA RTX 3060 12GB, mang lại hiệu suất ổn định và khả năng xử lý mượt mà các tác vụ thiết kế và dựng hình 3D.",
+    "images": [
+      "/img/product_workstation_graphics_3d_1.jpg",
+      "/img/product_workstation_graphics_3d_2.jpg",
+      "/img/product_workstation_graphics_3d_3.jpg",
+      "/img/product_workstation_graphics_3d_4.jpg",
+      "/img/product_workstation_graphics_3d_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:02.100Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fb5"
+    },
+    "name": "Workstation Render - Edit Video Nâng Cao",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1f"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b34"
+    },
+    "description": "Workstation cao cấp cho render và chỉnh sửa video nâng cao, trang bị CPU Intel Core i9-14900KF, RAM 32GB, ổ cứng SSD 512GB và card đồ họa NVIDIA RTX 5060 8GB, mang lại hiệu suất vượt trội và khả năng xử lý mượt mà các tác vụ đồ họa phức tạp và render video chất lượng cao.",
+    "images": [
+      "/img/product_workstation_render_edit_video_1.jpg",
+      "/img/product_workstation_render_edit_video_2.jpg",
+      "/img/product_workstation_render_edit_video_3.jpg",
+      "/img/product_workstation_render_edit_video_4.jpg",
+      "/img/product_workstation_render_edit_video_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "createdAt": "2025-09-17T00:00:03.100Z"
+  },
+  {
+    "_id": {
+      "$oid": "68ccfda16c80b09f076098bb"
+    },
+    "name": "HP 21 Pro",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b18"
+    },
+    "categoryId": {
+      "$oid": "68ccfd726c80b09f076098b4"
+    },
+    "description": "Mô tả",
+    "images": [],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "variants": [
+      {
+        "distinctFeature": "512GB",
+        "price": 12000000,
+        "stock": 10,
+        "_id": {
+          "$oid": "68ccfda16c80b09f076098bc"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-09-19T06:52:17.140Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68ccfe986c80b09f076098ea"
+    },
+    "name": "HP 22 Pro",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b18"
+    },
+    "categoryId": {
+      "$oid": "68ccfe8e6c80b09f076098e6"
+    },
+    "description": "Mô tả",
+    "images": [],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "variants": [
+      {
+        "distinctFeature": "512GB",
+        "price": 12000000,
+        "stock": 10,
+        "_id": {
+          "$oid": "68ccfe986c80b09f076098eb"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-09-19T06:56:24.692Z"
+    }
+  }
+]

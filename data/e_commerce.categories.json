@@ -1,0 +1,36 @@
+[
+  {
+    "_id": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "name": "PC Gaming",
+    "description": "Máy tính chơi game hiệu suất cao với cấu hình mạnh mẽ, card đồ họa rời và thiết kế tối ưu cho trải nghiệm chơi game mượt mà.",
+    "image": "/img/category_gaming_pc.png",
+    "landingPageDisplay": true
+  },
+  {
+    "_id": {
+      "$oid": "68ca511408e9904136cc0b33"
+    },
+    "name": "PC Văn Phòng",
+    "description": "Máy tính văn phòng đáng tin cậy với hiệu suất ổn định, thiết kế gọn nhẹ và các tính năng hỗ trợ công việc hàng ngày.",
+    "image": "/img/category_office_pc.png",
+    "landingPageDisplay": true
+  },
+  {
+    "_id": {
+      "$oid": "68ca511408e9904136cc0b34"
+    },
+    "name": "Workstation",
+    "description": "Máy trạm chuyên dụng với hiệu suất cao, khả năng xử lý đồ họa và tính toán phức tạp, phù hợp cho các công việc kỹ thuật và sáng tạo.",
+    "image": "/img/category_workstation_pc.png"
+  },
+  {
+    "_id": {
+      "$oid": "68ca511408e9904136cc0b35"
+    },
+    "name": "Linh kiện máy tính",
+    "description": "Linh kiện máy tính chất lượng cao bao gồm bo mạch chủ, card đồ họa, bộ nhớ RAM, ổ cứng SSD và các phụ kiện khác để nâng cấp và xây dựng hệ thống máy tính.",
+    "image": "/img/category_components.png"
+  }
+]
