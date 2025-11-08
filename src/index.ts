@@ -40,7 +40,6 @@ app.engine(
         helpers: {
             json: (context: unknown) => JSON.stringify(context),
             formatPrice: (price: unknown) => {
-                // Guard against undefined, null or non-numeric values to avoid runtime errors
                 if (price === undefined || price === null || price === '') return '';
                 const num = typeof price === 'number' ? price : Number(price as any);
                 if (Number.isNaN(num)) return '';

@@ -379,6 +379,7 @@ const siteController = {
             bestSellersProducts: bestSellers,
             windowNewProducts,
             categoryProducts: processed,
+            cartItemCount: 3 // Update later with actual cart item count
         });
     },
 
