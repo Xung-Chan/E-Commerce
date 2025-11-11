@@ -6,6 +6,7 @@ import ApiResponse from "../utils/Api.response.js";
 import ApiError from "../utils/ApiError.js";
 import { tokenService } from "../services/Token.service.js";
 import { get } from "mongoose";
+import { ErrorDictionary } from "../middleware/errorDictionary.js";
 const userController = {
     getAllUsers: expressAsyncHandler(async (req: Request, res: Response) => {
         const users = await userService.getAllUsers();
@@ -27,14 +28,19 @@ const userController = {
         const user = await userService.getUserById(userId);
         res.status(200).json(new ApiResponse(true, 200, "User fetched successfully", user));
     }),
+
+
+    //**Lấy thông tin cá nhân */
     getMyProfile: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = (req as any).userId;
         if (!userId) {
-            throw new ApiError(401, "Unauthorized", "No token provided");
+            throw new ApiError(401, "Unauthorized", ErrorDictionary.UNAUTHORIZED);
         }
         const user = await userService.getUserById(userId);
         res.status(200).json(new ApiResponse(true, 200, "User profile fetched successfully", user));
     }),
+
+
     updateUserById: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = req.params.userId;
         if (!userId) {

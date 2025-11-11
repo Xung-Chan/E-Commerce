@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 interface CreateUserDto {
     email: string;
-    password: string;
+    password: string | null;
     fullName: string;
     address: string;
 }
