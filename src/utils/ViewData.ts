@@ -2,24 +2,27 @@ import type { Request, Response } from "express";
 import { createApi, unwrap } from "./ApiClient.js";
 
 export const getCommonViewData = async (req: Request) => {
-  const isLoggedIn = (req as any).isLoggedIn || false;
-  const userId = (req as any).userId || null;
-
   let user = null;
+  let userId = (req as any).userId || null;
+  let isLoggedIn = (req as any).isLoggedIn || false;
+
   let categories: any[] = [];
 
   try {
     const api = createApi(req);
 
-    try {
-      const raw = await api.get("/api/categories");
-      categories = Array.isArray(raw.data) ? raw.data : unwrap(raw);
-    } catch {}
+    const raw = await api.get("/api/categories");
+    categories = Array.isArray(raw.data) ? raw.data : unwrap(raw);
 
-    if (isLoggedIn && userId) {
+    // If middleware didn't set isLoggedIn but we still have a token cookie,
+    // attempt to fetch profile and infer login state.
+    const hasToken = !!(req as any)?.cookies?.token;
+    if ((isLoggedIn && userId) || hasToken) {
       try {
         const me = await api.get("/api/users/profile/me");
         user = unwrap(me);
+        if (user && !userId) userId = user._id || user.id || null;
+        isLoggedIn = !!user;
       } catch {}
     }
   } catch {}
@@ -34,5 +37,6 @@ export const renderWithCommon = async (
   model: Record<string, any> = {}
 ) => {
   const common = await getCommonViewData(req);
+  console.log('Rendering view', view, 'with model', model, 'and common data', common);
   res.render(view, { ...model, ...common });
 };
