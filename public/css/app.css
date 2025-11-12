@@ -81,4 +81,10 @@
   height: 10px;
 }
 
+.table th,
+.table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
 /*# sourceMappingURL=app.css.map */

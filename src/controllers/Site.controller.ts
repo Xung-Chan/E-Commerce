@@ -4,7 +4,7 @@ import { getCommonViewData, renderWithCommon } from "../utils/ViewData.js";
 import { apiUrl, createApi, unwrap } from "../utils/ApiClient.js";
 
 const siteController = {
-    // LOGIN
+    // --- LOGIN ---
     // Login Page
     login: async (req: Request, res: Response) => {
         const commonData = await getCommonViewData(req);
@@ -46,16 +46,13 @@ const siteController = {
             const payload = {
                 title: "Đăng nhập | CoreStation",
                 formData: { email: req.body?.email },
-                errorMessage:
-                    (status === 401 && "Email/số điện thoại hoặc mật khẩu không đúng") ||
-                    apiErr?.message ||
-                    "Không thể kết nối đến server. Vui lòng thử lại sau.",
+                errorMessage: apiErr.message || "Có lỗi xảy ra khi đăng nhập"
             };
             return renderWithCommon(req, res, "login", payload);
         }
     },
 
-    // REGISTER
+    // --- REGISTER ---
     // Register page
     register: async (req: Request, res: Response) => {
         const commonData = await getCommonViewData(req);
@@ -113,7 +110,7 @@ const siteController = {
         }
     },
 
-    // FORGOT PASSWORD
+    // --- FORGOT PASSWORD ---
     // Forgot Password Page
     forgotPassword: async (req: Request, res: Response) => {
         return renderWithCommon(req, res, 'forgot-password', {
@@ -200,13 +197,13 @@ const siteController = {
         }
     },
 
-    // LOGOUT
+    // --- LOGOUT ---
     logout: async (req: Request, res: Response) => {
         res.clearCookie("token");
         return res.redirect("/login");
     },
 
-    // PROFILE
+    // --- PROFILE ---
     // Profile page
     profile: async (req: Request, res: Response) => {
         const common = await getCommonViewData(req);
@@ -344,10 +341,11 @@ const siteController = {
         }
     },
 
-    // Home
+    // --- Home ---
     home: async (req: Request, res: Response) => {
         const api = createApi(req);
         const landing = unwrap(await api.get("/api/products/landing"));
+
         const bestSellers = landing?.bestSellers || [];
         const newArrivals = landing?.newArrivals || [];
         const categoryProducts = landing?.categoryProducts || [];
@@ -383,7 +381,7 @@ const siteController = {
         });
     },
 
-    // CATALOG
+    // --- CATALOG ---
     catalog: async (req: Request, res: Response) => {
         const query: ProductQuery = req.query as ProductQuery;
         const page = Number(query.page) || 1;
@@ -451,7 +449,7 @@ const siteController = {
         });
     },
 
-    // PRODUCT DETAIL
+    // --- PRODUCT DETAIL ---
     product: async (req: Request, res: Response) => {
         const { productId } = req.params;
         const commonData = await getCommonViewData(req);
@@ -491,16 +489,42 @@ const siteController = {
         }
     },
 
-    // CART
+    // --- CART ---
     // Cart page
     cart: async (req: Request, res: Response) => {
         const commonData = await getCommonViewData(req);
 
+        const sampleData = {
+            items: [
+                {
+                    cartItemId: '64b8f0a5c9e77a6f4d2e8b1a',
+                    imageUrl: 'https://placehold.co/56x56?text=?',
+                    product: 'Product 1',
+                    variant: 'Variant 1',
+                    quantity: 2
+                },
+                {
+                    cartItemId: '64b8f0e2c9e77a6f4d2e8b1b',
+                    variantId: '64b8efdbc9e77a6f4d2e8b19',
+                    productId: '64b8ee9bc9e77a6f4d2e8b15',
+                    product: 'Product 2',
+                    variant: 'Variant 2',
+                    quantity: 1
+                }
+            ],
+            tax: 50000,
+            shippingCost: 20000,
+            totalPrice: 320000
+        }
+
         return res.render('cart', {
             title: 'Giỏ hàng | CoreStation',
+            cart: sampleData,
             ...commonData
         });
     }
+
+    
 };
 
 export default siteController;

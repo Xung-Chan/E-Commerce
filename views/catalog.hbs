@@ -1,5 +1,6 @@
-<div class="container-fluid flex-grow-1 px-0">
+<div class="container-fluid flex-grow-1 p-0">
     <div class="row g-0">
+        <!-- Sidebar lọc sản phẩm -->
         <aside class="col-md-3 px-0">
             <div class="filter-area bg-light h-100 border-end ps-3"
                 style="min-height: 100vh; padding: 32px 16px 32px 0;">
@@ -65,10 +66,9 @@
                 </div>
         </aside>
 
-
-
         <!-- Danh sách sản phẩm -->
         <main class="col-md-9 d-flex flex-column" style="min-height: 80vh;">
+            <!-- Bộ lọc sắp xếp -->
             <form method="GET" class="mb-3">
                 {{#if query.categoryId}}<input type="hidden" name="categoryId" value="{{query.categoryId}}">{{/if}}
                 {{#if query.brandId}}<input type="hidden" name="brandId" value="{{query.brandId}}">{{/if}}
@@ -78,10 +78,9 @@
                     <span class="fw-semibold text-primary"><i class="bi bi-funnel me-1"></i>Sắp xếp:</span>
                     <select class="form-select form-select-sm w-auto" name="sortBy">
                         <option value="rate" {{#if (eq query.sortBy "rate" )}}selected{{/if}}>Đánh giá</option>
-                        <option value="soldCount" {{#if (eq query.sortBy "soldCount" )}}selected{{/if}}>Bán chạy
-                        </option>
-                        <option value="createdAt" {{#if (eq query.sortBy "createdAt" )}}selected{{/if}}>Mới nhất
-                        </option>
+                        <option value="soldCount" {{#if (eq query.sortBy "soldCount" )}}selected{{/if}}>Bán chạy</option>
+                        <option value="createdAt" {{#if (eq query.sortBy "createdAt" )}}selected{{/if}}>Mới nhất</option>
+                        <option value="price" {{#if (eq query.sortBy "price" )}}selected{{/if}}>Giá</option>
                     </select>
                     <select class="form-select form-select-sm w-auto" name="sortOrder">
                         <option value="desc" {{#if (eq query.sortOrder "desc" )}}selected{{/if}}>Giảm dần</option>
@@ -93,7 +92,7 @@
                 </div>
             </form>
 
-
+            <!-- Lưới sản phẩm -->
             <div class="flex-grow-1 px-4 py-3">
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                     {{#if products_catalog.length}}
@@ -105,7 +104,7 @@
                                     style="height:320px;object-fit:cover;"
                                     onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                                 <div class="card-body p-2 d-flex flex-column h-100">
-                                    <h6 class="card-title fw-bold text-primary mb-0" style="font-size:1.2rem;">
+                                    <h6 class="card-title fw-bold text-primary mb-0" style="font-size:1.2rem; min-height:3rem;">
                                         <a href="/product/{{_id}}"
                                             class="text-decoration-none text-primary">{{name}}</a>
                                     </h6>
@@ -162,7 +161,7 @@
             f.addEventListener('submit', () => {
                 ['minPrice', 'maxPrice'].forEach(name => {
                     const el = f.querySelector(`[name="${name}"]`);
-                    if (el && !el.value) el.disabled = true; // không submit nếu rỗng
+                    if (el && !el.value) el.disabled = true;
                 });
             });
         });
