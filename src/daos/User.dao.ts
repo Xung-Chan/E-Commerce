@@ -4,6 +4,7 @@ import mongoose, { InferSchemaType, Schema } from "mongoose";
 import { CreateUserDto } from "../dto/Create.dto.js";
 import CRUD from "../utils/CRUD.interface.js";
 import { WithId } from "../utils/WithId.js";
+import ApiError from "../utils/ApiError.js";
 
 const UserSchema = new Schema({
     email: {
@@ -48,6 +49,8 @@ const UserSchema = new Schema({
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 })
 const User = mongoose.model("User", UserSchema)
+
+
 class UserDao implements CRUD {
 
     async patchById(id: string, item: Partial<IUser>): Promise<boolean> {
@@ -59,14 +62,23 @@ class UserDao implements CRUD {
     }
 
     async create(item: CreateUserDto): Promise<IUser> {
-        const user = User.create({
-            email: item.email,
-            password: item.password,
-            fullName: item.fullName,
-            addresses: [{ address: item.address }],
-            cart: [],
-        });
-        return await user;
+
+        try {
+            const user = await User.create({
+                email: item.email,
+                password: item.password,
+                fullName: item.fullName,
+                addresses: [{ address: item.address }],
+                cart: [],
+            });
+            return user;
+        } catch (error: any) {
+            console.error("Error creating user:", error);
+            if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+                throw new ApiError(409, "Duplicate Email", "Email đã tồn tại trong hệ thống.");
+            }
+            throw error;
+        }
     }
 
     async createAdmin(): Promise<any> {
@@ -74,7 +86,7 @@ class UserDao implements CRUD {
         if (isExist) return;
         const hashedPassword = bcrypt.hashSync("admin", 10);
         const admin = User.create({
-            email: process.env.USER_EMAIL || "nmdtruong18032004@gmail.com",
+            email: process.env.USER_EMAIL,
             password: hashedPassword,
             fullName: "Admin",
             addresses: [{ address: "Admin Address" }],

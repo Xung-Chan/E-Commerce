@@ -7,27 +7,37 @@ import { productDao } from "../daos/Product.dao.js";
 import { cartItemDao, ICartItem } from "../daos/CartItem.dao.js";
 import { variantDao } from "../daos/Variant.dao.js";
 import { CartResponse } from "../dto/Response.dto.js";
+import { ErrorDictionary } from "../middleware/errorDictionary.js";
 const userService = {
     createUser: async (data: CreateUserDto): Promise<boolean> => {
-        const hashedPassword = bcrypt.hashSync(data.password, 10);
         const user = await userDao.create({
-            email: data.email, password: hashedPassword, fullName: data.fullName, address: data.address
+            email: data.email, password: null, fullName: data.fullName, address: data.address
         })
 
         return !!user
 
     },
+
     getAllUsers: async (): Promise<any[]> => {
         const users = await userDao.list();
         return users;
     },
+
+
     getUserById: async (id: string): Promise<any | null> => {
         const user = await userDao.readById(id);
         if (!user) {
-            throw new ApiError(404, "Not Found", "User not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.USER_NOT_FOUND);
         }
-        return user;
+        return {
+            email: user.email,
+            fullName: user.fullName,
+            role: user.role,
+            addresses: user.addresses,
+        };
     },
+
+
     banUserById: async (id: string): Promise<boolean> => {
         const result = await userDao.patchById(id, { status: "banned" });
         return result;
@@ -38,6 +48,8 @@ const userService = {
         return result;
 
     },
+
+
     getAddressesByUserId: async (userId: string): Promise<any[]> => {
         const user: IUser | null = await userDao.readById(userId);
 
@@ -47,6 +59,8 @@ const userService = {
 
         return user.addresses;
     },
+
+
     addAddressByUserId: async (userId: string, address: string): Promise<boolean> => {
         const user: IUser | null = await userDao.readById(userId);
         if (!user) {
@@ -68,6 +82,8 @@ const userService = {
         return result;
 
     },
+
+
     updateAddressById: async (userId: string, addressId: string, newAddress: string): Promise<boolean> => {
         const user: IUser | null = await userDao.readById(userId);
         if (!user) {

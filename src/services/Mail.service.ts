@@ -1,7 +1,7 @@
 import "dotenv/config";
 import nodemailer from "nodemailer";
 
-import { reset_mail_template } from "../utils/constant.js";
+import { reset_mail_template, register_template } from "../utils/constant.js";
 const USER_EMAIL = process.env.USER_EMAIL
 const USER_PASSWORD = process.env.USER_PASSWORD
 
@@ -12,11 +12,28 @@ const transporter = nodemailer.createTransport({
     pass: USER_PASSWORD,
   },
 })
-export const sendMail = async (email: string, link: string) => {
-  await transporter.sendMail({
-    from: USER_EMAIL,
-    to: email,
-    subject: "Reset Password Request",
-    html: reset_mail_template(email, link),
-  });
+export const sendMail = async (email: string, link: string, type: "reset" | "register", metaData: any = {}) => {
+  switch (type) {
+    case "reset":
+      await transporter.sendMail({
+        from: USER_EMAIL,
+        to: email,
+        subject: "Reset Password Request",
+        html: reset_mail_template(email, link),
+      });
+      break;
+    case "register":
+      await transporter.sendMail({
+        from: USER_EMAIL,
+        to: email,
+        subject: "Resgister Your Account",
+        html: register_template(link, metaData.template_password),
+      });
+
+      break;
+    default:
+      throw new Error("Invalid email type");
+  }
 }
+
+

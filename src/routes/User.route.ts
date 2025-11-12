@@ -9,6 +9,8 @@ userRouter.patch("/:userId", authJwt, userController.updateUserById);
 userRouter.patch("/ban/:userId", authJwt, userController.banUserById);
 userRouter.get("/profile/me", authJwt, userController.getMyProfile);
 
+
+//* API addresses  */
 userRouter.get("/addresses/me", authJwt, userController.getMyAddresses);
 userRouter.post("/addresses/me", authJwt, userController.addMyAddress);
 userRouter.delete("/addresses/me/:addressId", authJwt, userController.removeMyAddressByAddressId);

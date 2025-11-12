@@ -46,7 +46,10 @@ const siteController = {
             const payload = {
                 title: "Đăng nhập | CoreStation",
                 formData: { email: req.body?.email },
-                errorMessage: apiErr.message || "Có lỗi xảy ra khi đăng nhập"
+                errorMessage: apiErr.message
+                // (status === 401 && "Email/số điện thoại hoặc mật khẩu không đúng") ||
+                // apiErr?.message ||
+                // "Không thể kết nối đến server. Vui lòng thử lại sau.",
             };
             return renderWithCommon(req, res, "login", payload);
         }
@@ -524,7 +527,7 @@ const siteController = {
         });
     }
 
-    
+
 };
 
 export default siteController;

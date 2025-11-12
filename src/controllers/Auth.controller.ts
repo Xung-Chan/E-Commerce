@@ -1,21 +1,29 @@
 import { Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
+
 import authService from "../services/Auth.service.js";
 import ApiResponse from "../utils/Api.response.js";
 import ApiError from "../utils/ApiError.js";
 import { LoginRequest } from "../dto/Request.dto.js";
 
+
 const authController = {
+
+
     login: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const data: LoginRequest = req.body;
         const result = await authService.login(data);
         res.status(200).json(new ApiResponse(true, 200, "Login successful", result));
     }),
+
+
     register: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
-        const { email, password, fullName, address } = req.body;
-        const user = await authService.register({ email, password, fullName, address });
+        const { email, fullName, address } = req.body;
+        const user = await authService.register({ email, password: null, fullName, address });
         res.status(201).json(new ApiResponse(true, 201, "User created successfully", user));
     }),
+
+
     forgotPassword: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { email } = req.body;
         await authService.forgotPassword(email);
