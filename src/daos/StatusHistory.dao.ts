@@ -19,7 +19,7 @@ const StatusHistorySchema = new Schema({
         createdAt: 'createdAt'
     }
 })
-const StatusHistory = mongoose.model("StatusHistory", StatusHistorySchema)
+const StatusHistory = mongoose.model("status_history", StatusHistorySchema)
 class StatusHistoryDao implements CRUD {
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
         const result = await StatusHistory.updateOne({ _id: id }, { $set: item });

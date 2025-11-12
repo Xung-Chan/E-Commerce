@@ -1,20 +1,31 @@
-<div class="container mt-3">
+<div class="container mt-3 py-4">
+    {{#unless bestSellersProducts.length}}
+    {{#unless windowNewProducts.length}}
+    {{#unless categoryProducts.length}}
+    <div class="alert alert-info text-center" role="alert">
+        Hiện không có sản phẩm để hiển thị. Vui lòng quay lại sau!
+    </div>
+    {{/unless}}
+    {{/unless}}
+    {{/unless}}
+
     <!-- Best Sellers -->
-    <div class="best-sellers-wrapper mb-5">
-        <div class="carousel-title-bar d-flex align-items-center mb-2 px-4 py-3">
+    {{#if bestSellersProducts.length}}
+    <div class="best-sellers-wrapper shadow p-2">
+        <div class="d-flex align-items-center my-2 ms-1">
             <i class="bi bi-star-fill me-2" style="color:#ffc107;font-size:2rem;"></i>
-            <h3 class="fw-bold text-primary mb-0 flex-grow-1">Bán chạy nhất</h3>
+            <h3 class="fw-bold mb-0 flex-grow-1" style="color: #fff;">Bán chạy nhất</h3>
         </div>
 
-        <div id="bestSellersCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div id="best-sellers-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-inner">
                 {{#each bestSellersProducts}}
-                <div class="carousel-item {{#if @first}}active{{/if}}">
+                <div class="carousel-item {{#if @first}}active{{/if}} p-2">
                     <div class="row align-items-center">
                         <div class="col-md-6 mb-3 mb-md-0">
                             <a href="/product/{{_id}}" class="d-block">
                                 <img src="{{images.[0]}}" class="card-img-top" alt=""
-                                    style="height:320px;object-fit:cover;"
+                                    style="height:320px;object-fit:cover;border-radius:1.25rem;"
                                     onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                             </a>
                         </div>
@@ -23,7 +34,7 @@
                                 <a href="/product/{{_id}}" class="text-decoration-none text-primary">{{name}}</a>
                             </h2>
                             <div class="mb-5">
-                                <div class="small text-muted mb-1">{{truncate this.description 100}}</div>
+                                <div class="small text-muted mb-1">{{truncate this.description 50}}</div>
                             </div>
                             <span class="text-danger fs-4 fw-bold">{{formatPrice this.variants.[0].price}} VNĐ</span>
                             <div class="mt-2">
@@ -34,7 +45,7 @@
                 </div>
                 {{/each}}
             </div>
-            <button class="carousel-control-prev carousel-nav" type="button" data-bs-target="#bestSellersCarousel"
+            <button class="carousel-control-prev carousel-nav" type="button" data-bs-target="#best-sellers-carousel"
                 data-bs-slide="prev" aria-label="Previous">
                 <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
                     <path fill="currentColor"
@@ -42,7 +53,7 @@
                 </svg>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next carousel-nav" type="button" data-bs-target="#bestSellersCarousel"
+            <button class="carousel-control-next carousel-nav" type="button" data-bs-target="#best-sellers-carousel"
                 data-bs-slide="next" aria-label="Next">
                 <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
                     <path fill="currentColor"
@@ -52,72 +63,75 @@
             </button>
         </div>
     </div>
+    {{/if}}
+
+    <div class="my-5"></div>
 
     <!-- New Products -->
-    <div class="new-products-wrapper mb-5">
-        <div class="d-flex align-items-center mb-1 pe-4 ps-0">
+    {{#if windowNewProducts.length}}
+    <div class="new-products-wrapper shadow p-2">
+        <div class="d-flex align-items-center my-2 ms-1">
             <i class="bi bi-box-seam me-2" style="color:#3a86ff;font-size:2rem;"></i>
             <h3 class="fw-bold text-primary mb-0 flex-growth-1">Sản phẩm mới</h3>
         </div>
 
-        <div class="card shadow new-products-card">
-            <div class="card-body py-4">
-                <div id="newProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true"
-                    data-bs-interval="3000">
-                    <div class="carousel-inner">
-                        {{#each windowNewProducts}}
-                        <div class="carousel-item {{#if @first}}active{{/if}}">
-                            <div class="row g-4 px-3 new-products-row">
-                                {{#each this}}
-                                <div class="col-md-3 col-6">
-                                    <div class="card new-product-card product-elevate h-100 d-flex flex-column">
+        <div id="new-products-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true"
+            data-bs-interval="3000">
+            <div class="carousel-inner px-4">
+                {{#each windowNewProducts}}
+                <div class="carousel-item {{#if @first}}active{{/if}} p-2">
+                    <div class="row g-4 px-3">
+                        {{#each this}}
+                        <div class="col-md-3 col-6">
+                            <div class="card new-product-card product-elevate h-100 d-flex flex-column shadow-sm">
+                                <a href="/product/{{_id}}" class="ratio ratio-4x3 rounded-top overflow-hidden d-block">
+                                    <img src="{{images.[0]}}" alt=""
+                                        onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';"
+                                        class="w-100 h-100 object-fit-cover">
+                                </a>
+                                <div class="card-body d-flex flex-column" style="min-height: 200px;">
+                                    <h6 class="card-title product-title text-primary fw-bold mb-1" style="min-height: 35px;">
                                         <a href="/product/{{_id}}"
-                                            class="ratio ratio-4x3 rounded-top overflow-hidden d-block">
-                                            <img src="{{images.[0]}}" alt=""
-                                                onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';"
-                                                class="w-100 h-100 object-fit-cover">
-                                        </a>
-                                        <div class="card-body d-flex flex-column">
-                                            <h6 class="card-title product-title text-primary fw-bold mb-1">
-                                                <a href="/product/{{_id}}"
-                                                    class="text-decoration-none text-primary">{{name}}</a>
-                                            </h6>
-                                            <div class="small text-muted mb-1">{{truncate description 100}}</div>
-                                            <div class="price fw-bold text-danger mt-auto">{{formatPrice
-                                                variants.[0].price}} VNĐ</div>
-                                        </div>
-                                    </div>
+                                            class="text-decoration-none text-primary">{{name}}</a>
+                                    </h6>
+                                    <div class="small text-muted mb-1">{{truncate description 50}}</div>
+                                    <div class="price fw-bold text-danger mt-auto">{{formatPrice
+                                        variants.[0].price}} VNĐ</div>
                                 </div>
-                                {{/each}}
                             </div>
                         </div>
                         {{/each}}
                     </div>
-                    <button class="carousel-control-prev carousel-nav" type="button"
-                        data-bs-target="#newProductsCarousel" data-bs-slide="prev" aria-label="Previous">
-                        <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-                            <path fill="currentColor"
-                                d="M11.354 1.646a.5.5 0 0 1 0 .708L6.707 8l4.647 5.646a.5.5 0 0 1-.708.708l-5-6a.5.5 0 0 1 0-.708l5-6a.5.5 0 0 1 .708 0z" />
-                        </svg>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next carousel-nav" type="button"
-                        data-bs-target="#newProductsCarousel" data-bs-slide="next" aria-label="Next">
-                        <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-                            <path fill="currentColor"
-                                d="M4.646 1.646a.5.5 0 0 1 .708 0l5 6a.5.5 0 0 1 0 .708l-5 6a.5.5 0 0 1-.708-.708L9.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                        </svg>
-                        <span class="visually-hidden">Next</span>
-                    </button>
                 </div>
+                {{/each}}
             </div>
+            <button class="carousel-control-prev carousel-nav" type="button" data-bs-target="#new-products-carousel"
+                data-bs-slide="prev" aria-label="Previous">
+                <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                    <path fill="currentColor"
+                        d="M11.354 1.646a.5.5 0 0 1 0 .708L6.707 8l4.647 5.646a.5.5 0 0 1-.708.708l-5-6a.5.5 0 0 1 0-.708l5-6a.5.5 0 0 1 .708 0z" />
+                </svg>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next carousel-nav" type="button" data-bs-target="#new-products-carousel"
+                data-bs-slide="next" aria-label="Next">
+                <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                    <path fill="currentColor"
+                        d="M4.646 1.646a.5.5 0 0 1 .708 0l5 6a.5.5 0 0 1 0 .708l-5 6a.5.5 0 0 1-.708-.708L9.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                </svg>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
     </div>
+    {{/if}}
+
+    <div class="my-5"></div>
 
     <!-- Dynamic Category Products -->
     {{#each categoryProducts}}
-    <div class="category-products-wrapper mb-5">
-        <div class="d-flex align-items-center mb-3 px-1 py-0 justify-content-between">
+    {{#if windowProducts.length}}
+    <div class="category-products-wrapper">
+        <div class="d-flex align-items-center justify-content-between my-2 ms-1">
             <div class="d-flex align-items-center">
                 <i class="{{getCategoryIcon name}} me-2" style="color:#3a86ff;font-size:1.5rem;"></i>
                 <h4 class="fw-semibold text-primary mb-0 flex-grow-1" style="font-size:1.3rem;">{{name}}</h4>
@@ -128,26 +142,26 @@
             </a>
         </div>
 
-        <div id="category{{@index}}ProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true"
-            data-bs-interval="3000">
-            <div class="carousel-inner">
+        <div id="category-{{@index}}-products-carousel" class="carousel slide" data-bs-ride="carousel"
+            data-bs-wrap="true" data-bs-interval="3000">
+            <div class="carousel-inner px-4 pb-4">
                 {{#each windowProducts}}
-                <div class="carousel-item {{#if @first}}active{{/if}}">
-                    <div class="row g-4 px-3" style="height: 400px;">
+                <div class="carousel-item {{#if @first}}active{{/if}} p-2">
+                    <div class="row g-4 px-3">
                         {{#each this}}
                         <div class="col-md-2 col-6">
-                            <div class="card h-100 d-flex flex-column">
+                            <div class="card h-100 d-flex flex-column shadow">
                                 <a href="/product/{{_id}}" class="d-block">
                                     <img src="{{images.[0]}}" class="card-img-top" alt=""
                                         style="height: 150px; object-fit: cover;"
                                         onerror="this.onerror=null;this.src='https://placehold.co/600x400?text={{name}}';">
                                 </a>
-                                <div class="card-body p-2 d-flex flex-column h-100" style="min-height: 150px;">
-                                    <h6 class="card-title mb-2 fw-bold">
+                                <div class="card-body p-2 d-flex flex-column h-100" style="min-height: 250px;">
+                                    <h6 class="card-title mb-2 fw-bold" style="min-height: 50px;">
                                         <a href="/product/{{_id}}"
                                             class="text-decoration-none text-primary">{{name}}</a>
                                     </h6>
-                                    <div class="small text-muted mb-1">{{truncate description 100}}</div>
+                                    <div class="small text-muted mb-1">{{truncate description 50}}</div>
                                     <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ
                                     </div>
                                 </div>
@@ -159,7 +173,7 @@
                 {{/each}}
             </div>
             <button class="carousel-control-prev carousel-nav" type="button"
-                data-bs-target="#category{{@index}}ProductsCarousel" data-bs-slide="prev" aria-label="Previous">
+                data-bs-target="#category-{{@index}}-products-carousel" data-bs-slide="prev" aria-label="Previous">
                 <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
                     <path fill="currentColor"
                         d="M11.354 1.646a.5.5 0 0 1 0 .708L6.707 8l4.647 5.646a.5.5 0 0 1-.708.708l-5-6a.5.5 0 0 1 0-.708l5-6a.5.5 0 0 1 .708 0z" />
@@ -167,7 +181,7 @@
                 <span class="visually-hidden">Previous</span>
             </button>
             <button class="carousel-control-next carousel-nav" type="button"
-                data-bs-target="#category{{@index}}ProductsCarousel" data-bs-slide="next" aria-label="Next">
+                data-bs-target="#category-{{@index}}-products-carousel" data-bs-slide="next" aria-label="Next">
                 <svg class="carousel-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
                     <path fill="currentColor"
                         d="M4.646 1.646a.5.5 0 0 1 .708 0l5 6a.5.5 0 0 1 0 .708l-5 6a.5.5 0 0 1-.708-.708L9.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
@@ -176,6 +190,9 @@
             </button>
         </div>
     </div>
+
+    <div class="my-5"></div>
+    {{/if}}
     {{/each}}
 </div>
 

@@ -1,4 +1,4 @@
-import ApiError from "./ApiError";
+import ApiError from "./ApiError.js";
 
 class SortOption {
     private readonly fields = ["rate", "soldCount", "createdAt"];

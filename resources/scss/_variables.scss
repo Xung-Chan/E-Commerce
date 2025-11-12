@@ -1,8 +1,8 @@
 @use "sass:color";
 
 $primary: #3a86ff;
-$primary-dark: color.scale($primary, $lightness: -30%);
+$secondary: color.scale($primary, $lightness: -30%);
 
-$secondary: #EDF1FF;
+$light: #EDF1FF;
 $dark: #1C1C1C;
 $inner-category-color: #c1121f; 

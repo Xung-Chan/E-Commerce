@@ -36,10 +36,10 @@
                     <!-- Login Form -->
                     <form id="loginForm" method="POST" action="login">
                         <div class="mb-3">
-                            <label for="email" class="form-label fw-semibold">Email hoặc Số điện thoại</label>
+                            <label for="email" class="form-label fw-semibold">Email</label>
                             <input type="text"
                                 class="form-control {{#if (hasFieldError errors 'email')}}is-invalid{{/if}}" id="email"
-                                name="email" placeholder="Nhập email hoặc số điện thoại"
+                                name="email" placeholder="Nhập email"
                                 value="{{#if formData}}{{formData.email}}{{/if}}" required>
                             {{#if (getFieldError errors 'email')}}
                             <div class="invalid-feedback">{{getFieldError errors 'email'}}</div>
