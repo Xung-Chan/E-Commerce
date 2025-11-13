@@ -35,6 +35,7 @@ interface CreateOrderDto {
     couponId?: string | null;
     totalPrice?: number;
     totalDiscount?: number;
+    shippingFee?: number;
     totalPay?: number;
 
 }
@@ -44,6 +45,9 @@ interface CreateProductDto {
     categoryId: string;
     description: string;
     images: string[];
+    minPrice: number;
+    maxPrice: number;
+
 }
 interface CreateRateDto {
     userId: string;
@@ -53,6 +57,7 @@ interface CreateRateDto {
 }
 interface CreateCartItemDto {
     userId: string;
+    productId: string;
     variantId: string;
     quantity: number;
 }

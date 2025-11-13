@@ -1,21 +1,27 @@
 import { Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
+
+import ApiError from "../utils/ApiError.js";
+import ApiResponse from "../utils/Api.response.js";
 import { CreateCategoryDto } from "../dto/Create.dto.js";
-import categoryService from "../services/Category.service.js";
-import ApiResponse from "../utils/Api.response";
-import ApiError from "../utils/ApiError";
 import { UPLOAD_DIR } from "../services/Image.service.js";
+import categoryService from "../services/Category.service.js";
+
+
 export const categoryController = {
+
     createCategory: expressAsyncHandler(async (req: Request, res: Response) => {
         const data: CreateCategoryDto = req.body;
         data.image = UPLOAD_DIR + req.file?.filename;
         const category = await categoryService.createCategory(data);
         res.status(201).json(new ApiResponse(true, 201, "Category created successfully", category));
     }),
+
     getAllCategories: expressAsyncHandler(async (req: Request, res: Response) => {
         const categories = await categoryService.getAllCategories();
         res.status(200).json(new ApiResponse(true, 200, "Categories fetched successfully", categories));
     }),
+
     getCategoryById: expressAsyncHandler(async (req: Request, res: Response) => {
         const categoryId = req.params.categoryId;
         if (!categoryId) {
@@ -27,6 +33,7 @@ export const categoryController = {
         }
         res.status(200).json(new ApiResponse(true, 200, "Category fetched successfully", category));
     }),
+
     deleteCategoryById: expressAsyncHandler(async (req: Request, res: Response) => {
         const categoryId = req.params.categoryId;
         if (!categoryId) {
@@ -35,6 +42,7 @@ export const categoryController = {
         await categoryService.deleteCategoryById(categoryId);
         res.status(200).json(new ApiResponse(true, 200, "Category deleted successfully", null));
     }),
+
     updateCategoryById: expressAsyncHandler(async (req: Request, res: Response) => {
         const categoryId = req.params.categoryId;
         if (!categoryId) {
@@ -46,7 +54,9 @@ export const categoryController = {
         }
         const updatedCategory = await categoryService.updateCategoryById(categoryId, data);
         res.status(200).json(new ApiResponse(true, 200, "Category updated successfully", updatedCategory));
+
     }),
+
     getCategoriesForLandingPage: expressAsyncHandler(async (req: Request, res: Response) => {
         const categories = await categoryService.getCategoriesForLandingPage();
         res.status(200).json(new ApiResponse(true, 200, "Categories fetched successfully", categories));
@@ -55,4 +65,6 @@ export const categoryController = {
 
 
 }
+
+
 export default categoryController;

@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "6915a708bce73b5dc1242381"
+  },
+  "name": "EXPRESS",
+  "description": "Đơn hàng của bạn sẽ được giao trong vòng 24 giờ",
+  "price": 50000,
+  "createdAt": {
+    "$date": "2025-11-13T09:38:16.598Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-13T09:38:16.598Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6915a75ebce73b5dc1242386"
+  },
+  "name": "STANDARD",
+  "description": "Đơn hàng của bạn sẽ được giao trong vòng 5-7 ngày",
+  "price": 15000,
+  "createdAt": {
+    "$date": "2025-11-13T09:39:42.349Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-13T09:39:42.349Z"
+  }
+}]

@@ -7,16 +7,22 @@ import { CreateOrderRequest } from '../dto/Request.dto.js';
 import { OrderStatus } from "../utils/OrderStatus.enum.js";
 import { OrderQuery, Pagination } from "../utils/Pagination.js";
 import { statusHistoryDao } from './../daos/StatusHistory.dao.js';
+import { ErrorDictionary } from "../middleware/errorDictionary.js";
+import shippingMethodService from "./ShippingMethod.service.js";
 
 const orderService = {
     createOrder: async (data: CreateOrderRequest) => {
         let totalPrice = 0;
         let totalDiscount = 0;
         let totalPay = 0;
+        const shipping = await shippingMethodService.getShippingMethodByName(data.shippingMethod);
+        if (!shipping) {
+            throw new ApiError(404, "Not Found", ErrorDictionary.SHIPPING_METHOD_NOT_FOUND);
+        }
         const orderItems = await Promise.all(data.variants.map(async (item) => {
             const variant = await variantDao.readById(item.variantId);
             if (variant === null) {
-                throw new ApiError(404, "Not Found", `Variant with ID ${item.variantId} not found`);
+                throw new ApiError(404, "Not Found", ErrorDictionary.VARIANT_NOT_FOUND);
             }
 
             totalPrice += variant.price * item.quantity;
@@ -38,6 +44,7 @@ const orderService = {
             paymentMethod: data.paymentMethod,
             totalPrice,
             totalDiscount,
+            shippingFee: shipping.price,
             totalPay,
         };
         const order = await orderDao.create(orderData);
@@ -86,7 +93,7 @@ const orderService = {
     getOrderById: async (id: string) => {
         const order = await orderDao.readById(id);
         if (!order) {
-            throw new ApiError(404, "Not Found", "Order not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.ORDER_NOT_FOUND);
         }
         return order;
     },
@@ -99,7 +106,7 @@ const orderService = {
     deleteOrderById: async (id: string) => {
         const order = await orderDao.readById(id);
         if (!order) {
-            throw new ApiError(404, "Not Found", "Order not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.ORDER_NOT_FOUND);
         }
         return orderDao.deleteById(id);
     },
@@ -109,12 +116,12 @@ const orderService = {
     updateStatusById: async (id: string, status: string) => {
         const validStatuses = Object.values(OrderStatus).map(s => s.toString());
         if (!validStatuses.includes(status)) {
-            throw new ApiError(400, "Bad Request", `Invalid status. Valid statuses are: ${validStatuses.join(", ")}`);
+            throw new ApiError(400, "Bad Request", ErrorDictionary.STATUS_INVALID);
         }
 
         const order = await orderDao.readById(id);
         if (!order) {
-            throw new ApiError(404, "Not Found", "Order not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.ORDER_NOT_FOUND);
         }
 
         await statusHistoryDao.create({

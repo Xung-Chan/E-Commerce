@@ -141,17 +141,20 @@ const userController = {
     updateMyCartByCartItemId: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = (req as any).userId;
         if (!userId) {
-            throw new ApiError(401, "Unauthorized", "No token provided");
+            throw new ApiError(401, "Unauthorized", ErrorDictionary.UNAUTHORIZED);
         }
         const cartItemId = req.params.cartItemId;
         if (!cartItemId) {
-            throw new ApiError(400, "Bad Request", "Cart Item ID is required");
+            throw new ApiError(400, "Bad Request", ErrorDictionary.CART_ITEM_NOT_FOUND);
         }
-        const { quantity } = req.body;
+        const { quantity, variantId } = req.body;
         if (quantity === undefined) {
-            throw new ApiError(400, "Bad Request", "Quantity is required");
+            throw new ApiError(400, "Bad Request", ErrorDictionary.QUANTITY_REQUIRED);
         }
-        const result = await userService.updateCartByCartItemId(cartItemId, quantity);
+        if (!variantId) {
+            throw new ApiError(400, "Bad Request", ErrorDictionary.VARIANT_REQUIRED);
+        }
+        const result = await userService.updateCartByCartItemId(cartItemId, variantId, quantity);
         res.status(200).json(new ApiResponse(true, 200, "Cart updated successfully", result));
     }),
     removeMyCartByCartItemId: expressAsyncHandler(async (req: Request, res: Response) => {

@@ -1,10 +1,14 @@
 import { Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
-import { CreateOrderRequest } from '../dto/Request.dto.js';
-import orderService from '../services/Order.service.js';
-import ApiResponse from '../utils/Api.response.js';
+
 import ApiError from '../utils/ApiError.js';
+import ApiResponse from '../utils/Api.response.js';
 import { OrderQuery } from '../utils/Pagination.js';
+import orderService from '../services/Order.service.js';
+import { CreateOrderRequest } from '../dto/Request.dto.js';
+import { ErrorDictionary } from '../middleware/errorDictionary.js';
+
+
 const orderController = {
     createOrder: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = (req as any).userId;
@@ -75,7 +79,7 @@ const orderController = {
     getMyOrders: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = (req as any).userId;
         if (!userId) {
-            throw new ApiError(401, "Unauthorized", "No token provided");
+            throw new ApiError(401, "Unauthorized", ErrorDictionary.UNAUTHORIZED);
         }
         const orders = await orderService.getOrderByUserId(userId);
         res.status(200).json(new ApiResponse(true, 200, "Orders fetched successfully", orders));

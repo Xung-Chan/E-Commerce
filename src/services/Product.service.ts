@@ -4,6 +4,7 @@ import { productDao } from "../daos/Product.dao.js";
 import { CreateVariantDto } from '../dto/Create.dto.js';
 import { CreateProductRequest } from "../dto/Request.dto.js";
 import { UpdateProductDto } from "../dto/Update.dto.js";
+import { ErrorDictionary } from "../middleware/errorDictionary.js";
 import ApiError from "../utils/ApiError.js";
 import { Pagination, ProductQuery } from "../utils/Pagination.js";
 import SortOption from "../utils/SortOption.js";
@@ -19,7 +20,11 @@ const productService = {
         if (!category) {
             throw new ApiError(404, "Not Found", "Category not found");
         }
-        const product = await productDao.create(data);
+        const product = await productDao.create({
+            ...data,
+            minPrice: Math.min(...data.variants.map(v => v.price)),
+            maxPrice: Math.max(...data.variants.map(v => v.price))
+        });
         data.variants.forEach(async (variant) => {
             const variantData: CreateVariantDto = {
                 productId: product._id.toString(),
@@ -42,7 +47,8 @@ const productService = {
             name?: { $regex: string, $options: string };
             categoryId?: string;
             brandId?: string;
-            "variants.price"?: { $gte?: number, $lte?: number };
+            minPrice?: { $gte: number };
+            maxPrice?: { $lte: number };
         } = {};
         const page = parseInt((query.page || "1"), 10);
         const limit = parseInt((query.limit || "10"), 10);
@@ -63,17 +69,13 @@ const productService = {
             filter.brandId = query.brandId;
         }
 
-        if (query.minPrice !== undefined || query.maxPrice !== undefined) {
-            filter["variants.price"] = {};
-            filter["variants.price"] = {};
-            if (query.minPrice !== undefined) {
-                filter["variants.price"].$gte = Number(query.minPrice);
-            }
-            if (query.maxPrice !== undefined) {
-                filter["variants.price"].$lte = Number(query.maxPrice);
-            }
+        if (query.minPrice !== undefined) {
+            filter.minPrice = { $gte: Number(query.minPrice) };
         }
-        console.log(filter);
+        if (query.maxPrice !== undefined) {
+            filter.maxPrice = { $lte: Number(query.maxPrice) };
+        }
+
         const data = await productDao.findBy(filter, options);
         const totalDatas = await productDao.count(filter);
         return new Pagination(data, page, limit, totalDatas);
@@ -94,7 +96,7 @@ const productService = {
     getProductsByBrandId: async (brandId: string) => {
         const brand = await brandDao.readById(brandId);
         if (!brand) {
-            throw new ApiError(404, "Not Found", "Brand not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.BRAND_NOT_FOUND);
         }
         return productDao.findBy({ brandId });
     },
@@ -131,16 +133,16 @@ const productService = {
         }
 
         const products = await productDao.findBy({}, options);
-        const datas = await Promise.all(products.map(async product => {
-            const variants = await variantService.getVariantsByProductId(product._id.toString());
-            return {
-                ...product,
-                variants: variants
-            };
-        }))
-        console.log(datas);
+        // const datas = await Promise.all(products.map(async product => {
+        //     const variants = await variantService.getVariantsByProductId(product._id.toString());
+        //     return {
+        //         ...product,
+        //         // variants: variants
+        //     };
+        // }))
+        // console.log(datas);
         const totalDatas = await productDao.count({});
-        return new Pagination(datas, page, limit, totalDatas);
+        return new Pagination(products, page, limit, totalDatas);
     },
 
     deleteProductById: async (id: string) => {

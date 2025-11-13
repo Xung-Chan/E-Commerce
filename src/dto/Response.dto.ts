@@ -11,11 +11,16 @@ interface CartResponse {
     items: Array<{
         cartItemId: string;
         variantId: string;
+        variantIds: string[];
         productId: string;
-        product: string;
-        variant: string;
+        productName: string;
+        productImage: string;
+        distinctFeature: string;
         quantity: number;
+        price: number;
+        totalPrice: number;
     }>;
+    totalProduct: number;
     total: number;
 }
 

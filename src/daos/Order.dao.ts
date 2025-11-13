@@ -22,6 +22,10 @@ const OrderSchema = new Schema({
         required: true
 
     },
+    shippingFee: {
+        type: Number,
+        default: 0
+    },
     totalPay: {
         type: Number,
         required: true
@@ -29,7 +33,6 @@ const OrderSchema = new Schema({
     },
     shippingMethod: {
         type: String,
-        enum: ["standard", "express"],
         required: true
     },
     paymentMethod: {
@@ -58,7 +61,7 @@ class OrderDao implements CRUD {
         return result.modifiedCount > 0;
     }
 
-    async findBy(query: Partial<any>, options: QueryOptions = {}): Promise<any | null> {
+    async findBy(query: Partial<any>, options: QueryOptions = {}): Promise<IOrder[]> {
         return await Order.find({
             ...query,
             deletedAt: null

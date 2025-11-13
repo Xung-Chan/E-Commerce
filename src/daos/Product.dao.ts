@@ -37,6 +37,14 @@ const ProductSchema = new Schema({
         max: 5,
         default: 0
     },
+    minPrice: {
+        type: Number,
+        required: true
+    },
+    maxPrice: {
+        type: Number,
+        required: true
+    },
     deletedAt: {
         type: Date,
         default: null

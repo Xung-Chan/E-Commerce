@@ -102,11 +102,11 @@ const userService = {
     getCartByUserId: async (userId: string): Promise<CartResponse> => {
         const user: IUser | null = await userDao.readById(userId);
         if (!user) {
-            throw new ApiError(404, "Not Found", "User not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.USER_NOT_FOUND);
         }
         const cart = await cartItemDao.findBy({ userId: userId });
         if (!cart) {
-            return { items: [], total: 0 };
+            return { items: [], totalProduct: 0, total: 0 };
         }
         const items = await Promise.all(
             cart.map(async (item: ICartItem) => {
@@ -118,12 +118,17 @@ const userService = {
                 if (!product) {
                     throw new ApiError(404, "Not Found", "Product not found");
                 }
+                const variantIds = await variantDao.findBy({ productId: product._id.toString() }).then(variants => variants.map(v => v._id.toString()));
                 return {
                     cartItemId: item._id.toString(),
                     variantId: variant._id.toString(),
+                    variantIds: variantIds,
                     productId: product._id.toString(),
-                    product: product.name,
-                    variant: variant.distinctFeature,
+                    productName: product.name,
+                    productImage: product.images[0] || "",
+                    distinctFeature: variant.distinctFeature,
+                    price: variant.price,
+                    totalPrice: variant.price * item.quantity,
                     quantity: item.quantity,
                 };
             })
@@ -131,17 +136,20 @@ const userService = {
 
         return {
             items: [...items],
-            total: items.reduce((sum, item) => sum + item.quantity, 0),
+            totalProduct: items.reduce((sum, item) => sum + item.quantity, 0),
+            total: items.reduce((sum, item) => sum + item.totalPrice, 0),
         };
     },
+
+
     addToCartByUserId: async (userId: string, variantId: string, quantity: number): Promise<boolean> => {
         const user: IUser | null = await userDao.readById(userId);
         if (!user) {
-            throw new ApiError(404, "Not Found", "User not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.USER_NOT_FOUND);
         }
         const variant = await variantDao.readById(variantId);
         if (!variant) {
-            throw new ApiError(404, "Not Found", "Variant not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.VARIANT_NOT_FOUND);
         }
         let cartItem = await cartItemDao.findOne({ userId: userId, variantId: variantId });
         if (cartItem) {
@@ -150,21 +158,33 @@ const userService = {
             return result;
         }
         else {
-            cartItem = await cartItemDao.create({ userId: userId, variantId: variantId, quantity: quantity });
+            cartItem = await cartItemDao.create({
+                userId: userId,
+                variantId: variantId,
+                quantity: quantity,
+                productId: variant.productId.toString()
+            });
             return !!cartItem;
         }
     },
-    updateCartByCartItemId: async (cartItemId: string, quantity: number): Promise<boolean> => {
+
+
+    updateCartByCartItemId: async (cartItemId: string, variantId: string, quantity: number): Promise<boolean> => {
         const cartItem = await cartItemDao.readById(cartItemId);
         if (!cartItem) {
-            throw new ApiError(404, "Not Found", "Cart item not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.CART_ITEM_NOT_FOUND);
         }
-        const result = await cartItemDao.updateById(cartItemId, { quantity });
+        const variant = await variantDao.findBy({ _id: variantId, productId: cartItem.productId.toString() });
+        if (!variant || variant.length === 0) {
+            throw new ApiError(404, "Not Found", ErrorDictionary.VARIANT_NOT_FOUND);
+        }
+        const result = await cartItemDao.updateById(cartItemId, { quantity, variantId });
         if (!result) {
             throw new ApiError(500, "Internal Server Error", "Failed to update cart item");
         }
         return result;
     },
+
     deleteCartByCartItemId: async (cartItemId: string): Promise<boolean> => {
         const cartItem = await cartItemDao.readById(cartItemId);
         if (!cartItem) {
