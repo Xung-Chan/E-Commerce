@@ -1,49 +1,60 @@
 <div class="container py-4">
-	<h2 class="fw-bold text-primary mb-4">Giỏ hàng</h2>
-
-	{{#if errorMessage}}
-	<div class="alert alert-danger">{{errorMessage}}</div>
-	{{/if}}
-
+	{{!-- Giỏ hàng --}}
 	{{#if cart.items.length}}
+	<h2 class="fw-bold text-primary mb-2">Giỏ hàng</h2>
 	<div class="row g-4">
-		<div class="col-lg-8">
+		<div class="col-12">
 			<div class="card shadow-sm">
 				<div class="card-body p-0">
 					<div class="table-responsive">
-						<table class="table align-middle mb-0">
+						<table class="table table-hover align-middle mb-0 cart-table w-100" id="cartTable" style="table-layout: fixed; width:100%;">
+							<colgroup>
+								<col style="width:50px;" />
+								<col style="width:260px;" />
+								<col style="width:170px;" />
+								<col style="width:150px;" />
+								<col style="width:160px;" />
+								<col style="width:130px;" />
+							</colgroup>
 							<thead class="table-light">
 								<tr>
-									<th>Sản phẩm</th>
-									<th>Cấu hình</th>
-									<th class="text-center">Số lượng</th>
-									<th class="text-end">Hành động</th>
+									<th style="min-width:45px;">
+										<input type="checkbox" id="selectAll">
+									</th>
+									<th style="min-width:240px;">Sản phẩm</th>
+									<th style="min-width:160px;">Cấu hình</th>
+									<th class="text-center" style="min-width:110px;">Số lượng</th>
+									<th class="text-end" style="min-width:140px;">Giá (x Qty)</th>
+									<th class="text-end" style="min-width:120px;">Hành động</th>
 								</tr>
 							</thead>
 							<tbody>
 								{{#each cart.items}}
-								<tr>
-									<td>
-										<img src="{{this.imageUrl}}" alt="{{this.product}}" width="60" height="60"
-											class="rounded object-fit-cover me-3"
-											onerror="this.onerror=null;this.src='https://placehold.co/56x56?text=?';">
-										{{this.product}}
+								<tr data-price="{{this.price}}" data-quantity="{{this.quantity}}" data-cart-item-id="{{this.cartItemId}}">
+									<td class="align-middle">
+										<input type="checkbox" class="item-checkbox">
 									</td>
 									<td>
-										{{this.variant}}
+										<div class="d-flex align-items-center">
+											<img src="{{this.imageUrl}}" alt="{{this.product}}" width="60" height="60"
+												class="rounded object-fit-cover me-3"
+												onerror="this.onerror=null;this.src='https://placehold.co/56x56?text=?';">
+											<div class="flex-grow-1">
+												<div class="fw-semibold text-truncate" title="{{this.product}}">{{this.product}}</div>
+											</div>
+										</div>
 									</td>
-									<td>
-										<form action="#" method="POST"
-											class="d-flex justify-content-center align-items-center gap-2">
-											<input type="number" class="form-control form-control-sm text-center"
-												name="quantity" value="{{this.quantity}}" min="1"
-												style="max-width:80px;">
-										</form>
+									<td class="small">{{this.variant}}</td>
+									<td class="text-center">
+										<div class="quantity-control d-inline-flex align-items-center" style="gap:4px;">
+											<button type="button" class="btn btn-sm btn-outline-secondary btn-qty" data-action="dec">-</button>
+											<input type="number" class="form-control form-control-sm qty-input" min="1" value="{{this.quantity}}" style="width:64px;">
+											<button type="button" class="btn btn-sm btn-outline-secondary btn-qty" data-action="inc">+</button>
+										</div>
 									</td>
-									<td class="text-end justify-content-center align-items-center" style="gap: 0.5rem;">
-										<form action="/cart/me/{{this.cartItemId}}" method="POST" class="d-inline">
-											<button class="btn btn-sm btn-outline-danger" type="submit">Xóa</button>
-										</form>
+									<td class="text-end fw-semibold text-danger line-total">{{lineTotal this.price this.quantity}} VND</td>
+									<td class="text-end">
+										<button type="button" class="btn btn-sm btn-outline-danger btn-remove">Xóa</button>
 									</td>
 								</tr>
 								{{/each}}
@@ -53,29 +64,28 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-4">
+
+		{{!-- Tóm tắt --}}
+		<div class="col-12 mt-3">
 			<div class="card shadow-sm">
 				<div class="card-body">
 					<h5 class="fw-bold mb-3">Tóm tắt</h5>
 					<ul class="list-group list-group-flush mb-3">
-						{{#each cart.items}}
-						<li class="list-group-item d-flex justify-content-between align-items-center">
-							{{this.product}} (x{{this.quantity}})
-						</li>
-						{{/each}}
 						<li class="list-group-item d-flex justify-content-between align-items-center">
 							Thuế:
-							<span>{{formatPrice cart.tax}} VND</span>
+							<span id="taxAmount">{{formatPrice cart.tax}} VND</span>
 						</li>
 						<li class="list-group-item d-flex justify-content-between align-items-center">
 							Phí vận chuyển:
-							<span>{{formatPrice cart.shippingCost}} VND</span>
+							<span id="shippingAmount">{{formatPrice cart.shippingCost}} VND</span>
 						</li>
 						<li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
 							Tổng cộng:
-							<span>{{formatPrice cart.totalPrice}} VND</span>
+							<span id="totalAmount">{{formatPrice 0}} VND</span>
+						</li>
 					</ul>
-					<button class="btn btn-success w-100" disabled>Thanh toán</button>
+					<button id="checkoutBtn" class="btn btn-success w-100" disabled>Thanh toán</button>
+					<div id="cartStatus" class="small mt-2"></div>
 				</div>
 			</div>
 		</div>
@@ -86,3 +96,182 @@
 	</div>
 	{{/if}}
 </div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const cartTable = document.getElementById('cartTable');
+		const selectAll = document.getElementById('selectAll');
+		const totalElement = document.getElementById('totalAmount');
+		const checkoutBtn = document.getElementById('checkoutBtn');
+		const statusEl = document.getElementById('cartStatus');
+		const tax = parseFloat(document.getElementById('taxAmount')?.innerText.replace(/[^\d]/g, '')) || 0;
+		const shipping = parseFloat(document.getElementById('shippingAmount')?.innerText.replace(/[^\d]/g, '')) || 0;
+
+		// Helper to format price
+		function formatPrice(price) {
+			return price.toLocaleString('vi-VN');
+		}
+
+		// Helper to set status message
+		function setStatus(message, type = 'info') {
+			if (!statusEl) return;
+			statusEl.textContent = message;
+			statusEl.className = `small mt-2 text-${type}`;
+		}
+
+		// Update the header cart badge without reloading
+		function updateHeaderCartCount() {
+			const badge = document.querySelector('.btn-cart .badge');
+			if (!badge) return;
+			const rows = document.querySelectorAll('#cartTable tbody tr');
+			let sum = 0;
+			rows.forEach(r => { sum += (parseInt(r.getAttribute('data-quantity') || '0') || 0); });
+			badge.textContent = String(sum);
+		}
+
+		// Recalculate line total for a row
+		function recalcLineTotal(row) {
+			const price = parseFloat(row.dataset.price) || 0;
+			const quantity = parseInt(row.dataset.quantity) || 1;
+			const cell = row.querySelector('.line-total');
+			if (cell) cell.textContent = formatPrice(price * quantity) + ' VND';
+		}
+
+		// Update total amount based on selected items
+		function updateTotal() {
+			let subtotal = 0;
+			const liveCheckboxes = document.querySelectorAll('#cartTable .item-checkbox');
+			liveCheckboxes.forEach(cb => {
+				if (cb.checked) {
+					const row = cb.closest('tr');
+					if (row) {
+						const price = parseFloat(row.dataset.price) || 0;
+						const quantity = parseInt(row.dataset.quantity) || 1;
+						subtotal += price * quantity;
+					}
+				}
+			});
+			let total = subtotal;
+			if (subtotal > 0) {
+				checkoutBtn.disabled = false;
+				total += tax + shipping;
+			} else {
+				checkoutBtn.disabled = true;
+			}
+			totalElement.textContent = `${formatPrice(total)} VND`;
+		}
+
+		// Handle quantity increment/decrement buttons
+		function handleQtyButtons(row) {
+			const input = row.querySelector('.qty-input');
+			row.querySelectorAll('.btn-qty').forEach(btn => {
+				btn.addEventListener('click', () => {
+					if (row.getAttribute('data-loading') === '1') return;
+					let val = parseInt(input.value) || 1;
+					if (btn.dataset.action === 'inc') val += 1; else val = Math.max(1, val - 1);
+					input.value = val;
+					patchQuantity(row, val);
+				});
+			});
+			// Optional: apply changes when typing
+			input.addEventListener('change', () => {
+				let val = parseInt(input.value) || 1;
+				if (val < 1) val = 1;
+				input.value = val;
+				if (row.getAttribute('data-loading') === '1') return;
+				patchQuantity(row, val);
+			});
+		}
+
+		function setRowLoading(row, isLoading) {
+			row.setAttribute('data-loading', isLoading ? '1' : '0');
+			row.querySelectorAll('.btn-qty').forEach(b => { if (b instanceof HTMLButtonElement) b.disabled = !!isLoading; });
+			const input = row.querySelector('.qty-input');
+			if (input) input.disabled = !!isLoading;
+		}
+
+		async function patchQuantity(row, newQty) {
+			const qtyInput = row.querySelector('.qty-input');
+			const cartItemId = row.getAttribute('data-cart-item-id');
+			const originalQty = parseInt(row.getAttribute('data-quantity') || '1');
+			if (!cartItemId) return;
+			if (newQty === originalQty) return; // no-op
+
+			row.setAttribute('data-quantity', String(newQty));
+			recalcLineTotal(row);
+			updateTotal();
+			setRowLoading(row, true);
+			try {
+				const res = await fetch(`/api/users/cart/me/${cartItemId}`, {
+					method: 'PATCH',
+					headers: { 'Content-Type': 'application/json' },
+					credentials: 'include',
+					body: JSON.stringify({ quantity: newQty })
+				});
+				if (!res.ok) throw new Error('Patch failed');
+				updateHeaderCartCount();
+			} catch (e) {
+				row.setAttribute('data-quantity', String(originalQty));
+				if (qtyInput) qtyInput.value = String(originalQty);
+				recalcLineTotal(row);
+				updateTotal();
+				setStatus('Lỗi cập nhật số lượng', 'danger');
+			} finally {
+				setRowLoading(row, false);
+			}
+		}
+
+		// Attach events to a cart row
+		function attachRowEvents(row) {
+			handleQtyButtons(row);
+			const removeBtn = row.querySelector('.btn-remove');
+			const cartItemId = row.dataset.cartItemId;
+
+			// Remove item
+			removeBtn.addEventListener('click', async () => {
+				const priceBackup = row.dataset.price;
+				const qtyBackup = row.dataset.quantity;
+				row.style.opacity = '0.5';
+				try {
+					const res = await fetch(`/api/users/cart/me/${cartItemId}`, {
+						method: 'DELETE',
+						credentials: 'include'
+					});
+					if (!res.ok) throw new Error('Delete failed');
+					row.remove();
+					if (!cartTable.querySelector('tbody tr')) {
+						const container = document.querySelector('.container');
+						container.innerHTML = '<div class="text-center text-muted py-5">Giỏ hàng trống. <a href="/catalog" class="text-primary">Tiếp tục mua sắm</a></div>';
+					}
+					updateTotal();
+					updateHeaderCartCount();
+				} catch (e) {
+					row.style.opacity = '1';
+					row.dataset.price = priceBackup;
+					row.dataset.quantity = qtyBackup;
+					setStatus('Lỗi xóa sản phẩm', 'danger');
+				}
+			});
+		}
+
+		// Initial attach
+		cartTable?.querySelectorAll('tbody tr').forEach(attachRowEvents);
+
+		// Checkbox events (live)
+		const refreshCheckboxHandlers = () => {
+			document.querySelectorAll('#cartTable .item-checkbox').forEach(cb => {
+				cb.removeEventListener('change', updateTotal);
+				cb.addEventListener('change', updateTotal);
+			});
+		};
+		refreshCheckboxHandlers();
+		selectAll?.addEventListener('change', function () {
+			document.querySelectorAll('#cartTable .item-checkbox').forEach(cb => { if (cb instanceof HTMLInputElement) cb.checked = selectAll.checked; });
+			updateTotal();
+		});
+
+		// Initial total calculation
+		updateTotal();
+		updateHeaderCartCount();
+	});
+</script>

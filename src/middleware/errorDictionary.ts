@@ -10,7 +10,7 @@ export enum ErrorDictionary {
     CART_ITEM_NOT_FOUND = "Mục giỏ hàng không tồn tại",
     SHIPPING_METHOD_NOT_FOUND = "Phương thức vận chuyển không tồn tại",
     INVALID_TOKEN_TYPE = "Loại token không hợp lệ",
-    INVALID_OR_EXPIRED_TOKEN = "Token không hợp lệ hoặc đã hết hạn",
+    INVALID_OR_EXPIRED_TOKEN = "Phiên không hợp lệ hoặc đã hết hạn",
     PASSWORD_UPDATE_FAILED = "Cập nhật mật khẩu thất bại",
     INVALID_OLD_PASSWORD = "Mật khẩu cũ không hợp lệ",
     UNAUTHORIZED = "Người dùng chưa được xác thực",

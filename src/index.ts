@@ -45,6 +45,12 @@ app.engine(
                 if (Number.isNaN(num)) return '';
                 return num.toLocaleString('vi-VN');
             },
+            lineTotal: (price: unknown, qty: unknown) => {
+                const p = typeof price === 'number' ? price : Number(price as any);
+                const q = typeof qty === 'number' ? qty : Number(qty as any);
+                if (Number.isNaN(p) || Number.isNaN(q)) return '';
+                return (p * q).toLocaleString('vi-VN');
+            },
             truncate: (str: string, len: number) =>
                 str && str.length > len ? str.substring(0, len) + '...' : str,
             eq: (a: any, b: any) => a === b,

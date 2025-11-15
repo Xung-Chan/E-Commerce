@@ -1,31 +1,4 @@
 <div class="container my-5">
-    <!-- Toast Container - Fixed position -->
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
-        {{#if successMessage}}
-        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 300px;">
-            <div class="toast-header bg-success text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-check-circle-fill me-2" viewBox="0 0 16 16">
-                    <path
-                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-                </svg>
-                <strong class="me-auto">Thành công</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-            </div>
-            <div class="toast-body bg-white">
-                {{successMessage}}
-                {{#if showLoginLink}}
-                <hr class="my-2">
-                <div class="text-center">
-                    <a href="/login" class="btn btn-success btn-sm">Đi đến trang đăng nhập</a>
-                </div>
-                {{/if}}
-            </div>
-        </div>
-        {{/if}}
-    </div>
-
     <div class="row justify-content-center">
         <div class="col-md-5">
             <div class="card shadow-sm rounded mb-4">
@@ -61,16 +34,7 @@
                             <div class="invalid-feedback">{{getFieldError errors 'fullName'}}</div>
                             {{/if}}
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label fw-semibold">Mật khẩu</label>
-                            <input type="password"
-                                class="form-control {{#if (hasFieldError errors 'password')}}is-invalid{{/if}}"
-                                id="password" name="password" placeholder="Nhập mật khẩu" required minlength="6">
-                            {{#if (getFieldError errors 'password')}}
-                            <div class="invalid-feedback">{{getFieldError errors 'password'}}</div>
-                            {{/if}}
-                            <small class="form-text text-muted">Mật khẩu tối thiểu 6 ký tự</small>
-                        </div>
+                        {{!-- Password field removed as requested --}}
                         <div class="mb-5">
                             <label for="address" class="form-label fw-semibold">Địa chỉ giao hàng</label>
                             <input type="text"
@@ -97,10 +61,8 @@
     </div>
 </div>
 
-{{!-- Validation Scripts --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Auto-hide success toast after 5 seconds
         const successToast = document.querySelector('.toast.show');
         if (successToast) {
             setTimeout(() => {
@@ -108,84 +70,5 @@
                 toastBootstrap.hide();
             }, 5000);
         }
-
-        const registerForm = document.getElementById('registerForm');
-        const inputs = registerForm.querySelectorAll('.form-control');
-
-        inputs.forEach(input => {
-            input.addEventListener('blur', function () {
-                validateField(this);
-            });
-
-            input.addEventListener('input', function () {
-                if (this.classList.contains('is-invalid')) {
-                    this.classList.remove('is-invalid');
-                    const feedback = this.parentNode.querySelector('.invalid-feedback');
-                    if (feedback) feedback.style.display = 'none';
-                }
-            });
-        });
-
-        function validateField(field) {
-            const value = field.value.trim();
-            let isValid = true;
-            let message = '';
-
-            if (!value) {
-                isValid = false;
-                message = 'Trường này không được để trống';
-            } else {
-                switch (field.type) {
-                    case 'email':
-                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                        if (!emailRegex.test(value)) {
-                            isValid = false;
-                            message = 'Email không hợp lệ';
-                        }
-                        break;
-                    case 'password':
-                        if (value.length < 6) {
-                            isValid = false;
-                            message = 'Mật khẩu phải có ít nhất 6 ký tự';
-                        }
-                        break;
-                }
-            }
-
-            if (!isValid) {
-                field.classList.add('is-invalid');
-                let feedback = field.parentNode.querySelector('.invalid-feedback');
-                if (!feedback) {
-                    feedback = document.createElement('div');
-                    feedback.className = 'invalid-feedback';
-                    field.parentNode.appendChild(feedback);
-                }
-                feedback.textContent = message;
-                feedback.style.display = 'block';
-            } else {
-                field.classList.remove('is-invalid');
-                const feedback = field.parentNode.querySelector('.invalid-feedback');
-                if (feedback) feedback.style.display = 'none';
-            }
-
-            return isValid;
-        }
-
-        registerForm.addEventListener('submit', function (e) {
-            let formValid = true;
-            inputs.forEach(input => {
-                if (!validateField(input)) {
-                    formValid = false;
-                }
-            });
-            if (!formValid) {
-                e.preventDefault();
-                const firstError = registerForm.querySelector('.is-invalid');
-                if (firstError) {
-                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    firstError.focus();
-                }
-            }
-        });
     });
 </script>

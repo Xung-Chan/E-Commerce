@@ -100,6 +100,7 @@
                 </form>
 
                 <!-- Hotline và Giỏ hàng -->
+                {{#if isLoggedIn}}
                 <div class="d-flex align-items-center ms-lg-auto" style="gap: 1rem;">
                     <a href="/cart"
                         class="btn btn-cart position-relative me-2 d-flex justify-content-center align-items-center shadow"
@@ -107,17 +108,16 @@
                         <i class="bi bi-cart3" style="font-size: 1.5rem;"></i>
                         <span class="cart-label ms-1">Giỏ hàng</span>
                         <span
-                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{cartItemCount}}</span>
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{totalCartItems}}</span>
                     </a>
-
-                    {{#if isLoggedIn}}
+                    
                     <a href="/profile" class="btn btn-user d-flex justify-content-center align-items-center me-2 shadow"
                         style="min-width: 120px;" title="Trang cá nhân">
                         <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
                         <span class="user-label ms-2">Tài khoản</span>
                     </a>
-                    {{/if}}
                 </div>
+                {{/if}}
             </div>
         </div>
     </div>

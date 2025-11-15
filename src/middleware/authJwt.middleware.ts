@@ -8,7 +8,7 @@ export const authAnonymous = async (req: Request, res: Response, next: NextFunct
 
 export const authJwt = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const token = req.headers["authorization"]?.split(" ")[1];
+        const token = req.cookies?.token || req.headers["authorization"]?.split(" ")[1];
         if (!token) {
             throw new ApiError(401, "Unauthorized", "Token không được cung cấp");
         }
@@ -24,7 +24,7 @@ export const authJwt = async (req: Request, res: Response, next: NextFunction): 
 }
 export const authJwtAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const token = req.headers["authorization"]?.split(" ")[1];
+        const token = req.cookies?.token || req.headers["authorization"]?.split(" ")[1];
         if (!token) {
             throw new ApiError(401, "Unauthorized", "Token không được cung cấp");
         }

@@ -28,9 +28,9 @@ siteRouter.post('/logout', siteController.logout);
 
 // Profile
 siteRouter.get('/profile', isLoggedIn, siteController.profile);
-siteRouter.post('/profile/addresses/me', siteController.profileAddAddress);
-siteRouter.post('/profile/addresses/me/:addressId', siteController.profileDeleteAddress);
-siteRouter.post('/profile/addresses/me/update/:addressId', siteController.profileUpdateAddress);
+siteRouter.post('/profile/addresses/me', isLoggedIn, siteController.profileAddAddress);
+siteRouter.post('/profile/addresses/me/:addressId', isLoggedIn, siteController.profileDeleteAddress);
+siteRouter.post('/profile/addresses/me/update/:addressId', isLoggedIn, siteController.profileUpdateAddress);
 siteRouter.post('/profile/update-user', isLoggedIn, siteController.profileUpdateUser);
 siteRouter.post('/profile/update-password', isLoggedIn, siteController.profileChangePassword);
 
@@ -39,8 +39,13 @@ siteRouter.get('/catalog', isLoggedIn, siteController.catalog);
 
 // Product details
 siteRouter.get('/product/:productId', isLoggedIn, siteController.product);
+siteRouter.post('/product/add-to-cart', isLoggedIn, siteController.productAddToCart);
 
 // Cart
 siteRouter.get('/cart', siteController.cart);
+
+// Checkout
+siteRouter.get('/checkout', siteController.checkout);
+
 
 export default siteRouter;

@@ -38,7 +38,7 @@ const authService = {
         const user = result[0];
         const isMatch = await bcrypt.compareSync(data.password, user.password);
         if (!isMatch) {
-            throw new ApiError(401, "Unauthorized", "Mật khẩu đúng");
+            throw new ApiError(401, "Unauthorized", "Mật khẩu không đúng");
         }
 
         const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user.id, email: user.email, role: user.role });

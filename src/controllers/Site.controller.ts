@@ -11,92 +11,62 @@ const siteController = {
         if (commonData.isLoggedIn) {
             return res.redirect('/');
         }
-        return res.render("login", {
-            title: "Đăng nhập | CoreStation",
-            ...commonData
+
+        renderWithCommon(req, res, "login", {
+            title: "Đăng nhập | CoreStation"
         });
     },
+    
+
     // Login Form
     loginPost: async (req: Request, res: Response) => {
+        const { email, password } = req.body;
+
         try {
-            const { email, password } = req.body;
-
-            const errors = [];
-            if (!email?.trim()) errors.push({ field: "email", message: "Email/Số điện thoại không được để trống" });
-            if (!password?.trim()) errors.push({ field: "password", message: "Mật khẩu không được để trống" });
-            if (errors.length) {
-                return renderWithCommon(req, res, "login", {
-                    title: "Đăng nhập | CoreStation",
-                    errors: errors,
-                    formData: { email },
-                    errorMessage: "Vui lòng kiểm tra lại thông tin đăng nhập",
-                });
-            }
-
             const api = createApi();
             const resp = await api.post("/api/auth/login", { email: email.trim(), password: password.trim() });
+            
             const data = unwrap<{ accessToken?: string; token?: string }>(resp);
             const token = (data as any)?.accessToken || (data as any)?.token;
+            
             if (token) res.cookie("token", token, { httpOnly: true });
-
             return res.redirect("/");
         } catch (error: any) {
-            const status = error?.response?.status;
             const apiErr = error?.response?.data;
             const payload = {
                 title: "Đăng nhập | CoreStation",
                 formData: { email: req.body?.email },
                 errorMessage: apiErr.message
-                // (status === 401 && "Email/số điện thoại hoặc mật khẩu không đúng") ||
-                // apiErr?.message ||
-                // "Không thể kết nối đến server. Vui lòng thử lại sau.",
             };
             return renderWithCommon(req, res, "login", payload);
         }
     },
 
+
     // --- REGISTER ---
     // Register page
     register: async (req: Request, res: Response) => {
-        const commonData = await getCommonViewData(req);
-        return res.render("register", {
-            title: "Đăng ký | CoreStation",
-            ...commonData
+        return renderWithCommon(req, res, "register", {
+            title: "Đăng ký | CoreStation"
         });
     },
+
+
     // Register form
     registerPost: async (req: Request, res: Response) => {
+        const { email, fullName, address } = req.body;
+        
         try {
-            const { email, fullName, password, address } = req.body;
-
-            const errors = [];
-            if (!email?.trim()) errors.push({ field: "email", message: "Email không được để trống" });
-            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push({ field: "email", message: "Email không hợp lệ" });
-            if (!fullName?.trim()) errors.push({ field: "fullName", message: "Họ tên không được để trống" });
-            if (!password?.trim()) errors.push({ field: "password", message: "Mật khẩu không được để trống" });
-            else if (password.length < 6) errors.push({ field: "password", message: "Mật khẩu phải có ít nhất 6 ký tự" });
-            if (!address?.trim()) errors.push({ field: "address", message: "Địa chỉ không được để trống" });
-            if (errors.length) {
-                return renderWithCommon(req, res, "register", {
-                    title: "Đăng ký | CoreStation",
-                    errors: errors,
-                    formData: { email, fullName, address },
-                    errorMessage: "Vui lòng kiểm tra lại thông tin đã nhập",
-                });
-            }
-
             const api = createApi();
             await api.post("/api/auth/register", {
                 email: email.trim(),
                 fullName: fullName.trim(),
-                password: password.trim(),
                 address: address.trim()
             });
 
-            return renderWithCommon(req, res, "register", {
-                title: "Đăng ký | CoreStation",
+            return renderWithCommon(req, res, "login", {
+                title: "Đăng nhập | CoreStation",
                 successMessage: "Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.",
-                showLoginLink: true
             });
         } catch (error: any) {
             const apiErr = error?.response?.data;
@@ -113,6 +83,7 @@ const siteController = {
         }
     },
 
+
     // --- FORGOT PASSWORD ---
     // Forgot Password Page
     forgotPassword: async (req: Request, res: Response) => {
@@ -120,23 +91,14 @@ const siteController = {
             title: 'Quên mật khẩu | CoreStation'
         });
     },
+
+
     // Forgot Password Form
     forgotPasswordPost: async (req: Request, res: Response) => {
+        const { email } = req.body as { email: string };
+        const value = email.trim();
+
         try {
-            const { email = '' } = req.body as { email?: string };
-            const value = email.trim();
-            let errorMessage = '';
-            if (!value) errorMessage = 'Vui lòng nhập email của bạn';
-            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errorMessage = 'Email không hợp lệ';
-
-            if (errorMessage) {
-                return renderWithCommon(req, res, 'forgot-password', {
-                    title: 'Quên mật khẩu | CoreStation',
-                    errorMessage,
-                    formData: { email: value }
-                });
-            }
-
             const api = createApi();
             await api.post('/api/auth/forgot-password', { email: value });
 
@@ -153,14 +115,19 @@ const siteController = {
             });
         }
     },
+
+
     // Reset Password Page
     resetPassword: async (req: Request, res: Response) => {
         const { token = '' } = req.query as { token?: string };
+
         return renderWithCommon(req, res, 'reset-password', {
             title: 'Đặt lại mật khẩu | CoreStation',
             token
         });
     },
+
+
     // Reset Password Form
     resetPasswordPost: async (req: Request, res: Response) => {
         const { token = '', newPassword = '', confirmPassword = '' } = req.body as any;
@@ -170,8 +137,7 @@ const siteController = {
 
         const errors: { field?: string; message: string }[] = [];
         if (!t) errors.push({ message: 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.' });
-        if (!next) errors.push({ field: 'newPassword', message: 'Mật khẩu mới không được để trống' });
-        else if (next.length < 6) errors.push({ field: 'newPassword', message: 'Mật khẩu mới phải có ít nhất 6 ký tự' });
+        if (next.length < 6) errors.push({ field: 'newPassword', message: 'Mật khẩu mới phải có ít nhất 6 ký tự' });
         if (next !== confirm) errors.push({ field: 'confirmPassword', message: 'Xác nhận mật khẩu không khớp' });
 
         if (errors.length) {
@@ -186,12 +152,14 @@ const siteController = {
         try {
             const api = createApi();
             await api.post('/api/auth/reset-password', { token: t, newPassword: next });
+
             return renderWithCommon(req, res, 'reset-password', {
                 title: 'Đặt lại mật khẩu | CoreStation',
                 successMessage: 'Mật khẩu đã được đặt lại. Bạn có thể đăng nhập bằng mật khẩu mới.'
             });
         } catch (e) {
             const apiErr = (e as any)?.response?.data;
+
             return renderWithCommon(req, res, 'reset-password', {
                 title: 'Đặt lại mật khẩu | CoreStation',
                 errorMessage: apiErr?.message || 'Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại sau.',
@@ -200,27 +168,29 @@ const siteController = {
         }
     },
 
+
     // --- LOGOUT ---
     logout: async (req: Request, res: Response) => {
         res.clearCookie("token");
-        return res.redirect("/login");
+        return res.redirect("/");
     },
+
 
     // --- PROFILE ---
     // Profile page
     profile: async (req: Request, res: Response) => {
         const common = await getCommonViewData(req);
-        if (!common.isLoggedIn) return res.redirect("/login");
-        return res.render("profile", { title: "Thông tin cá nhân | CoreStation", ...common });
+        if (!common.isLoggedIn) return res.redirect("/");
+
+        return renderWithCommon(req, res, "profile", {
+            title: "Thông tin cá nhân | CoreStation" 
+        });
     },
+
 
     // Thêm địa chỉ
     profileAddAddress: async (req: Request, res: Response) => {
         const { newAddress } = req.body;
-
-        if (!newAddress?.trim()) {
-            return renderWithCommon(req, res, "profile", { title: "Thông tin cá nhân | CoreStation", errorMessage: "Địa chỉ không được để trống." });
-        }
 
         try {
             const api = createApi(req);
@@ -234,16 +204,29 @@ const siteController = {
         }
     },
 
+
     // Xóa địa chỉ
     profileDeleteAddress: async (req: Request, res: Response) => {
         const { addressId } = req.params;
 
         if (!addressId) {
-            return renderWithCommon(req, res, "profile", { title: "Thông tin cá nhân | CoreStation", errorMessage: "Địa chỉ không hợp lệ." });
+            return renderWithCommon(req, res, "profile", { 
+                title: "Thông tin cá nhân | CoreStation",
+                errorMessage: "Địa chỉ không hợp lệ." 
+            });
         }
 
         try {
             const api = createApi(req);
+
+            const addresses = await api.get("/api/users/addresses/me");
+            if (addresses.data?.data?.length <= 1) {
+                return renderWithCommon(req, res, "profile", {
+                    title: "Thông tin cá nhân | CoreStation",
+                    errorMessage: "Phải có ít nhất một địa chỉ trong danh sách.",
+                });
+            }
+
             await api.delete(`/api/users/addresses/me/${addressId}`);
             return res.redirect("/profile");
         } catch (e: any) {
@@ -254,13 +237,17 @@ const siteController = {
         }
     },
 
+
     // Cập nhật địa chỉ
     profileUpdateAddress: async (req: Request, res: Response) => {
         const { addressId } = req.params;
         const { newAddress } = req.body;
 
         if (!addressId || !newAddress?.trim()) {
-            return renderWithCommon(req, res, "profile", { title: "Thông tin cá nhân | CoreStation", errorMessage: "Địa chỉ mới không được để trống." });
+            return renderWithCommon(req, res, "profile", { 
+                title: "Thông tin cá nhân | CoreStation",
+                errorMessage: "Địa chỉ mới không được để trống."
+            });
         }
 
         try {
@@ -275,23 +262,11 @@ const siteController = {
         }
     },
 
+
     // Cập nhật thông tin người dùng
     profileUpdateUser: async (req: Request, res: Response) => {
         const { email = "", fullName = "" } = req.body as { email?: string; fullName?: string };
         const trimmed = { email: email.trim(), fullName: fullName.trim() };
-
-        const errors = [];
-        if (!trimmed.email) errors.push({ field: "email", message: "Email không được để trống" });
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed.email)) errors.push({ field: "email", message: "Email không hợp lệ" });
-        if (!trimmed.fullName) errors.push({ field: "fullName", message: "Họ tên không được để trống" });
-
-        if (errors.length) {
-            return renderWithCommon(req, res, "profile", {
-                title: "Thông tin cá nhân | CoreStation",
-                errors,
-                errorMessage: "Vui lòng kiểm tra lại thông tin",
-            });
-        }
 
         try {
             const userId = (req as any).userId;
@@ -309,6 +284,7 @@ const siteController = {
         }
     },
 
+
     // Cập nhật mật khẩu
     profileChangePassword: async (req: Request, res: Response) => {
         const { oldPassword = "", newPassword = "", confirmPassword = "" } = req.body as any;
@@ -317,15 +293,12 @@ const siteController = {
         const confirm = confirmPassword.trim();
 
         const errors = [];
-        if (!curr) errors.push({ field: "oldPassword", message: "Vui lòng nhập mật khẩu hiện tại" });
-        if (!next) errors.push({ field: "newPassword", message: "Mật khẩu mới không được để trống" });
-        else if (next.length < 6) errors.push({ field: "newPassword", message: "Mật khẩu mới phải có ít nhất 6 ký tự" });
+        if (next.length < 6) errors.push({ field: "newPassword", message: "Mật khẩu mới phải có ít nhất 6 ký tự" });
         if (next !== confirm) errors.push({ field: "confirmPassword", message: "Xác nhận mật khẩu không khớp" });
         if (errors.length) {
             return renderWithCommon(req, res, "profile", {
                 title: "Thông tin cá nhân | CoreStation",
-                errors,
-                errorMessage: "Vui lòng kiểm tra lại thông tin",
+                errorMessage: errors[0]?.message || "Vui lòng kiểm tra lại thông tin",
             });
         }
 
@@ -343,6 +316,7 @@ const siteController = {
             });
         }
     },
+
 
     // --- Home ---
     home: async (req: Request, res: Response) => {
@@ -379,10 +353,10 @@ const siteController = {
             title: "CoreStation - PC và linh kiện máy tính",
             bestSellersProducts: bestSellers,
             windowNewProducts,
-            categoryProducts: processed,
-            cartItemCount: 3 // Update later with actual cart item count
+            categoryProducts: processed
         });
     },
+
 
     // --- CATALOG ---
     catalog: async (req: Request, res: Response) => {
@@ -452,6 +426,7 @@ const siteController = {
         });
     },
 
+
     // --- PRODUCT DETAIL ---
     product: async (req: Request, res: Response) => {
         const { productId } = req.params;
@@ -492,42 +467,55 @@ const siteController = {
         }
     },
 
+    // Add to cart from product page
+    productAddToCart: async (req: Request, res: Response) => {
+        const { variantId, quantity } = req.body;
+        const qty = Number(quantity) || 1;
+
+        try {
+            const api = createApi(req);
+            await api.post(`${apiUrl}/api/users/cart/me`, {
+                variantId,
+                quantity: qty
+            });
+            return res.redirect('/cart');
+        } catch (error: any) {
+            const status = error?.response?.status;
+            const message = error?.response?.data?.message || "Không thể kết nối đến server. Vui lòng thử lại sau.";
+            if (status === 404) {
+                return res.status(404).render('404', { title: 'Không tìm thấy | CoreStation', errorMessage: message });
+            }
+            return res.render('productDetail', { title: 'Chi tiết sản phẩm | CoreStation', errorMessage: message });
+        }
+    },
+
     // --- CART ---
     // Cart page
     cart: async (req: Request, res: Response) => {
         const commonData = await getCommonViewData(req);
 
-        const sampleData = {
-            items: [
-                {
-                    cartItemId: '64b8f0a5c9e77a6f4d2e8b1a',
-                    imageUrl: 'https://placehold.co/56x56?text=?',
-                    product: 'Product 1',
-                    variant: 'Variant 1',
-                    quantity: 2
-                },
-                {
-                    cartItemId: '64b8f0e2c9e77a6f4d2e8b1b',
-                    variantId: '64b8efdbc9e77a6f4d2e8b19',
-                    productId: '64b8ee9bc9e77a6f4d2e8b15',
-                    product: 'Product 2',
-                    variant: 'Variant 2',
-                    quantity: 1
-                }
-            ],
-            tax: 50000,
-            shippingCost: 20000,
-            totalPrice: 320000
-        }
+        if (commonData.isLoggedIn) {
+            const api = createApi(req)
+            const cartRes = await api.get(`${apiUrl}/api/users/cart/me`);
+            const cart = unwrap(cartRes);
+            console.log('Cart data:', cart);
 
-        return res.render('cart', {
-            title: 'Giỏ hàng | CoreStation',
-            cart: sampleData,
-            ...commonData
+            return res.render('cart', {
+                title: 'Giỏ hàng | CoreStation',
+                cart,
+                ...commonData
+            });
+        } else {
+            res.redirect('/login');
+        }
+    },
+
+    // Checkout
+    checkout: async (req: Request, res: Response) => {
+        renderWithCommon(req, res, 'checkout', {
+            title: 'Thanh toán | CoreStation'
         });
     }
-
-
 };
 
 export default siteController;

@@ -4,7 +4,7 @@
   },
   "name": "AMD",
   "description": "AMD nổi bật với vi xử lý (CPU), card đồ họa (GPU) và giải pháp bán dẫn cạnh tranh.",
-  "image": "/img/amd_logo.png"
+  "image": "/img/brand_amd.png"
 },
 {
   "_id": {
@@ -12,7 +12,7 @@
   },
   "name": "Asrock",
   "description": "Asrock là nhà sản xuất bo mạch chủ và linh kiện máy tính chất lượng.",
-  "image": "/img/asrock_logo.png"
+  "image": "/img/brand_asrock.png"
 },
 {
   "_id": {
@@ -20,7 +20,7 @@
   },
   "name": "Asus",
   "description": "Asus nổi bật với các sản phẩm laptop, bo mạch chủ và linh kiện máy tính chất lượng cao.",
-  "image": "/img/asus_logo.png"
+  "image": "/img/brand_asus.png"
 },
 {
   "_id": {
@@ -28,7 +28,7 @@
   },
   "name": "Gigabyte",
   "description": "Gigabyte là nhà sản xuất bo mạch chủ, card đồ họa và linh kiện máy tính hiệu suất cao.",
-  "image": "/img/gigabyte_logo.png"
+  "image": "/img/brand_gigabyte.png"
 },
 {
   "_id": {
@@ -36,7 +36,7 @@
   },
   "name": "Intel",
   "description": "Intel là nhà sản xuất vi xử lý (CPU) và chip bán dẫn hàng đầu thế giới.",
-  "image": "/img/intel_logo.png"
+  "image": "/img/brand_intel.png"
 },
 {
   "_id": {
@@ -44,7 +44,7 @@
   },
   "name": "MSI",
   "description": "MSI nổi tiếng với bo mạch chủ, card đồ họa và laptop chơi game hiệu suất cao.",
-  "image": "/img/msi_logo.png"
+  "image": "/img/brand_msi.png"
 },
 {
   "_id": {
@@ -52,5 +52,5 @@
   },
   "name": "Nvidia",
   "description": "Nvidia dẫn đầu về công nghệ card đồ họa (GPU) và giải pháp xử lý đồ họa tiên tiến.",
-  "image": "/img/nvidia_logo.png"
+  "image": "/img/brand_nvidia.png"
 }]

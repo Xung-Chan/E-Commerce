@@ -81,10 +81,16 @@
   height: 10px;
 }
 
-.table th,
-.table td {
-  text-align: center;
+.cart-table th, .cart-table td {
   vertical-align: middle;
+}
+
+.qty-input {
+  text-align: center;
+}
+
+.line-total {
+  white-space: nowrap;
 }
 
 /*# sourceMappingURL=app.css.map */

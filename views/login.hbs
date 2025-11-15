@@ -1,25 +1,4 @@
 <div class="container my-5">
-    <!-- Toast Container - Fixed position -->
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
-        {{#if successMessage}}
-        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 300px;">
-            <div class="toast-header bg-success text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-check-circle-fill me-2" viewBox="0 0 16 16">
-                    <path
-                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-                </svg>
-                <strong class="me-auto">Thành công</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-            </div>
-            <div class="toast-body bg-white">
-                {{successMessage}}
-            </div>
-        </div>
-        {{/if}}
-    </div>
-
     <div class="row justify-content-center">
         <div class="col-md-5">
             <div class="card shadow-sm rounded mb-4">
@@ -34,7 +13,7 @@
                     {{/if}}
 
                     <!-- Login Form -->
-                    <form id="loginForm" method="POST" action="login">
+                    <form id="loginForm" method="POST" action="/login">
                         <div class="mb-3">
                             <label for="email" class="form-label fw-semibold">Email</label>
                             <input type="text"
@@ -84,7 +63,6 @@
     </div>
 </div>
 
-{{!-- Validation Scripts --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const successToast = document.querySelector('.toast.show');
@@ -94,71 +72,5 @@
                 toastBootstrap.hide();
             }, 5000);
         }
-        const loginForm = document.getElementById('loginForm');
-        const inputs = loginForm.querySelectorAll('.form-control');
-        inputs.forEach(input => {
-            input.addEventListener('blur', function () {
-                validateField(this);
-            });
-            input.addEventListener('input', function () {
-                if (this.classList.contains('is-invalid')) {
-                    this.classList.remove('is-invalid');
-                    const feedback = this.parentNode.querySelector('.invalid-feedback');
-                    if (feedback) feedback.style.display = 'none';
-                }
-            });
-        });
-
-        function validateField(field) {
-            const value = field.value.trim();
-            let isValid = true;
-            let message = '';
-            if (!value) {
-                isValid = false;
-                message = 'Trường này không được để trống';
-            } else {
-                if (field.name === 'email') {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    const phoneRegex = /^[0-9]{10,11}$/;
-                    if (!emailRegex.test(value) && !phoneRegex.test(value)) {
-                        isValid = false;
-                        message = 'Email không hợp lệ hoặc số điện thoại phải có 10-11 chữ số';
-                    }
-                }
-            }
-            if (!isValid) {
-                field.classList.add('is-invalid');
-                let feedback = field.parentNode.querySelector('.invalid-feedback');
-                if (!feedback) {
-                    feedback = document.createElement('div');
-                    feedback.className = 'invalid-feedback';
-                    field.parentNode.appendChild(feedback);
-                }
-                feedback.textContent = message;
-                feedback.style.display = 'block';
-            } else {
-                field.classList.remove('is-invalid');
-                const feedback = field.parentNode.querySelector('.invalid-feedback');
-                if (feedback) feedback.style.display = 'none';
-            }
-            return isValid;
-        }
-
-        loginForm.addEventListener('submit', function (e) {
-            let formValid = true;
-            inputs.forEach(input => {
-                if (!validateField(input)) {
-                    formValid = false;
-                }
-            });
-            if (!formValid) {
-                e.preventDefault();
-                const firstError = loginForm.querySelector('.is-invalid');
-                if (firstError) {
-                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    firstError.focus();
-                }
-            }
-        });
     });
 </script>
