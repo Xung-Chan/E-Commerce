@@ -16,7 +16,7 @@ const siteController = {
             title: "Đăng nhập | CoreStation"
         });
     },
-    
+
 
     // Login Form
     loginPost: async (req: Request, res: Response) => {
@@ -25,10 +25,10 @@ const siteController = {
         try {
             const api = createApi();
             const resp = await api.post("/api/auth/login", { email: email.trim(), password: password.trim() });
-            
+
             const data = unwrap<{ accessToken?: string; token?: string }>(resp);
             const token = (data as any)?.accessToken || (data as any)?.token;
-            
+
             if (token) res.cookie("token", token, { httpOnly: true });
             return res.redirect("/");
         } catch (error: any) {
@@ -55,7 +55,7 @@ const siteController = {
     // Register form
     registerPost: async (req: Request, res: Response) => {
         const { email, fullName, address } = req.body;
-        
+
         try {
             const api = createApi();
             await api.post("/api/auth/register", {
@@ -183,7 +183,7 @@ const siteController = {
         if (!common.isLoggedIn) return res.redirect("/");
 
         return renderWithCommon(req, res, "profile", {
-            title: "Thông tin cá nhân | CoreStation" 
+            title: "Thông tin cá nhân | CoreStation"
         });
     },
 
@@ -210,9 +210,9 @@ const siteController = {
         const { addressId } = req.params;
 
         if (!addressId) {
-            return renderWithCommon(req, res, "profile", { 
+            return renderWithCommon(req, res, "profile", {
                 title: "Thông tin cá nhân | CoreStation",
-                errorMessage: "Địa chỉ không hợp lệ." 
+                errorMessage: "Địa chỉ không hợp lệ."
             });
         }
 
@@ -244,7 +244,7 @@ const siteController = {
         const { newAddress } = req.body;
 
         if (!addressId || !newAddress?.trim()) {
-            return renderWithCommon(req, res, "profile", { 
+            return renderWithCommon(req, res, "profile", {
                 title: "Thông tin cá nhân | CoreStation",
                 errorMessage: "Địa chỉ mới không được để trống."
             });
@@ -360,20 +360,24 @@ const siteController = {
 
     // --- CATALOG ---
     catalog: async (req: Request, res: Response) => {
+        // Get query params
         const query: ProductQuery = req.query as ProductQuery;
         const page = Number(query.page) || 1;
         const limit = Number(query.limit) || 9;
+        const apiParams: any = { page, limit };
+        const api = createApi(req);
+
         const {
             sortBy = '',
             sortOrder = 'desc',
+            name = '',
             categoryId = '',
             brandId = '',
             minPrice = '',
             maxPrice = '',
-            name = ''
+            rating = ''
         } = query;
 
-        const apiParams: any = { page, limit };
         if (sortBy) apiParams.sortBy = sortBy;
         if (sortOrder) apiParams.sortOrder = sortOrder;
         if (categoryId) apiParams.categoryId = categoryId;
@@ -381,24 +385,22 @@ const siteController = {
         if (minPrice) apiParams.minPrice = minPrice;
         if (maxPrice) apiParams.maxPrice = maxPrice;
         if (name) apiParams.name = name;
+        if (rating) apiParams.rating = rating;
 
-        const api = createApi(req);
-
-        const productsRes = await api.get(`${apiUrl}/api/products/search`, { params: apiParams });
-        const paginationData = productsRes.data?.data || productsRes.data;
-        const products_catalog = Array.isArray(paginationData?.datas) ? paginationData.datas : [];
-        const pagination = new Pagination(
-            products_catalog,
-            page,
-            limit,
-            paginationData?.totalDatas || products_catalog.length
-        );
-
+        // Get Brands
         const brandsRes = await api.get(`${apiUrl}/api/brands`);
         const brands = Array.isArray(brandsRes.data) ? brandsRes.data : brandsRes.data.data;
 
+        // Get Products
+        const productsRes = await api.get(`${apiUrl}/api/products/search`, { params: apiParams });
+        const paginationData = productsRes.data?.data || productsRes.data;
+        console.log('Pagination data:', paginationData);
+        const products = Array.isArray(paginationData?.datas) ? paginationData.datas : [];
+        console.log('Extracted products:', products);
+
+        // Build base query and render with API pagination data
         const filteredQuery: Record<string, string> = {};
-        Object.entries({ sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice, name }).forEach(([k, v]) => {
+        Object.entries({ sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice, name, rating }).forEach(([k, v]) => {
             if (v !== undefined && v !== null && v !== '') {
                 filteredQuery[k] = String(v);
             }
@@ -407,22 +409,20 @@ const siteController = {
             .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
             .join('&');
 
-        const commonData = await getCommonViewData(req);
-        return res.render('catalog', {
+        return renderWithCommon(req, res, 'catalog', {
             title: 'Danh mục sản phẩm | CoreStation',
             brands,
-            products_catalog: pagination.datas,
+            products_catalog: products,
             query: filteredQuery,
             baseQueryString,
-            pages: Array.from({ length: pagination.totalPages }, (_, i) => ({
+            pages: Array.from({ length: paginationData?.totalPages || 1 }, (_, i) => ({
                 number: i + 1,
-                active: i + 1 === pagination.page
+                active: i + 1 === (paginationData?.page || page)
             })),
-            isFirstPage: !pagination.hasPrevPage,
-            isLastPage: !pagination.hasNextPage,
-            prevPage: pagination.prevPage,
-            nextPage: pagination.nextPage,
-            ...commonData
+            isFirstPage: !(paginationData?.hasPrevPage),
+            isLastPage: !(paginationData?.hasNextPage),
+            prevPage: paginationData?.prevPage || null,
+            nextPage: paginationData?.nextPage || null
         });
     },
 
@@ -503,6 +503,7 @@ const siteController = {
             return res.render('cart', {
                 title: 'Giỏ hàng | CoreStation',
                 cart,
+                shippingCost: 30000,
                 ...commonData
             });
         } else {

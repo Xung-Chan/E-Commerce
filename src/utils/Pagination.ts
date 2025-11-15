@@ -39,6 +39,7 @@ interface ProductQuery extends QueryUrl {
     brandId?: string;
     minPrice?: string;
     maxPrice?: string;
+    rating?: string;
 }
 interface OrderQuery extends QueryUrl {
     userId?: string;

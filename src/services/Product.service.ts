@@ -1,6 +1,7 @@
 import { brandDao } from "../daos/Brand.dao.js";
 import { categoryDao } from "../daos/Category.dao.js";
 import { productDao } from "../daos/Product.dao.js";
+import { variantDao } from "../daos/Variant.dao.js";
 import { CreateVariantDto } from '../dto/Create.dto.js';
 import { CreateProductRequest } from "../dto/Request.dto.js";
 import { UpdateProductDto } from "../dto/Update.dto.js";
@@ -43,16 +44,12 @@ const productService = {
     },
 
     searchProducts: async (query: ProductQuery) => {
-        const filter: {
-            name?: { $regex: string, $options: string };
-            categoryId?: string;
-            brandId?: string;
-            minPrice?: { $gte: number };
-            maxPrice?: { $lte: number };
-        } = {};
+        const filter: any = {};
         const page = parseInt((query.page || "1"), 10);
         const limit = parseInt((query.limit || "10"), 10);
-        const sortBy = query.sortBy || "name";
+        // Map UI sort key 'rate' to schema field 'averageRate'
+        const sortByRaw = query.sortBy || "name";
+        const sortBy = sortByRaw === "rate" ? "averageRate" : sortByRaw;
         const sortOrder = query.sortOrder === "desc" ? -1 : 1;
         const options = {
             skip: (page - 1) * limit,
@@ -69,16 +66,40 @@ const productService = {
             filter.brandId = query.brandId;
         }
 
-        if (query.minPrice !== undefined) {
-            filter.minPrice = { $gte: Number(query.minPrice) };
+        // Rating (averageRate) threshold filter
+        if (query.rating !== undefined && query.rating !== null && query.rating !== "") {
+            const r = Number(query.rating);
+            if (!Number.isNaN(r) && r >= 0 && r <= 5) {
+                (filter as any).averageRate = { $gte: r };
+            }
         }
-        if (query.maxPrice !== undefined) {
-            filter.maxPrice = { $lte: Number(query.maxPrice) };
+        // Price filter via variants collection
+        const hasMin = query.minPrice !== undefined && query.minPrice !== "";
+        const hasMax = query.maxPrice !== undefined && query.maxPrice !== "";
+        if (hasMin || hasMax) {
+            const priceCond: any = {};
+            if (hasMin) priceCond.$gte = Number(query.minPrice);
+            if (hasMax) priceCond.$lte = Number(query.maxPrice);
+            const matchedVariants = await variantDao.findBy({ price: priceCond });
+            const productIdSet = new Set(matchedVariants.map(v => v.productId?.toString()).filter(Boolean));
+            if (productIdSet.size === 0) {
+                return new Pagination([], page, limit, 0);
+            }
+            filter._id = { $in: Array.from(productIdSet) };
         }
 
-        const data = await productDao.findBy(filter, options);
+        const products = await productDao.findBy(filter, options);
+
+        // Enrich products with variants and ensure first variant price can be shown
+        const datas = await Promise.all(products.map(async (p: any) => {
+            const variants = await variantService.getVariantsByProductId(p._id.toString());
+            // sort variants by createdAt asc to define the "first" variant
+            variants.sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+            return { ...p, variants };
+        }));
+
         const totalDatas = await productDao.count(filter);
-        return new Pagination(data, page, limit, totalDatas);
+        return new Pagination(datas, page, limit, totalDatas);
     },
 
     getProductById: async (id: string) => {
