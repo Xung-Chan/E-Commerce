@@ -1,6 +1,84 @@
 [
   {
     "_id": {
+      "$oid": "68cbff992bdc353b4acc3fb0"
+    },
+    "name": "PC AMD GAMING PRO",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1b"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming sử dụng CPU AMD Ryzen 7 7700, card đồ họa NVIDIA GeForce RTX 5070 12GB, RAM 16GB và SSD 512GB, mang lại hiệu suất chơi game mượt mà và khả năng xử lý đa nhiệm tốt với giá cả phải chăng và khả năng nâng cấp linh hoạt.",
+    "images": [
+      "/img/product_pc_amd_gaming_pro_1.jpg",
+      "/img/product_pc_amd_gaming_pro_2.jpg",
+      "/img/product_pc_amd_gaming_pro_3.jpg",
+      "/img/product_pc_amd_gaming_pro_4.jpg",
+      "/img/product_pc_amd_gaming_pro_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 28990000,
+    "maxPrice": 33990000,
+    "createdAt": "2025-09-17T00:00:08.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fb1"
+    },
+    "name": "PC AMD GAMING SUPER LUXURY",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1b"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming cao cấp sử dụng CPU AMD Ryzen 9 9950X, card đồ họa NVIDIA GeForce RTX 5080 16GB, RAM 32GB và SSD 1TB, mang lại hiệu suất chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
+    "images": [
+      "/img/product_pc_amd_gaming_super_luxury_1.jpg",
+      "/img/product_pc_amd_gaming_super_luxury_2.jpg",
+      "/img/product_pc_amd_gaming_super_luxury_3.jpg",
+      "/img/product_pc_amd_gaming_super_luxury_4.jpg",
+      "/img/product_pc_amd_gaming_super_luxury_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 26680000,
+    "maxPrice": 26680000,
+    "createdAt": "2025-09-17T00:00:09.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "68cbff992bdc353b4acc3fb2"
+    },
+    "name": "PC AMD ULTRA GAMING",
+    "brandId": {
+      "$oid": "68ca42a308e9904136cc0b1b"
+    },
+    "categoryId": {
+      "$oid": "68ca511408e9904136cc0b32"
+    },
+    "description": "Mẫu PC Gaming cao cấp sử dụng CPU AMD Ryzen 9 9950X, card đồ họa NVIDIA GeForce RTX 5080 16GB, RAM 32GB và SSD 1TB, mang lại hiệu suất chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
+    "images": [
+      "/img/product_pc_amd_ultra_gaming_1.jpg",
+      "/img/product_pc_amd_ultra_gaming_2.jpg",
+      "/img/product_pc_amd_ultra_gaming_3.jpg",
+      "/img/product_pc_amd_ultra_gaming_4.jpg",
+      "/img/product_pc_amd_ultra_gaming_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 39990000,
+    "maxPrice": 45990000,
+    "createdAt": "2025-09-17T00:00:09.000Z"
+  },
+  {
+    "_id": {
       "$oid": "68cbff992bdc353b4acc3fa9"
     },
     "name": "PC GAMING HIGH PERFORMANCE",
@@ -21,60 +99,10 @@
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
+    "minPrice": 26680000,
+    "maxPrice": 67600000,
     "createdAt": "2025-09-17T00:00:01.000Z"
   },
-
-  {
-    "_id": {
-      "$oid": "68cbff992bdc353b4acc3faa"
-    },
-    "name": "PC GAMING RX 6600 CHALENGER 8GB",
-    "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1b"
-    },
-    "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
-    },
-    "description": "Mẫu PC Gaming với card đồ họa AMD Radeon RX 6600 8GB, CPU AMD Ryzen 5 3600, RAM 16GB và SSD 512GB, mang lại hiệu suất chơi game mượt mà và khả năng xử lý đa nhiệm tốt với giá cả phải chăng và khả năng nâng cấp linh hoạt.",
-    "images": [
-      "/img/product_pc_gaming_rx6600_challenger_1.jpg",
-      "/img/product_pc_gaming_rx6600_challenger_2.jpg",
-      "/img/product_pc_gaming_rx6600_challenger_3.jpg",
-      "/img/product_pc_gaming_rx6600_challenger_4.jpg",
-      "/img/product_pc_gaming_rx6600_challenger_5.jpg"
-    ],
-    "soldCount": 0,
-    "rate": 0,
-    "discount": 0,
-
-    "createdAt": "2025-09-17T00:00:02.000Z"
-  },
-
-  {
-    "_id": {
-      "$oid": "68cbff992bdc353b4acc3fab"
-    },
-    "name": "PC GAMING ULTRA PERFORMANCE",
-    "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1f"
-    },
-    "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
-    },
-    "description": "Mẫu PC Gaming cao cấp với cấu hình siêu khỏe, card đồ họa NVIDIA GeForce RTX 5080 16GB, CPU Intel Core Ultra 7 265KF, RAM 32GB và SSD 512GB, mang lại trải nghiệm chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
-    "images": [
-      "/img/product_pc_gaming_ultra_performance_1.jpg",
-      "/img/product_pc_gaming_ultra_performance_2.jpg",
-      "/img/product_pc_gaming_ultra_performance_3.jpg",
-      "/img/product_pc_gaming_ultra_performance_4.jpg",
-      "/img/product_pc_gaming_ultra_performance_5.jpg"
-    ],
-    "soldCount": 0,
-    "rate": 0,
-    "discount": 0,
-    "createdAt": "2025-09-17T00:00:03.000Z"
-  },
-
   {
     "_id": {
       "$oid": "68cbff992bdc353b4acc3fac"
@@ -97,9 +125,10 @@
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
+    "minPrice": 10990000,
+    "maxPrice": 12800000,
     "createdAt": "2025-09-17T00:00:04.000Z"
   },
-
   {
     "_id": {
       "$oid": "68cbff992bdc353b4acc3fad"
@@ -122,34 +151,36 @@
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
+    "minPrice": 20990000,
+    "maxPrice": 24990000,
     "createdAt": "2025-09-17T00:00:05.000Z"
   },
-
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fae"
+      "$oid": "68cbff992bdc353b4acc3faa"
     },
-    "name": "PC GAMING ULTRA 5",
+    "name": "PC GAMING RX 6600 CHALENGER 8GB",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b24"
+      "$oid": "68ca42a308e9904136cc0b1b"
     },
     "categoryId": {
       "$oid": "68ca511408e9904136cc0b32"
     },
-    "description": "Mẫu PC Gaming với cấu hình cân bằng, trang bị CPU Core Ultra 5 245KF thế hệ mới, card đồ họa NVIDIA GeForce RTX 5060 8GB, RAM 16GB và SSD 512GB, mang lại trải nghiệm chơi game mượt mà, đáp ứng mọi nhu cầu giải trí và làm việc đa nhiệm.",
+    "description": "Mẫu PC Gaming với card đồ họa AMD Radeon RX 6600 8GB, CPU AMD Ryzen 5 3600, RAM 16GB và SSD 512GB, mang lại hiệu suất chơi game mượt mà và khả năng xử lý đa nhiệm tốt với giá cả phải chăng và khả năng nâng cấp linh hoạt.",
     "images": [
-      "/img/product_pc_gaming_ultra_5_1.jpg",
-      "/img/product_pc_gaming_ultra_5_2.jpg",
-      "/img/product_pc_gaming_ultra_5_3.jpg",
-      "/img/product_pc_gaming_ultra_5_4.jpg",
-      "/img/product_pc_gaming_ultra_5_5.jpg"
+      "/img/product_pc_gaming_rx6600_challenger_1.jpg",
+      "/img/product_pc_gaming_rx6600_challenger_2.jpg",
+      "/img/product_pc_gaming_rx6600_challenger_3.jpg",
+      "/img/product_pc_gaming_rx6600_challenger_4.jpg",
+      "/img/product_pc_gaming_rx6600_challenger_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "createdAt": "2025-09-17T00:00:06.000Z"
+    "minPrice": 15690000,
+    "maxPrice": 21000000,
+    "createdAt": "2025-09-17T00:00:02.000Z"
   },
-
   {
     "_id": {
       "$oid": "68cbff992bdc353b4acc3faf"
@@ -163,67 +194,45 @@
     },
     "description": "Mẫu PC Gaming cao cấp với cấu hình siêu khỏe, card đồ họa NVIDIA GeForce RTX 5070 Ti 16GB, CPU Intel Core i5 14600KF, RAM 16GB và SSD 512GB, mang lại trải nghiệm chơi game mượt mà, đáp ứng mọi nhu cầu giải trí và làm việc đa nhiệm.",
     "images": [
-      "/img/product_pc_ultra_gaming_1.jpg",
-      "/img/product_pc_ultra_gaming_2.jpg",
-      "/img/product_pc_ultra_gaming_3.jpg",
-      "/img/product_pc_ultra_gaming_4.jpg",
-      "/img/product_pc_ultra_gaming_5.jpg"
+      "/img/product_pc_gaming_ultra_1.jpg",
+      "/img/product_pc_gaming_ultra_2.jpg",
+      "/img/product_pc_gaming_ultra_3.jpg",
+      "/img/product_pc_gaming_ultra_4.jpg",
+      "/img/product_pc_gaming_ultra_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
+    "minPrice": 27990000,
+    "maxPrice": 32990000,
     "createdAt": "2025-09-17T00:00:07.000Z"
   },
-
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fb0"
+      "$oid": "68cbff992bdc353b4acc3fab"
     },
-    "name": "PC AMD GAMING PRO",
+    "name": "PC GAMING ULTRA PERFORMANCE",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1b"
+      "$oid": "68ca42a308e9904136cc0b1f"
     },
     "categoryId": {
       "$oid": "68ca511408e9904136cc0b32"
     },
-    "description": "Mẫu PC Gaming sử dụng CPU AMD Ryzen 7 7700, card đồ họa NVIDIA GeForce RTX 5070 12GB, RAM 16GB và SSD 512GB, mang lại hiệu suất chơi game mượt mà và khả năng xử lý đa nhiệm tốt với giá cả phải chăng và khả năng nâng cấp linh hoạt.",
+    "description": "Mẫu PC Gaming cao cấp với cấu hình siêu khỏe, card đồ họa NVIDIA GeForce RTX 5080 16GB, CPU Intel Core Ultra 7 265KF, RAM 32GB và SSD 512GB, mang lại trải nghiệm chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
     "images": [
-      "/img/product_pc_amd_gaming_pro_1.jpg",
-      "/img/product_pc_amd_gaming_pro_2.jpg",
-      "/img/product_pc_amd_gaming_pro_3.jpg",
-      "/img/product_pc_amd_gaming_pro_4.jpg",
-      "/img/product_pc_amd_gaming_pro_5.jpg"
+      "/img/product_pc_gaming_ultra_performance_1.jpg",
+      "/img/product_pc_gaming_ultra_performance_2.jpg",
+      "/img/product_pc_gaming_ultra_performance_3.jpg",
+      "/img/product_pc_gaming_ultra_performance_4.jpg",
+      "/img/product_pc_gaming_ultra_performance_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "createdAt": "2025-09-17T00:00:08.000Z"
+    "minPrice": 64990000,
+    "maxPrice": 72000000,
+    "createdAt": "2025-09-17T00:00:03.000Z"
   },
-  {
-    "_id": {
-      "$oid": "68cbff992bdc353b4acc3fb1"
-    },
-    "name": "PC AMD ULTRA GAMING",
-    "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1b"
-    },
-    "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
-    },
-    "description": "Mẫu PC Gaming cao cấp sử dụng CPU AMD Ryzen 9 9950X, card đồ họa NVIDIA GeForce RTX 5080 16GB, RAM 32GB và SSD 1TB, mang lại hiệu suất chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
-    "images": [
-      "/img/product_pc_amd_ultra_gaming_1.jpg",
-      "/img/product_pc_amd_ultra_gaming_2.jpg",
-      "/img/product_pc_amd_ultra_gaming_3.jpg",
-      "/img/product_pc_amd_ultra_gaming_4.jpg",
-      "/img/product_pc_amd_ultra_gaming_5.jpg"
-    ],
-    "soldCount": 0,
-    "rate": 0,
-    "discount": 0,
-    "createdAt": "2025-09-17T00:00:09.000Z"
-  },
-
   {
     "_id": {
       "$oid": "68cbff992bdc353b4acc3fb3"
@@ -246,9 +255,10 @@
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
+    "minPrice": 17990000,
+    "maxPrice": 21990000,
     "createdAt": "2025-09-17T00:00:01.100Z"
   },
-
   {
     "_id": {
       "$oid": "68cbff992bdc353b4acc3fb4"
@@ -271,9 +281,10 @@
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
+    "minPrice": 22990000,
+    "maxPrice": 26990000,
     "createdAt": "2025-09-17T00:00:02.100Z"
   },
-  
   {
     "_id": {
       "$oid": "68cbff992bdc353b4acc3fb5"
@@ -296,6 +307,8 @@
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
+    "minPrice": 29990000,
+    "maxPrice": 34990000,
     "createdAt": "2025-09-17T00:00:03.100Z"
   }
 ]

@@ -326,6 +326,7 @@ const siteController = {
         const bestSellers = landing?.bestSellers || [];
         const newArrivals = landing?.newArrivals || [];
         const categoryProducts = landing?.categoryProducts || [];
+        console.log('bestSellers: ', bestSellers);
 
         // Window new products
         const windowNewProducts: any[][] = [];

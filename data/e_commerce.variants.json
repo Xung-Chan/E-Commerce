@@ -102,5 +102,117 @@
     "distinctFeature": "Intel Core i5 14500 / RTX 4060 8GB / RAM 32GB / SSD 1TB",
     "price": 24990000,
     "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fab"
+    },
+    "distinctFeature": "Intel Core Ultra 7 265KF / RTX 5080 16GB / RAM 32GB / SSD 512GB",
+    "price": 64990000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fab"
+    },
+    "distinctFeature": "Intel Core Ultra 7 265KF / RTX 5080 16GB / RAM 64GB / SSD 1TB",
+    "price": 72000000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3faf"
+    },
+    "distinctFeature": "Intel Core i5 14600KF / RTX 5070 Ti 16GB / RAM 16GB / SSD 512GB",
+    "price": 27990000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3faf"
+    },
+    "distinctFeature": "Intel Core i5 14600KF / RTX 5070 Ti 16GB / RAM 32GB / SSD 1TB",
+    "price": 32990000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb0"
+    },
+    "distinctFeature": "AMD Ryzen 7 7700 / RTX 5070 12GB / RAM 16GB / SSD 512GB",
+    "price": 28990000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb0"
+    },
+    "distinctFeature": "AMD Ryzen 7 7700 / RTX 5070 12GB / RAM 32GB / SSD 1TB",
+    "price": 33990000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb3"
+    },
+    "distinctFeature": "Intel Core i5 12400F / RTX 3060 12GB / RAM 16GB / SSD 512GB",
+    "price": 17990000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb3"
+    },
+    "distinctFeature": "Intel Core i5 12400F / RTX 3060 12GB / RAM 32GB / SSD 1TB",
+    "price": 21990000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb4"
+    },
+    "distinctFeature": "Intel Core i5 14600KF / RTX 3060 12GB / RAM 16GB / SSD 512GB",
+    "price": 22990000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb4"
+    },
+    "distinctFeature": "Intel Core i5 14600KF / RTX 3060 12GB / RAM 32GB / SSD 1TB",
+    "price": 26990000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb5"
+    },
+    "distinctFeature": "Intel Core i9 14900KF / RTX 5060 8GB / RAM 32GB / SSD 512GB",
+    "price": 29990000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb5"
+    },
+    "distinctFeature": "Intel Core i9 14900KF / RTX 5060 8GB / RAM 64GB / SSD 1TB",
+    "price": 34990000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb2"
+    },
+    "distinctFeature": "AMD Ryzen 9 9950X / RTX 5080 16GB / RAM 32GB / SSD 1TB",
+    "price": 39990000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "68cbff992bdc353b4acc3fb2"
+    },
+    "distinctFeature": "AMD Ryzen 9 9950X / RTX 5080 16GB / RAM 64GB / SSD 2TB",
+    "price": 45990000,
+    "stock": 2
   }
 ]

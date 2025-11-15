@@ -20,8 +20,8 @@
         <div id="best-sellers-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-inner">
                 {{#each bestSellersProducts}}
-                <div class="carousel-item {{#if @first}}active{{/if}} p-2">
-                    <div class="row align-items-center">
+                <div class="carousel-item {{#if @first}}active{{/if}} py-2 px-4">
+                    <div class="row align-items-center px-4">
                         <div class="col-md-6 mb-3 mb-md-0">
                             <a href="/product/{{_id}}" class="d-block">
                                 <img src="{{images.[0]}}" class="card-img-top" alt=""
@@ -36,7 +36,8 @@
                             <div class="mb-5">
                                 <div class="small text-muted mb-1">{{truncate this.description 50}}</div>
                             </div>
-                            <span class="text-danger fs-4 fw-bold">{{formatPrice this.variants.[0].price}} VNĐ</span>
+                            <span class="text-danger fs-4 fw-bold">{{formatPrice this.minPrice}} - {{formatPrice
+                                this.maxPrice}} VNĐ</span>
                             <div class="mt-2">
                                 <a href="/product/{{_id}}" class="btn btn-primary">Xem chi tiết</a>
                             </div>
@@ -90,13 +91,14 @@
                                         class="w-100 h-100 object-fit-cover">
                                 </a>
                                 <div class="card-body d-flex flex-column" style="min-height: 200px;">
-                                    <h6 class="card-title product-title text-primary fw-bold mb-1" style="min-height: 35px;">
+                                    <h6 class="card-title product-title text-primary fw-bold mb-1"
+                                        style="min-height: 35px;">
                                         <a href="/product/{{_id}}"
                                             class="text-decoration-none text-primary">{{name}}</a>
                                     </h6>
                                     <div class="small text-muted mb-1">{{truncate description 50}}</div>
-                                    <div class="price fw-bold text-danger mt-auto">{{formatPrice
-                                        variants.[0].price}} VNĐ</div>
+                                    <div class="price fw-bold text-danger mt-auto">{{formatPrice this.minPrice}} -
+                                        {{formatPrice this.maxPrice}} VNĐ</div>
                                 </div>
                             </div>
                         </div>
@@ -162,7 +164,8 @@
                                             class="text-decoration-none text-primary">{{name}}</a>
                                     </h6>
                                     <div class="small text-muted mb-1">{{truncate description 50}}</div>
-                                    <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice variants.[0].price}} VNĐ
+                                    <div class="fw-bold text-danger fs-6 mt-auto">{{formatPrice this.minPrice}} -
+                                        {{formatPrice this.maxPrice}} VNĐ
                                     </div>
                                 </div>
                             </div>
