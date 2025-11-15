@@ -44,7 +44,7 @@
                     <button type="button"
                         class="variant-btn btn mb-2 {{#if @first}}btn-primary text-white{{else}}btn-outline-primary{{/if}}"
                         data-price="{{this.price}}" data-feature="{{this.distinctFeature}}" data-stock="{{this.stock}}"
-                        style="text-align:left; padding: 12px 16px;">
+                        data-variant-id="{{this._id}}" style="text-align:left; padding: 12px 16px;">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <i class="bi bi-cpu me-2"></i>{{this.distinctFeature}}
@@ -59,6 +59,7 @@
                 </div>
             </div>
 
+            <!-- Price and Stock Info -->
             <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="text-muted">Giá:</span>
@@ -70,16 +71,34 @@
                 <div class="d-flex justify-content-between align-items-center mt-2">
                     <span class="text-muted">Kho:</span>
                     <span id="productStock" class="fw-bold">
-                        {{#if selectedVariant}}{{selectedVariant.stock}}{{else}}{{product.variants.[0].stock}}{{/if}}
+                        {{#if
+                        selectedVariant}}{{selectedVariant.stock}}{{else}}{{product.variants.[0].stock}}{{/if}}
                         sản phẩm
                     </span>
                 </div>
+                <label class="text-muted">Số lượng:</label>
+                <div class="d-flex align-items-center mt-2 gap-2">
+                    <button class="btn btn-outline-secondary" id="qtyMinus">−</button>
+                    <input type="number" id="qtyInput" value="1" min="1" class="form-control" style="width:80px;">
+                    <button class="btn btn-outline-secondary" id="qtyPlus">+</button>
+                </div>
             </div>
 
+            <!-- Action Buttons -->
             <div class="d-flex gap-3 mb-4">
-                <button class="btn btn-success px-4">Đặt hàng</button>
-                <button class="btn btn-outline-primary px-4">Thêm vào giỏ</button>
+                <button class="btn btn-success px-4" id="orderNowBtn" data-product-id="{{product._id}}">Đặt
+                    hàng</button>
+                {{#if isLoggedIn}}
+                <button class="btn btn-outline-primary px-4" id="addToCartBtn" data-product-id="{{product._id}}">Thêm
+                    vào
+                    giỏ</button>
+                {{/if}}
             </div>
+            <form id="addToCartForm" action="/product/add-to-cart" method="POST" style="display:none;">
+                <input type="hidden" name="variantId" id="formVariantId">
+                <input type="hidden" name="quantity" id="formQuantity">
+            </form>
+
         </div>
     </div>
 
@@ -190,88 +209,113 @@
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        document.querySelectorAll('.rating-stars').forEach(function (starsGroup) {
-            const stars = starsGroup.querySelectorAll('input[type="radio"]');
-            const labels = starsGroup.querySelectorAll('.star-label');
-            stars.forEach((star, idx) => {
-                star.addEventListener('change', function () {
-                    labels.forEach((label, i) => {
-                        label.style.color = (i < idx + 1) ? '#ffc107' : '#ccc';
-                    });
-                });
-            });
-            labels.forEach((label, idx) => {
-                label.addEventListener('mouseenter', function () {
-                    labels.forEach((l, i) => {
-                        l.style.color = (i <= idx) ? '#ffc107' : '#ccc';
-                    });
-                });
-                label.addEventListener('mouseleave', function () {
-                    const checked = starsGroup.querySelector('input[type="radio"]:checked');
-                    let checkedIdx = -1;
-                    stars.forEach((star, i) => {
-                        if (star.checked) checkedIdx = i;
-                    });
-                    labels.forEach((l, i) => {
-                        l.style.color = (i <= checkedIdx) ? '#ffc107' : '#ccc';
-                    });
-                });
-                label.addEventListener('click', function () {
-                    stars[idx].checked = true;
-                    labels.forEach((l, i) => {
-                        l.style.color = (i <= idx) ? '#ffc107' : '#ccc';
-                    });
+<script>
+    document.querySelectorAll('.rating-stars').forEach(function (starsGroup) {
+        const stars = starsGroup.querySelectorAll('input[type="radio"]');
+        const labels = starsGroup.querySelectorAll('.star-label');
+        stars.forEach((star, idx) => {
+            star.addEventListener('change', function () {
+                labels.forEach((label, i) => {
+                    label.style.color = (i < idx + 1) ? '#ffc107' : '#ccc';
                 });
             });
         });
-
-        (function () {
-            // Xử lý ảnh thumbnail
-            const mainImg = document.getElementById('mainImage');
-            document.querySelectorAll('.thumb-btn img').forEach(img => {
-                img.parentElement.addEventListener('click', () => {
-                    mainImg.src = img.src;
-                    document.querySelectorAll('.thumb-btn').forEach(b => b.classList.remove('border-primary'));
-                    img.parentElement.classList.add('border-primary');
+        labels.forEach((label, idx) => {
+            label.addEventListener('mouseenter', function () {
+                labels.forEach((l, i) => {
+                    l.style.color = (i <= idx) ? '#ffc107' : '#ccc';
                 });
             });
-
-            // Xử lý variant selection
-            const priceEl = document.getElementById('productPrice');
-            const stockEl = document.getElementById('productStock');
-            const variantBtns = document.querySelectorAll('.variant-btn');
-
-            variantBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-
-                    // Xóa active state từ tất cả buttons
-                    variantBtns.forEach(b => {
-                        b.classList.remove('btn-primary', 'text-white');
-                        b.classList.add('btn-outline-primary');
-                    });
-
-                    // Thêm active state cho button được chọn
-                    btn.classList.remove('btn-outline-primary');
-                    btn.classList.add('btn-primary', 'text-white');
-
-                    // Cập nhật giá và số lượng kho
-                    const price = Number(btn.dataset.price || 0);
-                    const stock = Number(btn.dataset.stock || 0);
-                    const feature = btn.dataset.feature || '';
-
-                    if (!isNaN(price)) {
-                        priceEl.textContent = price.toLocaleString('vi-VN') + ' VNĐ';
-                    }
-
-                    if (!isNaN(stock)) {
-                        stockEl.textContent = stock + ' sản phẩm';
-                    }
-
-                    console.log('Variant selected:', { feature, price, stock });
+            label.addEventListener('mouseleave', function () {
+                const checked = starsGroup.querySelector('input[type="radio"]:checked');
+                let checkedIdx = -1;
+                stars.forEach((star, i) => {
+                    if (star.checked) checkedIdx = i;
+                });
+                labels.forEach((l, i) => {
+                    l.style.color = (i <= checkedIdx) ? '#ffc107' : '#ccc';
                 });
             });
-        })();
-    </script>
+            label.addEventListener('click', function () {
+                stars[idx].checked = true;
+                labels.forEach((l, i) => {
+                    l.style.color = (i <= idx) ? '#ffc107' : '#ccc';
+                });
+            });
+        });
+    });
+
+    (function () {
+        // Xử lý variant selection
+        const priceEl = document.getElementById('productPrice');
+        const stockEl = document.getElementById('productStock');
+        const qtyInput = document.getElementById('qtyInput');
+        const minus = document.getElementById('qtyMinus');
+        const plus = document.getElementById('qtyPlus');
+        const variantBtns = document.querySelectorAll('.variant-btn');
+        let selectedVariantId = null;
+
+        if (variantBtns.length) {
+            const first = variantBtns[0];
+            selectedVariantId = first.getAttribute('data-variant-id');
+        }
+
+        variantBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                variantBtns.forEach(b => {
+                    b.classList.remove('btn-primary', 'text-white');
+                    b.classList.add('btn-outline-primary');
+                });
+
+                btn.classList.remove('btn-outline-primary');
+                btn.classList.add('btn-primary', 'text-white');
+
+                const price = Number(btn.dataset.price || 0);
+                const stock = Number(btn.dataset.stock || 0);
+                selectedVariantId = btn.getAttribute('data-variant-id');
+
+                if (!isNaN(price)) {
+                    priceEl.textContent = price.toLocaleString('vi-VN') + ' VNĐ';
+                }
+                if (!isNaN(stock)) {
+                    stockEl.textContent = stock + ' sản phẩm';
+                }
+            });
+        });
+
+        // Xử lý số lượng
+        if (qtyInput && minus && plus) {
+            minus.addEventListener('click', (e) => {
+                e.preventDefault();
+                const n = Math.max(1, Number(qtyInput.value) - 1);
+                qtyInput.value = n;
+            });
+
+            plus.addEventListener('click', (e) => {
+                e.preventDefault();
+                const n = Number(qtyInput.value) + 1;
+                qtyInput.value = n;
+            });
+        }
+
+        // Thêm vào giỏ -> submit form ẩn
+        const addBtn = document.getElementById('addToCartBtn');
+        const form = document.getElementById('addToCartForm');
+        const formVariantInput = document.getElementById('formVariantId');
+        const formQuantityInput = document.getElementById('formQuantity');
+
+        if (addBtn && form && formVariantInput && formQuantityInput) {
+            addBtn.addEventListener('click', () => {
+                formVariantInput.value = selectedVariantId;
+                formQuantityInput.value = qtyInput.value;
+                form.submit();
+            });
+        }
+    })();
+
+
+</script>

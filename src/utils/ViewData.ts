@@ -1,33 +1,45 @@
 import type { Request, Response } from "express";
 import { createApi, unwrap } from "./ApiClient.js";
+import { token } from "morgan";
 
 export const getCommonViewData = async (req: Request) => {
+  let categories: any[] = [];
   let user = null;
   let userId = (req as any).userId || null;
   let isLoggedIn = (req as any).isLoggedIn || false;
+  let totalCartItems = 0;
 
-  let categories: any[] = [];
+  const api = createApi(req);
 
+  // Categories
   try {
-    const api = createApi(req);
-
-    const raw = await api.get("/api/categories");
+    const raw = await api.get('/api/categories');
     categories = Array.isArray(raw.data) ? raw.data : unwrap(raw);
-
-    // If middleware didn't set isLoggedIn but we still have a token cookie,
-    // attempt to fetch profile and infer login state.
-    const hasToken = !!(req as any)?.cookies?.token;
-    if ((isLoggedIn && userId) || hasToken) {
-      try {
-        const me = await api.get("/api/users/profile/me");
-        user = unwrap(me);
-        if (user && !userId) userId = user._id || user.id || null;
-        isLoggedIn = !!user;
-      } catch {}
+  } catch (e) {
+    console.warn('Categories failed:', (e as any)?.message);
+  }
+  
+  // Profile + cart chỉ khi có token
+  const tokenCookie = (req as any)?.cookies?.token;
+  if (tokenCookie) {
+    // Profile
+    try {
+      const me = await api.get('/api/users/profile/me');
+      user = unwrap(me);
+      userId = userId || user?._id || user?.id || null;
+      isLoggedIn = !!user;
+    } catch (e) {
+      console.warn('Profile failed:', (e as any)?.message);
     }
-  } catch {}
-
-  return { isLoggedIn, user, categories, userId };
+    // Cart
+    try {
+      const cartRes = await api.get('/api/users/cart/me');
+      totalCartItems = unwrap(cartRes).total || 0;
+    } catch (e) {
+      totalCartItems = 0;
+    }
+  }
+  return { categories, user, userId, isLoggedIn, totalCartItems };
 };
 
 export const renderWithCommon = async (
@@ -37,6 +49,5 @@ export const renderWithCommon = async (
   model: Record<string, any> = {}
 ) => {
   const common = await getCommonViewData(req);
-  console.log('Rendering view', view, 'with model', model, 'and common data', common);
   res.render(view, { ...model, ...common });
 };

@@ -123,7 +123,9 @@ const userService = {
                     variantId: variant._id.toString(),
                     productId: product._id.toString(),
                     product: product.name,
+                    imageUrl: product.images[0],
                     variant: variant.distinctFeature,
+                    price: variant.price,
                     quantity: item.quantity,
                 };
             })

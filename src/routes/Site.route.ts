@@ -39,8 +39,13 @@ siteRouter.get('/catalog', isLoggedIn, siteController.catalog);
 
 // Product details
 siteRouter.get('/product/:productId', isLoggedIn, siteController.product);
+siteRouter.post('/product/add-to-cart', isLoggedIn, siteController.productAddToCart);
 
 // Cart
 siteRouter.get('/cart', siteController.cart);
+
+// Checkout
+siteRouter.get('/checkout', siteController.checkout);
+
 
 export default siteRouter;

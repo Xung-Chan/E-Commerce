@@ -353,8 +353,7 @@ const siteController = {
             title: "CoreStation - PC và linh kiện máy tính",
             bestSellersProducts: bestSellers,
             windowNewProducts,
-            categoryProducts: processed,
-            cartItemCount: 3 // Update later with actual cart item count
+            categoryProducts: processed
         });
     },
 
@@ -468,39 +467,53 @@ const siteController = {
         }
     },
 
+    // Add to cart from product page
+    productAddToCart: async (req: Request, res: Response) => {
+        const { variantId, quantity } = req.body;
+        const qty = Number(quantity) || 1;
+
+        try {
+            const api = createApi(req);
+            await api.post(`${apiUrl}/api/users/cart/me`, {
+                variantId,
+                quantity: qty
+            });
+            return res.redirect('/cart');
+        } catch (error: any) {
+            const status = error?.response?.status;
+            const message = error?.response?.data?.message || "Không thể kết nối đến server. Vui lòng thử lại sau.";
+            if (status === 404) {
+                return res.status(404).render('404', { title: 'Không tìm thấy | CoreStation', errorMessage: message });
+            }
+            return res.render('productDetail', { title: 'Chi tiết sản phẩm | CoreStation', errorMessage: message });
+        }
+    },
 
     // --- CART ---
     // Cart page
     cart: async (req: Request, res: Response) => {
         const commonData = await getCommonViewData(req);
 
-        const sampleData = {
-            items: [
-                {
-                    cartItemId: '64b8f0a5c9e77a6f4d2e8b1a',
-                    imageUrl: 'https://placehold.co/56x56?text=?',
-                    product: 'Product 1',
-                    variant: 'Variant 1',
-                    quantity: 2
-                },
-                {
-                    cartItemId: '64b8f0e2c9e77a6f4d2e8b1b',
-                    variantId: '64b8efdbc9e77a6f4d2e8b19',
-                    productId: '64b8ee9bc9e77a6f4d2e8b15',
-                    product: 'Product 2',
-                    variant: 'Variant 2',
-                    quantity: 1
-                }
-            ],
-            tax: 50000,
-            shippingCost: 20000,
-            totalPrice: 320000
-        }
+        if (commonData.isLoggedIn) {
+            const api = createApi(req)
+            const cartRes = await api.get(`${apiUrl}/api/users/cart/me`);
+            const cart = unwrap(cartRes);
+            console.log('Cart data:', cart);
 
-        return res.render('cart', {
-            title: 'Giỏ hàng | CoreStation',
-            cart: sampleData,
-            ...commonData
+            return res.render('cart', {
+                title: 'Giỏ hàng | CoreStation',
+                cart,
+                ...commonData
+            });
+        } else {
+            res.redirect('/login');
+        }
+    },
+
+    // Checkout
+    checkout: async (req: Request, res: Response) => {
+        renderWithCommon(req, res, 'checkout', {
+            title: 'Thanh toán | CoreStation'
         });
     }
 };
