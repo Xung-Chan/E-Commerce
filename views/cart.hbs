@@ -30,21 +30,21 @@
 							</thead>
 							<tbody>
 								{{#each cart.items}}
-								<tr data-price="{{this.price}}" data-quantity="{{this.quantity}}" data-cart-item-id="{{this.cartItemId}}">
+								<tr data-price="{{this.price}}" data-quantity="{{this.quantity}}" data-cart-item-id="{{this.cartItemId}}" data-variant-id="{{this.variantId}}">
 									<td class="align-middle">
 										<input type="checkbox" class="item-checkbox">
 									</td>
 									<td>
 										<div class="d-flex align-items-center">
-											<img src="{{this.imageUrl}}" alt="{{this.product}}" width="60" height="60"
+											<img src="{{this.productImage}}" alt="{{this.product}}" width="60" height="60"
 												class="rounded object-fit-cover me-3"
 												onerror="this.onerror=null;this.src='https://placehold.co/56x56?text=?';">
 											<div class="flex-grow-1">
-												<div class="fw-semibold text-truncate" title="{{this.product}}">{{this.product}}</div>
+												<div class="fw-semibold text-truncate" title="{{this.productName}}">{{this.productName}}</div>
 											</div>
 										</div>
 									</td>
-									<td class="small">{{this.variant}}</td>
+									<td class="small">{{this.distinctFeature}}</td>
 									<td class="text-center">
 										<div class="quantity-control d-inline-flex align-items-center" style="gap:4px;">
 											<button type="button" class="btn btn-sm btn-outline-secondary btn-qty" data-action="dec">-</button>
@@ -74,10 +74,6 @@
 						<li class="list-group-item d-flex justify-content-between align-items-center">
 							Thuế:
 							<span id="taxAmount">{{formatPrice tax}} VND</span>
-						</li>
-						<li class="list-group-item d-flex justify-content-between align-items-center">
-							Phí vận chuyển:
-							<span id="shippingAmount">{{formatPrice shippingCost}} VND</span>
 						</li>
 						<li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
 							Tổng cộng:
@@ -204,11 +200,12 @@
 			updateTotal();
 			setRowLoading(row, true);
 			try {
+				const variantId = row.getAttribute('data-variant-id');
 				const res = await fetch(`/api/users/cart/me/${cartItemId}`, {
 					method: 'PATCH',
 					headers: { 'Content-Type': 'application/json' },
 					credentials: 'include',
-					body: JSON.stringify({ quantity: newQty })
+					body: JSON.stringify({ quantity: newQty, variantId })
 				});
 				if (!res.ok) throw new Error('Patch failed');
 				updateHeaderCartCount();

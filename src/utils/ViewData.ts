@@ -34,7 +34,7 @@ export const getCommonViewData = async (req: Request) => {
     // Cart
     try {
       const cartRes = await api.get('/api/users/cart/me');
-      totalCartItems = unwrap(cartRes).total || 0;
+      totalCartItems = unwrap(cartRes).totalProduct || 0;
     } catch (e) {
       totalCartItems = 0;
     }

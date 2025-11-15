@@ -326,7 +326,6 @@ const siteController = {
         const bestSellers = landing?.bestSellers || [];
         const newArrivals = landing?.newArrivals || [];
         const categoryProducts = landing?.categoryProducts || [];
-        console.log('bestSellers: ', bestSellers);
 
         // Window new products
         const windowNewProducts: any[][] = [];
@@ -437,6 +436,9 @@ const siteController = {
         try {
             const productRes = await api.get(`${apiUrl}/api/products/${productId}`);
             const product = unwrap(productRes);
+            const selectedVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
+            const productRating = product.rate;
+            console.log('Product data:', product);
 
             const categoryRes = await api.get(`${apiUrl}/api/categories/${product.categoryId}`);
             const category = unwrap(categoryRes);
@@ -444,10 +446,7 @@ const siteController = {
             const brandRes = await api.get(`${apiUrl}/api/brands/${product.brandId}`);
             const brand = unwrap(brandRes);
 
-            const selectedVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
 
-            // TODO: TEMP STARS
-            const stars = [1, 2, 3, 4, 5];
 
             return res.render('product', {
                 title: `${product.name} | CoreStation`,
@@ -455,7 +454,8 @@ const siteController = {
                 category,
                 brand,
                 selectedVariant,
-                stars,
+                productRating,
+                stars: [1, 2, 3, 4, 5],
                 ...commonData
             });
         } catch (error: any) {
@@ -504,7 +504,6 @@ const siteController = {
             return res.render('cart', {
                 title: 'Giỏ hàng | CoreStation',
                 cart,
-                shippingCost: 30000,
                 ...commonData
             });
         } else {

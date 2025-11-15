@@ -113,12 +113,12 @@
             <div class="col-auto">
                 <div class="d-flex align-items-center gap-3 bg-white border rounded p-3 shadow-sm">
                     <div class="display-5 fw-bold mb-0 text-primary text-center" style="min-width:60px; width:80px;">
-                        {{product.rate}}
+                        {{productRating}}
                     </div>
                     <div>
                         <div style="letter-spacing:2px;">
-                            {{#each ../stars}}
-                            {{#if (lte this ../../product.rate)}}
+                            {{#each stars}}
+                            {{#if (lte this ../productRating)}}
                             <span class="text-warning" style="font-size:1.7rem;">★</span>
                             {{else}}
                             <span class="text-secondary" style="font-size:1.7rem;">★</span>
@@ -256,10 +256,29 @@
         const plus = document.getElementById('qtyPlus');
         const variantBtns = document.querySelectorAll('.variant-btn');
         let selectedVariantId = null;
+        let selectedVariantStock = 0;
+
+        function clampQty() {
+            if (!qtyInput) return;
+            let val = parseInt(qtyInput.value || '1', 10);
+            if (isNaN(val)) val = 1;
+            if (selectedVariantStock > 0) {
+                if (val < 1) val = 1;
+                if (val > selectedVariantStock) val = selectedVariantStock;
+            } else {
+                val = 0;
+            }
+            qtyInput.value = String(val);
+            if (plus) plus.disabled = (selectedVariantStock === 0) || (val >= selectedVariantStock);
+            if (minus) minus.disabled = (selectedVariantStock === 0) || (val <= 1);
+            if (qtyInput) qtyInput.max = selectedVariantStock > 0 ? String(selectedVariantStock) : '';
+        }
 
         if (variantBtns.length) {
             const first = variantBtns[0];
             selectedVariantId = first.getAttribute('data-variant-id');
+            selectedVariantStock = Number(first.dataset.stock || 0);
+            clampQty();
         }
 
         variantBtns.forEach(btn => {
@@ -277,6 +296,7 @@
                 const price = Number(btn.dataset.price || 0);
                 const stock = Number(btn.dataset.stock || 0);
                 selectedVariantId = btn.getAttribute('data-variant-id');
+                selectedVariantStock = stock;
 
                 if (!isNaN(price)) {
                     priceEl.textContent = price.toLocaleString('vi-VN') + ' VNĐ';
@@ -284,6 +304,7 @@
                 if (!isNaN(stock)) {
                     stockEl.textContent = stock + ' sản phẩm';
                 }
+                clampQty();
             });
         });
 
@@ -291,14 +312,28 @@
         if (qtyInput && minus && plus) {
             minus.addEventListener('click', (e) => {
                 e.preventDefault();
-                const n = Math.max(1, Number(qtyInput.value) - 1);
-                qtyInput.value = n;
+                const current = Number(qtyInput.value) || 1;
+                const n = Math.max(1, current - 1);
+                qtyInput.value = String(n);
+                clampQty();
             });
 
             plus.addEventListener('click', (e) => {
                 e.preventDefault();
-                const n = Number(qtyInput.value) + 1;
-                qtyInput.value = n;
+                const current = Number(qtyInput.value) || 1;
+                let n = current + 1;
+                if (selectedVariantStock > 0 && n > selectedVariantStock) {
+                    n = selectedVariantStock;
+                }
+                qtyInput.value = String(n);
+                clampQty();
+            });
+
+            qtyInput.addEventListener('input', () => {
+                clampQty();
+            });
+            qtyInput.addEventListener('change', () => {
+                clampQty();
             });
         }
 
@@ -310,12 +345,11 @@
 
         if (addBtn && form && formVariantInput && formQuantityInput) {
             addBtn.addEventListener('click', () => {
+                clampQty();
                 formVariantInput.value = selectedVariantId;
                 formQuantityInput.value = qtyInput.value;
                 form.submit();
             });
         }
     })();
-
-
 </script>
