@@ -396,7 +396,7 @@ const siteController = {
         const paginationData = productsRes.data?.data || productsRes.data;
         console.log('Pagination data:', paginationData);
         const products = Array.isArray(paginationData?.datas) ? paginationData.datas : [];
-        console.log('Extracted products:', products);
+        // console.log('Extracted products:', products);
 
         // Build base query and render with API pagination data
         const filteredQuery: Record<string, string> = {};
@@ -445,8 +445,6 @@ const siteController = {
 
             const brandRes = await api.get(`${apiUrl}/api/brands/${product.brandId}`);
             const brand = unwrap(brandRes);
-
-
 
             return res.render('product', {
                 title: `${product.name} | CoreStation`,
