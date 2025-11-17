@@ -1695,20 +1695,8 @@
       "engines": {
         "node": ">=18.0.0"
       }
-    },
-    "node_modules/@smithy/is-array-buffer": {
-      "version": "4.1.0",
-      "resolved": "https://registry.npmjs.org/@smithy/is-array-buffer/-/is-array-buffer-4.1.0.tgz",
-      "integrity": "sha512-ePTYUOV54wMogio+he4pBybe8fwg4sDvEVDBU8ZlHOZXbXK3/C0XfJgUCu6qAZcawv05ZhZzODGUerFBPsPUDQ==",
-      "dev": true,
-      "license": "Apache-2.0",
-      "dependencies": {
-        "tslib": "^2.6.2"
-      },
-      "engines": {
-        "node": ">=18.0.0"
-      }
     }
+   
     
   }
 }
