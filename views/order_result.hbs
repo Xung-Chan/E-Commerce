@@ -1,0 +1,117 @@
+<div class="container py-5" id="orderResultPage">
+	<div class="text-center mb-4">
+		<h2 class="fw-bold text-success">Đặt hàng thành công!</h2>
+		<p class="text-muted mb-1">Mã đơn hàng: <span id="orderIdDisplay">{{orderId}}</span></p>
+		<p class="text-muted">Cảm ơn bạn đã mua sắm tại CoreStation.</p>
+		<a href="/catalog" class="btn btn-outline-primary btn-sm">Tiếp tục mua sắm</a>
+	</div>
+
+	<div class="row g-4">
+		<div class="col-lg-8">
+			<div class="card shadow-sm mb-4">
+				<div class="card-header bg-white fw-semibold">Sản phẩm trong đơn</div>
+				<div class="card-body" id="itemsContainer">
+					<div class="text-muted small" id="itemsLoading">Đang tải dữ liệu...</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card shadow-sm position-sticky" style="top:20px;">
+				<div class="card-header bg-white fw-semibold">Tóm tắt thanh toán</div>
+				<div class="card-body">
+					<ul class="list-group list-group-flush mb-3" id="summaryList">
+						<li class="list-group-item d-flex justify-content-between"><span>Tạm tính:</span><span id="subtotalDisplay">0 VND</span></li>
+						<li class="list-group-item d-flex justify-content-between"><span>Tổng giảm giá:</span><span id="discountDisplay">0 VND</span></li>
+						<li class="list-group-item d-flex justify-content-between"><span>Phí vận chuyển:</span><span id="shippingFeeDisplay">0 VND</span></li>
+						<li class="list-group-item d-flex justify-content-between"><span>Phải trả:</span><span id="totalPayDisplay" class="fw-semibold">0 VND</span></li>
+					</ul>
+					<div class="mb-2 small"><strong>Phương thức vận chuyển:</strong> <span id="shippingMethodDisplay">—</span></div>
+					<div class="mb-2 small"><strong>Phương thức thanh toán:</strong> <span id="paymentMethodDisplay">—</span></div>
+					<div class="small text-muted" id="statusDisplay"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+	const orderId = '{{orderId}}'.trim();
+	const itemsContainer = document.getElementById('itemsContainer');
+	const subtotalDisplay = document.getElementById('subtotalDisplay');
+	const discountDisplay = document.getElementById('discountDisplay');
+	const shippingFeeDisplay = document.getElementById('shippingFeeDisplay');
+	const totalPayDisplay = document.getElementById('totalPayDisplay');
+	const shippingMethodDisplay = document.getElementById('shippingMethodDisplay');
+	const paymentMethodDisplay = document.getElementById('paymentMethodDisplay');
+	const statusDisplay = document.getElementById('statusDisplay');
+
+	function formatPrice(n){ return (n||0).toLocaleString('vi-VN') + ' VND'; }
+	function paymentLabel(code){
+		switch(code){
+			case 'cash_on_delivery': return 'Thanh toán khi nhận (COD)';
+			case 'credit': return 'Thẻ tín dụng / ghi nợ';
+			default: return code || '—';
+		}
+	}
+
+	async function loadOrder(){
+		if(!orderId){
+			statusDisplay.textContent = 'Không có mã đơn hàng.';
+			return;
+		}
+		try {
+			const resp = await fetch('/api/orders/' + orderId, { credentials: 'include' });
+			if(!resp.ok) throw new Error();
+			const json = await resp.json();
+			const order = json?.data || json?.order || null;
+			if(!order){ throw new Error(); }
+			// Summary
+			subtotalDisplay.textContent = formatPrice(order.totalPrice);
+			discountDisplay.textContent = formatPrice(order.totalDiscount);
+			shippingFeeDisplay.textContent = formatPrice(order.shippingFee);
+			totalPayDisplay.textContent = formatPrice(order.totalPay);
+			shippingMethodDisplay.textContent = order.shippingMethod;
+			paymentMethodDisplay.textContent = paymentLabel(order.paymentMethod);
+			statusDisplay.textContent = 'Trạng thái: ' + (order.currentStatus || 'pending');
+
+			// Load items referencing orderId
+			await loadOrderItems(orderId);
+		} catch(e){
+			statusDisplay.textContent = 'Lỗi tải thông tin đơn hàng.';
+			itemsContainer.innerHTML = '<div class="text-danger small">Không thể tải đơn hàng.</div>';
+		}
+	}
+
+	async function loadOrderItems(id){
+		try {
+			const resp = await fetch('/api/order-items?orderId=' + encodeURIComponent(id), { credentials: 'include' });
+			if(!resp.ok){ throw new Error(); }
+			const data = await resp.json();
+			const items = data?.data || data?.items || [];
+			if(!Array.isArray(items) || !items.length){ throw new Error(); }
+			itemsContainer.innerHTML = '';
+			items.forEach(it => {
+				const div = document.createElement('div');
+				div.className = 'd-flex justify-content-between border-bottom py-2';
+				div.innerHTML = `
+					<div class="me-2 flex-grow-1">
+						<div class="fw-semibold">${it.productName || it.variantId}</div>
+						<div class="small text-muted">${it.distinctFeature || ''}</div>
+						<div class="small">x ${it.quantity}</div>
+					</div>
+					<div class="text-end">
+						<div class="fw-semibold text-danger">${formatPrice((it.price||0) * (it.quantity||0))}</div>
+						${it.discount? `<div class="small text-success">- ${formatPrice(it.discount)}</div>`: ''}
+					</div>
+				`;
+				itemsContainer.appendChild(div);
+			});
+		} catch(e){
+			itemsContainer.innerHTML = '<div class="small text-muted">Chi tiết sản phẩm sẽ được cập nhật sau. (API order-items chưa khả dụng)</div>';
+		}
+	}
+
+	loadOrder();
+});
+</script>

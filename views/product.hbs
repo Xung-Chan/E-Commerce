@@ -132,7 +132,7 @@
         </div>
 
         <div class="row g-4 d-flex align-items-stretch">
-            {{#if verify}}
+            {{#if showUserRatingForm}}
             <div class="col-auto mb-3 d-flex align-items-stretch">
                 <form id="ratingForm" class="card flex-fill" style="min-width:220px; width:auto;">
                     <div class="card-body d-flex flex-row align-items-center gap-3">
@@ -147,6 +147,15 @@
                         <button type="submit" class="btn btn-warning ms-3">Gửi đánh giá</button>
                     </div>
                 </form>
+            </div>
+            {{else if userRating}}
+            <div class="col-auto mb-3 d-flex align-items-stretch">
+                <div class="card flex-fill p-3" style="min-width:220px; width:auto;">
+                    <div class="d-flex flex-column gap-2">
+                        <div>Bạn đã đánh giá: <strong>{{userRating.rate}}</strong> ★</div>
+                        <button type="button" class="btn btn-outline-danger" id="deleteRatingBtn" data-rating-id="{{userRating._id}}">Xóa đánh giá</button>
+                    </div>
+                </div>
             </div>
             {{/if}}
 
@@ -349,6 +358,143 @@
                 formVariantInput.value = selectedVariantId;
                 formQuantityInput.value = qtyInput.value;
                 form.submit();
+            });
+        }
+
+        // Xử lý click thumbnail đổi ảnh lớn
+        const mainImage = document.getElementById('mainImage');
+        const thumbButtons = document.querySelectorAll('.thumb-btn');
+        if (mainImage && thumbButtons.length) {
+            thumbButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const img = btn.querySelector('img');
+                    if (!img) return;
+                    const src = img.getAttribute('src');
+                    if (src) {
+                        mainImage.setAttribute('src', src);
+                    }
+                    // Highlight active thumbnail
+                    thumbButtons.forEach(b => {
+                        b.style.outline = 'none';
+                        b.style.boxShadow = 'none';
+                        b.classList.remove('active-thumb');
+                    });
+                    btn.classList.add('active-thumb');
+                    btn.style.outline = '2px solid #0d6efd';
+                    btn.style.boxShadow = '0 0 4px rgba(13,110,253,.7)';
+                });
+            });
+        }
+    })();
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/socket_server.js"></script>
+<script>
+    (function(){
+        const productId = '{{product._id}}';
+        const commentsList = document.getElementById('commentsList');
+        const ratingForm = document.getElementById('ratingForm');
+        const commentForm = document.getElementById('commentForm');
+        const ratingDisplayBox = document.querySelector('.display-5.fw-bold');
+        const starLabelsGroups = document.querySelectorAll('.rating-stars');
+
+        function formatDate(d){
+            try { return new Date(d).toLocaleString('vi-VN'); } catch { return d || ''; }
+        }
+
+        function recolorStars(newAvg){
+            starLabelsGroups.forEach(group => {
+                const labels = group.querySelectorAll('.star-label');
+                labels.forEach((l,i)=>{ l.style.color = (i < Math.round(newAvg)) ? '#ffc107' : '#ccc'; });
+            });
+        }
+
+        function onNewComment(comment){
+            if(!commentsList) return;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'p-3 border rounded bg-light';
+            wrapper.innerHTML = `
+                <div class="d-flex justify-content-between mb-1">
+                    <strong>${comment.fullName || comment.userName || 'Người dùng'}</strong>
+                    <span class="text-muted small">${formatDate(comment.createdAt || comment.date)}</span>
+                </div>
+                <div>${comment.content}</div>
+            `;
+            commentsList.prepend(wrapper);
+        }
+
+        function onNewRating(rating){
+            // rating might contain productId, newAverageRate or rate value
+            const avg = rating.averageRate || rating.newAverage || rating.rate || null;
+            if(avg !== null && ratingDisplayBox){
+                ratingDisplayBox.textContent = avg.toFixed(1).replace(/\.0$/,'');
+                recolorStars(avg);
+            }
+        }
+
+        // Join socket room
+        if(window.joinProductRoom && productId){
+            joinProductRoom(productId, onNewComment, onNewRating);
+        }
+
+        // Comment submit via AJAX
+        if(commentForm){
+            commentForm.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                const input = commentForm.querySelector('input[name="comment"]');
+                const content = (input?.value || '').trim();
+                if(!content){ return; }
+                input.disabled = true;
+                try {
+                    const resp = await fetch('/api/comments', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ productId, content })
+                    });
+                    if(resp.ok){ input.value=''; }
+                } catch {} finally { input.disabled = false; }
+            });
+        }
+
+        // Rating submit via AJAX
+        if(ratingForm){
+            ratingForm.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                const checked = ratingForm.querySelector('input[name="rating"]:checked');
+                if(!checked){ return; }
+                const rateVal = Number(checked.value);
+                const btn = ratingForm.querySelector('button[type="submit"]');
+                if(btn) btn.disabled = true;
+                try {
+                    const resp = await fetch('/api/ratings', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ productId, rate: rateVal })
+                    });
+                    if(resp.ok){ /* Wait for socket event to update average */ }
+                } catch {} finally { if(btn) btn.disabled=false; }
+            });
+        }
+
+        // Delete user rating if button exists
+        const deleteRatingBtn = document.getElementById('deleteRatingBtn');
+        if(deleteRatingBtn){
+            deleteRatingBtn.addEventListener('click', async ()=>{
+                const id = deleteRatingBtn.getAttribute('data-rating-id');
+                if(!id) return;
+                deleteRatingBtn.disabled = true;
+                try {
+                    const resp = await fetch(`/api/ratings/${id}`, { method: 'DELETE', credentials: 'include' });
+                    if(resp.ok){
+                        // Simple approach: reload page to show rating form again
+                        location.reload();
+                    }
+                } catch(e) {} finally {
+                    deleteRatingBtn.disabled = false;
+                }
             });
         }
     })();
