@@ -2,6 +2,7 @@ import mongoose, { InferSchemaType, QueryOptions, Schema } from "mongoose";
 import { CreateOrderDto } from "../dto/Create.dto.js";
 import CRUD from "../utils/CRUD.interface.js";
 import { WithId } from "../utils/WithId.js";
+import { OrderStatus } from "../utils/OrderStatus.enum.js";
 const OrderSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -22,28 +23,27 @@ const OrderSchema = new Schema({
         required: true
 
     },
-    shippingFee: {
-        type: Number,
-        default: 0
-    },
     totalPay: {
         type: Number,
         required: true
 
     },
+    shippingFee: {
+        type: Number,
+        required: true
+    },
     shippingMethod: {
         type: String,
         required: true
     },
-    paymentMethod: {
+    address: {
         type: String,
-        enum: ["credit", "cash_on_delivery"],
         required: true
     },
     currentStatus: {
         type: String,
-        enum: ["pending", "processed", "delivered", "completed", "canceled"],
-        default: "pending"
+        enum: Object.values(OrderStatus),
+        default: OrderStatus.PENDING
     },
     deletedAt: {
         type: Date,
@@ -62,18 +62,21 @@ class OrderDao implements CRUD {
     }
 
     async findBy(query: Partial<any>, options: QueryOptions = {}): Promise<IOrder[]> {
-        return await Order.find({
+        const orders = await Order.find({
             ...query,
             deletedAt: null
         }, null, options).exec();
+        return orders.map(order => order.toObject() as IOrder);
     }
 
     async create(item: CreateOrderDto): Promise<IOrder> {
-        return await Order.create(item);
+        const order = await Order.create(item);
+        return order.toObject() as IOrder;
     }
 
     async readById(id: string): Promise<IOrder | null> {
-        return await Order.findById(id).exec();
+        const order = await Order.findById(id).exec();
+        return order ? order.toObject() as IOrder : null;
     }
 
     async deleteById(id: string): Promise<boolean> {
@@ -115,4 +118,4 @@ class OrderDao implements CRUD {
     }
 }
 export const orderDao = new OrderDao();
-export type IOrder = WithId<InferSchemaType<typeof OrderSchema>>;
+export type IOrder = WithId<InferSchemaType<typeof OrderSchema>> & { createdAt: Date };

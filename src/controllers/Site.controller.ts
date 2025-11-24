@@ -372,7 +372,6 @@ const siteController = {
             sortOrder = 'desc',
             name = '',
             categoryId = '',
-            brandId = '',
             minPrice = '',
             maxPrice = '',
             rating = ''
@@ -381,26 +380,20 @@ const siteController = {
         if (sortBy) apiParams.sortBy = sortBy;
         if (sortOrder) apiParams.sortOrder = sortOrder;
         if (categoryId) apiParams.categoryId = categoryId;
-        if (brandId) apiParams.brandId = brandId;
         if (minPrice) apiParams.minPrice = minPrice;
         if (maxPrice) apiParams.maxPrice = maxPrice;
         if (name) apiParams.name = name;
         if (rating) apiParams.rating = rating;
-
-        // Get Brands
-        const brandsRes = await api.get(`${apiUrl}/api/brands`);
-        const brands = Array.isArray(brandsRes.data) ? brandsRes.data : brandsRes.data.data;
 
         // Get Products
         const productsRes = await api.get(`${apiUrl}/api/products/search`, { params: apiParams });
         const paginationData = productsRes.data?.data || productsRes.data;
         console.log('Pagination data:', paginationData);
         const products = Array.isArray(paginationData?.datas) ? paginationData.datas : [];
-        // console.log('Extracted products:', products);
 
         // Build base query and render with API pagination data
         const filteredQuery: Record<string, string> = {};
-        Object.entries({ sortBy, sortOrder, categoryId, brandId, minPrice, maxPrice, name, rating }).forEach(([k, v]) => {
+        Object.entries({ sortBy, sortOrder, categoryId, minPrice, maxPrice, name, rating }).forEach(([k, v]) => {
             if (v !== undefined && v !== null && v !== '') {
                 filteredQuery[k] = String(v);
             }
@@ -411,7 +404,6 @@ const siteController = {
 
         return renderWithCommon(req, res, 'catalog', {
             title: 'Danh mục sản phẩm | CoreStation',
-            brands,
             products_catalog: products,
             query: filteredQuery,
             baseQueryString,
@@ -446,6 +438,34 @@ const siteController = {
             const brandRes = await api.get(`${apiUrl}/api/brands/${product.brandId}`);
             const brand = unwrap(brandRes);
 
+            // Load existing comments for product
+            let comments: any[] = [];
+            try {
+                const commentsRes = await api.get(`${apiUrl}/api/comments/product/${productId}`);
+                const rawComments = unwrap<any[]>(commentsRes) || [];
+                comments = rawComments.map(c => ({
+                    name: c.fullName || c.name || 'Người dùng',
+                    content: c.content,
+                    date: c.createdAt || c.date || '',
+                }));
+            } catch (e) {
+                comments = [];
+            }
+
+            // Load user rating info (determine if current user has rated)
+            const userId = (req as any).userId || null;
+            let userRating: any = null;
+            try {
+                const ratesRes = await api.get(`${apiUrl}/api/ratings/product/${productId}`);
+                const rates = unwrap<any[]>(ratesRes) || [];
+                if (userId) {
+                    userRating = rates.find(r => String(r.userId) === String(userId)) || null;
+                }
+            } catch (e) {
+                userRating = null;
+            }
+            const showUserRatingForm = commonData.isLoggedIn && !userRating;
+
             return res.render('product', {
                 title: `${product.name} | CoreStation`,
                 product,
@@ -454,6 +474,9 @@ const siteController = {
                 selectedVariant,
                 productRating,
                 stars: [1, 2, 3, 4, 5],
+                comments,
+                userRating,
+                showUserRatingForm,
                 ...commonData
             });
         } catch (error: any) {
@@ -465,6 +488,7 @@ const siteController = {
             return res.render('productDetail', { title: 'Chi tiết sản phẩm | CoreStation', errorMessage: message });
         }
     },
+
 
     // Add to cart from product page
     productAddToCart: async (req: Request, res: Response) => {
@@ -488,6 +512,7 @@ const siteController = {
         }
     },
 
+
     // --- CART ---
     // Cart page
     cart: async (req: Request, res: Response) => {
@@ -509,10 +534,24 @@ const siteController = {
         }
     },
 
+
     // Checkout
     checkout: async (req: Request, res: Response) => {
         renderWithCommon(req, res, 'checkout', {
             title: 'Thanh toán | CoreStation'
+        });
+    },
+
+
+    // Order result page
+    orderResult: async (req: Request, res: Response) => {
+        const { orderId } = req.params as { orderId?: string };
+        if (!orderId) {
+            return res.redirect('/');
+        }
+        renderWithCommon(req, res, 'order_result', {
+            title: 'Đơn hàng thành công | CoreStation',
+            orderId
         });
     }
 };

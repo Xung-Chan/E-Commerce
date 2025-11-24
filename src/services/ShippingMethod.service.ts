@@ -19,6 +19,16 @@ const shippingMethodService = {
         return shippingMethodDao.list();
     },
 
+    getShippingMethodById: async (id: string) => {
+
+        const shippingMethod = await shippingMethodDao.readById(id);
+
+        if (!shippingMethod) {
+            throw new ApiError(404, "Not Found", ErrorDictionary.SHIPPING_METHOD_NOT_FOUND);
+        }
+        return shippingMethod;
+    },
+
     getShippingMethodByName: async (name: string) => {
 
         const shippingMethod = await shippingMethodDao.readByName(name);

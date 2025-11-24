@@ -50,6 +50,7 @@ const productService = {
             brandId?: string;
             minPrice?: { $gte: number };
             maxPrice?: { $lte: number };
+            rate?: { $gte: number };
         } = {};
         const page = parseInt((query.page || "1"), 10);
         const limit = parseInt((query.limit || "10"), 10);
@@ -68,6 +69,9 @@ const productService = {
         }
         if (query.brandId) {
             filter.brandId = query.brandId;
+        }
+        if (query.rating !== undefined) {
+            filter.rate = { $gte: Number(query.rating) };
         }
         if (query.minPrice !== undefined) {
             filter.minPrice = { $gte: Number(query.minPrice) };
@@ -133,14 +137,6 @@ const productService = {
         }
 
         const products = await productDao.findBy({}, options);
-        // const datas = await Promise.all(products.map(async product => {
-        //     const variants = await variantService.getVariantsByProductId(product._id.toString());
-        //     return {
-        //         ...product,
-        //         // variants: variants
-        //     };
-        // }))
-        // console.log(datas);
         const totalDatas = await productDao.count({});
         return new Pagination(products, page, limit, totalDatas);
     },

@@ -272,5 +272,33 @@
 		// Initial total calculation
 		updateTotal();
 		updateHeaderCartCount();
+
+		// Checkout selected items -> sessionStorage then redirect
+		checkoutBtn?.addEventListener('click', (e) => {
+			if (checkoutBtn.disabled) return;
+			const selected = [];
+			document.querySelectorAll('#cartTable .item-checkbox:checked').forEach(cb => {
+				const row = cb.closest('tr');
+				if (!row) return;
+				selected.push({
+					cartItemId: row.getAttribute('data-cart-item-id'),
+					variantId: row.getAttribute('data-variant-id'),
+					productName: (row.querySelector('[title]')?.getAttribute('title') || '').trim(),
+					distinctFeature: (row.querySelector('td.small')?.textContent || '').trim(),
+					price: Number(row.getAttribute('data-price') || '0'),
+					quantity: Number(row.getAttribute('data-quantity') || '1')
+				});
+			});
+			if (!selected.length) {
+				setStatus('Chưa chọn sản phẩm nào để thanh toán', 'warning');
+				return;
+			}
+			try {
+				sessionStorage.setItem('checkoutItems', JSON.stringify(selected));
+				window.location.href = '/checkout';
+			} catch (err) {
+				setStatus('Không thể lưu dữ liệu để thanh toán', 'danger');
+			}
+		});
 	});
 </script>

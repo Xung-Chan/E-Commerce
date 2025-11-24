@@ -31,28 +31,15 @@
                                     {{/each}}
                                 </div>
 
-                                <h6 class="fw-semibold text-uppercase small text-secondary mt-3 mb-2">Tìm theo Brand
-                                </h6>
-                                <div class="row row-cols-2 gx-3">
-                                    {{#each brands}}
-                                    <div class="col mb-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="brandId"
-                                                id="brand-{{@index}}" value="{{_id}}" {{#if (eq ../query.brandId
-                                                _id)}}checked{{/if}}>
-                                            <label class="form-check-label" for="brand-{{@index}}">{{name}}</label>
-                                        </div>
-                                    </div>
-                                    {{/each}}
-                                </div>
+                                <!-- Brand filter removed per new spec -->
 
                                 <h6 class="fw-semibold text-uppercase small text-secondary mt-3 mb-2">Theo khoảng giá
                                 </h6>
                                 <div class="d-flex align-items-center gap-2">
-                                    <input type="number" class="form-control form-control-sm" name="minPrice" min="0"
+                                    <input type="text" class="form-control form-control-sm price-input" name="minPrice" inputmode="numeric"
                                         placeholder="Từ" value="{{query.minPrice}}">
                                     <span class="text-muted">-</span>
-                                    <input type="number" class="form-control form-control-sm" name="maxPrice" min="0"
+                                    <input type="text" class="form-control form-control-sm price-input" name="maxPrice" inputmode="numeric"
                                         placeholder="Đến" value="{{query.maxPrice}}">
                                 </div>
 
@@ -91,25 +78,24 @@
         <!-- Danh sách sản phẩm -->
         <main class="col-md-9 d-flex flex-column" style="min-height: 80vh;">
             <!-- Bộ lọc sắp xếp -->
-            <form method="GET" class="mb-3">
+            <form method="GET" class="mb-3" id="sortForm">
                 {{#if query.categoryId}}<input type="hidden" name="categoryId" value="{{query.categoryId}}">{{/if}}
-                {{#if query.brandId}}<input type="hidden" name="brandId" value="{{query.brandId}}">{{/if}}
                 {{#if query.minPrice}}<input type="hidden" name="minPrice" value="{{query.minPrice}}">{{/if}}
                 {{#if query.maxPrice}}<input type="hidden" name="maxPrice" value="{{query.maxPrice}}">{{/if}}
                 {{#if query.rating}}<input type="hidden" name="rating" value="{{query.rating}}">{{/if}}
+                <input type="hidden" name="sortBy" id="sortByHidden" value="{{query.sortBy}}">
+                <input type="hidden" name="sortOrder" id="sortOrderHidden" value="{{query.sortOrder}}">
                 <div class="d-flex flex-wrap align-items-center gap-2 p-3 bg-light rounded shadow-sm">
                     <span class="fw-semibold text-primary"><i class="bi bi-funnel me-1"></i>Sắp xếp:</span>
-                    <select class="form-select form-select-sm w-auto" name="sortBy">
-                        <option value="rate" {{#if (eq query.sortBy "rate" )}}selected{{/if}}>Đánh giá</option>
-                        <option value="soldCount" {{#if (eq query.sortBy "soldCount" )}}selected{{/if}}>Bán chạy</option>
-                        <option value="createdAt" {{#if (eq query.sortBy "createdAt" )}}selected{{/if}}>Mới nhất</option>
-                        <option value="price" {{#if (eq query.sortBy "price" )}}selected{{/if}}>Giá</option>
+                    <select class="form-select form-select-sm w-auto" id="sortPreset">
+                        <option value="maxPrice-desc" {{#if (eq query.sortBy "maxPrice")}}{{#if (eq query.sortOrder "desc")}}selected{{/if}}{{/if}}>Giá cao nhất</option>
+                        <option value="minPrice-asc" {{#if (eq query.sortBy "minPrice")}}{{#if (eq query.sortOrder "asc")}}selected{{/if}}{{/if}}>Giá thấp nhất</option>
+                        <option value="name-asc" {{#if (eq query.sortBy "name")}}{{#if (eq query.sortOrder "asc")}}selected{{/if}}{{/if}}>Tên A-Z</option>
+                        <option value="name-desc" {{#if (eq query.sortBy "name")}}{{#if (eq query.sortOrder "desc")}}selected{{/if}}{{/if}}>Tên Z-A</option>
+                        <option value="createdAt-desc" {{#if (eq query.sortBy "createdAt")}}{{#if (eq query.sortOrder "desc")}}selected{{/if}}{{/if}}>Mới nhất</option>
+                        <option value="createdAt-asc" {{#if (eq query.sortBy "createdAt")}}{{#if (eq query.sortOrder "asc")}}selected{{/if}}{{/if}}>Cũ nhất</option>
                     </select>
-                    <select class="form-select form-select-sm w-auto" name="sortOrder">
-                        <option value="desc" {{#if (eq query.sortOrder "desc" )}}selected{{/if}}>Giảm dần</option>
-                        <option value="asc" {{#if (eq query.sortOrder "asc" )}}selected{{/if}}>Tăng dần</option>
-                    </select>
-                    <button class="btn btn-sm btn-primary d-flex align-items-center gap-1">
+                    <button class="btn btn-sm btn-primary d-flex align-items-center gap-1" type="submit">
                         <i class="bi bi-arrow-down-up"></i> Áp dụng
                     </button>
                 </div>
@@ -136,10 +122,10 @@
                                         {{variants.[0].diffTitle}}
                                     </div>
                                     <div class="fw-bold text-danger mt-auto" style="font-size:1rem;">
-                                        {{#if variants}}
-                                        {{formatPrice variants.[0].price}} VNĐ
+                                        {{#if (eq minPrice maxPrice)}}
+                                            {{formatPrice minPrice}} VNĐ
                                         {{else}}
-                                        {{formatPrice price}} VNĐ
+                                            {{formatPrice minPrice}} - {{formatPrice maxPrice}} VNĐ
                                         {{/if}}
                                     </div>
                                 </div>
@@ -181,12 +167,46 @@
         document.addEventListener('DOMContentLoaded', () => {
             const f = document.getElementById('filterForm');
             if (!f) return;
-            f.addEventListener('submit', () => {
-                ['minPrice', 'maxPrice'].forEach(name => {
-                    const el = f.querySelector(`[name="${name}"]`);
-                    if (el && !el.value) el.disabled = true;
+            function rawDigits(v){ return (v||'').replace(/\D/g,''); }
+            function formatDots(v){ return v.replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
+            const priceInputs = f.querySelectorAll('.price-input');
+            priceInputs.forEach(inp => {
+                // Initial format existing value
+                const raw = rawDigits(inp.value);
+                inp.value = raw ? formatDots(raw) : '';
+                inp.addEventListener('input', () => {
+                    const caretEnd = inp.selectionEnd;
+                    const rawVal = rawDigits(inp.value);
+                    inp.value = rawVal ? formatDots(rawVal) : '';
+                    // best-effort restore caret near end
+                    inp.setSelectionRange(inp.value.length, inp.value.length);
+                });
+                inp.addEventListener('blur', () => {
+                    const rawVal = rawDigits(inp.value);
+                    inp.value = rawVal ? formatDots(rawVal) : '';
                 });
             });
+            f.addEventListener('submit', () => {
+                ['minPrice','maxPrice'].forEach(name => {
+                    const el = f.querySelector(`[name="${name}"]`);
+                    if(!el) return;
+                    const raw = rawDigits(el.value);
+                    if(!raw){ el.disabled = true; }
+                    else { el.value = raw; }
+                });
+            });
+            // Sort preset logic
+            const sortPreset = document.getElementById('sortPreset');
+            const sortByHidden = document.getElementById('sortByHidden');
+            const sortOrderHidden = document.getElementById('sortOrderHidden');
+            if (sortPreset && sortByHidden && sortOrderHidden) {
+                sortPreset.addEventListener('change', () => {
+                    const val = sortPreset.value; // format: field-order
+                    const [field, order] = val.split('-');
+                    sortByHidden.value = field;
+                    sortOrderHidden.value = order;
+                });
+            }
         });
     </script>
 </div>

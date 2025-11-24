@@ -1,15 +1,15 @@
 
-class Pagination {
+class Pagination<T> {
     page: number;
     totalPages: number;
     limit: number;
     totalDatas: number;
-    datas: any[];
+    datas: T[];
     hasNextPage: boolean;
     hasPrevPage: boolean;
     nextPage: number | null;
     prevPage: number | null;
-    constructor(datas: any[], page: number = 1, limit: number = 10, totalDatas: number) {
+    constructor(datas: T[], page: number = 1, limit: number = 10, totalDatas: number) {
         this.page = page;
         this.limit = limit;
         this.totalDatas = totalDatas;
@@ -44,7 +44,6 @@ interface ProductQuery extends QueryUrl {
 interface OrderQuery extends QueryUrl {
     userId?: string;
     couponId?: string;
-    status?: string;
 }
 
 interface CouponQuery extends QueryUrl {

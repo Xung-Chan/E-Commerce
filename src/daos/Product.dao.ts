@@ -31,10 +31,16 @@ const ProductSchema = new Schema({
         type: Number,
         default: 0
     },
-    averageRate: {
+    rate: {
         type: Number,
         min: 0,
         max: 5,
+        default: 0
+    },
+    discount: {
+        type: Number,
+        min: 0,
+        max: 50,
         default: 0
     },
     minPrice: {

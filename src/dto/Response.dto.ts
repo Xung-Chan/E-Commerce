@@ -1,3 +1,5 @@
+import { OrderStatus } from "../utils/OrderStatus.enum.js";
+
 class LoginResponseDto {
     accessToken: string;
     refreshToken: string;
@@ -37,10 +39,68 @@ interface StatisticResponse {
     }>
 }
 
+interface UserResponse {
+    id: string;
+    email: string;
+    fullName: string;
+    role: string;
+    addresses: Array<{
+        address: string;
+    }>;
+    status: string;
+    point: number;
+}
+
+
+interface OutlineOrderResponse {
+    id: string;
+    userId: string;
+    fullName: string;
+    totalPrice: number;
+    items:
+    {
+        productName: string;
+        distinctFeature: string;
+        quantity: number;
+        price: number;
+    }[]
+    ,
+    currentStatus: OrderStatus;
+}
+
+interface DetailOrderResponse {
+    id: string;
+
+    userId: string;
+    fullName: string;
+    email: string;
+    address: string;
+
+    status:
+    {
+        status: string;
+        createdAt: Date;
+    }[],
+
+    items:
+    {
+        productName: string;
+        distinctFeature: string;
+        quantity: number;
+        price: number;
+    }[],
+    totalPrice: number;
+    totalDiscount: number;
+    shippingFee: number;
+    totalPay: number;
+    shippingMethod: string;
+}
+
 export {
-    LoginResponseDto,
+    LoginResponseDto
 };
 export type {
-    CartResponse,
-    StatisticResponse
+    CartResponse, DetailOrderResponse, OutlineOrderResponse, StatisticResponse,
+    UserResponse
 };
+

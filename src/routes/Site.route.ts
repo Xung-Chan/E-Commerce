@@ -47,5 +47,8 @@ siteRouter.get('/cart', siteController.cart);
 // Checkout
 siteRouter.get('/checkout', siteController.checkout);
 
+// Order Result
+siteRouter.get('/order/result/:orderId', siteController.orderResult);
+
 
 export default siteRouter;

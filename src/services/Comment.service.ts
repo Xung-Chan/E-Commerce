@@ -1,21 +1,31 @@
 import { commentDao } from "../daos/Comment.dao.js";
 import { userDao } from "../daos/User.dao.js";
-import { CreateCommentDto } from "../dto/Create.dto.js";
 import { CreateCommentRequest } from "../dto/Request.dto.js";
 import { ioServer } from "../index.js";
 const commentService = {
 
     createComment: async (data: CreateCommentRequest) => {
-        const user = await userDao.readById(data.userId);
-        if (!user) {
-            throw new Error("User not found");
+        let comment;
+        if (data.userId) {
+            const user = await userDao.readById(data.userId);
+            if (!user) {
+                throw new Error("User not found");
+            }
+            comment = await commentDao.create({
+                userId: data.userId,
+                productId: data.productId,
+                content: data.content,
+                fullName: user.fullName
+            });
+
         }
-        const comment = await commentDao.create({
-            userId: data.userId,
-            productId: data.productId,
-            content: data.content,
-            fullName: user.fullName
-        });
+        else {
+            comment = await commentDao.create({
+                productId: data.productId,
+                content: data.content,
+                fullName: "Anonymous"
+            });
+        }
         ioServer.to(`product_${data.productId}`).emit("newComment", comment);
 
         if (!comment) {

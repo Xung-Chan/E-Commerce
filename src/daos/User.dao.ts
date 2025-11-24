@@ -40,6 +40,10 @@ const UserSchema = new Schema({
         default: "active"
 
     },
+    point: {
+        type: Number,
+        default: 0
+    },
     deletedAt: {
         type: Date,
         default: null

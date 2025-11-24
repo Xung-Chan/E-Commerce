@@ -6,11 +6,10 @@ import { upload } from "../services/Image.service.js";
 
 const couponRouter = Router();
 
-couponRouter.get("/", couponController.getAllCoupons);
+couponRouter.get("/code", couponController.getCouponByCode);
 couponRouter.get("/:couponId", couponController.getCouponById);
 couponRouter.post("/", authJwtAdmin, upload.none(), couponController.createCoupon);
 couponRouter.delete("/:couponId", authJwtAdmin, couponController.deleteCouponById);
-couponRouter.get("/code/:couponCode", couponController.getCouponByCode);
-couponRouter.get("/search/query", couponController.getCouponByQuery);
+couponRouter.get("/search/query", authJwtAdmin, couponController.getCouponByQuery);
 
 export default couponRouter;

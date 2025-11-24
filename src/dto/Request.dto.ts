@@ -17,17 +17,19 @@ interface CreateProductRequest {
 }
 interface CreateOrderRequest {
     userId: string;
-    couponId?: string;
+    couponId?: string | null;
     variants: {
         variantId: string;
         quantity: number;
     }[];
-    shippingMethod: string;
-    paymentMethod: string;
+    address: string;
+    shippingMethodId: string;
+    isUseUserPoint: boolean;
+
 }
 
 interface CreateCommentRequest {
-    userId: string;
+    userId?: string;
     productId: string;
     content: string;
 }

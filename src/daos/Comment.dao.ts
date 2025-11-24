@@ -7,10 +7,12 @@ const CommentSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        default: null
     },
 
     fullName: {
         type: String,
+        default: "Anonymous"
     },
 
     productId: {

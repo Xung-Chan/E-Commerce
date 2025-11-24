@@ -6,7 +6,7 @@ import ApiError from "../utils/ApiError.js";
 import { productDao } from "../daos/Product.dao.js";
 import { cartItemDao, ICartItem } from "../daos/CartItem.dao.js";
 import { variantDao } from "../daos/Variant.dao.js";
-import { CartResponse } from "../dto/Response.dto.js";
+import { CartResponse, UserResponse } from "../dto/Response.dto.js";
 import { ErrorDictionary } from "../middleware/errorDictionary.js";
 const userService = {
     createUser: async (data: CreateUserDto): Promise<boolean> => {
@@ -24,16 +24,19 @@ const userService = {
     },
 
 
-    getUserById: async (id: string): Promise<any | null> => {
+    getUserById: async (id: string): Promise<UserResponse> => {
         const user = await userDao.readById(id);
         if (!user) {
             throw new ApiError(404, "Not Found", ErrorDictionary.USER_NOT_FOUND);
         }
         return {
+            id: user._id.toString(),
             email: user.email,
             fullName: user.fullName,
             role: user.role,
             addresses: user.addresses,
+            status: user.status,
+            point: user.point,
         };
     },
 

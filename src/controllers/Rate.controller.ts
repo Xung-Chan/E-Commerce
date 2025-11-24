@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
-import rateService from "../services/Rate.service";
-import { CreateRateDto } from "../dto/Create.dto";
-import ApiError from "../utils/ApiError";
+import rateService from "../services/Rate.service.js";
+import { CreateRateDto } from "../dto/Create.dto.js";
+import ApiError from "../utils/ApiError.js";
 const rateController = {
     createRate: expressAsyncHandler(async (req: Request, res: Response) => {
         const rateData: CreateRateDto = req.body;

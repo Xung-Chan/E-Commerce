@@ -1,6 +1,8 @@
-import mongoose, { InferSchemaType, Schema } from "mongoose";
+import { create } from 'express-handlebars';
+import mongoose, { InferSchemaType, QueryOptions, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { WithId } from "../utils/WithId.js";
+import { OrderStatus } from "../utils/OrderStatus.enum.js";
 const StatusHistorySchema = new Schema({
     orderId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -9,7 +11,7 @@ const StatusHistorySchema = new Schema({
     },
     status: {
         type: String,
-        enum: ["pending", "processing", "shipped", "delivered", "canceled"],
+        enum: Object.values(OrderStatus),
         required: true
     },
 
@@ -25,8 +27,9 @@ class StatusHistoryDao implements CRUD {
         const result = await StatusHistory.updateOne({ _id: id }, { $set: item });
         return result.modifiedCount > 0;
     }
-    async findBy(query: Partial<any>): Promise<any | null> {
-        return await StatusHistory.find(query).exec();
+    async findBy(query: Partial<any>, options: QueryOptions = {}): Promise<IStatusHistory[]> {
+        const sh = await StatusHistory.find(query, null, options).exec();
+        return sh.map(s => s.toObject() as IStatusHistory);
     }
     async create(item: {
         orderId: string,
@@ -46,4 +49,4 @@ class StatusHistoryDao implements CRUD {
     }
 }
 export const statusHistoryDao = new StatusHistoryDao();
-export type IStatusHistory = WithId<InferSchemaType<typeof StatusHistorySchema>>;
+export type IStatusHistory = WithId<InferSchemaType<typeof StatusHistorySchema>> & { createdAt: Date };
