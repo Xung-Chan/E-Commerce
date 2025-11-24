@@ -546,12 +546,20 @@ const siteController = {
     // Order result page
     orderResult: async (req: Request, res: Response) => {
         const { orderId } = req.params as { orderId?: string };
-        if (!orderId) {
-            return res.redirect('/');
-        }
+        // if (!orderId) {
+        //     return res.redirect('/');
+        // }
         renderWithCommon(req, res, 'order_result', {
             title: 'Đơn hàng thành công | CoreStation',
             orderId
+        });
+    },
+
+
+    // --- ORDER HISTORY ---
+    orderHistory: async (req: Request, res: Response) => {
+        renderWithCommon(req, res, 'order_history', {
+            title: 'Lịch sử đơn hàng | CoreStation'
         });
     }
 };

@@ -1,4 +1,16 @@
 <div class="container py-4">
+	{{!-- Style cho giỏ hàng --}}
+	<style>
+		#cartTable .cart-product-cell { overflow: hidden; }
+		#cartTable .cart-product-cell .product-info { min-width: 0; }
+		#cartTable .product-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+		#cartTable td.small { word-break: break-word; }
+		@media (max-width: 992px) {
+			#cartTable .product-name { white-space: normal; }
+		}
+	</style>
+
+
 	{{!-- Giỏ hàng --}}
 	{{#if cart.items.length}}
 	<h2 class="fw-bold text-primary mb-2">Giỏ hàng</h2>
@@ -34,13 +46,13 @@
 									<td class="align-middle">
 										<input type="checkbox" class="item-checkbox">
 									</td>
-									<td>
-										<div class="d-flex align-items-center">
+									<td class="cart-product-cell">
+										<div class="d-flex align-items-center gap-2">
 											<img src="{{this.productImage}}" alt="{{this.product}}" width="60" height="60"
-												class="rounded object-fit-cover me-3"
+												class="rounded object-fit-cover"
 												onerror="this.onerror=null;this.src='https://placehold.co/56x56?text=?';">
-											<div class="flex-grow-1">
-												<div class="fw-semibold text-truncate" title="{{this.productName}}">{{this.productName}}</div>
+											<div class="flex-grow-1 product-info">
+												<span class="fw-semibold product-name" title="{{this.productName}}">{{this.productName}}</span>
 											</div>
 										</div>
 									</td>
@@ -65,6 +77,7 @@
 			</div>
 		</div>
 
+
 		{{!-- Tóm tắt --}}
 		<div class="col-12 mt-3">
 			<div class="card shadow-sm">
@@ -86,12 +99,15 @@
 			</div>
 		</div>
 	</div>
+
+	
 	{{else}}
 	<div class="text-center text-muted py-5">
 		Giỏ hàng trống. <a href="/catalog" class="text-primary">Tiếp tục mua sắm</a>
 	</div>
 	{{/if}}
 </div>
+
 
 <script>
 	document.addEventListener('DOMContentLoaded', function () {
@@ -103,19 +119,22 @@
 		const taxEl = document.getElementById('taxAmount');
 		const shipping = parseFloat(document.getElementById('shippingAmount')?.innerText.replace(/[^\d]/g, '')) || 0;
 
-		// Helper to format price
+
+		// Định dạng tiền VNĐ
 		function formatPrice(price) {
 			return price.toLocaleString('vi-VN');
 		}
 
-		// Helper to set status message
+
+		// Hiển thị trạng thái giỏ hàng
 		function setStatus(message, type = 'info') {
 			if (!statusEl) return;
 			statusEl.textContent = message;
 			statusEl.className = `small mt-2 text-${type}`;
 		}
 
-		// Update the header cart badge without reloading
+
+		// Cập nhật số lượng sản phẩm trên biểu tượng giỏ hàng ở header mà không cần tải lại trang
 		function updateHeaderCartCount() {
 			const badge = document.querySelector('.btn-cart .badge');
 			if (!badge) return;
@@ -125,7 +144,8 @@
 			badge.textContent = String(sum);
 		}
 
-		// Recalculate line total for a row
+
+		// Tính lại tổng tiền cho một dòng
 		function recalcLineTotal(row) {
 			const price = parseFloat(row.dataset.price) || 0;
 			const quantity = parseInt(row.dataset.quantity) || 1;
@@ -133,7 +153,8 @@
 			if (cell) cell.textContent = formatPrice(price * quantity) + ' VND';
 		}
 
-		// Update total amount based on selected items
+
+		// Cập nhật tổng tiền dựa trên các mục được chọn
 		function updateTotal() {
 			let subtotal = 0;
 			const liveCheckboxes = document.querySelectorAll('#cartTable .item-checkbox');
@@ -159,7 +180,8 @@
 			totalElement.textContent = `${formatPrice(total)} VND`;
 		}
 
-		// Handle quantity increment/decrement buttons
+
+		// Xử lý các nút tăng/giảm số lượng
 		function handleQtyButtons(row) {
 			const input = row.querySelector('.qty-input');
 			row.querySelectorAll('.btn-qty').forEach(btn => {
@@ -171,7 +193,6 @@
 					patchQuantity(row, val);
 				});
 			});
-			// Optional: apply changes when typing
 			input.addEventListener('change', () => {
 				let val = parseInt(input.value) || 1;
 				if (val < 1) val = 1;
@@ -181,6 +202,8 @@
 			});
 		}
 
+
+		// Thiết lập trạng thái loading cho một dòng
 		function setRowLoading(row, isLoading) {
 			row.setAttribute('data-loading', isLoading ? '1' : '0');
 			row.querySelectorAll('.btn-qty').forEach(b => { if (b instanceof HTMLButtonElement) b.disabled = !!isLoading; });
@@ -188,6 +211,8 @@
 			if (input) input.disabled = !!isLoading;
 		}
 
+
+		// Gửi yêu cầu cập nhật số lượng sản phẩm
 		async function patchQuantity(row, newQty) {
 			const qtyInput = row.querySelector('.qty-input');
 			const cartItemId = row.getAttribute('data-cart-item-id');
@@ -220,13 +245,14 @@
 			}
 		}
 
-		// Attach events to a cart row
+
+		// Gắn sự kiện cho một dòng trong giỏ hàng
 		function attachRowEvents(row) {
 			handleQtyButtons(row);
 			const removeBtn = row.querySelector('.btn-remove');
 			const cartItemId = row.dataset.cartItemId;
 
-			// Remove item
+			// Xóa sản phẩm
 			removeBtn.addEventListener('click', async () => {
 				const priceBackup = row.dataset.price;
 				const qtyBackup = row.dataset.quantity;
@@ -253,10 +279,12 @@
 			});
 		}
 
-		// Initial attach
+
+		// Gắn sự kiện ban đầu
 		cartTable?.querySelectorAll('tbody tr').forEach(attachRowEvents);
 
-		// Checkbox events (live)
+
+		// Gắn sự kiện cho các checkbox và nút chọn tất cả
 		const refreshCheckboxHandlers = () => {
 			document.querySelectorAll('#cartTable .item-checkbox').forEach(cb => {
 				cb.removeEventListener('change', updateTotal);
@@ -269,11 +297,13 @@
 			updateTotal();
 		});
 
-		// Initial total calculation
+
+		// Tính tổng ban đầu
 		updateTotal();
 		updateHeaderCartCount();
 
-		// Checkout selected items -> sessionStorage then redirect
+
+		// Thanh toán các mục đã chọn -> lưu vào sessionStorage rồi chuyển hướng
 		checkoutBtn?.addEventListener('click', (e) => {
 			if (checkoutBtn.disabled) return;
 			const selected = [];

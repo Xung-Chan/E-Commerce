@@ -1,6 +1,6 @@
 <div class="container py-4 product-page">
     <div class="row g-4 align-items-stretch">
-        <!-- Images -->
+        <!-- Ảnh sản phẩm -->
         <div class="col-lg-6 h-100">
             <div class="ratio ratio-4x3 border rounded mb-3 bg-white d-flex align-items-center justify-content-center">
                 <img id="mainImage" src="{{product.images.[0]}}" alt="{{product.name}}"
@@ -18,7 +18,8 @@
             </div>
         </div>
 
-        <!-- Info -->
+
+        <!-- Thông tin sản phẩm -->
         <div class="col-lg-6 d-flex flex-column h-100 info-col">
             <div class="top-info">
                 <h2 class="fw-bold mb-3 text-primary">{{product.name}}</h2>
@@ -36,7 +37,8 @@
                 </div>
             </div>
 
-            <!-- Variants -->
+
+            <!-- Cấu hình -->
             <div class="mb-3">
                 <span class="text-muted">Cấu hình:</span>
                 <div class="btn-group-vertical w-100 mt-2" role="group" aria-label="Chọn cấu hình">
@@ -59,7 +61,8 @@
                 </div>
             </div>
 
-            <!-- Price and Stock Info -->
+
+            <!-- Giá và số lượng hiện có -->
             <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="text-muted">Giá:</span>
@@ -103,8 +106,7 @@
     </div>
 
 
-
-    <!-- Rating & Comment Section -->
+    <!-- Đánh giá & Bình luận -->
     <div class="mt-5">
         <h4 class="fw-bold mb-3">Đánh giá & Bình luận</h4>
 
@@ -130,6 +132,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="row g-4 d-flex align-items-stretch">
             {{#if showUserRatingForm}}
@@ -159,7 +162,8 @@
             </div>
             {{/if}}
 
-            <!-- Form bình luận chiếm phần còn lại -->
+
+            <!-- Form bình -->
             <div class="col mb-3 d-flex align-items-stretch">
                 <form id="commentForm" class="card flex-fill w-100">
                     <div class="card-body d-flex flex-column flex-md-row align-items-md-center gap-3">
@@ -173,8 +177,9 @@
             </div>
         </div>
 
+
+        <!-- Danh sách bình luận -->
         <div class="row g-4 align-items-start">
-            <!-- Danh sách bình luận -->
             <div class="col-12">
                 <div id="commentsList" class="d-flex flex-column gap-3">
                     {{#if comments.length}}
@@ -221,6 +226,7 @@
 </div>
 
 <script>
+    // Xử lý đánh giá sao
     document.querySelectorAll('.rating-stars').forEach(function (starsGroup) {
         const stars = starsGroup.querySelectorAll('input[type="radio"]');
         const labels = starsGroup.querySelectorAll('.star-label');
@@ -256,8 +262,8 @@
         });
     });
 
+    // Xử lý chọn cấu hình
     (function () {
-        // Xử lý variant selection
         const priceEl = document.getElementById('productPrice');
         const stockEl = document.getElementById('productStock');
         const qtyInput = document.getElementById('qtyInput');
@@ -388,6 +394,8 @@
         }
     })();
 </script>
+
+
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/socket_server.js"></script>
 <script>
@@ -425,7 +433,6 @@
         }
 
         function onNewRating(rating){
-            // rating might contain productId, newAverageRate or rate value
             const avg = rating.averageRate || rating.newAverage || rating.rate || null;
             if(avg !== null && ratingDisplayBox){
                 ratingDisplayBox.textContent = avg.toFixed(1).replace(/\.0$/,'');
@@ -433,12 +440,11 @@
             }
         }
 
-        // Join socket room
+
         if(window.joinProductRoom && productId){
             joinProductRoom(productId, onNewComment, onNewRating);
         }
 
-        // Comment submit via AJAX
         if(commentForm){
             commentForm.addEventListener('submit', async (e)=>{
                 e.preventDefault();
@@ -458,7 +464,6 @@
             });
         }
 
-        // Rating submit via AJAX
         if(ratingForm){
             ratingForm.addEventListener('submit', async (e)=>{
                 e.preventDefault();
@@ -479,7 +484,6 @@
             });
         }
 
-        // Delete user rating if button exists
         const deleteRatingBtn = document.getElementById('deleteRatingBtn');
         if(deleteRatingBtn){
             deleteRatingBtn.addEventListener('click', async ()=>{
@@ -489,7 +493,6 @@
                 try {
                     const resp = await fetch(`/api/ratings/${id}`, { method: 'DELETE', credentials: 'include' });
                     if(resp.ok){
-                        // Simple approach: reload page to show rating form again
                         location.reload();
                     }
                 } catch(e) {} finally {
