@@ -17,18 +17,13 @@ const VariantSchema = new Schema({
         required: true,
         min: 0
     },
-    discount: {
-        type: Number,
-        min: 0,
-        max: 50,
-        default: 0
-    },
+
     stock: {
         type: Number,
         required: true,
         min: 0
-    }
-    , deletedAt: {
+    },
+    deletedAt: {
         type: Date,
         default: null
     }

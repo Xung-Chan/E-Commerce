@@ -1,19 +1,19 @@
 import { CreateCouponDto } from '../dto/Create.dto.js';
-import { couponDao } from '../daos/Coupon.dao.js';
+import { couponDao, CouponStatus, ICoupon } from '../daos/Coupon.dao.js';
 import { UpdateCouponDto } from '../dto/Update.dto.js';
 import ApiError from '../utils/ApiError.js';
 import { CouponQuery, Pagination } from '../utils/Pagination.js';
 
-const couponService = {
-    createCoupon: async (data: CreateCouponDto) => {
-        return couponDao.create(data);
-    },
 
-    getAllCoupons: async () => {
-        return couponDao.list();
-    },
 
-    getCouponByQuery: async (query: CouponQuery) => {
+class CouponService {
+    async createCoupon(data: CreateCouponDto): Promise<ICoupon> {
+        const coupon = await couponDao.create(data);
+        return coupon;
+    }
+
+
+    async getCouponByQuery(query: CouponQuery): Promise<Pagination<ICoupon>> {
         const filter: {
             code?: string;
             status?: string;
@@ -36,37 +36,49 @@ const couponService = {
         const data = await couponDao.findBy(filter, options);
         const totalDatas = await couponDao.count(filter);
         return new Pagination(data, page, limit, totalDatas);
-    },
+    }
 
-    getCouponById: async (id: string) => {
-        return couponDao.readById(id);
-    },
+    async getCouponById(id: string): Promise<ICoupon> {
+        const coupon = await couponDao.readById(id);
+        if (!coupon) {
+            throw new ApiError(404, "Not Found", "Mã giảm giá không tồn tại hoặc đã hết hạn");
+        }
+        return coupon;
+    }
 
-    getCouponByCode: async (code: string) => {
-        const coupons = await couponDao.findBy({ code });
-        return coupons ? coupons[0] : null;
-    },
+    async getCouponByCode(code: string): Promise<ICoupon> {
+        const coupons = await couponDao.findOneBy({ code });
+        if (!coupons) {
+            throw new ApiError(404, "Not Found", "Mã giảm giá không tồn tại hoặc đã hết hạn");
+        }
+        return coupons;
+    }
 
-    deleteCouponById: async (id: string) => {
-        return couponDao.deleteById(id);
-    },
+    async deleteCouponById(id: string): Promise<boolean> {
+        return await couponDao.deleteById(id);
+    }
 
-    updateCouponById: async (id: string, data: Partial<UpdateCouponDto>) => {
-        return couponDao.patchById(id, data);
-    },
 
-    increaseCouponUsage: async (id: string) => {
+    async useCoupon(id: string, userId: string): Promise<boolean> {
         const coupon = await couponDao.findOneBy({ _id: id, status: "active" });
         if (!coupon) {
-            throw new ApiError(404, "Coupon Error", "Coupon not found or inactive");
+            throw new ApiError(404, "Coupon Error", "Mã giảm giá không tồn tại hoặc đã hết hạn");
         }
+
+        if (coupon.userIds.map(id => id.toString()).includes(userId)) {
+            throw new ApiError(400, "Coupon Error", "Bạn đã sử dụng mã giảm giá này rồi");
+        }
+
         coupon.used += 1;
         if (coupon.used == coupon.maxUse) {
-            coupon.status = "inactive";
+            coupon.status = CouponStatus.INACTIVE;
         }
-        return await couponDao.patchById(id, { used: coupon.used, status: coupon.status });
 
+
+
+        return await couponDao.patchById(coupon._id.toString(), { used: coupon.used, status: coupon.status, userIds: [...coupon.userIds, userId] });
     }
 
 }
+const couponService = new CouponService();
 export default couponService;

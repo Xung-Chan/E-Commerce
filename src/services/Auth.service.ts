@@ -49,6 +49,7 @@ const authService = {
 
     register: async (userData: CreateUserDto): Promise<any> => {
         const temporaryPassword = generateTemporaryPassword();
+        console.log("Temporary Password:", temporaryPassword);
         const hashedPassword = bcrypt.hashSync(temporaryPassword, 10);
         userData.password = hashedPassword;
         const user = await userDao.create(userData);

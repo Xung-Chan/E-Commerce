@@ -7,6 +7,7 @@ import { OrderQuery } from '../utils/Pagination.js';
 import orderService from '../services/Order.service.js';
 import { CreateOrderRequest } from '../dto/Request.dto.js';
 import { ErrorDictionary } from '../middleware/errorDictionary.js';
+import { createOrder } from '../middleware/validate.js';
 
 
 const orderController = {
@@ -15,20 +16,31 @@ const orderController = {
         if (!userId) {
             throw new ApiError(401, "Unauthorized", "No token provided");
         }
-        const data: CreateOrderRequest = req.body;
-        data.userId = userId;
-        if (!data.variants || data.variants.length === 0) {
-            throw new ApiError(400, "Bad Request", "Variants are required");
+        const {
+            variants,
+            shippingMethodId,
+            couponId,
+            isUseUserPoint,
+            address
+        } = req.body;
+
+        const errors = createOrder.validate({
+            userId,
+            variants,
+            shippingMethodId,
+            couponId,
+            isUseUserPoint,
+            address
+        }, { abortEarly: false }).error;
+        if (errors) {
+            throw new ApiError(400, "Bad Request", errors.details.map(detail => detail.message).join(", "));
         }
-        const order = await orderService.createOrder(data);
+        const order = await orderService.createOrder({ address, isUseUserPoint, userId, variants, shippingMethodId, couponId });
         res.status(201).json(new ApiResponse(true, 201, "Order created successfully", order));
     }),
 
-    getAllOrders: expressAsyncHandler(async (req: Request, res: Response) => {
-        const orders = await orderService.getAllOrders();
-        res.status(200).json(new ApiResponse(true, 200, "Orders fetched successfully", orders));
-    }),
 
+    //* Admin only
     searchOrder: expressAsyncHandler(async (req: Request, res: Response) => {
         const query: OrderQuery = req.query;
         console.log(query);
@@ -45,14 +57,6 @@ const orderController = {
         res.status(200).json(new ApiResponse(true, 200, "Order fetched successfully", order));
     }),
 
-    getOrderByUserId: expressAsyncHandler(async (req: Request, res: Response) => {
-        const userId = req.params.userId;
-        if (!userId) {
-            throw new ApiError(400, "Bad Request", "User ID is required");
-        }
-        const orders = await orderService.getOrderByUserId(userId);
-        res.status(200).json(new ApiResponse(true, 200, "Orders fetched successfully", orders));
-    }),
 
     deleteOrderById: expressAsyncHandler(async (req: Request, res: Response) => {
         const orderId = req.params.orderId;
@@ -76,12 +80,13 @@ const orderController = {
         res.status(200).json(new ApiResponse(true, 200, "Order status updated successfully", updatedOrder));
     }),
 
+    //* User only
     getMyOrders: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = (req as any).userId;
         if (!userId) {
             throw new ApiError(401, "Unauthorized", ErrorDictionary.UNAUTHORIZED);
         }
-        const orders = await orderService.getOrderByUserId(userId);
+        const orders = await orderService.getOrdersByQuery({ userId });
         res.status(200).json(new ApiResponse(true, 200, "Orders fetched successfully", orders));
     }),
 

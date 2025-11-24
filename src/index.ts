@@ -1,5 +1,5 @@
 import fs from "fs";
-import path from "path";
+import path, { format } from "path";
 import http from "http";
 import morgan from "morgan";
 import express from "express";
@@ -39,6 +39,10 @@ app.engine(
         extname: ".hbs",
         helpers: {
             json: (context: unknown) => JSON.stringify(context),
+            // cre:xungChan
+            formatDate: (date: string) => {
+                return new Date(date).toLocaleString("vi-VN")
+            },
             formatPrice: (price: unknown) => {
                 if (price === undefined || price === null || price === '') return '';
                 const num = typeof price === 'number' ? price : Number(price as any);

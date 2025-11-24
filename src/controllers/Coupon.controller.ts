@@ -16,11 +16,6 @@ const couponController = {
         res.status(201).json(new ApiResponse(true, 201, "Coupon created successfully", coupon));
     }),
 
-    getAllCoupons: expressAsyncHandler(async (req: Request, res: Response) => {
-        const coupons = await couponService.getAllCoupons();
-        res.status(200).json(new ApiResponse(true, 200, "Coupons fetched successfully", coupons));
-    }),
-
     getCouponById: expressAsyncHandler(async (req: Request, res: Response) => {
         const couponId = req.params.couponId;
         if (!couponId) {
@@ -33,6 +28,12 @@ const couponController = {
         res.status(200).json(new ApiResponse(true, 200, "Coupon fetched successfully", coupon));
     }),
 
+    // getAllCoupons: expressAsyncHandler(async (req: Request, res: Response) => {
+    //     const coupons = await couponService.getAllCoupons();
+    //     res.status(200).json(new ApiResponse(true, 200, "Coupons fetched successfully", coupons));
+    // }),
+
+
     deleteCouponById: expressAsyncHandler(async (req: Request, res: Response) => {
         const couponId = req.params.couponId;
         if (!couponId) {
@@ -43,11 +44,14 @@ const couponController = {
     }),
 
     getCouponByCode: expressAsyncHandler(async (req: Request, res: Response) => {
-        const couponCode = req.params.couponCode;
+        const couponCode = req.query.code as string;
         if (!couponCode) {
             throw new ApiError(400, "Bad Request", "Coupon code is required");
         }
         const coupon = await couponService.getCouponByCode(couponCode);
+        if (!coupon) {
+            throw new ApiError(404, "Not Found", "Không tìm thấy mã giảm giá");
+        }
         res.status(200).json(new ApiResponse(true, 200, "Coupon fetched successfully", coupon));
     }),
 

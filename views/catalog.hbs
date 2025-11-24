@@ -92,6 +92,8 @@
                         <option value="minPrice-asc" {{#if (eq query.sortBy "minPrice")}}{{#if (eq query.sortOrder "asc")}}selected{{/if}}{{/if}}>Giá thấp nhất</option>
                         <option value="name-asc" {{#if (eq query.sortBy "name")}}{{#if (eq query.sortOrder "asc")}}selected{{/if}}{{/if}}>Tên A-Z</option>
                         <option value="name-desc" {{#if (eq query.sortBy "name")}}{{#if (eq query.sortOrder "desc")}}selected{{/if}}{{/if}}>Tên Z-A</option>
+                        <option value="createdAt-desc" {{#if (eq query.sortBy "createdAt")}}{{#if (eq query.sortOrder "desc")}}selected{{/if}}{{/if}}>Mới nhất</option>
+                        <option value="createdAt-asc" {{#if (eq query.sortBy "createdAt")}}{{#if (eq query.sortOrder "asc")}}selected{{/if}}{{/if}}>Cũ nhất</option>
                     </select>
                     <button class="btn btn-sm btn-primary d-flex align-items-center gap-1" type="submit">
                         <i class="bi bi-arrow-down-up"></i> Áp dụng

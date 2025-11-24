@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 const SECRET_KEY = process.env.SECRET_KEY as string;
 const generateAccessToken = (payload: TokenPayload): string => {
     payload.type = 'access';
-    return jwt.sign(payload, SECRET_KEY, { expiresIn: '15m' });
+    return jwt.sign(payload, SECRET_KEY, { expiresIn: '1d' });
 };
 const generateRefreshToken = (payload: TokenPayload): string => {
     payload.type = 'refresh';
@@ -38,7 +38,7 @@ export const tokenService = {
     verifyToken: async (token: string): Promise<TokenPayload> => {
         const payload = jwt.verify(token, SECRET_KEY) as TokenPayload;
         const user = await userDao.findBy({ id: payload.userId });
-        if (!user ) {
+        if (!user) {
             throw new ApiError(401, "Unauthorized", "User not found");
         }
         return payload;

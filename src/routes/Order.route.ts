@@ -5,7 +5,6 @@ import { authJwt, authJwtAdmin } from "../middleware/authJwt.middleware.js";
 
 const orderRouter = Router();
 
-orderRouter.get("/", authJwtAdmin, orderController.getAllOrders);
 orderRouter.get("/search", authJwtAdmin, orderController.searchOrder);
 orderRouter.delete("/:orderId", authJwtAdmin, orderController.deleteOrderById);
 orderRouter.patch("/status/:orderId", authJwtAdmin, orderController.updateStatusById);
@@ -13,7 +12,6 @@ orderRouter.patch("/status/:orderId", authJwtAdmin, orderController.updateStatus
 orderRouter.post("/", authJwt, orderController.createOrder);
 orderRouter.get("/me", authJwt, orderController.getMyOrders);
 orderRouter.get("/:orderId", authJwt, orderController.getOrderById);
-orderRouter.get("/user/:userId", authJwt, orderController.getOrderByUserId);
 
 
 export default orderRouter;

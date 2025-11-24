@@ -2,6 +2,13 @@ import mongoose, { InferSchemaType, Query, QueryOptions, Schema } from "mongoose
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateCouponDto } from "../dto/Create.dto.js";
 import { WithId } from "../utils/WithId.js";
+import { CouponDto } from "../dto/Dto.js";
+
+export enum CouponStatus {
+    ACTIVE = "active",
+    INACTIVE = "inactive"
+}
+
 const CouponSchema = new Schema(
     {
         code: {
@@ -12,7 +19,8 @@ const CouponSchema = new Schema(
         discount: {
             type: Number,
             required: true,
-            min: 1
+            min: 1,
+            max: 50
         },
         maxUse: {
             type: Number,
@@ -26,16 +34,14 @@ const CouponSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ["active", "inactive"],
-            default: "active"
+            enum: [CouponStatus.ACTIVE, CouponStatus.INACTIVE],
+            default: CouponStatus.ACTIVE
         },
-        orders: {
-            type: [{
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Order",
-            }],
-            default: []
-        },
+        userIds: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: null
+        }],
         deletedAt: {
             type: Date,
             default: null
@@ -50,6 +56,13 @@ const CouponSchema = new Schema(
 
 const Coupon = mongoose.model("Coupon", CouponSchema)
 class CouponDao implements CRUD {
+
+
+    async create(item: CreateCouponDto): Promise<ICoupon> {
+        const doc = await Coupon.create(item);
+        return doc.toObject() as ICoupon;
+    }
+
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
         const result = await Coupon.updateOne({
             _id: id,
@@ -57,32 +70,43 @@ class CouponDao implements CRUD {
         }, { $set: item });
         return result.modifiedCount > 0;
     }
+
     async findBy(query: Partial<any>, options: QueryOptions = {}): Promise<ICoupon[]> {
-        return Coupon.find({
+        const coupons = await Coupon.find({
             ...query,
             deletedAt: null
         }, null, options).exec();
+
+        return coupons.map(coupon => coupon.toObject() as ICoupon);
     }
+
     async findOneBy(query: Partial<any>): Promise<ICoupon | null> {
-        return await Coupon.findOne({
+        const coupon = await Coupon.findOne({
             ...query,
             deletedAt: null
         }).exec();
+        return coupon ? coupon.toObject() as ICoupon : null;
     }
-    async create(item: CreateCouponDto): Promise<any> {
-        return await Coupon.create(item);
-    }
+
+
     async readById(id: string): Promise<ICoupon | null> {
-        return await Coupon.findById(id).exec();
+        const coupon = await Coupon.findById(id).exec();
+        return coupon ? coupon.toObject() as ICoupon : null;
     }
+
+
 
     async deleteById(id: string): Promise<boolean> {
         const result = await Coupon.updateOne({ _id: id, deletedAt: null }, { $set: { deletedAt: new Date() } });
         return result.modifiedCount > 0;
     }
+
+
     async list(): Promise<any[]> {
         return await Coupon.find().exec();
     }
+
+
 
     async count(query: Partial<any>): Promise<number> {
         return await Coupon.countDocuments({
@@ -93,4 +117,4 @@ class CouponDao implements CRUD {
 
 }
 export const couponDao = new CouponDao();
-export type ICoupon = WithId<InferSchemaType<typeof CouponSchema>>;
+export type ICoupon = WithId<InferSchemaType<typeof CouponSchema>> & { createdAt: Date, updatedAt: Date };

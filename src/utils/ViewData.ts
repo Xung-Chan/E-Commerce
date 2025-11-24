@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { createApi, unwrap } from "./ApiClient.js";
 import { token } from "morgan";
+import { UserResponse } from "../dto/Response.dto.js";
 
 export const getCommonViewData = async (req: Request) => {
   let categories: any[] = [];
@@ -18,15 +19,15 @@ export const getCommonViewData = async (req: Request) => {
   } catch (e) {
     console.warn('Categories failed:', (e as any)?.message);
   }
-  
+
   // Profile + cart chỉ khi có token
   const tokenCookie = (req as any)?.cookies?.token;
   if (tokenCookie) {
     // Profile
     try {
       const me = await api.get('/api/users/profile/me');
-      user = unwrap(me);
-      userId = userId || user?._id || user?.id || null;
+      user = unwrap<UserResponse>(me);
+      userId = user.id;
       isLoggedIn = !!user;
     } catch (e) {
       console.warn('Profile failed:', (e as any)?.message);

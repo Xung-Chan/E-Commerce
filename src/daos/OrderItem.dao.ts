@@ -33,16 +33,18 @@ const OrderItemSchema = new Schema({
 const OrderItem = mongoose.model("OrderItem", OrderItemSchema);
 class OrderItemDao {
     async create(data: CreateOrderItemDto): Promise<IOrderItem> {
-        return OrderItem.create(data);
+        const orderItem = await OrderItem.create(data);
+        return orderItem.toObject();
     }
     async readById(id: string): Promise<IOrderItem | null> {
-        return OrderItem.findById(id).exec();
+        const orderItem = await OrderItem.findById(id).exec();
+        return orderItem ? orderItem.toObject() : null;
     }
     async deleteById(id: string): Promise<boolean> {
         const result = await OrderItem.deleteOne({ _id: id })
         return result.deletedCount > 0;
     }
-    async findBy(query: Partial<any>): Promise<IOrderItem[] | null> {
+    async findBy(query: Partial<any>): Promise<IOrderItem[]> {
         return OrderItem.find(query).exec();
     }
     async findOne(query: Partial<any>): Promise<IOrderItem | null> {

@@ -17,8 +17,8 @@ interface CreateCategoryDto {
     image: string;
 }
 interface CreateCommentDto {
-    userId: string;
-    fullName: string;
+    userId?: string;
+    fullName?: string;
     productId: string;
     content: string;
 }
@@ -29,15 +29,13 @@ interface CreateCouponDto {
 }
 interface CreateOrderDto {
     userId: string;
-    shippingMethod: string;
-    paymentMethod: string;
-
     couponId?: string | null;
-    totalPrice?: number;
-    totalDiscount?: number;
-    shippingFee?: number;
-    totalPay?: number;
-
+    totalPrice: number;
+    totalDiscount: number;
+    totalPay: number;
+    shippingFee: number;
+    shippingMethod: string;
+    address: string;
 }
 interface CreateProductDto {
     name: string;
