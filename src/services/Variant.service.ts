@@ -1,6 +1,7 @@
 import { variantDao } from "../daos/Variant.dao.js";
 import { CreateVariantDto } from "../dto/Create.dto.js";
 import { UpdateVariantDto } from "../dto/Update.dto.js";
+import { ErrorDictionary } from "../middleware/errorDictionary.js";
 import ApiError from "../utils/ApiError.js";
 
 const variantService = {
@@ -19,7 +20,11 @@ const variantService = {
         return variantDao.findBy({});
     },
     getVariantById: async (id: string) => {
-        return variantDao.readById(id);
+        const variant = await variantDao.readById(id);
+        if (!variant) {
+            throw new ApiError(404, "Not Found", ErrorDictionary.VARIANT_NOT_FOUND);
+        }
+        return variant;
     },
     deleteVariantById: async (id: string) => {
         return variantDao.deleteById(id);

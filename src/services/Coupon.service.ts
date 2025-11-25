@@ -7,7 +7,24 @@ import { CouponQuery, Pagination } from '../utils/Pagination.js';
 
 
 class CouponService {
+    private async generateCouponCode(): Promise<string> {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        while (true) {
+            let code = '';
+            for (let i = 0; i < 5; i++) {
+                code += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+
+            const existingCoupon = await couponDao.findOneBy({ code });
+            if (!existingCoupon) {
+                return code;
+            }
+        }
+    }
     async createCoupon(data: CreateCouponDto): Promise<ICoupon> {
+        if (!data.code) {
+            data.code = await this.generateCouponCode();
+        }
         const coupon = await couponDao.create(data);
         return coupon;
     }

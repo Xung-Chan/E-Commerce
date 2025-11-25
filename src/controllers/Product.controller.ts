@@ -9,7 +9,8 @@ import ApiError from "../utils/ApiError.js";
 import { Pagination, ProductQuery } from "../utils/Pagination.js";
 import categoryService from "../services/Category.service.js";
 import { ICategory } from "../daos/Category.dao.js";
-import { CreateProductRequest } from "../dto/Request.dto.js";
+import { CreateProductRequest, UpdateProductRequest } from "../dto/Request.dto.js";
+import { IProduct } from "../daos/Product.dao.js";
 const productController = {
     createProduct: expressAsyncHandler(async (req: Request, res: Response) => {
         const productData: CreateProductRequest = req.body;
@@ -22,10 +23,6 @@ const productController = {
         res.status(201).json(new ApiResponse(true, 201, "Product created successfully", product));
     }),
 
-    getAllProducts: expressAsyncHandler(async (req: Request, res: Response) => {
-        const products = await productService.getAllProducts();
-        res.status(200).json(new ApiResponse(true, 200, "Products fetched successfully", products));
-    }),
 
     searchProducts: expressAsyncHandler(async (req: Request, res: Response) => {
         const query: ProductQuery = req.query;
@@ -71,8 +68,8 @@ const productController = {
     }),
 
     getProductForLandingPage: expressAsyncHandler(async (req: Request, res: Response) => {
-        const bestSellers: Pagination = await productService.getProductsByTag("best-seller", { limit: "5" });
-        const newArrivals: Pagination = await productService.getProductsByTag("new-arrival", { limit: "5" });
+        const bestSellers: Pagination<IProduct> = await productService.getProductsByTag("best-seller", { limit: "5" });
+        const newArrivals: Pagination<IProduct> = await productService.getProductsByTag("new-arrival", { limit: "5" });
         const categories: ICategory[] = await categoryService.getCategoriesForLandingPage();
         const categoryProducts = [];
         for (const category of categories) {
@@ -93,7 +90,7 @@ const productController = {
 
     updateProductById: expressAsyncHandler(async (req: Request, res: Response) => {
         const productId = req.params.productId;
-        const updateData: UpdateProductDto = req.body;
+        const updateData: UpdateProductRequest = req.body;
         if (!productId) {
             throw new ApiError(400, "Bad Request", "Product ID is required");
         }

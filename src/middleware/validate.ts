@@ -14,6 +14,12 @@ const createOrder = Joi.object({
     address: Joi.string().required(),
 });
 
+const updateUserStatus = Joi.object({
+    userId: Joi.string().required(),
+    status: Joi.string().valid("active", "inactive", "banned").required(),
+});
+
 export {
-    createOrder
+    createOrder,
+    updateUserStatus,
 };

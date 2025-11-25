@@ -1,12 +1,12 @@
 import express from "express";
 import userController from "../controllers/User.controller.js";
-import { authJwt } from "../middleware/authJwt.middleware.js";
+import { authJwt, authJwtAdmin } from "../middleware/authJwt.middleware.js";
 const userRouter = express.Router();
 
 userRouter.get("/", authJwt, userController.getAllUsers);
 userRouter.get("/:userId", authJwt, userController.getUserById);
 userRouter.patch("/:userId", authJwt, userController.updateUserById);
-userRouter.patch("/ban/:userId", authJwt, userController.banUserById);
+userRouter.patch("/status/:userId", authJwtAdmin, userController.updateUserStatusById);
 userRouter.get("/profile/me", authJwt, userController.getMyProfile);
 
 
