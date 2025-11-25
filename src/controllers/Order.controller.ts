@@ -14,7 +14,6 @@ const orderController = {
     createOrder: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = (req as any).userId;
 
-        console.log('Order Request Body:', req.body);
         if (!userId) {
             throw new ApiError(401, "Unauthorized", "No token provided");
         }
@@ -38,8 +37,7 @@ const orderController = {
             throw new ApiError(400, "Bad Request", errors.details.map(detail => detail.message).join(", "));
         }
         const order = await orderService.createOrder({ address, isUseUserPoint, userId, variants, shippingMethodId, couponId });
-        
-        console.log('Created Order:', order);
+
         res.status(201).json(new ApiResponse(true, 201, "Order created successfully", order));
     }),
 

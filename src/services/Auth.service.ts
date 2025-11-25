@@ -43,17 +43,27 @@ const authService = {
         if (user.status == UserStatus.BANNED) {
             throw new ApiError(403, "Forbidden", "Tài khoản của bạn đã bị khóa");
         }
+
+        if (user.status == UserStatus.INACTIVE) {
+            throw new ApiError(403, "Forbidden", "Tài khoản của bạn chưa được kích hoạt");
+        }
+
         const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user._id.toString(), email: user.email, role: user.role });
         await tokenService.saveToken(user._id.toString(), refreshToken);
         return new LoginResponseDto(accessToken, refreshToken);
     },
 
 
-    register: async (userData: CreateUserDto): Promise<any> => {
+    register: async (userData: CreateUserDto, isAnonymous: boolean = false): Promise<any> => {
         const temporaryPassword = generateTemporaryPassword();
         console.log("Temporary Password:", temporaryPassword);
         const hashedPassword = bcrypt.hashSync(temporaryPassword, 10);
         userData.password = hashedPassword;
+        if (isAnonymous) {
+            console.log("Registering anonymous user");
+            const user = await userDao.createAnonymous(userData);
+            return user;
+        }
         const user = await userDao.create(userData);
         const payload: TokenPayload = {
             userId: user._id.toString(),
@@ -62,13 +72,15 @@ const authService = {
             type: 'reset'
         };
         const token = jwt.sign(payload, process.env.SECRET_KEY as string, { expiresIn: '5m' });
-        console.log(token);
         const link = `${process.env.BASE_URL}/reset-password?token=${token}`;
         await tokenService.saveToken(user._id.toString(), token);
         sendMail(user.email, link, "register", { template_password: temporaryPassword });
         return user;
     },
 
+    activeAccount: async (token: string): Promise<void> => {
+        
+    },
 
     forgotPassword: async (email: string): Promise<void> => {
         const user = await userDao.findOne({ email });

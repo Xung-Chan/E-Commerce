@@ -48,7 +48,6 @@ class OrderService {
             totalPrice += variant.price * item.quantity;
             const discountAmount = variant.price * product.discount / 100;
             totalDiscount += item.quantity * discountAmount;
-            console.log("Discount Amount:", discountAmount);
 
             await variantDao.patchById(variant._id.toString(), {
                 stock: variant.stock - item.quantity
@@ -87,16 +86,19 @@ class OrderService {
             await couponService.useCoupon(coupon._id.toString(), data.userId);
             const discountAmount = coupon.discount * totalPrice / 100;
             totalDiscount += discountAmount;
-            totalPay -= discountAmount;
         }
+        const tax = totalPrice * 0.1; // 10% tax
+
+        totalPay = totalPrice - totalDiscount + shipping.price + tax;
+
 
         if (data.isUseUserPoint) {
             const pointPrice = user.point * 1000;
 
             if (pointPrice >= totalPay) {
                 const usedPoints = Math.floor(totalPay / 1000);
+                totalDiscount += totalPay;
                 totalPay = 0;
-                totalDiscount += usedPoints * 1000;
                 await userDao.patchById(user._id.toString(), { point: user.point - usedPoints });
             } else {
                 totalPay -= pointPrice;
@@ -104,10 +106,6 @@ class OrderService {
                 await userDao.patchById(user._id.toString(), { point: 0 });
             }
         }
-        totalPay = totalPrice - totalDiscount + shipping.price;
-
-        const tax = totalPrice * 0.1; // 10% tax
-        totalPay += tax;
 
         const orderData: CreateOrderDto = {
             userId: data.userId,
@@ -120,7 +118,6 @@ class OrderService {
             tax,
             address: data.address
         };
-
         const order = await orderDao.create(orderData);
 
         await statusHistoryDao.create({

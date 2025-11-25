@@ -77,6 +77,18 @@ class UserDao implements CRUD {
         return user ? (user.toObject() as IUser) : null;
     }
 
+    async createAnonymous(item: CreateUserDto): Promise<IUser> {
+        const user = await User.create({
+            email: item.email,
+            password: item.password,
+            fullName: "Anonymous",
+            addresses: [{ address: item.address }],
+            role: "anonymous",
+            status: UserStatus.INACTIVE,
+        })
+        return user.toObject() as IUser;
+    }
+
     async create(item: CreateUserDto): Promise<IUser> {
 
         try {

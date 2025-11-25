@@ -18,8 +18,8 @@ const authController = {
 
 
     register: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
-        const { email, fullName, address } = req.body;
-        const user = await authService.register({ email, password: null, fullName, address });
+        const { email, fullName, address, isAnonymous } = req.body;
+        const user = await authService.register({ email, password: null, fullName, address }, isAnonymous);
         res.status(201).json(new ApiResponse(true, 201, "User created successfully", user));
     }),
 
@@ -29,6 +29,7 @@ const authController = {
         await authService.forgotPassword(email);
         res.status(200).json(new ApiResponse(true, 200, "Password reset email sent", null));
     }),
+
     resetPassword: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { token, newPassword } = req.body;
         if (typeof newPassword !== "string") {
@@ -38,6 +39,8 @@ const authController = {
 
         res.status(200).json(new ApiResponse(true, 200, "Password has been reset successfully", null));
     }),
+
+
     changePassword: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         console.log('Changing password...');
         const userId = (req as any).userId;

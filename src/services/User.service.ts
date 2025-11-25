@@ -9,14 +9,7 @@ import { variantDao } from "../daos/Variant.dao.js";
 import { CartResponse, UserResponse } from "../dto/Response.dto.js";
 import { ErrorDictionary } from "../middleware/errorDictionary.js";
 const userService = {
-    createUser: async (data: CreateUserDto): Promise<boolean> => {
-        const user = await userDao.create({
-            email: data.email, password: null, fullName: data.fullName, address: data.address
-        })
 
-        return !!user
-
-    },
 
     getAllUsers: async (): Promise<any[]> => {
         const users = await userDao.list();
