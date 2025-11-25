@@ -23,7 +23,7 @@ interface CreateCommentDto {
     content: string;
 }
 interface CreateCouponDto {
-    code: string;
+    code?: string;
     discount: number;
     maxUse: number;
 }
@@ -63,7 +63,6 @@ interface CreateVariantDto {
     productId: string;
     distinctFeature: string;
     price: number;
-    discount?: number;
     stock: number;
 }
 interface CreateOrderItemDto {

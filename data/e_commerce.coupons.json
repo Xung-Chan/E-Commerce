@@ -1,220 +1,90 @@
 [{
   "_id": {
-    "$oid": "68ca518108e9904136cc0b37"
+    "$oid": "69255227778e0e6adb4ad355"
   },
-  "code": "A1B2C",
-  "discount": 10,
+  "code": "O1SM4",
+  "discount": 50,
   "maxUse": 10,
   "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
+  "status": "active",
+  "userIds": [],
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2025-11-25T06:52:23.481Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-25T06:52:23.481Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68ca518108e9904136cc0b38"
+    "$oid": "69255230778e0e6adb4ad359"
   },
-  "code": "X9Y8Z",
-  "discount": 15,
+  "code": "O8Y7C",
+  "discount": 50,
   "maxUse": 10,
   "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
+  "status": "active",
+  "userIds": [],
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2025-11-25T06:52:32.828Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-25T06:52:32.828Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68ca518108e9904136cc0b39"
+    "$oid": "69255231778e0e6adb4ad35d"
   },
-  "code": "Q7W8E",
-  "discount": 20,
+  "code": "I22GY",
+  "discount": 50,
   "maxUse": 10,
   "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
+  "status": "active",
+  "userIds": [],
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2025-11-25T06:52:33.623Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-25T06:52:33.623Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68ca518108e9904136cc0b3a"
+    "$oid": "69255232778e0e6adb4ad361"
   },
-  "code": "M3N4P",
-  "discount": 5,
+  "code": "SKBQA",
+  "discount": 50,
   "maxUse": 10,
   "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
+  "status": "active",
+  "userIds": [],
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2025-11-25T06:52:34.384Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-25T06:52:34.384Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68ca518108e9904136cc0b3b"
+    "$oid": "69255233778e0e6adb4ad365"
   },
-  "code": "Z2X3C",
-  "discount": 25,
+  "code": "ROMAN",
+  "discount": 50,
   "maxUse": 10,
   "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b3c"
+  "status": "active",
+  "userIds": [],
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2025-11-25T06:52:35.099Z"
   },
-  "code": "B7K2L",
-  "discount": 12,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b3d"
-  },
-  "code": "R5T8U",
-  "discount": 8,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b3e"
-  },
-  "code": "S6D3F",
-  "discount": 18,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b3f"
-  },
-  "code": "V4C9X",
-  "discount": 22,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b40"
-  },
-  "code": "L8M2N",
-  "discount": 7,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b41"
-  },
-  "code": "P1Q2R",
-  "discount": 14,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b42"
-  },
-  "code": "E5F6G",
-  "discount": 11,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b43"
-  },
-  "code": "H7J8K",
-  "discount": 16,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b44"
-  },
-  "code": "T3Y6U",
-  "discount": 9,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b45"
-  },
-  "code": "W2E4R",
-  "discount": 13,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b46"
-  },
-  "code": "C8V7B",
-  "discount": 17,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b47"
-  },
-  "code": "N5M6L",
-  "discount": 19,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b48"
-  },
-  "code": "G3H4J",
-  "discount": 21,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b49"
-  },
-  "code": "K2L3M",
-  "discount": 23,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
-},
-{
-  "_id": {
-    "$oid": "68ca518108e9904136cc0b4a"
-  },
-  "code": "U1I2O",
-  "discount": 24,
-  "maxUse": 10,
-  "used": 0,
-  "createdAt": "2025-09-17T00:00:00.000Z",
-  "orders": []
+  "updatedAt": {
+    "$date": "2025-11-25T06:52:35.099Z"
+  }
 }]

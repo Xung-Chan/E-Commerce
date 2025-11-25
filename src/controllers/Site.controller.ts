@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Pagination, ProductQuery } from "../utils/Pagination.js";
 import { getCommonViewData, renderWithCommon } from "../utils/ViewData.js";
 import { apiUrl, createApi, unwrap } from "../utils/ApiClient.js";
+import { LoginResponseDto } from "../dto/Response.dto.js";
 
 const siteController = {
     // --- LOGIN ---
@@ -26,7 +27,7 @@ const siteController = {
             const api = createApi();
             const resp = await api.post("/api/auth/login", { email: email.trim(), password: password.trim() });
 
-            const data = unwrap<{ accessToken?: string; token?: string }>(resp);
+            const data = unwrap<LoginResponseDto>(resp);
             const token = (data as any)?.accessToken || (data as any)?.token;
 
             if (token) res.cookie("token", token, { httpOnly: true });

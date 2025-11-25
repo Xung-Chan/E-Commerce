@@ -6,6 +6,12 @@ import CRUD from "../utils/CRUD.interface.js";
 import { WithId } from "../utils/WithId.js";
 import ApiError from "../utils/ApiError.js";
 
+export enum UserStatus {
+    ACTIVE = "active",
+    INACTIVE = "inactive",
+    BANNED = "banned"
+}
+
 const UserSchema = new Schema({
     email: {
         type: String,
@@ -36,8 +42,8 @@ const UserSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ["active", "inactive", "banned"],
-        default: "active"
+        enum: Object.values(UserStatus),
+        default: UserStatus.ACTIVE
 
     },
     point: {

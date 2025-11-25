@@ -5,7 +5,6 @@ import { uploadMultiple } from "../middleware/multer.middleware.js";
 
 const productRouter = Router();
 
-productRouter.get("/", productController.getAllProducts);
 productRouter.get("/landing", productController.getProductForLandingPage);
 productRouter.get("/search", productController.searchProducts);
 productRouter.post("/", authJwtAdmin, uploadMultiple, productController.createProduct);

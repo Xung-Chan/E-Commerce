@@ -25,11 +25,9 @@ interface UpdateProductDto {
     categoryId?: string;
     description?: string;
     images?: string[];
-    variants?: {
-        distinctFeature: string;
-        price: number;
-        stock: number
-    }[];
+    discount?: number;
+    minPrice?: number;
+    maxPrice?: number;
 }
 interface UpdateCouponDto {
     discount?: number;
