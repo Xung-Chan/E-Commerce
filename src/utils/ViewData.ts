@@ -9,6 +9,7 @@ export const getCommonViewData = async (req: Request) => {
   let userId = (req as any).userId || null;
   let isLoggedIn = (req as any).isLoggedIn || false;
   let totalCartItems = 0;
+  let points = 0;
 
   const api = createApi(req);
 
@@ -20,7 +21,7 @@ export const getCommonViewData = async (req: Request) => {
     console.warn('Categories failed:', (e as any)?.message);
   }
 
-  // Profile + cart chỉ khi có token
+  // User
   const tokenCookie = (req as any)?.cookies?.token;
   if (tokenCookie) {
     // Profile
@@ -29,6 +30,7 @@ export const getCommonViewData = async (req: Request) => {
       user = unwrap<UserResponse>(me);
       userId = user.id;
       isLoggedIn = !!user;
+      points = user.point || 0;
     } catch (e) {
       console.warn('Profile failed:', (e as any)?.message);
     }
@@ -40,7 +42,7 @@ export const getCommonViewData = async (req: Request) => {
       totalCartItems = 0;
     }
   }
-  return { categories, user, userId, isLoggedIn, totalCartItems };
+  return { categories, user, userId, isLoggedIn, totalCartItems, points };
 };
 
 export const renderWithCommon = async (

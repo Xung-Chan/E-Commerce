@@ -18,7 +18,6 @@ const siteController = {
         });
     },
 
-
     // Login Form
     loginPost: async (req: Request, res: Response) => {
         const { email, password } = req.body;
@@ -44,6 +43,7 @@ const siteController = {
     },
 
 
+
     // --- REGISTER ---
     // Register page
     register: async (req: Request, res: Response) => {
@@ -51,7 +51,6 @@ const siteController = {
             title: "Đăng ký | CoreStation"
         });
     },
-
 
     // Register form
     registerPost: async (req: Request, res: Response) => {
@@ -85,6 +84,7 @@ const siteController = {
     },
 
 
+
     // --- FORGOT PASSWORD ---
     // Forgot Password Page
     forgotPassword: async (req: Request, res: Response) => {
@@ -92,8 +92,7 @@ const siteController = {
             title: 'Quên mật khẩu | CoreStation'
         });
     },
-
-
+ 
     // Forgot Password Form
     forgotPasswordPost: async (req: Request, res: Response) => {
         const { email } = req.body as { email: string };
@@ -118,6 +117,8 @@ const siteController = {
     },
 
 
+
+    // --- RESET PASSWORD ---
     // Reset Password Page
     resetPassword: async (req: Request, res: Response) => {
         const { token = '' } = req.query as { token?: string };
@@ -127,7 +128,6 @@ const siteController = {
             token
         });
     },
-
 
     // Reset Password Form
     resetPasswordPost: async (req: Request, res: Response) => {
@@ -170,11 +170,13 @@ const siteController = {
     },
 
 
+
     // --- LOGOUT ---
     logout: async (req: Request, res: Response) => {
         res.clearCookie("token");
         return res.redirect("/");
     },
+
 
 
     // --- PROFILE ---
@@ -188,8 +190,7 @@ const siteController = {
         });
     },
 
-
-    // Thêm địa chỉ
+    // Add address
     profileAddAddress: async (req: Request, res: Response) => {
         const { newAddress } = req.body;
 
@@ -205,8 +206,7 @@ const siteController = {
         }
     },
 
-
-    // Xóa địa chỉ
+    // Delete address
     profileDeleteAddress: async (req: Request, res: Response) => {
         const { addressId } = req.params;
 
@@ -238,8 +238,7 @@ const siteController = {
         }
     },
 
-
-    // Cập nhật địa chỉ
+    // Update address
     profileUpdateAddress: async (req: Request, res: Response) => {
         const { addressId } = req.params;
         const { newAddress } = req.body;
@@ -263,8 +262,7 @@ const siteController = {
         }
     },
 
-
-    // Cập nhật thông tin người dùng
+    // Update user information
     profileUpdateUser: async (req: Request, res: Response) => {
         const { email = "", fullName = "" } = req.body as { email?: string; fullName?: string };
         const trimmed = { email: email.trim(), fullName: fullName.trim() };
@@ -285,8 +283,7 @@ const siteController = {
         }
     },
 
-
-    // Cập nhật mật khẩu
+    // Update password
     profileChangePassword: async (req: Request, res: Response) => {
         const { oldPassword = "", newPassword = "", confirmPassword = "" } = req.body as any;
         const curr = oldPassword.trim();
@@ -318,8 +315,7 @@ const siteController = {
         }
     },
 
-
-    // --- Home ---
+    // --- LANDING PAGE ---
     home: async (req: Request, res: Response) => {
         const api = createApi(req);
         const landing = unwrap(await api.get("/api/products/landing"));
@@ -359,9 +355,10 @@ const siteController = {
     },
 
 
+    
     // --- CATALOG ---
     catalog: async (req: Request, res: Response) => {
-        // Get query params
+        // Query parameters
         const query: ProductQuery = req.query as ProductQuery;
         const page = Number(query.page) || 1;
         const limit = Number(query.limit) || 9;
@@ -392,7 +389,8 @@ const siteController = {
         console.log('Pagination data:', paginationData);
         const products = Array.isArray(paginationData?.datas) ? paginationData.datas : [];
 
-        // Build base query and render with API pagination data
+
+        // Build base query string
         const filteredQuery: Record<string, string> = {};
         Object.entries({ sortBy, sortOrder, categoryId, minPrice, maxPrice, name, rating }).forEach(([k, v]) => {
             if (v !== undefined && v !== null && v !== '') {
@@ -403,6 +401,8 @@ const siteController = {
             .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
             .join('&');
 
+
+        // Render
         return renderWithCommon(req, res, 'catalog', {
             title: 'Danh mục sản phẩm | CoreStation',
             products_catalog: products,
@@ -420,6 +420,7 @@ const siteController = {
     },
 
 
+
     // --- PRODUCT DETAIL ---
     product: async (req: Request, res: Response) => {
         const { productId } = req.params;
@@ -431,7 +432,6 @@ const siteController = {
             const product = unwrap(productRes);
             const selectedVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
             const productRating = product.rate;
-            console.log('Product data:', product);
 
             const categoryRes = await api.get(`${apiUrl}/api/categories/${product.categoryId}`);
             const category = unwrap(categoryRes);
@@ -514,6 +514,7 @@ const siteController = {
     },
 
 
+
     // --- CART ---
     // Cart page
     cart: async (req: Request, res: Response) => {
@@ -523,7 +524,6 @@ const siteController = {
             const api = createApi(req)
             const cartRes = await api.get(`${apiUrl}/api/users/cart/me`);
             const cart = unwrap(cartRes);
-            console.log('Cart data:', cart);
 
             return res.render('cart', {
                 title: 'Giỏ hàng | CoreStation',
@@ -536,24 +536,40 @@ const siteController = {
     },
 
 
-    // Checkout
+
+    
+    // --- CHECKOUT ---
     checkout: async (req: Request, res: Response) => {
         renderWithCommon(req, res, 'checkout', {
             title: 'Thanh toán | CoreStation'
         });
     },
 
-
     // Order result page
     orderResult: async (req: Request, res: Response) => {
         const { orderId } = req.params as { orderId?: string };
-        // if (!orderId) {
-        //     return res.redirect('/');
-        // }
-        renderWithCommon(req, res, 'order_result', {
-            title: 'Đơn hàng thành công | CoreStation',
-            orderId
-        });
+        
+        if (!orderId) {
+            return res.redirect('/');
+        }
+
+        try {
+            const api = createApi(req);
+            const orderRes = await api.get(`${apiUrl}/api/orders/${orderId}`);
+            const order = unwrap(orderRes);
+
+            renderWithCommon(req, res, 'order_result', {
+                title: 'Đơn hàng thành công | CoreStation',
+                orderId,
+                order
+            });
+        } catch (error: any) {
+            return renderWithCommon(req, res, 'order_result', {
+                title: 'Đơn hàng thành công | CoreStation',
+                orderId,
+                errorMessage: error?.response?.data?.message || 'Không thể tải thông tin đơn hàng'
+            });
+        }
     },
 
 

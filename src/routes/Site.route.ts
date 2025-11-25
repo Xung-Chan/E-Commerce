@@ -48,7 +48,7 @@ siteRouter.get('/cart', siteController.cart);
 siteRouter.get('/checkout', siteController.checkout);
 
 // Order Result
-siteRouter.get('/order/result/', siteController.orderResult);
+siteRouter.get('/order/result/:orderId', siteController.orderResult);
 siteRouter.get('/order/history', isLoggedIn, siteController.orderHistory);
 
 

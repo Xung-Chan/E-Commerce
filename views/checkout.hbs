@@ -1,9 +1,9 @@
 <div class="container py-4" id="checkoutPage">
 	<h2 class="fw-bold text-primary mb-4">Thanh toán</h2>
-
 	<div class="row g-4">
-		<!-- Left Column: Details -->
+		{{!-- Details information --}}
 		<div class="col-lg-8 d-flex flex-column gap-4">
+
 			<!-- Shipping Address -->
 			<div class="card shadow-sm">
 				<div class="card-header bg-white fw-semibold">Địa chỉ giao hàng</div>
@@ -21,29 +21,21 @@
 				</div>
 			</div>
 
-			<!-- Payment Methods -->
+			{{!-- Payment Methods --}}
 			<div class="card shadow-sm">
 				<div class="card-header bg-white fw-semibold">Phương thức thanh toán</div>
 				<div class="card-body" id="paymentSection">
 					<div class="d-flex flex-column gap-2" id="paymentMethods">
 						<div class="form-check">
-							<input class="form-check-input" type="radio" name="paymentMethod" id="pmCOD" value="cod" checked>
+							<input class="form-check-input" type="radio" name="paymentMethod" id="pmCOD" value="cod"
+								checked>
 							<label class="form-check-label" for="pmCOD">Thanh toán khi nhận hàng (COD)</label>
 						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="paymentMethod" id="pmBank" value="bank">
-							<label class="form-check-label" for="pmBank">Chuyển khoản ngân hàng</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="paymentMethod" id="pmCard" value="card">
-							<label class="form-check-label" for="pmCard">Thẻ tín dụng / ghi nợ</label>
-						</div>
 					</div>
-					<div id="paymentExtra" class="mt-3 small text-muted"></div>
 				</div>
 			</div>
 
-			<!-- Shipping Methods -->
+			{{!-- Shipping Methods --}}
 			<div class="card shadow-sm">
 				<div class="card-header bg-white fw-semibold">Phương thức vận chuyển</div>
 				<div class="card-body" id="shippingMethodSection">
@@ -54,30 +46,50 @@
 				</div>
 			</div>
 
-			<!-- Coupon & Loyalty -->
+			{{!-- Coupon --}}
 			<div class="card shadow-sm">
-				<div class="card-header bg-white fw-semibold">Mã giảm giá & Khách hàng thân thiết</div>
-				<div class="card-body" id="discountSection">
+				<div class="card-header bg-white fw-semibold">Mã giảm giá (Coupon)</div>
+				<div class="card-body" id="couponSection">
 					<div class="mb-3">
 						<label for="couponInput" class="form-label">Mã coupon:</label>
 						<div class="input-group">
-							<input type="text" id="couponInput" class="form-control" placeholder="Nhập mã">
-							<button class="btn btn-outline-primary" id="applyCouponBtn">Áp dụng</button>
+							<input type="text" id="couponInput" class="form-control"
+								placeholder="Nhập mã (chưa hoạt động)">
+							<button class="btn btn-outline-primary" id="applyCouponBtn" disabled>Áp dụng</button>
 						</div>
-						<div id="couponStatus" class="small mt-2"></div>
+						<div id="couponStatus" class="small mt-2 text-muted">Tính năng coupon sẽ được triển khai sau.
+						</div>
 					</div>
-					<div class="border rounded p-3 bg-light">
+				</div>
+			</div>
+
+			{{!-- Loyalty Points --}}
+			<div class="card shadow-sm">
+				<div class="card-header bg-white fw-semibold">Điểm khách hàng thân thiết</div>
+				<div class="card-body" id="loyaltySection">
+					<div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-2">
+						<div>
+							<div class="small">Bạn có: <strong id="userPointsDisplay">{{points}}</strong> điểm</div>
+							<small class="text-muted">Quy đổi: 1 điểm = 1.000 VNĐ</small>
+						</div>
+						<div>
+							<button class="btn btn-sm btn-outline-success" id="applyPointsBtn">Áp dụng điểm</button>
+							<button class="btn btn-sm btn-outline-secondary d-none" id="removePointsBtn">Bỏ áp
+								dụng</button>
+						</div>
+					</div>
+					<div class="border rounded p-3 bg-light mb-2">
 						<div class="d-flex justify-content-between align-items-center">
-							<span>Giảm giá khách hàng thân thiết:</span>
+							<span>Giảm giá từ điểm:</span>
 							<span id="loyaltyDiscountDisplay" class="fw-semibold text-success">0 VND</span>
 						</div>
-						<small class="text-muted d-block mt-2">Tự động áp dụng dựa trên cấp độ tài khoản của bạn.</small>
+						<small id="loyaltyStatus" class="text-muted d-block mt-2">Chưa áp dụng điểm.</small>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<!-- Right Column: Order Summary -->
+		<!-- Order Summary -->
 		<div class="col-lg-4">
 			<div class="card shadow-sm position-sticky" style="top:20px;">
 				<div class="card-header bg-white fw-semibold">Tóm tắt đơn hàng</div>
@@ -121,15 +133,23 @@
 <script>
 	document.addEventListener('DOMContentLoaded', () => {
 		// State
-		let cartItems = [];
+		const userPoints = Number('{{points}}') || 0;
+		const POINT_VALUE = 1000;
+
 		let addresses = [];
-		let selectedAddressId = null;
+		let cartItems = [];
 		let couponCode = '';
-		let couponDiscount = 0; // absolute value
-		let loyaltyDiscount = 0; // absolute value
-			let shippingFee = 0; // dynamic from backend shipping method price
-			let selectedShippingMethod = null; // will be set after load
-			let shippingMethods = [];
+		let shippingFee = 0;
+		let couponDiscount = 0;
+		let loyaltyDiscount = 0;
+		let shippingMethods = [];
+
+		let couponId = null;
+		let selectedAddressId = null;
+		let couponPercentApplied = null;
+		let loyaltyPointsApplied = false;
+		let selectedShippingMethod = null;
+		let selectedShippingMethodId = null;
 
 		// Elements
 		const addressesListEl = document.getElementById('addressesList');
@@ -138,10 +158,17 @@
 		const newAddressInput = document.getElementById('newAddressInput');
 		const cancelAddAddressBtn = document.getElementById('cancelAddAddress');
 		const addAddressStatus = document.getElementById('addAddressStatus');
+
 		const couponInput = document.getElementById('couponInput');
 		const applyCouponBtn = document.getElementById('applyCouponBtn');
 		const couponStatus = document.getElementById('couponStatus');
+
 		const loyaltyDiscountDisplay = document.getElementById('loyaltyDiscountDisplay');
+		const applyPointsBtn = document.getElementById('applyPointsBtn');
+		const removePointsBtn = document.getElementById('removePointsBtn');
+		const loyaltyStatus = document.getElementById('loyaltyStatus');
+		const userPointsDisplay = document.getElementById('userPointsDisplay');
+
 		const itemsListEl = document.getElementById('itemsList');
 		const subtotalDisplay = document.getElementById('subtotalDisplay');
 		const taxDisplay = document.getElementById('taxDisplay');
@@ -151,18 +178,21 @@
 		const totalDisplay = document.getElementById('totalDisplay');
 		const confirmOrderBtn = document.getElementById('confirmOrderBtn');
 		const orderStatus = document.getElementById('orderStatus');
-			const shippingNote = document.getElementById('shippingNote');
-			const shippingMethodsEl = document.getElementById('shippingMethods');
+		const shippingNote = document.getElementById('shippingNote');
+		const shippingMethodsEl = document.getElementById('shippingMethods');
 
 		// Helpers
 		function formatPrice(n) { return (n || 0).toLocaleString('vi-VN') + ' VND'; }
-		function setStatus(el, message, type='info') {
+		function setStatus(el, message, type = 'info') {
 			if (!el) return; el.textContent = message; el.className = 'small text-' + type;
 		}
 		function calcLoyaltyDiscount(subtotal) {
-			// Placeholder: 5% loyalty discount if subtotal > 10,000,000
-			if (subtotal > 10000000) return Math.round(subtotal * 0.05); return 0;
+			if (!loyaltyPointsApplied) return 0;
+			const maxFromPoints = userPoints * POINT_VALUE;
+			return Math.min(maxFromPoints, subtotal);
 		}
+
+		// Render addresses
 		function renderAddresses() {
 			addressesListEl.innerHTML = '';
 			if (!addresses.length) {
@@ -170,6 +200,10 @@
 				selectedAddressId = null;
 				updateConfirmState();
 				return;
+			}
+			if (!selectedAddressId) {
+				const first = addresses[0];
+				selectedAddressId = first._id || first.id || first.addressId || first.address;
 			}
 			addresses.forEach(addr => {
 				const id = addr._id || addr.id || addr.addressId || addr.address || Math.random().toString(36).slice(2);
@@ -183,9 +217,10 @@
 				input.addEventListener('change', () => { selectedAddressId = id; updateConfirmState(); });
 				addressesListEl.appendChild(wrapper);
 			});
-			if (!selectedAddressId && addresses.length) { selectedAddressId = addresses[0]._id || addresses[0].id || addresses[0].addressId || addresses[0].address; }
 			updateConfirmState();
 		}
+
+		// Render cart items
 		function renderCartItems() {
 			itemsListEl.innerHTML = '';
 			if (!cartItems.length) {
@@ -208,8 +243,13 @@
 			});
 			updateSummary();
 		}
+
+		// Update summary calculations
 		function updateSummary() {
 			const subtotal = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
+			if (typeof couponPercentApplied === 'number' && couponPercentApplied > 0) {
+				couponDiscount = Math.round(subtotal * (couponPercentApplied / 100));
+			}
 			loyaltyDiscount = calcLoyaltyDiscount(subtotal);
 			const tax = Math.round(subtotal * 0.10);
 			const total = subtotal + tax + shippingFee - couponDiscount - loyaltyDiscount;
@@ -221,83 +261,87 @@
 			loyaltyDiscountDisplaySummary.textContent = formatPrice(loyaltyDiscount);
 			totalDisplay.textContent = formatPrice(Math.max(total, 0));
 			updateConfirmState();
+			if (loyaltyPointsApplied) {
+				loyaltyStatus.textContent = `Đã áp dụng ${userPoints} điểm (giảm ${formatPrice(loyaltyDiscount)})`;
+				loyaltyStatus.className = 'text-success small d-block mt-2';
+			} else {
+				loyaltyStatus.textContent = 'Chưa áp dụng điểm.';
+				loyaltyStatus.className = 'text-muted small d-block mt-2';
+			}
 		}
 		function updateConfirmState() {
 			const ok = cartItems.length > 0 && selectedAddressId && document.querySelector('input[name="paymentMethod"]:checked');
 			confirmOrderBtn.disabled = !ok;
 		}
 
-			function applyShippingFee(methodName) {
-				selectedShippingMethod = methodName;
-				const m = shippingMethods.find(sm => sm.name === methodName);
-				if (m) {
-					shippingFee = Number(m.price) || 0;
-					shippingNote.textContent = m.description || '';
-				} else {
-					shippingFee = 0;
-					shippingNote.textContent = 'Không tìm thấy phương thức vận chuyển.';
-				}
-				updateSummary();
+		function applyShippingMethod(m) {
+			selectedShippingMethod = m || null;
+			selectedShippingMethodId = m?._id || m?.id || null;
+			if (m) {
+				shippingFee = Number(m.price) || 0;
+				shippingNote.textContent = m.description || '';
+			} else {
+				shippingFee = 0;
+				shippingNote.textContent = 'Không tìm thấy phương thức vận chuyển.';
 			}
+			updateSummary();
+		}
 
-			function renderShippingMethods() {
-				shippingMethodsEl.innerHTML = '';
-				if (!shippingMethods.length) {
-					shippingMethodsEl.innerHTML = '<div class="text-danger small">Không tải được phương thức vận chuyển.</div>';
-					selectedShippingMethod = null;
-					applyShippingFee(null);
-					return;
-				}
-				shippingMethods.forEach((m, idx) => {
-					const wrapper = document.createElement('div');
-					wrapper.className = 'form-check';
-					const id = 'ship_' + m.name.replace(/[^a-zA-Z0-9_-]/g, '_');
-					wrapper.innerHTML = `
-						<input class="form-check-input" type="radio" name="shippingMethod" id="${id}" value="${m.name}" ${idx===0 ? 'checked' : ''}>
+		// Render shipping methods
+		function renderShippingMethods() {
+			shippingMethodsEl.innerHTML = '';
+			if (!shippingMethods.length) {
+				shippingMethodsEl.innerHTML = '<div class="text-danger small">Không tải được phương thức vận chuyển.</div>';
+				selectedShippingMethod = null;
+				applyShippingMethod(null);
+				return;
+			}
+			shippingMethods.forEach((m, idx) => {
+				const wrapper = document.createElement('div');
+				wrapper.className = 'form-check';
+				const id = 'ship_' + m.name.replace(/[^a-zA-Z0-9_-]/g, '_');
+				wrapper.innerHTML = `
+						<input class="form-check-input" type="radio" name="shippingMethod" id="${id}" value="${m.name}" ${idx === 0 ? 'checked' : ''}>
 						<label class="form-check-label" for="${id}">
 							<span class="fw-semibold">${m.name}</span> - ${formatPrice(m.price)}
 						</label>
 					`;
-					const input = wrapper.querySelector('input');
-					input.addEventListener('change', () => { if (input.checked) applyShippingFee(m.name); });
-					shippingMethodsEl.appendChild(wrapper);
-				});
-				// Default select first
-				selectedShippingMethod = shippingMethods[0].name;
-				applyShippingFee(selectedShippingMethod);
-			}
+				const input = wrapper.querySelector('input');
+				input.addEventListener('change', () => { if (input.checked) applyShippingMethod(m); });
+				shippingMethodsEl.appendChild(wrapper);
+			});
+			applyShippingMethod(shippingMethods[0]);
+		}
 
-			async function loadShippingMethods() {
-				try {
-					const resp = await fetch('/api/shipping-methods', { credentials: 'include' });
-					if (!resp.ok) throw new Error();
-					const data = await resp.json();
-					shippingMethods = data?.data || data || [];
-				} catch (e) {
-					shippingMethods = [];
-				}
-				renderShippingMethods();
+		// Load shipping methods
+		async function loadShippingMethods() {
+			try {
+				const resp = await fetch('/api/shipping-methods', { credentials: 'include' });
+				if (!resp.ok) throw new Error();
+				const data = await resp.json();
+				shippingMethods = data?.data || data || [];
+			} catch (e) {
+				shippingMethods = [];
 			}
+			renderShippingMethods();
+		}
 
 		// Fetch data (cart + addresses)
-			async function loadInitial() {
-			// Prefer selected items passed from cart via sessionStorage
+		async function loadInitial() {
 			const stored = sessionStorage.getItem('checkoutItems');
 			if (stored) {
 				try {
 					cartItems = JSON.parse(stored) || [];
 				} catch { cartItems = []; }
-				// Clear after load to avoid stale reuse on refresh
 				sessionStorage.removeItem('checkoutItems');
 			} else {
-				// Fallback: load entire cart
 				try {
 					const cartRes = await fetch('/api/users/cart/me', { credentials: 'include' });
 					if (cartRes.ok) {
 						const cartJson = await cartRes.json();
 						cartItems = cartJson?.data?.items || cartJson?.items || [];
 					}
-				} catch { /* ignore */ }
+				} catch { }
 			}
 			try {
 				const addrRes = await fetch('/api/users/addresses/me', { credentials: 'include' });
@@ -305,36 +349,66 @@
 					const addrJson = await addrRes.json();
 					addresses = addrJson?.data || addrJson || [];
 				}
-			} catch { /* ignore */ }
+			} catch { }
 			renderAddresses();
 			renderCartItems();
 			await loadShippingMethods();
 		}
 
-		// Coupon apply
+
+		// Loyalty points apply/remove
+		applyCouponBtn.removeAttribute('disabled');
+		couponInput.placeholder = 'Nhập mã coupon';
+		couponStatus.classList.remove('text-muted');
+		couponStatus.textContent = '';
 		applyCouponBtn.addEventListener('click', async () => {
-			couponCode = couponInput.value.trim();
-			if (!couponCode) { setStatus(couponStatus, 'Vui lòng nhập mã.', 'warning'); return; }
-			setStatus(couponStatus, 'Đang kiểm tra...', 'info');
+			const inputCode = couponInput.value.trim();
+			if (!inputCode) { setStatus(couponStatus, 'Vui lòng nhập mã.', 'warning'); return; }
+			couponDiscount = 0;
+			couponId = null;
+			couponCode = '';
+			couponPercentApplied = null;
+			
 			try {
-				// Placeholder: call API to validate coupon
-				const resp = await fetch(`/api/coupons/validate?code=${encodeURIComponent(couponCode)}`, { credentials: 'include' });
-				if (!resp.ok) throw new Error();
-				const data = await resp.json();
-				// Expect data.discountValue or discountPercent
-				if (data?.data?.discountValue) {
-					couponDiscount = Number(data.data.discountValue) || 0;
-					setStatus(couponStatus, 'Áp dụng thành công.', 'success');
-				} else if (data?.data?.discountPercent) {
-					const subtotal = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
-					couponDiscount = Math.round(subtotal * (Number(data.data.discountPercent) / 100));
-					setStatus(couponStatus, `Giảm ${data.data.discountPercent}%`, 'success');
+				const resp = await fetch('/api/coupons/code?code=' + encodeURIComponent(inputCode), { credentials: 'include' });
+				if (!resp.ok) throw new Error('Coupon fetch failed');
+				const json = await resp.json();
+				const coupon = json?.data || json?.coupon || json || null;
+				if (!coupon) throw new Error('No coupon data');
+				couponId = coupon._id || coupon.id || null;
+				if (typeof coupon.discount === 'number' && coupon.discount > 0) {
+					couponPercentApplied = Number(coupon.discount);
+					const subtotalNow = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
+					couponDiscount = Math.round(subtotalNow * (couponPercentApplied / 100));
+					couponCode = inputCode;
+					setStatus(couponStatus, `Giảm ${couponPercentApplied}% (-${formatPrice(couponDiscount)})`, 'success');
 				} else {
-					couponDiscount = 0; setStatus(couponStatus, 'Coupon không hợp lệ.', 'danger');
+					setStatus(couponStatus, 'Coupon không hợp lệ.', 'warning');
 				}
 			} catch (e) {
-				couponDiscount = 0; setStatus(couponStatus, 'Lỗi áp dụng coupon.', 'danger');
+				couponDiscount = 0;
+				couponId = null; couponCode = ''; couponPercentApplied = null;
+				setStatus(couponStatus, 'Coupon không hợp lệ.', 'danger');
 			}
+			updateSummary();
+		});
+
+		applyPointsBtn.addEventListener('click', () => {
+			if (!userPoints) {
+				loyaltyStatus.textContent = 'Bạn không có điểm để áp dụng.';
+				loyaltyStatus.className = 'text-danger small d-block mt-2';
+				return;
+			}
+			loyaltyPointsApplied = true;
+			applyPointsBtn.classList.add('d-none');
+			removePointsBtn.classList.remove('d-none');
+			updateSummary();
+		});
+
+		removePointsBtn.addEventListener('click', () => {
+			loyaltyPointsApplied = false;
+			applyPointsBtn.classList.remove('d-none');
+			removePointsBtn.classList.add('d-none');
 			updateSummary();
 		});
 
@@ -376,15 +450,20 @@
 		confirmOrderBtn.addEventListener('click', async () => {
 			if (confirmOrderBtn.disabled) return;
 			confirmOrderBtn.disabled = true;
-			setStatus(orderStatus, 'Đang tạo đơn hàng...', 'info');
 			const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+			const variants = cartItems.map(i => ({ variantId: i.variantId, quantity: i.quantity }));
+			const addrObj = addresses.find(a => (a._id || a.id || a.addressId || a.address) === selectedAddressId);
+			const addressText = addrObj?.address || null;
 			const payload = {
-				addressId: selectedAddressId,
-				paymentMethod,
-				shippingMethod: selectedShippingMethod,
-				couponCode: couponCode || null,
-				items: cartItems.map(i => ({ cartItemId: i.cartItemId, variantId: i.variantId, quantity: i.quantity })),
+				variants,
+				shippingMethodId: selectedShippingMethodId,
+				isUseUserPoint: loyaltyPointsApplied,
+				address: addressText
 			};
+			if (couponId) {
+				payload.couponId = couponId;
+			}
+			
 			try {
 				const resp = await fetch('/api/orders', {
 					method: 'POST',
@@ -392,7 +471,13 @@
 					credentials: 'include',
 					body: JSON.stringify(payload)
 				});
-				if (!resp.ok) throw new Error();
+				
+				if (!resp.ok) {
+					const errorData = await resp.json();
+					const errorMessage = errorData?.message || errorData?.error || 'Lỗi đặt hàng';
+					throw new Error(errorMessage);
+				}
+				
 				const json = await resp.json();
 				const createdOrder = json?.data || json?.order || null;
 				const oid = createdOrder?._id || createdOrder?.orderId || json?.data?.orderId || json?.orderId;
@@ -404,7 +489,8 @@
 					confirmOrderBtn.disabled = false;
 				}
 			} catch (e) {
-				setStatus(orderStatus, 'Lỗi đặt hàng. Vui lòng thử lại.', 'danger');
+				const errorMsg = e.message || 'Lỗi đặt hàng. Vui lòng thử lại.';
+				setStatus(orderStatus, errorMsg, 'danger');
 				confirmOrderBtn.disabled = false;
 			}
 		});

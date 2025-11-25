@@ -75,8 +75,6 @@ class OrderService {
 
             };
         }));
-        console.log(orderItems);
-
 
         if (data.couponId) {
             const coupon = await couponService.getCouponById(data.couponId);

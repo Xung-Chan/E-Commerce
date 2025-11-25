@@ -352,19 +352,76 @@
             });
         }
 
-        // Thêm vào giỏ -> submit form ẩn
+        // Thêm vào giỏ -> gọi API không submit form
         const addBtn = document.getElementById('addToCartBtn');
         const form = document.getElementById('addToCartForm');
         const formVariantInput = document.getElementById('formVariantId');
         const formQuantityInput = document.getElementById('formQuantity');
 
         if (addBtn && form && formVariantInput && formQuantityInput) {
-            addBtn.addEventListener('click', () => {
+            addBtn.addEventListener('click', async () => {
                 clampQty();
-                formVariantInput.value = selectedVariantId;
-                formQuantityInput.value = qtyInput.value;
-                form.submit();
+                const variantId = selectedVariantId;
+                const quantity = Number(qtyInput.value) || 1;
+                
+                if (!variantId) {
+                    alert('Vui lòng chọn cấu hình sản phẩm');
+                    return;
+                }
+
+                addBtn.disabled = true;
+                const originalText = addBtn.textContent;
+                addBtn.textContent = 'Đang thêm...';
+
+                try {
+                    const resp = await fetch('/api/users/cart/me', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ variantId, quantity })
+                    });
+
+                    if (resp.ok) {
+                        addBtn.textContent = '✓ Đã thêm';
+                        addBtn.classList.remove('btn-outline-primary');
+                        addBtn.classList.add('btn-success');
+                        
+                        // Cập nhật số lượng giỏ hàng trong header
+                        updateCartBadge();
+                        
+                        // Reset sau 2 giây
+                        setTimeout(() => {
+                            addBtn.textContent = originalText;
+                            addBtn.classList.remove('btn-success');
+                            addBtn.classList.add('btn-outline-primary');
+                            addBtn.disabled = false;
+                        }, 2000);
+                    } else {
+                        throw new Error('Lỗi khi thêm vào giỏ hàng');
+                    }
+                } catch (error) {
+                    alert('Không thể thêm vào giỏ hàng. Vui lòng thử lại.');
+                    addBtn.textContent = originalText;
+                    addBtn.disabled = false;
+                }
             });
+        }
+
+        // Hàm cập nhật số lượng giỏ hàng
+        async function updateCartBadge() {
+            try {
+                const resp = await fetch('/api/users/cart/me', { credentials: 'include' });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    const totalItems = data?.data?.totalProduct || data?.totalProduct || 0;
+                    const badge = document.querySelector('.btn-cart .badge');
+                    if (badge) {
+                        badge.textContent = totalItems;
+                    }
+                }
+            } catch (e) {
+                console.error('Không thể cập nhật số lượng giỏ hàng:', e);
+            }
         }
 
         // Xử lý click thumbnail đổi ảnh lớn
