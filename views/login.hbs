@@ -4,7 +4,7 @@
             <div class="card shadow-sm rounded mb-4">
                 <div class="card-body p-4">
                     <h3 class="mb-4 text-primary fw-bold text-center">Đăng nhập</h3>
-                    <!-- Server Messages -->
+                    <!-- Hiển thị lỗi -->
                     {{#if errorMessage}}
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         {{errorMessage}}
@@ -12,7 +12,8 @@
                     </div>
                     {{/if}}
 
-                    <!-- Login Form -->
+
+                    <!-- Form đăng nhập -->
                     <form id="loginForm" method="POST" action="/login">
                         <div class="mb-3">
                             <label for="email" class="form-label fw-semibold">Email</label>
@@ -45,7 +46,8 @@
                 </div>
             </div>
 
-            {{!-- Social Login --}}
+
+            {{!-- Đăng nhập bằng mạng xã hội --}}
             <div class="card shadow-sm rounded">
                 <div class="card-body p-4">
                     <div class="text-center mb-3 text-muted">Hoặc đăng nhập bằng</div>
@@ -62,6 +64,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
