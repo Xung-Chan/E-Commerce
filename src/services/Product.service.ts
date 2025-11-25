@@ -3,8 +3,8 @@ import { categoryDao } from "../daos/Category.dao.js";
 import { productDao } from "../daos/Product.dao.js";
 import { variantDao } from "../daos/Variant.dao.js";
 import { CreateVariantDto } from '../dto/Create.dto.js';
-import { CreateProductRequest } from "../dto/Request.dto.js";
-import { UpdateProductDto } from "../dto/Update.dto.js";
+import { CreateProductRequest, UpdateProductRequest } from "../dto/Request.dto.js";
+import { UpdateProductDto, UpdateVariantDto } from "../dto/Update.dto.js";
 import { ErrorDictionary } from "../middleware/errorDictionary.js";
 import ApiError from "../utils/ApiError.js";
 import { Pagination, ProductQuery } from "../utils/Pagination.js";
@@ -21,10 +21,16 @@ const productService = {
         if (!category) {
             throw new ApiError(404, "Not Found", "Category not found");
         }
+        let minPrice = Math.min(...data.variants.map(v => v.price));
+        let maxPrice = Math.max(...data.variants.map(v => v.price));
+        if (data.discount) {
+            minPrice = minPrice - (minPrice * data.discount) / 100;
+            maxPrice = maxPrice - (maxPrice * data.discount) / 100;
+        }
         const product = await productDao.create({
             ...data,
-            minPrice: Math.min(...data.variants.map(v => v.price)),
-            maxPrice: Math.max(...data.variants.map(v => v.price))
+            minPrice: minPrice,
+            maxPrice: maxPrice
         });
         data.variants.forEach(async (variant) => {
             const variantData: CreateVariantDto = {
@@ -32,16 +38,12 @@ const productService = {
                 distinctFeature: variant.distinctFeature,
                 price: variant.price,
                 stock: variant.stock,
-                discount: variant.discount || 0
             };
             await variantService.createVariant(variantData);
         });
         return product;
     },
 
-    getAllProducts: async () => {
-        return productDao.list();
-    },
 
     searchProducts: async (query: ProductQuery) => {
         const filter: {
@@ -93,7 +95,10 @@ const productService = {
         const variants = await variantService.getVariantsByProductId(id);
         return {
             ...product,
-            variants: variants
+            variants: variants.map(variant => ({
+                ...variant,
+                discountPrice: product.discount ? variant.price - (variant.price * product.discount) / 100 : variant.price
+            }))
         };
     },
 
@@ -149,12 +154,49 @@ const productService = {
         return productDao.deleteById(id);
     },
 
-    updateProductById: async (id: string, data: UpdateProductDto) => {
+    updateProductById: async (id: string, data: UpdateProductRequest) => {
         const product = await productDao.readById(id);
         if (!product) {
-            throw new ApiError(404, "Not Found", "Product not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.PRODUCT_NOT_FOUND);
         }
-        return productDao.patchById(id, data);
+        let newData: UpdateProductDto = { ...data };
+        if (data.discount && (data.discount < 0 || data.discount > 50)) {
+            throw new ApiError(400, "Bad Request", "Giảm giá phải từ 0 đến 50%");
+        }
+
+
+        if (data.variants) {
+            await Promise.all(data.variants.map(async (variant) => {
+                let data: UpdateVariantDto = {};
+                if (variant.distinctFeature) {
+                    data.distinctFeature = variant.distinctFeature;
+                }
+                if (variant.price) {
+                    data.price = variant.price;
+                }
+
+                if (variant.stock) {
+                    data.stock = variant.stock;
+                }
+
+                const result = await variantService.updateVariantById(variant.id, data);
+                if (!result) {
+                    throw new ApiError(500, "Internal Server Error", `Cập nhật variant ${variant.id} thất bại`);
+                }
+            }));
+            const variantUpdates = await variantService.getVariantsByProductId(id);
+            let minPrice = Math.min(...variantUpdates.map(v => v.price));
+            let maxPrice = Math.max(...variantUpdates.map(v => v.price));
+
+            if (data.discount) {
+                minPrice = minPrice - (minPrice * data.discount) / 100;
+                maxPrice = maxPrice - (maxPrice * data.discount) / 100;
+            }
+
+            newData = { ...newData, minPrice, maxPrice };
+        }
+        console.log(newData);
+        return productDao.patchById(id, newData);
     },
 
     getBestSellingProducts: async (limit: number = 10) => {

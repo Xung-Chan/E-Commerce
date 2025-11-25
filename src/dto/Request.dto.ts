@@ -8,11 +8,11 @@ interface CreateProductRequest {
     categoryId: string;
     description: string;
     images: string[];
+    discount?: number;
     variants: {
         distinctFeature: string;
         price: number;
         stock: number;
-        discount?: number;
     }[];
 }
 interface CreateOrderRequest {
@@ -40,10 +40,26 @@ interface CreateRatingRequest {
     rate: number;
 }
 
+interface UpdateProductRequest {
+    name?: string;
+    brandId?: string;
+    categoryId?: string;
+    description?: string;
+    images?: string[];
+    discount?: number;
+    variants?: {
+        id: string;
+        distinctFeature?: string;
+        price?: number;
+        stock?: number;
+    }[]
+}
+
 export type {
     LoginRequest,
     CreateOrderRequest,
     CreateProductRequest,
     CreateCommentRequest,
-    CreateRatingRequest
+    CreateRatingRequest,
+    UpdateProductRequest
 };

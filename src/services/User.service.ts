@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { IUser, userDao } from "../daos/User.dao.js";
+import { IUser, userDao, UserStatus } from "../daos/User.dao.js";
 import { CreateUserDto } from "../dto/Create.dto.js";
 import { UpdateUserDto } from "../dto/Update.dto.js";
 import ApiError from "../utils/ApiError.js";
@@ -40,11 +40,12 @@ const userService = {
         };
     },
 
-
-    banUserById: async (id: string): Promise<boolean> => {
-        const result = await userDao.patchById(id, { status: "banned" });
+    updateUserStatusById: async (id: string, status: UserStatus): Promise<boolean> => {
+        const result = await userDao.patchById(id, { status: status });
         return result;
     },
+
+
 
     updateUserById: async (id: string, data: UpdateUserDto): Promise<boolean> => {
         const result = await userDao.patchById(id, data);

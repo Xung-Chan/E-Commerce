@@ -7,6 +7,7 @@ import ApiError from "../utils/ApiError.js";
 import { tokenService } from "../services/Token.service.js";
 import { get } from "mongoose";
 import { ErrorDictionary } from "../middleware/errorDictionary.js";
+import { updateUserStatus } from "../middleware/validate.js";
 const userController = {
     getAllUsers: expressAsyncHandler(async (req: Request, res: Response) => {
         const users = await userService.getAllUsers();
@@ -56,17 +57,21 @@ const userController = {
         }
         res.status(200).json(new ApiResponse(true, 200, "User updated successfully", result));
     }),
-    banUserById: expressAsyncHandler(async (req: Request, res: Response) => {
+
+    updateUserStatusById: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = req.params.userId;
         if (!userId) {
-            throw new ApiError(400, "Bad Request", "User ID is required");
+            throw new ApiError(400, "Bad Request", "User Id không hợp lệ");
         }
-        const result = await userService.banUserById(userId);
-        if (!result) {
-            throw new ApiError(500, "Internal Server Error", "Failed to ban user");
+        const { status } = req.body;
+        const errors = updateUserStatus.validate({ userId, status }, { abortEarly: false }).error;
+        if (errors) {
+            throw new ApiError(400, "Bad Request", errors.details.map(detail => detail.message).join(", "));
         }
-        res.status(200).json(new ApiResponse(true, 200, "User banned successfully", result));
+        const result = await userService.updateUserStatusById(userId, status);
+        res.status(200).json(new ApiResponse(true, 200, "User status updated successfully", result));
     }),
+
     getMyAddresses: expressAsyncHandler(async (req: Request, res: Response) => {
         const userId = (req as any).userId;
         if (!userId) {
