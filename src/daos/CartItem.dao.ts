@@ -49,7 +49,7 @@ class CartItemDao {
         return CartItem.find(query).exec();
     }
     async findOne(query: Partial<any>): Promise<ICartItem | null> {
-        return CartItem.findOne(query).exec();
+        return await CartItem.findOne(query).exec();
     }
 }
 export const cartItemDao = new CartItemDao();

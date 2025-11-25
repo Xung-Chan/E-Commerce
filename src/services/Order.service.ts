@@ -1,3 +1,4 @@
+import { cartItemDao } from "../daos/CartItem.dao.js";
 import { orderDao } from "../daos/Order.dao.js";
 import { orderItemDao } from '../daos/OrderItem.dao.js';
 import { userDao } from "../daos/User.dao.js";
@@ -52,6 +53,14 @@ class OrderService {
             await variantDao.patchById(variant._id.toString(), {
                 stock: variant.stock - item.quantity
             });
+
+            const existingCartItem = await cartItemDao.findOne({
+                userId: data.userId,
+                variantId: item.variantId
+            });
+            if (existingCartItem) {
+                await cartItemDao.deleteById(existingCartItem._id.toString());
+            }
 
 
             const orderItem = await orderItemDao.create({
