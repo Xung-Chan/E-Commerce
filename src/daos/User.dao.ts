@@ -67,8 +67,14 @@ class UserDao implements CRUD {
         return await User.updateOne({ _id: id, deletedAt: null }, { $set: item }).then(result => result.modifiedCount > 0);
     }
 
-    async findBy(query: Partial<any>): Promise<any | null> {
-        return await User.find({ ...query, deletedAt: null }).exec();
+    async findBy(query: Partial<any>): Promise<IUser[]> {
+        const user = await User.find({ ...query, deletedAt: null }).exec();
+        return user.map(u => u.toObject() as IUser);
+    }
+
+    async findOne(query: Partial<any>): Promise<IUser | null> {
+        const user = await User.findOne({ ...query, deletedAt: null }).exec();
+        return user ? (user.toObject() as IUser) : null;
     }
 
     async create(item: CreateUserDto): Promise<IUser> {
@@ -110,7 +116,7 @@ class UserDao implements CRUD {
 
     async readById(id: string): Promise<IUser | null> {
         const user = await User.findById(id).exec();
-        return user
+        return user ? (user.toObject() as IUser) : null;
     }
 
     async deleteById(id: string): Promise<boolean> {

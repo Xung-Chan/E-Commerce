@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 import ApiError from "../utils/ApiError.js";
 import { sendMail } from "./Mail.service.js";
-import { userDao } from "../daos/User.dao.js";
+import { userDao, UserStatus } from "../daos/User.dao.js";
 import { TokenPayload } from "../utils/jwt.js";
 import { tokenService } from "./Token.service.js";
 import { CreateUserDto } from "../dto/Create.dto.js";
@@ -31,18 +31,20 @@ function generateTemporaryPassword(): string {
 
 const authService = {
     login: async (data: LoginRequest): Promise<LoginResponseDto> => {
-        const result = await userDao.findBy({ email: data.email });
-        if (result.length === 0) {
+        const user = await userDao.findOne({ email: data.email });
+        if (!user) {
             throw new ApiError(404, "Not Found", "Tài khoản không tồn tại");
         }
-        const user = result[0];
-        const isMatch = await bcrypt.compareSync(data.password, user.password);
+        const isMatch = bcrypt.compareSync(data.password, user.password);
         if (!isMatch) {
             throw new ApiError(401, "Unauthorized", "Mật khẩu không đúng");
         }
 
-        const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user.id, email: user.email, role: user.role });
-        await tokenService.saveToken(user.id, refreshToken);
+        if (user.status == UserStatus.BANNED) {
+            throw new ApiError(403, "Forbidden", "Tài khoản của bạn đã bị khóa");
+        }
+        const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user._id.toString(), email: user.email, role: user.role });
+        await tokenService.saveToken(user._id.toString(), refreshToken);
         return new LoginResponseDto(accessToken, refreshToken);
     },
 
@@ -69,13 +71,15 @@ const authService = {
 
 
     forgotPassword: async (email: string): Promise<void> => {
-        const result = await userDao.findBy({ email });
-        if (result.length === 0) {
+        const user = await userDao.findOne({ email });
+        if (!user) {
             throw new ApiError(404, "Not Found", "Tài khoản không tồn tại");
         }
-        const user = result[0];
+        if (user.status == UserStatus.BANNED) {
+            throw new ApiError(403, "Forbidden", "Tài khoản của bạn đã bị khóa");
+        }
         const payload: TokenPayload = {
-            userId: user.id,
+            userId: user._id.toString(),
             email: user.email,
             role: user.role,
             type: 'reset'
@@ -83,7 +87,7 @@ const authService = {
         const token = jwt.sign(payload, process.env.SECRET_KEY as string, { expiresIn: '5m' });
         console.log(token);
         const link = `${process.env.BASE_URL}/reset-password?token=${token}`;
-        await tokenService.saveToken(user.id, token);
+        await tokenService.saveToken(user._id.toString(), token);
         sendMail(email, link, "reset");
     },
 

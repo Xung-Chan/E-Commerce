@@ -48,7 +48,7 @@ class OrderService {
             totalPrice += variant.price * item.quantity;
             const discountAmount = variant.price * product.discount / 100;
             totalDiscount += item.quantity * discountAmount;
-
+            console.log("Discount Amount:", discountAmount);
 
             await variantDao.patchById(variant._id.toString(), {
                 stock: variant.stock - item.quantity
@@ -78,8 +78,6 @@ class OrderService {
         console.log(orderItems);
 
 
-        totalPay = totalPrice - totalDiscount + shipping.price;
-
         if (data.couponId) {
             const coupon = await couponService.getCouponById(data.couponId);
             if (!coupon) {
@@ -108,7 +106,9 @@ class OrderService {
                 await userDao.patchById(user._id.toString(), { point: 0 });
             }
         }
-        const tax = totalPay * 0.1; // 10% tax
+        totalPay = totalPrice - totalDiscount + shipping.price;
+
+        const tax = totalPrice * 0.1; // 10% tax
         totalPay += tax;
 
         const orderData: CreateOrderDto = {

@@ -19,7 +19,14 @@ const updateUserStatus = Joi.object({
     status: Joi.string().valid("active", "inactive", "banned").required(),
 });
 
+
+const createaRating = Joi.object({
+    userId: Joi.string().required(),
+    productId: Joi.string().required(),
+    rating: Joi.number().min(1).max(5).required(),
+});
 export {
     createOrder,
     updateUserStatus,
+    createaRating,
 };

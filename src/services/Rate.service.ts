@@ -4,17 +4,32 @@ import { productDao } from "../daos/Product.dao.js";
 import ApiError from "../utils/ApiError.js";
 import { CreateRatingRequest } from "../dto/Request.dto.js";
 import { ioServer } from "../index.js";
+import { userDao } from "../daos/User.dao.js";
 const rateService = {
+
+
     createRate: async (data: CreateRatingRequest) => {
+        const user = await userDao.findOne({ _id: data.userId });
+        if (!user) {
+            throw new ApiError(404, "Not Found", "User not found");
+        }
         const product = await productDao.readById(data.productId);
         if (!product) {
             throw new ApiError(404, "Not Found", "Product not found");
         }
+
+
+
+        const existingRate = await rateDao.findBy({ userId: data.userId, productId: data.productId });
+        if (existingRate && existingRate.length > 0) {
+            throw new ApiError(409, "Conflict", "Bạn đã đánh giá sản phẩm này rồi");
+        }
+
         const createdRate = await rateDao.create(
             {
                 userId: data.userId,
                 productId: data.productId,
-                fullName: "Anonymous",
+                fullName: user.fullName,
                 rate: data.rate,
             }
         );
