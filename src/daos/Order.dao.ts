@@ -32,6 +32,10 @@ const OrderSchema = new Schema({
         type: Number,
         required: true
     },
+    tax: {
+        type: Number,
+        default: 0
+    },
     shippingMethod: {
         type: String,
         required: true

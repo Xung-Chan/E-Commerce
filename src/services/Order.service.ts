@@ -108,6 +108,8 @@ class OrderService {
                 await userDao.patchById(user._id.toString(), { point: 0 });
             }
         }
+        const tax = totalPay * 0.1; // 10% tax
+        totalPay += tax;
 
         const orderData: CreateOrderDto = {
             userId: data.userId,
@@ -117,6 +119,7 @@ class OrderService {
             totalDiscount,
             shippingFee: shipping.price,
             totalPay,
+            tax,
             address: data.address
         };
 

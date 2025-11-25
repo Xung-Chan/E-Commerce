@@ -34,6 +34,7 @@ interface CreateOrderDto {
     totalDiscount: number;
     totalPay: number;
     shippingFee: number;
+    tax: number;
     shippingMethod: string;
     address: string;
 }
