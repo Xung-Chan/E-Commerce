@@ -40,7 +40,7 @@ const siteController = {
             if (data.role === 'user') {
                 return res.redirect("/");
             } else if (data.role === 'admin') {
-                // TODO: Redirect to admin dashboard
+                return res.redirect("/admin/dashboard");
             }
         } catch (error: any) {
             const apiErr = error?.response?.data;

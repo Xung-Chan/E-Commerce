@@ -1,0 +1,13 @@
+<h2>User Detail</h2>
+
+<p><strong>Email:</strong> {{user.email}}</p>
+<p><strong>Full Name:</strong> {{user.fullName}}</p>
+<p><strong>Role:</strong> {{user.role}}</p>
+<p><strong>Status:</strong> {{user.status}}</p>
+
+<h3>Addresses:</h3>
+<ul>
+    {{#each user.addresses}}
+        <li>{{this.address}}</li>
+    {{/each}}
+</ul>

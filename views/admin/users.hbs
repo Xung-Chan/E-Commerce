@@ -1,0 +1,64 @@
+<h2>Manage Users</h2>
+
+<input type="text" id="search" placeholder="Search by name or email">
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Full Name</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="user-table-body">
+        {{#each users}}
+            <tr data-id="{{this.id}}">
+                <td>{{this.email}}</td>
+                <td>{{this.fullName}}</td>
+                <td>{{this.role}}</td>
+                <td>
+                    <select class="status-select">
+                        <option value="active" {{#ifCond this.status "==" "active"}}selected{{/ifCond}}>Active</option>
+                        <option value="inactive" {{#ifCond this.status "==" "inactive"}}selected{{/ifCond}}>Inactive</option>
+                    </select>
+                </td>
+                <td>
+                    <a href="/admin/users/{{this.id}}" class="view-btn">View</a>
+                    <button class="delete-btn">Delete</button>
+                </td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<script>
+document.querySelectorAll('.status-select').forEach(select => {
+    select.addEventListener('change', async (e) => {
+        const tr = e.target.closest('tr');
+        const userId = tr.dataset.id;
+        const status = e.target.value;
+
+        const res = await fetch(`/admin/users/${userId}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+        });
+        if(res.ok) alert('Status updated');
+        else alert('Failed to update status');
+    });
+});
+
+document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+        const tr = e.target.closest('tr');
+        const userId = tr.dataset.id;
+        if(confirm('Are you sure to delete this user?')) {
+            const res = await fetch(`/admin/users/${userId}`, { method: 'DELETE' });
+            if(res.ok) tr.remove();
+            else alert('Failed to delete user');
+        }
+    });
+});
+</script>

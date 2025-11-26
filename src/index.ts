@@ -19,6 +19,8 @@ import socketService from "./services/Socket.service.js";
 import commentService from "./services/Comment.service.js";
 import { io } from "socket.io-client";
 import { createApi } from "./utils/ApiClient.js";
+import adminRouter from "./routes/Admin.route.js";
+
 
 
 const PORT = process.env.PORT || 8000;
@@ -108,6 +110,8 @@ app.set("view engine", "hbs")
 app.set("views", "./views")
 
 app.use(siteRouter)
+
+app.use("/admin", adminRouter);
 
 app.use("/api", apiRouter);
 
