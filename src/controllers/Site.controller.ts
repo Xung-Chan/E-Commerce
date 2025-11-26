@@ -13,9 +13,16 @@ const siteController = {
             return res.redirect('/');
         }
 
-        renderWithCommon(req, res, "login", {
+        const { registered } = req.query;
+        const payload: any = {
             title: "Đăng nhập | CoreStation"
-        });
+        };
+
+        if (registered === 'success') {
+            payload.successMessage = "Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.";
+        }
+
+        renderWithCommon(req, res, "login", payload);
     },
 
     // Login Form
@@ -30,7 +37,11 @@ const siteController = {
             const token = (data as any)?.accessToken || (data as any)?.token;
 
             if (token) res.cookie("token", token, { httpOnly: true });
-            return res.redirect("/");
+            if (data.role === 'user') {
+                return res.redirect("/");
+            } else if (data.role === 'admin') {
+                // TODO: Redirect to admin dashboard
+            }
         } catch (error: any) {
             const apiErr = error?.response?.data;
             const payload = {
@@ -64,10 +75,7 @@ const siteController = {
                 address: address.trim()
             });
 
-            return renderWithCommon(req, res, "login", {
-                title: "Đăng nhập | CoreStation",
-                successMessage: "Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.",
-            });
+            return res.redirect("/login?registered=success");
         } catch (error: any) {
             const apiErr = error?.response?.data;
             const payload = {
@@ -558,7 +566,7 @@ const siteController = {
             const orderRes = await api.get(`${apiUrl}/api/orders/${orderId}`);
             const order = unwrap(orderRes);
 
-            renderWithCommon(req, res, 'order_result', {
+            return renderWithCommon(req, res, 'order_result', {
                 title: 'Đơn hàng thành công | CoreStation',
                 orderId,
                 order

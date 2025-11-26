@@ -356,7 +356,7 @@
 		}
 
 
-		// Loyalty points apply/remove
+		// Coupon apply
 		applyCouponBtn.removeAttribute('disabled');
 		couponInput.placeholder = 'Nhập mã coupon';
 		couponStatus.classList.remove('text-muted');
@@ -373,10 +373,19 @@
 				const resp = await fetch('/api/coupons/code?code=' + encodeURIComponent(inputCode), { credentials: 'include' });
 				if (!resp.ok) throw new Error('Coupon fetch failed');
 				const json = await resp.json();
+				
 				const coupon = json?.data || json?.coupon || json || null;
 				if (!coupon) throw new Error('No coupon data');
-				couponId = coupon._id || coupon.id || null;
-				if (typeof coupon.discount === 'number' && coupon.discount > 0) {
+				
+				couponId = coupon._id;
+				if (coupon.maxUse >= coupon.used) {
+					setStatus(couponStatus, 'Coupon đã hết lượt sử dụng.', 'warning');
+					couponId = null; couponCode = ''; couponPercentApplied = null;
+				} else if (coupon.status == "inactive") {
+					setStatus(couponStatus, 'Coupon không hoạt động.', 'warning');
+					couponId = null; couponCode = ''; couponPercentApplied = null;
+				} 
+				else if (typeof coupon.discount === 'number' && coupon.discount > 0) {
 					couponPercentApplied = Number(coupon.discount);
 					const subtotalNow = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
 					couponDiscount = Math.round(subtotalNow * (couponPercentApplied / 100));
@@ -482,6 +491,7 @@
 				const createdOrder = json?.data || json?.order || null;
 				const oid = createdOrder?._id || createdOrder?.orderId || json?.data?.orderId || json?.orderId;
 				setStatus(orderStatus, 'Đặt hàng thành công! Đang chuyển hướng...', 'success');
+				
 				if (oid) {
 					setTimeout(() => { window.location.href = '/order/result/' + oid; }, 800);
 				} else {
