@@ -50,7 +50,7 @@ const authService = {
 
         const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user._id.toString(), email: user.email, role: user.role });
         await tokenService.saveToken(user._id.toString(), refreshToken);
-        return new LoginResponseDto(accessToken, refreshToken);
+        return new LoginResponseDto(accessToken, refreshToken, user.role);
     },
 
 
@@ -79,7 +79,8 @@ const authService = {
     },
 
     activeAccount: async (token: string): Promise<void> => {
-        
+
+
     },
 
     forgotPassword: async (email: string): Promise<void> => {
@@ -161,8 +162,7 @@ const authService = {
             });
             await tokenService.saveToken(userId, newRefreshToken);
             await tokenService.markUsedToken(tokenInstance._id);
-            return new LoginResponseDto(accessToken, newRefreshToken);
-
+            return new LoginResponseDto(accessToken, newRefreshToken, tokenPayload.role);
         } catch (err) {
             console.error(err);
             throw new ApiError(400, "Bad Request", ErrorDictionary.INVALID_OR_EXPIRED_TOKEN);

@@ -3,9 +3,11 @@ import { OrderStatus } from "../utils/OrderStatus.enum.js";
 class LoginResponseDto {
     accessToken: string;
     refreshToken: string;
-    constructor(accessToken: string, refreshToken: string) {
+    role: string;
+    constructor(accessToken: string, refreshToken: string, role: string) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.role = role;
     }
 }
 
