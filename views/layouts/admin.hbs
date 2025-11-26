@@ -138,16 +138,20 @@
 </head>
 <body>
     <header class="admin-header">
-        <a class="navbar-brand" href="/admin/dashboard">
-            <i class="bi bi-gear-wide-connected me-2"></i> CoreStation Admin
-        </a>
-        <div class="ms-auto">
-            <ul class="list-unstyled d-flex mb-0">
-                <li class="me-3"><a class="btn btn-outline-secondary btn-sm" href="/" target="_blank"><i class="bi bi-box-arrow-up-right"></i> Xem Trang</a></li>
-                <li><a class="btn btn-danger btn-sm" href="/logout"><i class="bi bi-box-arrow-right"></i> Đăng Xuất</a></li>
-            </ul>
-        </div>
-    </header>
+    <a class="navbar-brand" href="/admin/dashboard">
+        <i class="bi bi-gear-wide-connected me-2"></i> CoreStation Admin
+    </a>
+    <div class="ms-auto d-flex align-items-center">
+        
+        <span class="me-4 fw-medium text-secondary">
+            <i class="bi bi-person-circle me-1"></i> Xin chào, Admin! 
+            </span>
+        
+        <ul class="list-unstyled d-flex mb-0">
+            <li><a class="btn btn-danger btn-sm" href="/logout"><i class="bi bi-box-arrow-right"></i> Đăng Xuất</a></li>
+        </ul>
+    </div>
+</header>
 
     <div class="wrapper">
         <div class="sidebar">
@@ -168,8 +172,8 @@
                     </a>
                 </li>
                  <li>
-                    <a href="/admin/settings" class="{{#if (eq title 'Settings')}}active{{/if}}">
-                        <i class="bi bi-gear"></i> Cài đặt
+                    <a href="/admin/coupons" class="{{#if (eq title 'Coupons')}}active{{/if}}">
+                        <i class="bi bi-percent"></i> Quản lý mã giảm giá
                     </a>
                 </li>
             </ul>

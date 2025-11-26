@@ -1,0 +1,164 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">Danh Sách Mã Giảm Giá</h3>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCouponModal">
+        <i class="bi bi-plus-circle me-2"></i> Thêm Mã Giảm Giá Mới
+    </button>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form class="row g-3 align-items-center">
+            <div class="col-md-4">
+                <input type="text" class="form-control" placeholder="Tìm kiếm theo Mã Coupon...">
+            </div>
+            <div class="col-md-3">
+                <select class="form-select">
+                    <option selected>Lọc theo Trạng thái</option>
+                    <option value="1">Đang hoạt động</option>
+                    <option value="2">Hết hạn</option>
+                    <option value="3">Sắp kích hoạt</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select">
+                    <option selected>Lọc theo Loại giảm</option>
+                    <option value="percentage">Phần trăm (%)</option>
+                    <option value="fixed">Số tiền cố định</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-funnel"></i> Lọc
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 fw-bold text-primary">Bảng dữ liệu Coupons</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped" id="couponTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã Coupon</th>
+                        <th>Giá Trị</th>
+                        <th>Loại</th>
+                        <th>Ngày Bắt Đầu</th>
+                        <th>Ngày Hết Hạn</th>
+                        <th>Giới Hạn</th>
+                        <th>Trạng Thái</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="fw-bold text-success">WELCOME20</td>
+                        <td>20%</td>
+                        <td>Phần trăm</td>
+                        <td>01/01/2025</td>
+                        <td>31/12/2025</td>
+                        <td>Không giới hạn</td>
+                        <td><span class="badge bg-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-info me-2 edit-btn" data-id="1"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-danger delete-btn" data-id="1"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-danger">FIXED100K</td>
+                        <td>100,000 VNĐ</td>
+                        <td>Cố định</td>
+                        <td>01/03/2025</td>
+                        <td>30/06/2025</td>
+                        <td>Còn 50/100</td>
+                        <td><span class="badge bg-warning text-dark">Sắp hết hạn</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-info me-2 edit-btn" data-id="2"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-danger delete-btn" data-id="2"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-muted">SPRINGOFF</td>
+                        <td>15%</td>
+                        <td>Phần trăm</td>
+                        <td>01/02/2025</td>
+                        <td>28/02/2025</td>
+                        <td>Đã hết</td>
+                        <td><span class="badge bg-secondary">Hết hạn</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-info me-2" disabled><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-danger delete-btn" data-id="3"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                    </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-end mt-3">
+                <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Sau</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div class="modal fade" id="addCouponModal" tabindex="-1" aria-labelledby="addCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addCouponModalLabel"><i class="bi bi-plus-circle me-2"></i> Thêm Mã Coupon Mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="couponForm">
+                    <div class="mb-3">
+                        <label for="couponCode" class="form-label">Mã Coupon <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="couponCode" required placeholder="VD: TETNGUYENDAN20">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="discountType" class="form-label">Loại Giảm Giá <span class="text-danger">*</span></label>
+                            <select class="form-select" id="discountType" required>
+                                <option value="percentage">% Phần trăm</option>
+                                <option value="fixed">Số tiền cố định</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="discountValue" class="form-label">Giá Trị Giảm <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="discountValue" required placeholder="VD: 20 hoặc 50000">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="startDate" class="form-label">Ngày Bắt Đầu <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="startDate" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="endDate" class="form-label">Ngày Hết Hạn</label>
+                            <input type="date" class="form-control" id="endDate">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="usageLimit" class="form-label">Giới Hạn Sử Dụng (Tổng số lần)</label>
+                        <input type="number" class="form-control" id="usageLimit" placeholder="Để trống nếu không giới hạn">
+                    </div>
+                    <div class="mb-3">
+                        <label for="minimumOrder" class="form-label">Giá Trị Đơn Hàng Tối Thiểu</label>
+                        <input type="number" class="form-control" id="minimumOrder" placeholder="Để trống nếu không yêu cầu">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" form="couponForm" class="btn btn-primary">Lưu Coupon</button>
+            </div>
+        </div>
+    </div>
+</div>
