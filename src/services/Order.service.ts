@@ -166,6 +166,7 @@ class OrderService {
 
         if (query.userId) filter.userId = query.userId;
 
+        if (query.status) filter.currentStatus = query.status;
         const page = parseInt((query.page || "1"), 10);
         const limit = parseInt((query.limit || "10"), 10);
         const sortBy = query.sortBy || "updatedAt";
@@ -179,6 +180,7 @@ class OrderService {
         const totalDatas = await orderDao.count(filter);
         const orders = await orderDao.findBy(filter, options);
         const data: OutlineOrderResponse[] = await Promise.all(orders.map(async (order) => {
+            console.log(order._id);
             const user = await userDao.readById(order.userId.toString());
             if (!user) {
                 throw new ApiError(404, "Not Found", ErrorDictionary.USER_NOT_FOUND);

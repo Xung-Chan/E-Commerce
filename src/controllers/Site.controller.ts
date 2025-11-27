@@ -3,6 +3,8 @@ import { Pagination, ProductQuery } from "../utils/Pagination.js";
 import { getCommonViewData, renderWithCommon } from "../utils/ViewData.js";
 import { apiUrl, createApi, unwrap } from "../utils/ApiClient.js";
 import { LoginResponseDto } from "../dto/Response.dto.js";
+import ApiResponse from "../utils/Api.response.js";
+import { IUser } from "../daos/User.dao.js";
 
 const siteController = {
     // --- LOGIN ---
@@ -58,15 +60,16 @@ const siteController = {
 
         try {
             const api = createApi();
-            await api.post("/api/auth/register", {
+            const response = await api.post("/api/auth/register", {
                 email: email.trim(),
                 fullName: fullName.trim(),
                 address: address.trim()
             });
+            const messsage = (response.data as ApiResponse<IUser>).message
 
             return renderWithCommon(req, res, "login", {
                 title: "Đăng nhập | CoreStation",
-                successMessage: "Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.",
+                successMessage: messsage,
             });
         } catch (error: any) {
             const apiErr = error?.response?.data;
@@ -92,7 +95,7 @@ const siteController = {
             title: 'Quên mật khẩu | CoreStation'
         });
     },
- 
+
     // Forgot Password Form
     forgotPasswordPost: async (req: Request, res: Response) => {
         const { email } = req.body as { email: string };
@@ -355,7 +358,7 @@ const siteController = {
     },
 
 
-    
+
     // --- CATALOG ---
     catalog: async (req: Request, res: Response) => {
         // Query parameters
@@ -537,7 +540,7 @@ const siteController = {
 
 
 
-    
+
     // --- CHECKOUT ---
     checkout: async (req: Request, res: Response) => {
         renderWithCommon(req, res, 'checkout', {
@@ -548,7 +551,7 @@ const siteController = {
     // Order result page
     orderResult: async (req: Request, res: Response) => {
         const { orderId } = req.params as { orderId?: string };
-        
+
         if (!orderId) {
             return res.redirect('/');
         }

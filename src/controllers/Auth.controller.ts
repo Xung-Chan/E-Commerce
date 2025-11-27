@@ -20,7 +20,7 @@ const authController = {
     register: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { email, fullName, address, isAnonymous } = req.body;
         const user = await authService.register({ email, password: null, fullName, address }, isAnonymous);
-        res.status(201).json(new ApiResponse(true, 201, "User created successfully", user));
+        res.status(201).json(new ApiResponse(true, 201, "Đăng ký thành công! Vui lòng kiểm tra email.", user));
     }),
 
 
@@ -28,6 +28,15 @@ const authController = {
         const { email } = req.body;
         await authService.forgotPassword(email);
         res.status(200).json(new ApiResponse(true, 200, "Password reset email sent", null));
+    }),
+
+    activateAccount: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
+        const { email } = req.body;
+        if (!email) {
+            throw new ApiError(400, "Bad Request", "Email không được để trống");
+        }
+        await authService.activateAccount(email);
+        res.status(200).json(new ApiResponse(true, 200, "Account activated successfully", null));
     }),
 
     resetPassword: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
