@@ -586,9 +586,65 @@ const siteController = {
 
     // --- ORDER HISTORY ---
     orderHistory: async (req: Request, res: Response) => {
-        renderWithCommon(req, res, 'order_history', {
-            title: 'Lịch sử đơn hàng | CoreStation'
-        });
+        const commonData = await getCommonViewData(req);
+        
+        if (!commonData.isLoggedIn) {
+            return res.redirect('/login');
+        }
+
+        try {
+            const api = createApi(req);
+            const { page = '1', limit = '10', status = '', sortBy = 'updatedAt', sortOrder = 'desc' } = (req.query || {}) as any;
+
+            const params: any = { page, limit, sortBy, sortOrder };
+            if (status) params.status = status;
+
+            const ordersRes = await api.get(`${apiUrl}/api/orders/me`, { params });
+            const paginationData = unwrap(ordersRes);
+
+            const orders = Array.isArray(paginationData?.datas)
+                ? paginationData.datas
+                : (Array.isArray(paginationData) ? paginationData : []);
+
+            const pageNum = Number(paginationData?.page || page) || 1;
+            const totalPages = Number(paginationData?.totalPages || 1) || 1;
+            const hasNextPage = Boolean(paginationData?.hasNextPage);
+            const hasPrevPage = Boolean(paginationData?.hasPrevPage);
+            const prevPage = hasPrevPage ? pageNum - 1 : null;
+            const nextPage = hasNextPage ? pageNum + 1 : null;
+
+            const filteredQuery: Record<string, string> = {};
+            Object.entries({ status, sortBy, sortOrder, limit }).forEach(([k, v]) => {
+                if (v !== undefined && v !== null && String(v) !== '') filteredQuery[k] = String(v);
+            });
+            const baseQueryString = Object.entries(filteredQuery)
+                .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+                .join('&');
+
+            const pages = Array.from({ length: totalPages }, (_, i) => ({
+                number: i + 1,
+                active: i + 1 === pageNum
+            }));
+
+            return renderWithCommon(req, res, 'order_history', {
+                title: 'Lịch sử đơn hàng | CoreStation',
+                orders,
+                pages,
+                isFirstPage: !hasPrevPage,
+                isLastPage: !hasNextPage,
+                prevPage,
+                nextPage,
+                baseQueryString,
+                query: { page: pageNum, limit: Number(limit) || 10, status, sortBy, sortOrder }
+            });
+        } catch (error: any) {
+            return renderWithCommon(req, res, 'order_history', {
+                title: 'Lịch sử đơn hàng | CoreStation',
+                orders: [],
+                pagination: null,
+                errorMessage: error?.response?.data?.message || 'Không thể tải lịch sử đơn hàng'
+            });
+        }
     }
 };
 
