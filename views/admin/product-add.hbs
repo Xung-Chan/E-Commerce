@@ -1,0 +1,175 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">{{title}}</h3> 
+    <a href="/admin/products" class="btn btn-secondary">
+        <i class="bi bi-arrow-left me-2"></i> Quay lại Danh sách
+    </a>
+</div>
+
+<form id="addProductForm" enctype="multipart/form-data" method="POST"> 
+    
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-success text-white">
+            <h6 class="m-0 fw-bold">Thông tin cơ bản</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">  
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Tên Sản Phẩm <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categoryId" class="form-label">Danh Mục <span class="text-danger">*</span></label>
+                        <select class="form-select" id="categoryId" name="categoryId" required>
+                            <option value="" selected disabled>--- Chọn Danh Mục ---</option>
+                            {{#each categories}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="brandId" class="form-label">Thương Hiệu <span class="text-danger">*</span></label>
+                        <select class="form-select" id="brandId" name="brandId" required>
+                            <option value="" selected disabled>--- Chọn Thương Hiệu ---</option>
+                            {{#each brands}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="discount" class="form-label">Giảm giá (%)</label>
+                        <input type="number" class="form-control" id="discount" name="discount" value="0" min="0" max="50">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Mô Tả Sản Phẩm <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="images" class="form-label">Hình ảnh Sản phẩm <span class="text-danger">*</span></label>
+                <input type="file" class="form-control" id="images" name="images" multiple required>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-secondary text-white">
+            <h6 class="m-0 fw-bold">Biến thể & Tồn kho</h6>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped table-sm" id="variantsTable">
+                <thead>
+                    <tr>
+                        <th>Đặc điểm/Cấu hình</th>
+                        <th>Giá bán</th>
+                        <th>Tồn kho</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="variantsTableBody">
+                    </tbody>
+            </table>
+            
+            <button type="button" id="addVariantBtn" class="btn btn-sm btn-outline-primary mt-3">
+                <i class="bi bi-plus-circle"></i> Thêm Biến Thể
+            </button>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-lg mb-5">
+        <i class="bi bi-check-circle-fill me-2"></i> Tạo Sản Phẩm
+    </button>
+</form>
+
+## 🛠️ Bước 3: Thêm JavaScript (Logic POST & Variants)
+
+Thêm thẻ `<script>` vào cuối file **`product-add.hbs`** để xử lý API POST và thêm/xóa dòng Variant động.
+
+```html
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('addProductForm');
+        const variantsTableBody = document.getElementById('variantsTableBody');
+        const addVariantBtn = document.getElementById('addVariantBtn');
+        let variantIndex = 0; // Bắt đầu index từ 0
+
+        // Thêm dòng Variant mặc định khi load trang
+        createNewVariantRow(variantIndex);
+
+        // --- HÀM TẠO DÒNG VARIANT MỚI (Cho Add) ---
+        function createNewVariantRow(index) {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" class="form-control" name="variants[${index}][distinctFeature]" required></td>
+                <td><input type="number" class="form-control" name="variants[${index}][price]" required min="0"></td>
+                <td><input type="number" class="form-control" name="variants[${index}][stock]" required min="0"></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger remove-new-variant-btn">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            `;
+            variantsTableBody.appendChild(newRow);
+            variantIndex++;
+        }
+        
+        // --- XỬ LÝ SỰ KIỆN NÚT ---
+        
+        // Nút Thêm Variant
+        addVariantBtn.addEventListener('click', function() {
+            createNewVariantRow(variantIndex);
+        });
+
+        // Xóa dòng Variant mới tạo
+        variantsTableBody.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-new-variant-btn')) {
+                e.target.closest('tr').remove();
+            }
+        });
+
+
+        // product-add.hbs (Phần XỬ LÝ FORM SUBMIT)
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // TẠO FORMDATA CHUẨN (Bao gồm file và các trường variants[index][...])
+            const formData = new FormData(form); 
+            
+            const discount = Number(formData.get('discount'));
+            const maxUse = Number(formData.get('maxUse'));
+
+            // GHI ĐÈ các trường số đã ép kiểu trở lại FormData
+            formData.set('discount', discount); 
+            formData.set('maxUse', maxUse);
+
+            try {
+                const response = await fetch('/api/products', {
+                    method: 'POST', 
+                    body: formData, 
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert(result.message || 'Tạo sản phẩm thành công!');
+                    window.location.href = `/admin/products`; 
+                } else {
+                    alert(`Lỗi: ${result.message || 'Tạo sản phẩm thất bại.'}`);
+                }
+            } catch (error) {
+                console.error('Lỗi API tạo sản phẩm:', error);
+                alert('Đã xảy ra lỗi hệ thống khi lưu.');
+            }
+        });
+    });
+</script>

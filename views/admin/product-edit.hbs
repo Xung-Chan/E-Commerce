@@ -1,0 +1,239 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">{{title}}</h3> 
+    <a href="/admin/products/{{product._id}}" class="btn btn-secondary">
+        <i class="bi bi-eye-fill me-2"></i> Xem Chi Tiết
+    </a>
+</div>
+
+<form id="editProductForm" data-product-id="{{product._id}}">
+    
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-info text-white">
+            <h6 class="m-0 fw-bold">Thông tin cơ bản</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Tên Sản Phẩm</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{product.name}}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categoryId" class="form-label">Danh Mục</label>
+                        <select class="form-select" id="categoryId" name="categoryId" required>
+                            
+                            <option value="" disabled>--- Chọn Danh Mục ---</option> 
+                            
+                            {{#each categories}}
+                                <option value="{{this._id}}" {{#if (isEqual this._id ../product.categoryId)}}selected{{/if}}>
+                                    {{this.name}}
+                                </option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="brandId" class="form-label">Thương Hiệu</label>
+                        <select class="form-select" id="brandId" name="brandId" required>
+                            
+                            <option value="" disabled>--- Chọn Thương Hiệu ---</option> 
+                            
+                            {{#each brands}}
+                                <option value="{{this._id}}" {{#if (isEqual this._id ../product.brandId)}}selected{{/if}}>
+                                    {{this.name}}
+                                </option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="discount" class="form-label">Giảm giá (%)</label>
+                        <input type="number" class="form-control" id="discount" name="discount" value="{{product.discount}}" min="0" max="50">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Mô Tả Sản Phẩm</label>
+                <textarea class="form-control" id="description" name="description" rows="4">{{product.description}}</textarea>
+            </div>
+            
+            <p class="text-muted">Lưu ý: Quản lý hình ảnh và giá min/max được xử lý tự động hoặc qua module riêng.</p>
+        </div>
+    </div>
+    
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-secondary text-white">
+            <h6 class="m-0 fw-bold">Biến thể & Tồn kho</h6>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped table-sm" id="variantsTable">
+                <thead>
+                    <tr>
+                        <th>Đặc điểm/Cấu hình</th>
+                        <th>Giá bán</th>
+                        <th>Tồn kho</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="variantsTableBody">
+                    {{#each product.variants}}
+                    <tr data-variant-id="{{this._id}}">
+                        <input type="hidden" name="variants[{{@index}}][id]" value="{{this._id}}"> 
+                        
+                        <td>
+                            <input type="text" class="form-control" name="variants[{{@index}}][distinctFeature]" value="{{this.distinctFeature}}" required>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" name="variants[{{@index}}][price]" value="{{this.price}}" required min="0">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" name="variants[{{@index}}][stock]" value="{{this.stock}}" required min="0">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger delete-variant-btn" data-variant-id="{{this._id}}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            
+            <button type="button" id="addVariantBtn" class="btn btn-sm btn-outline-primary mt-3">
+                <i class="bi bi-plus-circle"></i> Thêm Biến Thể Mới
+            </button>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-lg mb-5">
+        <i class="bi bi-check-circle-fill me-2"></i> Lưu Tất Cả Thay Đổi
+    </button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('editProductForm');
+        const productId = form.dataset.productId;
+        const variantsTableBody = document.getElementById('variantsTableBody');
+        const addVariantBtn = document.getElementById('addVariantBtn');
+        let variantIndex = {{product.variants.length}};
+
+        // --- HÀM TẠO DÒNG VARIANT MỚI (Cho Add) ---
+        function createNewVariantRow(index) {
+            const newRow = document.createElement('tr');
+            newRow.setAttribute('data-new-variant', 'true');
+            newRow.innerHTML = `
+                <input type="hidden" name="variants[${index}][id]" value=""> 
+                <td><input type="text" class="form-control" name="variants[${index}][distinctFeature]" required></td>
+                <td><input type="number" class="form-control" name="variants[${index}][price]" required min="0"></td>
+                <td><input type="number" class="form-control" name="variants[${index}][stock]" required min="0"></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger remove-new-variant-btn">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </td>
+            `;
+            variantsTableBody.appendChild(newRow);
+            variantIndex++;
+        }
+        
+        // --- XỬ LÝ SỰ KIỆN NÚT ---
+        
+        // Nút Thêm Variant
+        addVariantBtn.addEventListener('click', function() {
+            createNewVariantRow(variantIndex);
+        });
+
+        // Xóa dòng Variant mới tạo (chưa có ID)
+        variantsTableBody.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-new-variant-btn')) {
+                e.target.closest('tr').remove();
+            }
+            
+            // XỬ LÝ NÚT XÓA VARIANT CŨ (Cần API DELETE Variant)
+            if (e.target.closest('.delete-variant-btn')) {
+                e.preventDefault(); 
+                const button = e.target.closest('.delete-variant-btn');
+                const variantId = button.dataset.variantId;
+                
+                if (confirm('Bạn có chắc chắn muốn xóa biến thể này?')) {
+                    // CẦN GỌI API DELETE VARIANT TẠI ĐÂY (Ví dụ: /api/variants/:id)
+                    alert('Chức năng xóa Variant cần triển khai API DELETE /api/variants/:id');
+                    // Tạm thời ẩn dòng trên UI
+                    button.closest('tr').style.opacity = '0.5';
+                }
+            }
+        });
+
+
+        // --- XỬ LÝ FORM SUBMIT (API PUT/PATCH) ---
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = {};
+            
+            // Chuyển đổi FormData thành cấu trúc JSON nested phù hợp với Express Body Parser
+            const productData = {};
+            const variantsArray = [];
+            
+            for (let [key, value] of formData.entries()) {
+                if (key.startsWith('variants[')) {
+                    // Lấy index và tên trường (distinctFeature, price, stock, id)
+                    const match = key.match(/variants\[(\d+)\]\[(\w+)\]/);
+                    if (match) {
+                        const index = parseInt(match[1]);
+                        const field = match[2];
+
+                        // Đảm bảo array[index] tồn tại
+                        if (!variantsArray[index]) {
+                            variantsArray[index] = {};
+                        }
+
+                        // Ép kiểu số
+                        if (field === 'price' || field === 'stock') {
+                            value = Number(value);
+                        }
+
+                        variantsArray[index][field] = value;
+                    }
+                } else {
+                    // Trường Product chính (name, discount, categoryId, brandId, description)
+                    productData[key] = value;
+                }
+            }
+            
+            // 3. Kết hợp Product và Variants
+            const fullUpdateData = {
+                ...productData,
+                variants: variantsArray.filter(v => v !== null) // Lọc bỏ các mục undefined
+            };
+            
+            // 4. Gọi API PUT (Route đã có: /api/products/:id)
+            try {
+                const response = await fetch(`/api/products/${productId}`, {
+                    method: 'PUT', // Dùng PUT/PATCH tùy theo API Product.route của bạn
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(fullUpdateData), 
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message || 'Cập nhật sản phẩm thành công!');
+                    window.location.href = `/admin/products/${productId}`; // Quay lại trang detail
+                } else {
+                    alert(`Lỗi: ${result.message || 'Cập nhật thất bại.'}`);
+                }
+            } catch (error) {
+                console.error('Lỗi API cập nhật sản phẩm:', error);
+                alert('Đã xảy ra lỗi hệ thống khi lưu.');
+            }
+        });
+    });
+</script>

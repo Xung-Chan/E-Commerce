@@ -1,0 +1,119 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">Chi Tiết Sản Phẩm: {{product.name}}</h3> 
+    
+    <div class="d-flex gap-2">
+        <a href="/admin/products/{{product._id}}/edit" class="btn btn-info">
+            <i class="bi bi-pencil-square me-2"></i> Chỉnh Sửa Sản Phẩm
+        </a>
+        <a href="/admin/products" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i> Quay lại Danh sách
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-primary text-white">
+                <h6 class="m-0 fw-bold">Thông tin chung & Chiết khấu</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>ID Sản phẩm:</strong> <code class="text-danger">{{product._id}}</code></p>
+                        <p><strong>Tên Sản phẩm:</strong> {{product.name}}</p>
+                        <p><strong>Giảm giá (%):</strong> <span class="fw-bold text-danger">{{product.discount}}%</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Giá thấp nhất:</strong> {{formatPrice product.minPrice}}</p>
+                        <p><strong>Giá cao nhất:</strong> {{formatPrice product.maxPrice}}</p>
+                        <p><strong>Số lượng đã bán:</strong> {{product.soldCount}}</p>
+                        <p><strong>Đánh giá TB:</strong> {{product.rate}} sao</p>
+                    </div>
+                </div>
+                
+                <h6 class="fw-bold mt-4">Mô tả sản phẩm</h6>
+                <p>{{product.description}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-5">
+        
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 fw-bold text-dark">Hình ảnh (Tổng {{product.images.length}})</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                    {{#each product.images}}
+                        <img src="{{this}}" alt="Product Image" style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #ddd;">
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 fw-bold text-dark">Liên kết</h6>
+            </div>
+            <div class="card-body">
+                
+                <p><strong>Thương Hiệu:</strong> <span class="fw-bold">{{product.brandName}}</span></p>
+                <p>Brand ID: <code class="text-muted">{{product.brandId}}</code></p>
+                
+                <hr>
+                
+                <p><strong>Danh Mục:</strong> <span class="fw-bold">{{product.categoryName}}</span></p>
+                <p>Category ID: <code class="text-muted">{{product.categoryId}}</code></p>
+                
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<hr>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-secondary text-white">
+        <h6 class="m-0 fw-bold"><i class="bi bi-gear-fill me-2"></i> Danh sách Biến thể (Variants)</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>ID Variant</th>
+                        <th>Đặc điểm khác biệt</th>
+                        <th>Giá (chưa giảm)</th>
+                        <th>Giá sau giảm</th>
+                        <th>Tồn kho</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each product.variants}}
+                    <tr>
+                        <td><code>{{this._id}}</code></td>
+                        <td class="fw-bold">{{this.distinctFeature}}</td>
+                        <td>{{formatPrice this.price}}</td>
+                        <td><span class="text-danger">{{formatPrice this.discountPrice}}</span></td> 
+                        <td><span class="badge {{#if (lte this.stock 5)}}bg-warning text-dark{{else}}bg-success{{/if}}">{{this.stock}}</span></td>
+                    </tr>
+                    {{/each}}
+                    {{#unless product.variants}}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">Sản phẩm này chưa có biến thể nào.</td>
+                    </tr>
+                    {{/unless}}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="text-end mt-3">
+            <a href="/admin/products/{{product._id}}/edit" class="btn btn-sm btn-outline-info">
+                Quản lý Variants chi tiết
+            </a>
+        </div>
+    </div>
+</div>

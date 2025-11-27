@@ -8,6 +8,8 @@ import ApiError from "../utils/ApiError.js";
 import { IUser } from "../daos/User.dao.js"; 
 import couponService from "../services/Coupon.service.js";
 import { UpdateCouponDto } from "../dto/Update.dto.js";
+import productService from "../services/Product.service.js";
+import { CreateProductRequest } from "../dto/Request.dto.js";
 
 import bcrypt from "bcryptjs";
 
@@ -85,6 +87,34 @@ const adminController = {
         const success = await couponService.updateCouponById(couponId, data); 
         return success;
     },
+
+    //products-management
+    getAllProductsHandler: async (queryParams: any = {}) => {
+        const filter: any = {};
+        
+        if (queryParams.q) {
+            const searchRegex = new RegExp(queryParams.q, 'i');
+            filter.$or = [
+                { name: searchRegex },
+            ];
+        }
+        if (queryParams.categoryId) filter.categoryId = queryParams.categoryId;
+        if (queryParams.brandId) filter.brandId = queryParams.brandId; 
+
+        const products = await productService.getProductsForAdmin(filter); 
+        return products;
+    },
+
+    getProductByIdHandler: async (productId: string) => {
+        const productDetail = await productService.getProductDetailForAdmin(productId); 
+        return productDetail;
+    },
+
+    createProductHandler: expressAsyncHandler(async (req: Request, res: Response) => {
+        const productData: CreateProductRequest = req.body;
+        const product = await productService.createProduct(productData);
+        res.status(201).json({ success: true, message: "Sản phẩm đã được tạo thành công.", product });
+    }),
 };
 
 export default adminController;
