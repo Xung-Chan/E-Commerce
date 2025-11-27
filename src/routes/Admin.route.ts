@@ -7,6 +7,7 @@ import { IProduct } from "../daos/Product.dao.js";
 
 const router = Router();
 
+//dashboard
 router.get("/dashboard", authJwtAdmin, async (req: Request, res: Response) => {
     res.render("admin/dashboard", {
         title: "Dashboard",
@@ -14,6 +15,7 @@ router.get("/dashboard", authJwtAdmin, async (req: Request, res: Response) => {
     });
 });
 
+//users-management
 router.get("/users", authJwtAdmin, async (req: Request, res: Response) => {
     const users = await adminController.getAllUsersHandler(req.query); 
     res.render("admin/users-management", { 
@@ -42,17 +44,6 @@ router.get("/users/:id", authJwtAdmin, async (req: Request, res: Response) => {
             layout: "admin"
         });
     }
-});
-
-
-router.get("/products", authJwtAdmin, async (req: Request, res: Response) => {
-    const products: IProduct[] = []; 
-    
-    res.render("admin/products-management", { 
-        title: "Products",
-        products, 
-        layout: "admin" 
-    });
 });
 
 router.delete("/api/users/:id", authJwtAdmin, async (req: Request, res: Response) => {
@@ -142,12 +133,92 @@ router.patch("/api/users/:userId", authJwtAdmin, async (req: Request, res: Respo
     }
 });
 
+//coupons-management 
 router.get("/coupons", authJwtAdmin, async (req: Request, res: Response) => {
-    const coupons: any[] = []; 
+    try {
+        const paginationData = await adminController.getAllCouponsHandler(req.query); 
+        
+        res.render("admin/coupons-management", { 
+            title: "Coupons",
+            coupons: paginationData.datas, 
+            pagination: paginationData, 
+            query: req.query || {}, 
+            layout: "admin" 
+        });
+    } catch (error) {
+        console.error("Lỗi khi tải coupons:", error);
+        res.status(500).render("error/500", { title: "Lỗi Server", layout: "admin" });
+    }
+});
+
+router.post("/api/coupons", authJwtAdmin, async (req: Request, res: Response) => {
+    try {
+        const newCoupon = await adminController.createCouponHandler(req.body);
+        return res.status(201).json({ success: true, message: "Mã giảm giá đã được tạo.", coupon: newCoupon });
+    } catch (error: any) {
+        console.error("Lỗi tạo coupon:", error);
+        return res.status(error.statusCode || 400).json({ success: false, message: error.message || "Lỗi tạo coupon." });
+    }
+});
+
+router.delete("/api/coupons/:id", authJwtAdmin, async (req: Request, res: Response) => {
+    try {
+        const success = await adminController.deleteCouponHandler(req.params.id!);
+        if (success) {
+            return res.status(200).json({ success: true, message: "Mã giảm giá đã được xóa." });
+        } else {
+            return res.status(404).json({ success: false, message: "Không tìm thấy mã giảm giá." });
+        }
+    } catch (error: any) {
+        console.error("Lỗi xóa coupon:", error);
+        return res.status(error.statusCode || 500).json({ success: false, message: error.message || "Lỗi xóa server." });
+    }
+});
+
+router.patch("/api/coupons/:id/status", authJwtAdmin, async (req: Request, res: Response) => {
+    const couponId = req.params.id!;
+    const { status } = req.body;
+
+    try {
+        const success = await adminController.updateCouponStatusHandler(couponId, status); 
+        if (success) {
+            return res.status(200).json({ success: true, message: `Trạng thái coupon đã được cập nhật thành ${status}.` });
+        } else {
+            return res.status(404).json({ success: false, message: "Không tìm thấy mã giảm giá." });
+        }
+    } catch (error: any) {
+        console.error("Lỗi cập nhật status coupon:", error);
+        return res.status(error.statusCode || 500).json({ success: false, message: error.message || "Lỗi server." });
+    }
+});
+
+router.patch("/api/coupons/:id", authJwtAdmin, async (req: Request, res: Response) => {
+    const couponId = req.params.id!;
+    const updateData = req.body;
     
-    res.render("admin/coupons-management", { 
-        title: "Coupons",
-        coupons, 
+    try {
+        const success = await adminController.updateCouponDetailHandler(couponId, updateData); 
+        
+        if (success) {
+            return res.status(200).json({ success: true, message: "Thông tin mã giảm giá đã được cập nhật." });
+        } else {
+            return res.status(400).json({ success: false, message: "Không tìm thấy mã giảm giá hoặc không có thay đổi." });
+        }
+    } catch (error: any) {
+        console.error("Lỗi khi cập nhật coupon:", error);
+        return res.status(error.statusCode || 400).json({ success: false, message: error.message || "Lỗi cập nhật server." });
+    }
+});
+
+
+
+
+router.get("/products", authJwtAdmin, async (req: Request, res: Response) => {
+    const products: IProduct[] = []; 
+    
+    res.render("admin/products-management", { 
+        title: "Products",
+        products, 
         layout: "admin" 
     });
 });

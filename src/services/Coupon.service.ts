@@ -91,11 +91,20 @@ class CouponService {
             coupon.status = CouponStatus.INACTIVE;
         }
 
-
-
         return await couponDao.patchById(coupon._id.toString(), { used: coupon.used, status: coupon.status, userIds: [...coupon.userIds, userId] });
     }
 
+    //admin
+    async updateCouponStatusById(id: string, status: string): Promise<boolean> {
+        const updateStatus = status as CouponStatus; 
+        
+        const result = await couponDao.patchById(id, { status: updateStatus }); 
+        return result;
+    }
+    async updateCouponById(id: string, data: UpdateCouponDto): Promise<boolean> {
+        const result = await couponDao.patchById(id, data);
+        return result;
+    }
 }
 const couponService = new CouponService();
 export default couponService;

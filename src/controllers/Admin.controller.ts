@@ -6,10 +6,13 @@ import orderService from "../services/Order.service.js";
 import ApiResponse from "../utils/Api.response.js";
 import ApiError from "../utils/ApiError.js";
 import { IUser } from "../daos/User.dao.js"; 
+import couponService from "../services/Coupon.service.js";
+import { UpdateCouponDto } from "../dto/Update.dto.js";
 
 import bcrypt from "bcryptjs";
 
 const adminController = {
+    //users-management
     getAllUsersHandler: async (queryParams: any = {}) => {
         const filter: any = {};
         if (queryParams.role) {
@@ -56,6 +59,30 @@ const adminController = {
             updateData.password = hashedPassword;
         } 
         const success = await userService.updateUserById(userId, updateData); 
+        return success;
+    },
+    
+    //coupons-management
+    getAllCouponsHandler: async (queryParams: any = {}) => {
+        const couponPaginationResult = await couponService.getCouponByQuery(queryParams); 
+        return couponPaginationResult; 
+    },
+
+    deleteCouponHandler: async (couponId: string): Promise<boolean> => {
+        const success = await couponService.deleteCouponById(couponId);
+        return success;
+    },
+
+    createCouponHandler: async (data: any) => {
+        const newCoupon = await couponService.createCoupon(data);
+        return newCoupon;
+    },
+    updateCouponStatusHandler: async (couponId: string, status: string): Promise<boolean> => {
+        const success = await couponService.updateCouponStatusById(couponId, status); 
+        return success;
+    },
+    updateCouponDetailHandler: async (couponId: string, data: UpdateCouponDto): Promise<boolean> => {
+        const success = await couponService.updateCouponById(couponId, data); 
         return success;
     },
 };

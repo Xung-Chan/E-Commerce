@@ -96,3 +96,18 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 1rem;
     box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.2);
 }
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color) !important; 
+    border-color: var(--primary-color) !important;
+    color: white !important; 
+    font-weight: bold !important; 
+    
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.6) !important; 
+}
+
+.pagination .page-item.active .page-link:hover,
+.pagination .page-item.active .page-link:focus {
+    background-color: #0069d9 !important;
+    border-color: #0062cc !important;
+}

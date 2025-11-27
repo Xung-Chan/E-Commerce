@@ -101,7 +101,36 @@ app.engine(
             slugify: (str: string) => {
                 if (!str) return '';
                 return slugify(str);
-            }
+            },
+            //admin
+            add: (a: number, b: number) => a + b,
+            subtract: (a: number, b: number) => a - b, 
+            gt: (a: number, b: number) => a > b,
+            isEqual: (a: any, b: any) => String(a) === String(b),
+            buildPageQuery: (obj: Record<string, unknown>, page: number) => { 
+                const queryObj = obj || {}; 
+                const filteredObj = Object.fromEntries(
+                    Object.entries(queryObj).filter(([k, v]) => k !== 'page')
+                );
+                const newObj = { ...filteredObj, page: page };
+                const params = Object.entries(newObj).filter(([, v]) => {
+                    if (v === undefined || v === null) return false;
+                    if (String(v) === '') return false; 
+                    return true;
+                });
+                return params.map(([k, v]) => {
+                    const encodedValue = encodeURIComponent(String(v)); 
+                    return `${k}=${encodedValue}`;
+                }).join('&');
+            },
+            assign: function (variableName: string, value: any, options: any) {
+                if (options && options.data) {
+                    options.data.root[variableName] = value;
+                } else if (this && this[variableName]) {
+                    this[variableName] = value;
+                }
+            },
+
         }
     })
 );
