@@ -2,6 +2,8 @@
 import { Router, Request, Response } from "express";
 import adminController from "../controllers/Admin.controller.js";
 import { authJwtAdmin } from "../middleware/authJwt.middleware.js";
+import brandService from "../services/Brand.service.js";
+import categoryService from "../services/Category.service.js";
 
 import { IProduct } from "../daos/Product.dao.js";
 
@@ -210,17 +212,76 @@ router.patch("/api/coupons/:id", authJwtAdmin, async (req: Request, res: Respons
     }
 });
 
-
-
+//products-management
 
 router.get("/products", authJwtAdmin, async (req: Request, res: Response) => {
-    const products: IProduct[] = []; 
-    
+    const products = await adminController.getAllProductsHandler(req.query); 
     res.render("admin/products-management", { 
         title: "Products",
-        products, 
+        products: products, 
+        query: req.query || {}, 
         layout: "admin" 
     });
+});
+
+router.get("/products/add", authJwtAdmin, async (req: Request, res: Response) => {
+    try {
+        const brands = await brandService.getAllBrands(); 
+        const categories = await categoryService.getAllCategories(); 
+        
+        res.render("admin/product-add", { 
+            title: `Thêm Sản Phẩm Mới`,
+            brands: brands,
+            categories: categories,
+            layout: "admin"
+        });
+        
+    } catch (error: any) {
+        console.error("Lỗi khi tải trang thêm sản phẩm:", error);
+        res.status(500).send(`<h1>500 Internal Error</h1><p>${error.message || 'Lỗi tải dữ liệu cơ bản.'}</p><a href="/admin/products">Quay lại</a>`);
+    }
+});
+
+router.get("/products/:id", authJwtAdmin, async (req: Request, res: Response) => {
+    const productId = req.params.id!;
+    
+    try {
+        const product = await adminController.getProductByIdHandler(productId); 
+        
+        res.render("admin/product-detail", {
+            title: `Chi Tiết Sản Phẩm: ${product.name}`,
+            product: product, 
+            layout: "admin"
+        });
+        
+    } catch (error: any) {
+        console.error("Lỗi khi xem chi tiết sản phẩm:", error);
+        res.status(404).send(`<h1>404 Not Found</h1><p>${error.message || 'Không tìm thấy sản phẩm.'}</p><a href="/admin/products">Quay lại</a>`);
+    }
+});
+
+
+router.get("/products/:id/edit", authJwtAdmin, async (req: Request, res: Response) => {
+    const productId = req.params.id!;
+    
+    try {
+        const product = await adminController.getProductByIdHandler(productId); 
+
+        const brands = await brandService.getAllBrands(); 
+        const categories = await categoryService.getAllCategories(); 
+        
+        res.render("admin/product-edit", { 
+            title: `Chỉnh Sửa Sản Phẩm: ${product.name}`,
+            product: product, 
+            brands: brands,
+            categories: categories,
+            layout: "admin"
+        });
+        
+    } catch (error: any) {
+        console.error("Lỗi khi tải trang chỉnh sửa sản phẩm:", error);
+        res.status(404).send(`<h1>404 Not Found</h1><p>${error.message || 'Không tìm thấy sản phẩm cần chỉnh sửa.'}</p><a href="/admin/products">Quay lại</a>`);
+    }
 });
 
 export default router;

@@ -88,3 +88,107 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.block-btn, .unblock-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const userId = this.dataset.id;
+                const newStatus = this.dataset.status;
+                const actionText = newStatus === 'banned' ? 'khóa' : 'mở khóa';
+
+                if (confirm(`Bạn có chắc chắn muốn ${actionText} người dùng này không?`)) {
+                    try {
+                        const response = await fetch(`/admin/api/users/${userId}/status`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ status: newStatus }),
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            alert(data.message);
+                            location.reload(); 
+                        } else {
+                            alert(`Lỗi: ${data.message}`);
+                        }
+                    } catch (error) {
+                        console.error('Lỗi khi cập nhật trạng thái người dùng:', error);
+                        alert('Đã xảy ra lỗi khi thực hiện thao tác.');
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const userId = this.dataset.id;
+
+                if (confirm('Bạn có chắc chắn muốn XÓA người dùng này không? Hành động này không thể hoàn tác!')) {
+                    try {
+                        const response = await fetch(`/admin/api/users/${userId}`, { 
+                            method: 'DELETE', 
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            alert(data.message);
+                            location.reload(); 
+                        } else {
+                            alert(`Lỗi: ${data.message}`);
+                        }
+                    } catch (error) {
+                        console.error('Lỗi khi xóa người dùng:', error);
+                        alert('Đã xảy ra lỗi khi thực hiện thao tác xóa.');
+                    }
+                }
+            });
+        });
+    });
+
+    document.getElementById('userForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('userEmail').value;
+        const role = document.getElementById('userRole').value;
+        const password = document.getElementById('userPassword').value;
+
+        const userData = {
+            fullName,
+            email,
+            role,
+            password,
+            // Mặc định khi tạo qua Admin là "Admin Created"
+            address: "Admin Created Address" 
+        };
+
+        try {
+            const response = await fetch('/admin/api/users', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(data.message || 'Thêm người dùng thành công!');
+                const modalElement = document.getElementById('addUserModal');
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                modal.hide();
+                location.reload(); 
+            } else {
+                alert(`Lỗi: ${data.message || 'Không thể tạo người dùng.'}`);
+            }
+        } catch (error) {
+            console.error('Lỗi khi gửi form tạo người dùng:', error);
+            alert('Lỗi kết nối hoặc lỗi server.');
+        }
+    });
+    </script>
