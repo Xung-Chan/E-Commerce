@@ -1,0 +1,113 @@
+h1, h2, h3, h4, h5, h6 {
+    color: #344767;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3 !important;
+    transform: translateY(-1px);
+}
+
+.card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 1.5rem;
+}
+
+.card .text-xs {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.border-start-primary { border-left: 0.25rem solid #4e73df !important; }
+.border-start-success { border-left: 0.25rem solid #1cc88a !important; }
+.border-start-info { border-left: 0.25rem solid #36b9cc !important; }
+.border-start-warning { border-left: 0.25rem solid #f6c23e !important; }
+.text-gray-300 { color: #dee2e6 !important; }
+.text-gray-800 { color: #5a5c69 !important; }
+
+.table-responsive {
+    border-radius: 0.5rem;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead tr {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table th {
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f0f3f6;
+}
+
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 0.35rem;
+}
+
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+    box-shadow: none;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+.modal-header.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.modal-content {
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color) !important; 
+    border-color: var(--primary-color) !important;
+    color: white !important; 
+    font-weight: bold !important; 
+    
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.6) !important; 
+}
+
+.pagination .page-item.active .page-link:hover,
+.pagination .page-item.active .page-link:focus {
+    background-color: #0069d9 !important;
+    border-color: #0062cc !important;
+}

@@ -1,0 +1,90 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">{{title}}</h3> 
+    <a href="/admin/users" class="btn btn-secondary">
+        <i class="bi bi-arrow-left me-2"></i> Quay lại Danh sách
+    </a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-primary text-white">
+        <h6 class="m-0 fw-bold">Thông tin cá nhân & Tài khoản</h6>
+    </div>
+    
+    <div class="card-body">
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <p><strong>Họ Tên:</strong> {{user.fullName}}</p>
+                <p><strong>Email:</strong> {{user.email}}</p>
+                <p><strong>ID Người Dùng:</strong> <code class="text-danger">{{user.id}}</code></p>
+                <p><strong>Điểm tích lũy:</strong> {{user.point}}</p>
+            </div>
+            
+            <div class="col-md-6">
+                <p><strong>Vai Trò:</strong> 
+                    {{#if (eq user.role 'admin')}}
+                        <span class="badge bg-danger text-uppercase">ADMIN</span>
+                    {{else if (eq user.role 'manager')}}
+                        <span class="badge bg-warning text-dark text-uppercase">QUẢN LÝ</span>
+                    {{else}}
+                        <span class="badge bg-primary text-uppercase">USER</span>
+                    {{/if}}
+                </p>
+                <p><strong>Trạng Thái:</strong> 
+                    {{#if (eq user.status 'active')}}
+                        <span class="badge bg-success">Hoạt động</span>
+                    {{else}}
+                        <span class="badge bg-secondary">Đã khóa</span>
+                    {{/if}}
+                </p>
+                
+                <p><strong>Trạng thái Xóa:</strong>
+                    {{#if user.deletedAt}}
+                        <span class="badge bg-danger">Đã Xóa/Vô hiệu hóa</span>
+                    {{else}}
+                        <span class="badge bg-light text-success">Bình thường</span>
+                    {{/if}}
+                </p>
+            </div>
+        </div>
+        
+        <hr>
+
+        <h6 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-geo-alt-fill me-2"></i> Địa Chỉ Giao Hàng</h6>
+        <ul class="list-group mb-4">
+            {{#each user.addresses}}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{this.address}}
+                    <small class="text-muted">ID: {{this._id}}</small>
+                </li>
+            {{/each}}
+            {{#unless user.addresses}}
+                 <li class="list-group-item text-muted">Người dùng chưa có địa chỉ nào.</li>
+            {{/unless}}
+        </ul>
+        
+       <hr>
+        <h6 class="fw-bold text-dark mt-4 mb-3">Hành động</h6>
+        <div class="d-flex gap-3">
+            
+            <a href="/admin/users/{{user.id}}/edit" class="btn btn-info">
+                <i class="bi bi-pencil-square me-2"></i> Chỉnh Sửa Người Dùng
+            </a>
+            
+            {{#if (eq user.status 'active')}}
+                <button class="btn btn-warning block-btn" data-id="{{user.id}}" data-status="banned" title="Khóa người dùng">
+                    <i class="bi bi-person-x-fill me-2"></i> Khóa Tài Khoản
+                </button>
+            {{else}}
+                <button class="btn btn-success unblock-btn" data-id="{{user.id}}" data-status="active" title="Mở khóa người dùng">
+                    <i class="bi bi-unlock-fill me-2"></i> Mở Khóa Tài Khoản
+                </button>
+            {{/if}}
+
+            <button class="btn btn-danger delete-btn" data-id="{{user.id}}" title="Xóa người dùng vĩnh viễn">
+                <i class="bi bi-trash-fill me-2"></i> Xóa Người Dùng
+            </button>
+            
+        </div>
+    </div>
+</div>

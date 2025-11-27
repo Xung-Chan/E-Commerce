@@ -1,0 +1,259 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">Danh Sách Người Dùng</h3>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">
+        <i class="bi bi-person-plus me-2"></i> Thêm Người Dùng Mới
+    </button>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form class="row g-3 align-items-center" method="GET" action="/admin/users">
+            
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="q" placeholder="Tìm kiếm theo Tên hoặc Email" value="{{query.q}}">
+            </div>
+            
+            <div class="col-md-3">
+                <select class="form-select" name="role">
+                    <option value="" selected>Lọc theo Vai trò</option>
+                    <option value="admin" {{#if (eq query.role 'admin')}}selected{{/if}}>Admin</option>
+                    <option value="user" {{#if (eq query.role 'user')}}selected{{/if}}>Khách hàng</option>
+                    </select>
+            </div>
+            
+            <div class="col-md-3">
+                <select class="form-select" name="status">
+                    <option value="" selected>Lọc theo Trạng thái</option>
+                    <option value="active" {{#if (eq query.status 'active')}}selected{{/if}}>Hoạt động</option>
+                    
+                    <option value="banned" {{#if (eq query.status 'banned')}}selected{{/if}}>Đã khóa</option> 
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Tìm Kiếm
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped" id="userTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Họ Tên</th>
+                        <th>Email</th>
+                        <th>Vai Trò</th> 
+                        <th>Trạng Thái</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each users}}
+                    <tr>
+                        <td>{{this.id}}</td> 
+                        
+                        <td><a href="/admin/users/{{this.id}}" class="text-dark fw-bold">{{this.fullName}}</a></td>
+                        
+                        <td>{{this.email}}</td>
+                                                
+                        <td>
+                            {{#if (eq this.role 'admin')}}
+                                <span class="badge bg-danger text-uppercase">{{this.role}}</span>
+                            {{else if (eq this.role 'manager')}}
+                                <span class="badge bg-warning text-dark text-uppercase">{{this.role}}</span>
+                            {{else}}
+                                <span class="badge bg-primary text-uppercase">{{this.role}}</span>
+                            {{/if}}
+                        </td>
+                        
+                        <td>
+                            {{#if (eq this.status 'active')}}
+                                <span class="badge bg-success">Hoạt động</span>
+                            {{else}}
+                                <span class="badge bg-secondary">Đã khóa</span>
+                            {{/if}}
+                        </td>
+                        
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="/admin/users/{{this.id}}" class="btn btn-info btn-sm" title="Xem chi tiết & Chỉnh sửa">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                                {{#if (eq this.status 'active')}}
+                                    <button class="btn btn-warning btn-sm block-btn" data-id="{{this.id}}" data-status="banned" title="Khóa người dùng">
+                                        <i class="bi bi-person-x-fill"></i>
+                                    </button>
+                                {{else}}
+                                    <button class="btn btn-success btn-sm unblock-btn" data-id="{{this.id}}" data-status="active" title="Mở khóa người dùng">
+                                        <i class="bi bi-unlock-fill"></i>
+                                    </button>
+                                {{/if}}
+
+                                <button class="btn btn-danger btn-sm delete-btn" data-id="{{this.id}}" title="Xóa người dùng">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                    
+                    {{#unless users}}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">Không tìm thấy người dùng nào.</td>
+                    </tr>
+                    {{/unless}}
+                </tbody>
+            </table>
+        </div>
+        <p class="text-muted mt-3">Hiển thị {{users.length}} người dùng.</p>
+        </div>
+</div>
+
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addUserModalLabel"><i class="bi bi-person-plus me-2"></i> Thêm Người Dùng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Họ Tên</label>
+                        <input type="text" class="form-control" id="fullName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="userEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userRole" class="form-label">Vai Trò</label>
+                        <select class="form-select" id="userRole" required>
+                            <option value="customer">Khách hàng</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userPassword" class="form-label">Mật Khẩu</label>
+                        <input type="password" class="form-control" id="userPassword">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" form="userForm" class="btn btn-primary">Lưu Người Dùng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.block-btn, .unblock-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const userId = this.dataset.id;
+                const newStatus = this.dataset.status;
+                const actionText = newStatus === 'banned' ? 'khóa' : 'mở khóa';
+
+                if (confirm(`Bạn có chắc chắn muốn ${actionText} người dùng này không?`)) {
+                    try {
+                        const response = await fetch(`/admin/api/users/${userId}/status`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ status: newStatus }),
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            alert(data.message);
+                            location.reload(); 
+                        } else {
+                            alert(`Lỗi: ${data.message}`);
+                        }
+                    } catch (error) {
+                        console.error('Lỗi khi cập nhật trạng thái người dùng:', error);
+                        alert('Đã xảy ra lỗi khi thực hiện thao tác.');
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const userId = this.dataset.id;
+
+                if (confirm('Bạn có chắc chắn muốn XÓA người dùng này không? Hành động này không thể hoàn tác!')) {
+                    try {
+                        const response = await fetch(`/admin/api/users/${userId}`, { 
+                            method: 'DELETE', 
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            alert(data.message);
+                            location.reload(); 
+                        } else {
+                            alert(`Lỗi: ${data.message}`);
+                        }
+                    } catch (error) {
+                        console.error('Lỗi khi xóa người dùng:', error);
+                        alert('Đã xảy ra lỗi khi thực hiện thao tác xóa.');
+                    }
+                }
+            });
+        });
+    });
+
+    document.getElementById('userForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('userEmail').value;
+        const role = document.getElementById('userRole').value;
+        const password = document.getElementById('userPassword').value;
+
+        const userData = {
+            fullName,
+            email,
+            role,
+            password,
+            // Mặc định khi tạo qua Admin là "Admin Created"
+            address: "Admin Created Address" 
+        };
+
+        try {
+            const response = await fetch('/admin/api/users', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(data.message || 'Thêm người dùng thành công!');
+                const modalElement = document.getElementById('addUserModal');
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                modal.hide();
+                location.reload(); 
+            } else {
+                alert(`Lỗi: ${data.message || 'Không thể tạo người dùng.'}`);
+            }
+        } catch (error) {
+            console.error('Lỗi khi gửi form tạo người dùng:', error);
+            alert('Lỗi kết nối hoặc lỗi server.');
+        }
+    });
+    </script>

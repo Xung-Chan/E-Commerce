@@ -1,0 +1,141 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">Danh Sách Sản Phẩm</h3>
+    <a href="/admin/products/add" class="btn btn-success">
+        <i class="bi bi-box-seam me-2"></i> Thêm Sản Phẩm Mới
+    </a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form class="row g-3 align-items-center">
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Tìm kiếm theo Tên, Mã SKU...">
+            </div>
+            <div class="col-md-2">
+                <select class="form-select">
+                    <option selected>Danh Mục</option>
+                    {{!-- {{#each categories}} --}}
+                    <option value="1">Điện Thoại</option>
+                    <option value="2">Máy Tính Bảng</option>
+                    {{!-- {{/each}} --}}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select">
+                    <option selected>Thương Hiệu</option>
+                    {{!-- {{#each brands}} --}}
+                    <option value="A">Samsung</option>
+                    <option value="B">Apple</option>
+                    {{!-- {{/each}} --}}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select">
+                    <option selected>Trạng Thái</option>
+                    <option value="active">Đang bán</option>
+                    <option value="inactive">Ngừng bán</option>
+                    <option value="draft">Bản nháp</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Tìm Kiếm
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 fw-bold text-primary">Bảng Sản Phẩm</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped" id="productTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ảnh</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Danh Mục</th>
+                        <th>Giá Bán</th>
+                        <th>Kho</th>
+                        <th>Trạng Thái</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each products}}
+                    <tr>
+                        <td>{{this.id}}</td>
+                        <td>[Image of product thumbnail]</td>
+                        <td>
+                            <a href="/admin/products/{{this.id}}" class="fw-bold">{{this.name}}</a>
+                        </td>
+                        <td>{{this.category.name}}</td>
+                        <td>{{formatCurrency this.price}}</td> {{!-- Cần helper formatCurrency --}}
+                        <td>{{this.stockQuantity}}</td>
+                        <td>
+                            <span class="badge {{#if (eq this.status 'active')}}bg-success{{else if (eq this.status 'low')}}bg-warning text-dark{{else}}bg-secondary{{/if}}">
+                                {{this.status}}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/admin/products/{{this.id}}" class="btn btn-sm btn-info me-2" title="Chỉnh sửa"><i class="bi bi-pencil"></i></a>
+                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{this.id}}" title="Xóa"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                    {{#unless products}}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">Không tìm thấy sản phẩm nào.</td>
+                    </tr>
+                    {{/unless}}
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-end mt-3">
+                <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">Sau</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addProductModalLabel"><i class="bi bi-box-seam me-2"></i> Thêm Sản Phẩm Nhanh</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Sử dụng modal này cho trường hợp cần thêm nhanh các trường cơ bản. Nếu sản phẩm có biến thể phức tạp, nên dùng trang chỉnh sửa riêng (/admin/products/add).</p>
+                <form id="quickProductForm">
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="productName" class="form-label">Tên Sản Phẩm <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="productSku" class="form-label">Mã SKU</label>
+                            <input type="text" class="form-control" id="productSku">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Giá Bán <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="productPrice" required placeholder="VNĐ">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" form="quickProductForm" class="btn btn-primary">Lưu Sản Phẩm</button>
+            </div>
+        </div>
+    </div>
+</div>

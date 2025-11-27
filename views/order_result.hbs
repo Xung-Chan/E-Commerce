@@ -39,10 +39,10 @@
 								{{#if this.distinctFeature}}
 								<div class="small text-muted">{{this.distinctFeature}}</div>
 								{{/if}}
-								<div class="small">Số lượng: x{{this.quantity}}</div>
+								<div class="small">Số lượng: x{{this.quantity}} × {{formatPrice this.price}} VND</div>
 							</div>
 							<div class="text-end">
-								<div class="fw-semibold text-danger">{{formatPrice this.price}} VND</div>
+								<div class="fw-semibold text-danger">{{lineTotal this.price this.quantity}} VND</div>
 							</div>
 						</div>
 						{{/each}}

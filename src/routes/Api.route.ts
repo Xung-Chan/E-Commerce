@@ -11,6 +11,8 @@ import rattingRouter from "./Rate.route.js";
 import userRouter from "./User.route.js";
 import imageRouter from "./Image.route.js";
 import shippingRouter from "./ShippingMethod.route.js";
+import adminRouter from "./Admin.route.js";
+
 const apiRouter = Router()
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/brands", brandRouter);
@@ -24,5 +26,7 @@ apiRouter.use("/ratings", rattingRouter);
 apiRouter.use("/users", userRouter);
 apiRouter.use("/images", imageRouter);
 apiRouter.use("/shipping-methods", shippingRouter);
+apiRouter.use("/admin", adminRouter);
+
 
 export default apiRouter;

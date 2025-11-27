@@ -8,6 +8,7 @@ import { cartItemDao, ICartItem } from "../daos/CartItem.dao.js";
 import { variantDao } from "../daos/Variant.dao.js";
 import { CartResponse, UserResponse } from "../dto/Response.dto.js";
 import { ErrorDictionary } from "../middleware/errorDictionary.js";
+
 const userService = {
 
 
@@ -192,6 +193,39 @@ const userService = {
             throw new ApiError(500, "Internal Server Error", "Failed to delete cart item");
         }
         return result;
+    },
+
+    //admin
+    getAllUsersForAdmin: async (filter: any = {}): Promise<any[]> => { 
+        const users = await userDao.findBy(filter);
+        return users.map(user => ({
+            id: user._id.toString(),
+            fullName: user.fullName,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+            addresses: user.addresses,
+        }));
+    },
+    deleteUserById: async (id: string): Promise<boolean> => {
+        const result = await userDao.deleteById(id); 
+        return result;
+    },
+    createUser: async (data: CreateUserDto): Promise<any> => {
+        if (!data.password) {
+            throw new ApiError(400, "Bad Request", "Mật khẩu là bắt buộc."); 
+        }
+        const hashedPassword = bcrypt.hashSync(data.password, 10);
+        const payload = data as any;
+        const userData = {
+            ...data,
+            password: hashedPassword,
+            addresses: [{ address: data.address || "No Address Provided" }],
+            role: payload.role || "user", 
+            status: UserStatus.ACTIVE 
+        };
+        const newUser = await userDao.create(userData); 
+        return newUser;
     },
 
 };

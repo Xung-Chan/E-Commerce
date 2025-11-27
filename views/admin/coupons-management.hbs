@@ -1,0 +1,292 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">Danh Sách Mã Giảm Giá</h3>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCouponModal">
+        <i class="bi bi-plus-circle me-2"></i> Thêm Mã Giảm Giá Mới
+    </button>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form class="row g-3 align-items-center" method="GET" action="/admin/coupons">
+            <div class="col-md-5">
+                <input type="text" class="form-control" name="code" placeholder="Tìm kiếm theo Mã Coupon..." value="{{query.code}}">
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select" name="status">
+                    <option value="" selected>Lọc theo Trạng thái</option>
+                    <option value="active" {{#if (eq query.status 'active')}}selected{{/if}}>Đang hoạt động</option>
+                    <option value="inactive" {{#if (eq query.status 'inactive')}}selected{{/if}}>Đã hết hạn/Khóa</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <select class="form-select" name="sortBy">
+                    <option value="" selected>Sắp xếp...</option>
+                    <option value="createdAt" {{#if (eq query.sortBy 'createdAt')}}selected{{/if}}>Ngày tạo</option>
+                    <option value="discount" {{#if (eq query.sortBy 'discount')}}selected{{/if}}>Giá trị (%)</option>
+                    <option value="used" {{#if (eq query.sortBy 'used')}}selected{{/if}}>Số lượng sử dụng</option>
+                    <option value="maxUse" {{#if (eq query.sortBy 'maxUse')}}selected{{/if}}>Tổng Giới hạn</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-funnel"></i> Lọc
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 fw-bold text-primary">Bảng dữ liệu Coupons</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped" id="couponTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã Coupon</th>
+                        <th>Giá Trị (%)</th> <th>Ngày Tạo</th>
+                        <th>Giới Hạn</th>
+                        <th>Trạng Thái</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each coupons}}
+                    <tr>
+                        <td class="fw-bold text-success">{{this.code}}</td>
+                        <td>{{this.discount}}%</td> 
+                        <td>{{formatDate this.createdAt}}</td>
+                        <td>{{this.used}}/{{this.maxUse}}</td>
+                        <td>
+                            {{#if (eq this.status 'active')}}
+                                <span class="badge bg-success">Active</span>
+                            {{else}}
+                                <span class="badge bg-secondary">Khóa/Hết hạn</span>
+                            {{/if}}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-info edit-btn" data-id="{{this._id}}" title="Chỉnh sửa"><i class="bi bi-pencil"></i></button>
+
+                                {{#if (eq this.status 'active')}}
+                                    <button class="btn btn-warning btn-sm block-btn" data-id="{{this._id}}" data-status="inactive" title="Khóa mã giảm giá">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </button>
+                                {{else}}
+                                    <button class="btn btn-success btn-sm unblock-btn" data-id="{{this._id}}" data-status="active" title="Mở khóa mã giảm giá">
+                                        <i class="bi bi-unlock-fill"></i>
+                                    </button>
+                                {{/if}}
+
+                                <button class="btn btn-danger btn-sm delete-btn" data-id="{{this._id}}" title="Xóa mã giảm giá">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                    </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation" class="mt-3">
+            {{#if pagination}}
+                {{#with pagination}}
+                {{#if (gt totalPages 1)}}
+                    <ul class="pagination justify-content-end">
+    
+                        <li class="page-item {{#if (isEqual page 1)}}disabled{{/if}}">
+                            {{#if (isEqual page 1)}}
+                                <a class="page-link" href="#" aria-label="Previous">Trước</a>
+                            {{else}}
+                                <a class="page-link" href="/admin/coupons?{{buildPageQuery ../query (subtract page 1)}}" aria-label="Previous">Trước</a>
+                            {{/if}}
+                        </li>
+                        
+                        {{#times totalPages}}
+                            {{#with (add 1 this) as |currentPage|}}
+                                <li class="page-item {{#if (isEqual currentPage page)}}active{{/if}}">
+                                    <a class="page-link" href="/admin/coupons?{{buildPageQuery ../query currentPage}}">{{currentPage}}</a>
+                                </li>
+                            {{/with}}
+                        {{/times}}
+
+                        <li class="page-item {{#if (isEqual page totalPages)}}disabled{{/if}}">
+                            {{#if (isEqual page totalPages)}}
+                                <a class="page-link" href="#" aria-label="Next">Sau</a>
+                            {{else}}
+                                <a class="page-link" href="/admin/coupons?{{buildPageQuery ../query (add page 1)}}" aria-label="Next">Sau</a>
+                            {{/if}}
+                        </li>
+                    </ul>
+                {{/if}}
+                {{/with}}
+            {{/if}}
+        </nav>
+    </div>
+</div>
+
+<div class="modal fade" id="addCouponModal" tabindex="-1" aria-labelledby="addCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addCouponModalLabel"><i class="bi bi-plus-circle me-2"></i> Thêm Mã Coupon Mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="couponForm">
+                    <div class="mb-3">
+                        <label for="couponCode" class="form-label">Mã Coupon</label>
+                        <input type="text" class="form-control" id="couponCode" name="code" placeholder="Để trống nếu muốn hệ thống tự tạo">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="discountValue" class="form-label">Giá Trị Giảm (%) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="discountValue" name="discount" required min="1" max="50" placeholder="VD: 20 (cho 20%)">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="usageLimit" class="form-label">Giới Hạn Sử Dụng (Tổng số lần) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="usageLimit" name="maxUse" required min="1" placeholder="VD: 100">
+                        </div>
+                    </div>
+                    
+                    </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" form="couponForm" class="btn btn-primary">Lưu Coupon</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const MODAL_ID = '#addCouponModal';
+        const modalElement = document.querySelector(MODAL_ID);
+        const couponForm = document.getElementById('couponForm');
+        
+        async function handleAction(endpoint, method, body, confirmMsg) {
+            if (method !== 'POST' && method !== 'PATCH' && !confirm(confirmMsg)) {
+                 if (method !== 'POST' && method !== 'PATCH') return;
+            }
+            if ((method === 'DELETE' || method === 'PATCH') && !confirm(confirmMsg)) return;
+
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: body ? JSON.stringify(body) : null,
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message || 'Thao tác thành công!');
+                    
+                    if (method === 'POST' || (method === 'PATCH' && couponForm.hasAttribute('data-mode'))) {
+                        bootstrap.Modal.getInstance(modalElement).hide();
+                    }
+                    
+                    location.reload(); 
+                } else {
+                    alert(`Lỗi: ${data.message || 'Không thể hoàn thành thao tác.'}`);
+                }
+            } catch (error) {
+                console.error('Lỗi kết nối API:', error);
+                alert('Đã xảy ra lỗi khi thực hiện thao tác.');
+            }
+        }
+        
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.dataset.id;
+                handleAction(
+                    `/admin/api/coupons/${id}`, 
+                    'DELETE', 
+                    null, 
+                    'Bạn có chắc chắn muốn XÓA mã giảm giá này không?'
+                );
+            });
+        });
+
+        document.querySelectorAll('.block-btn, .unblock-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.dataset.id;
+                const newStatus = this.dataset.status;
+                const actionText = newStatus === 'inactive' ? 'khóa' : 'mở khóa';
+                
+                handleAction(
+                    `/admin/api/coupons/${id}/status`, 
+                    'PATCH', 
+                    { status: newStatus }, 
+                    `Bạn có chắc chắn muốn ${actionText} mã giảm giá này không?`
+                );
+            });
+        });
+        
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const id = this.dataset.id;
+                
+                const response = await fetch(`/api/coupons/${id}`); 
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    const coupon = data.data;
+                    
+                    document.getElementById('couponCode').value = coupon.code;
+                    document.getElementById('discountValue').value = coupon.discount;
+                    document.getElementById('usageLimit').value = coupon.maxUse;
+                    
+                    document.querySelector('.modal-title').textContent = `Chỉnh Sửa Mã Coupon: ${coupon.code}`;
+                    couponForm.setAttribute('data-mode', 'edit');
+                    couponForm.setAttribute('data-id', id);
+                    
+                    new bootstrap.Modal(modalElement).show();
+                } else {
+                    alert('Không thể tải thông tin coupon.');
+                }
+            });
+        });
+        
+        couponForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const mode = couponForm.getAttribute('data-mode');
+            const id = couponForm.getAttribute('data-id');
+            
+            const formData = new FormData(couponForm);
+            const data = Object.fromEntries(formData.entries());
+
+            data.discount = Number(data.discount);
+            data.maxUse = Number(data.maxUse);
+            
+            if (mode !== 'edit' && !data.code) {
+                delete data.code;
+            }
+            
+            const method = mode === 'edit' ? 'PATCH' : 'POST';
+            const endpoint = mode === 'edit' ? `/admin/api/coupons/${id}` : '/admin/api/coupons';
+
+            const confirmMsg = mode === 'edit' ? 'Lưu thay đổi?' : 'Tạo coupon mới?';
+
+            handleAction(endpoint, method, data, confirmMsg);
+        });
+        
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            couponForm.removeAttribute('data-mode');
+            couponForm.removeAttribute('data-id');
+            couponForm.reset();
+            document.querySelector('.modal-title').textContent = 'Thêm Mã Coupon Mới';
+        });
+    });
+</script>
