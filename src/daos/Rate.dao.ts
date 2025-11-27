@@ -1,3 +1,4 @@
+import { create } from 'express-handlebars';
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { WithId } from "../utils/WithId.js";
@@ -41,6 +42,11 @@ class RateDao implements CRUD {
     async findBy(query: Partial<any>): Promise<any | null> {
         return await Rate.find({ ...query, deletedAt: null }).exec();
     }
+
+    async findOneBy(query: Partial<any>): Promise<IRate | null> {
+        const rate = await Rate.findOne({ ...query, deletedAt: null }).exec();
+        return rate?.toObject() as IRate || null;
+    }
     async create(item: CreateRateDto): Promise<any> {
         return await Rate.create(item);
     }
@@ -56,4 +62,4 @@ class RateDao implements CRUD {
     }
 }
 export const rateDao = new RateDao();
-export type IRate = WithId<InferSchemaType<typeof RateSchema>>;
+export type IRate = WithId<InferSchemaType<typeof RateSchema>> & { createdAt: Date, updatedAt: Date };

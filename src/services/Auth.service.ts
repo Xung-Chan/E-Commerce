@@ -11,6 +11,10 @@ import { CreateUserDto } from "../dto/Create.dto.js";
 import { LoginRequest } from "../dto/Request.dto.js";
 import { LoginResponseDto } from "../dto/Response.dto.js";
 import { ErrorDictionary } from "../middleware/errorDictionary.js";
+import { OAuth2Client } from "google-auth-library";
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 
 function generateTemporaryPassword(): string {
@@ -28,6 +32,8 @@ function generateTemporaryPassword(): string {
     }
     return password.split('').sort(() => 0.5 - Math.random()).join('');
 }
+
+
 
 const authService = {
     login: async (data: LoginRequest): Promise<LoginResponseDto> => {
@@ -54,6 +60,31 @@ const authService = {
         return new LoginResponseDto(accessToken, refreshToken, user.role);
     },
 
+
+    loginWithGoogle: async (token: string): Promise<LoginResponseDto> => {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        if (!payload || !payload.email) {
+            throw new ApiError(400, "Bad Request", "Invalid Google token");
+        }
+
+        let user = await userDao.findOne({ email: payload.email });
+        if (!user) {
+            throw new ApiError(404, "Not Found", "Tài khoản không tồn tại. Vui lòng đăng ký tài khoản trước khi đăng nhập bằng Google.");
+        }
+        if (user.status == UserStatus.INACTIVE) {
+            throw new ApiError(403, "Forbidden", "Tài khoản của bạn chưa được kích hoạt");
+        }
+        if (user.status == UserStatus.BANNED) {
+            throw new ApiError(403, "Forbidden", "Tài khoản của bạn đã bị khóa");
+        }
+        const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user._id.toString(), email: user.email, role: user.role });
+        await tokenService.saveToken(user._id.toString(), refreshToken);
+        return new LoginResponseDto(accessToken, refreshToken, user.role);
+    },
 
     register: async (userData: CreateUserDto, isAnonymous: boolean = false): Promise<IUser> => {
         const temporaryPassword = generateTemporaryPassword();

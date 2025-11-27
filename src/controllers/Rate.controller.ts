@@ -14,6 +14,7 @@ const rateController = {
             throw new ApiError(401, "Unauthorized", ErrorDictionary.UNAUTHORIZED);
         }
 
+
         const { rate, productId } = req.body;
         const errors = createaRating.validate({
             userId: userId,
@@ -39,6 +40,20 @@ const rateController = {
         const rates = await rateService.getAllRates();
         res.status(200).json(new ApiResponse(true, 200, "Rates fetched successfully", rates));
     }),
+
+    getMyRate: expressAsyncHandler(async (req: Request, res: Response) => {
+        const userId = (req as any).userId;
+        if (!userId) {
+            throw new ApiError(401, "Unauthorized", ErrorDictionary.UNAUTHORIZED);
+        }
+        const productId = req.params.productId;
+        if (!productId) {
+            throw new ApiError(400, "Bad Request", "Product ID is required");
+        }
+        const rate = await rateService.getRateByUserAndProduct(userId, productId);
+        res.status(200).json(new ApiResponse(true, 200, "Rate fetched successfully", rate));
+    }),
+
     getRateById: expressAsyncHandler(async (req: Request, res: Response) => {
         const rateId = req.params.rateId;
         if (!rateId) {

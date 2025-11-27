@@ -5,10 +5,11 @@ import ApiError from "../utils/ApiError.js";
 import { CreateRatingRequest } from "../dto/Request.dto.js";
 import { ioServer } from "../index.js";
 import { userDao } from "../daos/User.dao.js";
-const rateService = {
+import { RateResponse } from "../dto/Response.dto.js";
+class RateService {
 
 
-    createRate: async (data: CreateRatingRequest) => {
+    async createRate(data: CreateRatingRequest) {
         const user = await userDao.findOne({ _id: data.userId });
         if (!user) {
             throw new ApiError(404, "Not Found", "User not found");
@@ -17,8 +18,6 @@ const rateService = {
         if (!product) {
             throw new ApiError(404, "Not Found", "Product not found");
         }
-
-
 
         const existingRate = await rateDao.findBy({ userId: data.userId, productId: data.productId });
         if (existingRate && existingRate.length > 0) {
@@ -39,27 +38,45 @@ const rateService = {
             throw new Error("Failed to create rate");
         }
         return createdRate;
-    },
-    getAllRates: async () => {
+    }
+
+
+    async getAllRates() {
         return rateDao.list();
-    },
-    getRateById: async (id: string) => {
+    }
+
+    async getRateByUserAndProduct(userId: string, productId: string): Promise<RateResponse> {
+        const rate = await rateDao.findOneBy({ userId: userId, productId: productId });
+        if (!rate) {
+            throw new ApiError(404, "Not Found", "Bạn chưa đánh giá sản phẩm này");
+        }
+        return {
+            id: rate._id.toString(),
+            userId: rate.userId.toString(),
+            productId: rate.productId.toString(),
+            fullName: rate.fullName,
+            rate: rate.rate,
+            createdAt: rate.createdAt
+        };
+    }
+    async getRateById(id: string) {
         const rate = await rateDao.readById(id);
         if (!rate) {
             throw new ApiError(404, "Not Found", "Rate not found");
         }
         return rate;
-    },
-    getRatesByProductId: async (productId: string) => {
+    }
+    async getRatesByProductId(productId: string) {
         const product = await productDao.readById(productId);
         if (!product) {
             throw new ApiError(404, "Not Found", "Product not found");
         }
         return rateDao.findBy({ productId: productId });
-    },
-    deleteRateById: async (id: string) => {
+    }
+    async deleteRateById(id: string) {
         return rateDao.deleteById(id);
     }
 };
 
+const rateService = new RateService();
 export default rateService;

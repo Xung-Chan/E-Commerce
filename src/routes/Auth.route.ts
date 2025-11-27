@@ -5,6 +5,7 @@ import { upload } from "../services/Image.service.js";
 
 const authRouter = Router();
 authRouter.post("/login", upload.none(), authController.login);
+authRouter.get("/login/google", authController.loginWithGoogle);
 authRouter.post("/register", authController.register);
 authRouter.post("/forgot-password", authController.forgotPassword);
 authRouter.post("/activate-account", authController.activateAccount);

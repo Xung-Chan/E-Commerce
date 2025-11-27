@@ -16,6 +16,18 @@ const authController = {
         res.status(200).json(new ApiResponse(true, 200, "Login successful", result));
     }),
 
+    loginWithGoogle: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
+        const { token } = req.query as { token?: string };
+
+        if (!token) {
+            throw new ApiError(400, "Bad Request", "Token is required");
+        }
+        const result = await authService.loginWithGoogle(token);
+
+        res.cookie("token", result.accessToken, { httpOnly: true });
+        return res.redirect("/");
+    }),
+
 
     register: expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { email, fullName, address, isAnonymous } = req.body;

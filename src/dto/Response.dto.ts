@@ -98,11 +98,20 @@ interface DetailOrderResponse {
     shippingMethod: string;
 }
 
+interface RateResponse {
+    id: string;
+    userId: string;
+    productId: string;
+    fullName: string;
+    rate: number;
+    createdAt: Date;
+}
+
 export {
     LoginResponseDto
 };
 export type {
     CartResponse, DetailOrderResponse, OutlineOrderResponse, StatisticResponse,
-    UserResponse
+    UserResponse, RateResponse
 };
 
