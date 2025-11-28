@@ -107,7 +107,7 @@ class OrderDao implements CRUD {
             {
                 $match: {
                     ...filter,
-                    status: { $ne: "completed" },
+                    currentStatus: { $eq: OrderStatus.DELIVERED },
 
                 }
             },
@@ -118,7 +118,12 @@ class OrderDao implements CRUD {
                 }
             }
         ]).exec();
-        return result[0]?.totalRevenue || 0;
+
+        if (result.length === 0) {
+            return 0;
+        }
+
+        return result[0].totalRevenue;
     }
 }
 export const orderDao = new OrderDao();

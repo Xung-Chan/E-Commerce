@@ -18,6 +18,12 @@ const VariantSchema = new Schema({
         min: 0
     },
 
+    importPrice: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+
     stock: {
         type: Number,
         required: true,
