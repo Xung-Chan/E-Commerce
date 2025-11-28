@@ -8,16 +8,71 @@
 			<div class="card shadow-sm">
 				<div class="card-header bg-white fw-semibold">Địa chỉ giao hàng</div>
 				<div class="card-body" id="addressSection">
-					<div id="addressesList" class="d-flex flex-column gap-2 mb-3"></div>
-					<button class="btn btn-sm btn-outline-primary" id="addAddressToggle">+ Thêm địa chỉ mới</button>
-					<form id="addAddressForm" class="mt-3 d-none">
-						<div class="input-group">
-							<input type="text" class="form-control" id="newAddressInput" placeholder="Nhập địa chỉ mới">
-							<button class="btn btn-success" type="submit">Lưu</button>
-							<button class="btn btn-outline-secondary" type="button" id="cancelAddAddress">Hủy</button>
+					{{#if user}}
+						<div id="addressesList" class="d-flex flex-column gap-2 mb-3"></div>
+						<button class="btn btn-sm btn-outline-primary" id="addAddressToggle">+ Thêm địa chỉ mới</button>
+						<form id="addAddressForm" class="mt-3 d-none">
+							<div class="row g-2 mb-2">
+								<div class="col-md-4">
+									<label class="form-label small">Tỉnh/Thành phố</label>
+									<select class="form-select form-select-sm" id="provinceSelectNew" required>
+										<option value="">-- Chọn tỉnh/thành phố --</option>
+									</select>
+								</div>
+								<div class="col-md-4">
+									<label class="form-label small">Quận/Huyện</label>
+									<select class="form-select form-select-sm" id="districtSelectNew" disabled required>
+										<option value="">-- Chọn quận/huyện --</option>
+									</select>
+								</div>
+								<div class="col-md-4">
+									<label class="form-label small">Phường/Xã</label>
+									<select class="form-select form-select-sm" id="wardSelectNew" disabled required>
+										<option value="">-- Chọn phường/xã --</option>
+									</select>
+								</div>
+							</div>
+							<div class="input-group">
+								<input type="text" class="form-control" id="newAddressDetailInput" placeholder="Địa chỉ chi tiết (số nhà, tên đường)">
+								<button class="btn btn-success" type="submit">Lưu</button>
+								<button class="btn btn-outline-secondary" type="button" id="cancelAddAddress">Hủy</button>
+							</div>
+							<input type="hidden" id="newFullAddressInput">
+							<div id="addAddressStatus" class="small mt-2"></div>
+						</form>
+					{{else}}
+						<div class="mb-3">
+							<label for="guestEmailInput" class="form-label">Email liên hệ</label>
+							<input type="email" class="form-control" id="guestEmailInput" placeholder="Nhập email của bạn">
+							<small class="text-muted">Chúng tôi sẽ gửi thông tin đơn hàng qua email này.</small>
 						</div>
-						<div id="addAddressStatus" class="small mt-2"></div>
-					</form>
+						<div class="mb-2">
+							<label class="form-label">Địa chỉ giao hàng</label>
+							<div class="row g-2 mb-2">
+								<div class="col-md-4">
+									<label class="form-label small">Tỉnh/Thành phố</label>
+									<select class="form-select form-select-sm" id="provinceSelectGuest" required>
+										<option value="">-- Chọn tỉnh/thành phố --</option>
+									</select>
+								</div>
+								<div class="col-md-4">
+									<label class="form-label small">Quận/Huyện</label>
+									<select class="form-select form-select-sm" id="districtSelectGuest" disabled required>
+										<option value="">-- Chọn quận/huyện --</option>
+									</select>
+								</div>
+								<div class="col-md-4">
+									<label class="form-label small">Phường/Xã</label>
+									<select class="form-select form-select-sm" id="wardSelectGuest" disabled required>
+										<option value="">-- Chọn phường/xã --</option>
+									</select>
+								</div>
+							</div>
+							<input type="text" class="form-control form-control-sm" id="guestAddressDetailInput" placeholder="Địa chỉ chi tiết (số nhà, tên đường)" required>
+							<input type="hidden" id="guestFullAddressInput">
+						</div>
+						<div id="guestInfoStatus" class="small"></div>
+					{{/if}}
 				</div>
 			</div>
 
@@ -134,6 +189,8 @@
 	document.addEventListener('DOMContentLoaded', () => {
 		// State
 		const userPoints = Number('{{points}}') || 0;
+		const isLoggedIn = {{#if user}}true{{else}}false{{/if}};
+		const userIdInCommon = '{{userId}}';
 		const POINT_VALUE = 1000;
 
 		let addresses = [];
@@ -158,6 +215,20 @@
 		const newAddressInput = document.getElementById('newAddressInput');
 		const cancelAddAddressBtn = document.getElementById('cancelAddAddress');
 		const addAddressStatus = document.getElementById('addAddressStatus');
+		const guestEmailInput = document.getElementById('guestEmailInput');
+		// Guest address dropdowns
+		const provinceSelectGuest = document.getElementById('provinceSelectGuest');
+		const districtSelectGuest = document.getElementById('districtSelectGuest');
+		const wardSelectGuest = document.getElementById('wardSelectGuest');
+		const guestAddressDetailInput = document.getElementById('guestAddressDetailInput');
+		const guestFullAddressInput = document.getElementById('guestFullAddressInput');
+		// New address (logged-in) dropdowns
+		const provinceSelectNew = document.getElementById('provinceSelectNew');
+		const districtSelectNew = document.getElementById('districtSelectNew');
+		const wardSelectNew = document.getElementById('wardSelectNew');
+		const newAddressDetailInput = document.getElementById('newAddressDetailInput');
+		const newFullAddressInput = document.getElementById('newFullAddressInput');
+		const guestInfoStatus = document.getElementById('guestInfoStatus');
 
 		const couponInput = document.getElementById('couponInput');
 		const applyCouponBtn = document.getElementById('applyCouponBtn');
@@ -194,6 +265,11 @@
 
 		// Render addresses
 		function renderAddresses() {
+			if (!isLoggedIn) {
+				selectedAddressId = null;
+				updateConfirmState();
+				return;
+			}
 			addressesListEl.innerHTML = '';
 			if (!addresses.length) {
 				addressesListEl.innerHTML = '<div class="text-muted small">Chưa có địa chỉ. Thêm mới ở dưới.</div>';
@@ -270,8 +346,25 @@
 			}
 		}
 		function updateConfirmState() {
-			const ok = cartItems.length > 0 && selectedAddressId && document.querySelector('input[name="paymentMethod"]:checked');
+			const hasPayment = !!document.querySelector('input[name="paymentMethod"]:checked');
+			const guestEmail = guestEmailInput?.value?.trim();
+			const guestAddress = guestFullAddressInput?.value?.trim();
+			const hasUserAddress = isLoggedIn && !!selectedAddressId;
+			const hasGuestInfo = !isLoggedIn && !!guestEmail && !!guestAddress;
+			const ok = cartItems.length > 0 && hasPayment && (hasUserAddress || hasGuestInfo);
 			confirmOrderBtn.disabled = !ok;
+			if (!cartItems.length) {
+				orderStatus.textContent = 'Giỏ hàng trống.';
+				orderStatus.className = 'small text-muted';
+			} else if (isLoggedIn && !selectedAddressId) {
+				orderStatus.textContent = 'Vui lòng chọn địa chỉ giao hàng.';
+				orderStatus.className = 'small text-warning';
+			} else if (!isLoggedIn && !hasGuestInfo) {
+				orderStatus.textContent = 'Vui lòng nhập email và địa chỉ giao hàng.';
+				orderStatus.className = 'small text-warning';
+			} else {
+				orderStatus.textContent = '';
+			}
 		}
 
 		function applyShippingMethod(m) {
@@ -343,13 +436,15 @@
 					}
 				} catch { }
 			}
-			try {
-				const addrRes = await fetch('/api/users/addresses/me', { credentials: 'include' });
-				if (addrRes.ok) {
-					const addrJson = await addrRes.json();
-					addresses = addrJson?.data || addrJson || [];
-				}
-			} catch { }
+			if (isLoggedIn) {
+				try {
+					const addrRes = await fetch('/api/users/addresses/me', { credentials: 'include' });
+					if (addrRes.ok) {
+						const addrJson = await addrRes.json();
+						addresses = addrJson?.data || addrJson || [];
+					}
+				} catch { }
+			}
 			renderAddresses();
 			renderCartItems();
 			await loadShippingMethods();
@@ -421,39 +516,217 @@
 			updateSummary();
 		});
 
-		// Add address toggle
-		addAddressToggleBtn.addEventListener('click', () => {
-			addAddressForm.classList.toggle('d-none');
-			newAddressInput.value = '';
-			setStatus(addAddressStatus, '');
-		});
-		cancelAddAddressBtn.addEventListener('click', () => {
-			addAddressForm.classList.add('d-none');
-			newAddressInput.value = '';
-			setStatus(addAddressStatus, '');
-		});
-		addAddressForm.addEventListener('submit', async (e) => {
-			e.preventDefault();
-			const val = newAddressInput.value.trim();
-			if (!val) { setStatus(addAddressStatus, 'Địa chỉ không được trống.', 'warning'); return; }
-			setStatus(addAddressStatus, 'Đang lưu...', 'info');
+		// Disable loyalty for guests
+		if (!isLoggedIn) {
+			loyaltyPointsApplied = false;
+			if (applyPointsBtn) { applyPointsBtn.disabled = true; applyPointsBtn.title = 'Chỉ dành cho khách hàng đã đăng nhập'; }
+			if (removePointsBtn) { removePointsBtn.disabled = true; }
+			if (loyaltyStatus) { loyaltyStatus.textContent = 'Chỉ dành cho khách hàng đã đăng nhập.'; loyaltyStatus.className = 'text-muted small d-block mt-2'; }
+			updateSummary();
+		}
+
+		// Address dropdown helpers (shared)
+		const API_BASE = 'https://api.mysupership.vn/v1/partner/areas';
+
+		// Compose full address for guest
+		let selectedProvinceGuest = null, selectedDistrictGuest = null, selectedWardGuest = null;
+		function composeGuestFullAddress(){
+			const parts = [];
+			const detail = guestAddressDetailInput?.value?.trim();
+			if (detail) parts.push(detail);
+			if (selectedWardGuest) parts.push(selectedWardGuest);
+			if (selectedDistrictGuest) parts.push(selectedDistrictGuest);
+			if (selectedProvinceGuest) parts.push(selectedProvinceGuest);
+			if (guestFullAddressInput) guestFullAddressInput.value = parts.join(', ');
+		}
+
+		async function loadProvinces(selectEl){
 			try {
-				const resp = await fetch('/api/users/addresses/me', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					credentials: 'include',
-					body: JSON.stringify({ address: val })
+				const response = await fetch(`${API_BASE}/province`);
+				const json = await response.json();
+				const provinces = json?.results || json?.data || [];
+				if (!selectEl) return;
+				selectEl.innerHTML = '<option value="">-- Chọn tỉnh/thành phố --</option>';
+				provinces.forEach(p => {
+					const option = document.createElement('option');
+					option.value = p.code || p.id;
+					option.textContent = p.name;
+					option.dataset.name = p.name;
+					selectEl.appendChild(option);
 				});
-				if (!resp.ok) throw new Error();
-				addresses.push({ address: val });
-				selectedAddressId = addresses[addresses.length - 1].address;
-				renderAddresses();
-				addAddressForm.classList.add('d-none');
-				setStatus(addAddressStatus, 'Đã thêm địa chỉ.', 'success');
-			} catch (e) {
-				setStatus(addAddressStatus, 'Lỗi thêm địa chỉ.', 'danger');
+			} catch (e) { }
+		}
+
+		async function loadDistricts(selectEl, provinceCode){
+			try {
+				const response = await fetch(`${API_BASE}/district?province=${provinceCode}`);
+				const json = await response.json();
+				const districts = json?.results || json?.data || [];
+				if (!selectEl) return;
+				selectEl.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
+				selectEl.disabled = false;
+				districts.forEach(d => {
+					const option = document.createElement('option');
+					option.value = d.code || d.id;
+					option.textContent = d.name;
+					option.dataset.name = d.name;
+					selectEl.appendChild(option);
+				});
+			} catch (e) { }
+		}
+
+		async function loadWards(selectEl, districtCode){
+			try {
+				const response = await fetch(`${API_BASE}/commune?district=${districtCode}`);
+				const json = await response.json();
+				const wards = json?.results || json?.data || [];
+				if (!selectEl) return;
+				selectEl.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+				selectEl.disabled = false;
+				wards.forEach(w => {
+					const option = document.createElement('option');
+					option.value = w.code || w.id;
+					option.textContent = w.name;
+					option.dataset.name = w.name;
+					selectEl.appendChild(option);
+				});
+			} catch (e) { }
+		}
+
+		// Initialize guest dropdowns
+		if (provinceSelectGuest && districtSelectGuest && wardSelectGuest){
+			loadProvinces(provinceSelectGuest);
+			provinceSelectGuest.addEventListener('change', (e)=>{
+				const code = e.target.value;
+				const opt = e.target.options[e.target.selectedIndex];
+				selectedProvinceGuest = opt?.dataset?.name || '';
+				guestFullAddressInput.value = '';
+				if (code){
+					loadDistricts(districtSelectGuest, code);
+					wardSelectGuest.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+					wardSelectGuest.disabled = true;
+				} else {
+					districtSelectGuest.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
+					districtSelectGuest.disabled = true;
+					wardSelectGuest.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+					wardSelectGuest.disabled = true;
+					selectedDistrictGuest = null; selectedWardGuest = null;
+				}
+				composeGuestFullAddress(); updateConfirmState();
+			});
+			districtSelectGuest.addEventListener('change', (e)=>{
+				const code = e.target.value;
+				const opt = e.target.options[e.target.selectedIndex];
+				selectedDistrictGuest = opt?.dataset?.name || '';
+				if (code){
+					loadWards(wardSelectGuest, code);
+				} else {
+					wardSelectGuest.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+					wardSelectGuest.disabled = true;
+					selectedWardGuest = null;
+				}
+				composeGuestFullAddress(); updateConfirmState();
+			});
+			wardSelectGuest.addEventListener('change', (e)=>{
+				const opt = e.target.options[e.target.selectedIndex];
+				selectedWardGuest = opt?.dataset?.name || '';
+				composeGuestFullAddress(); updateConfirmState();
+			});
+		}
+
+		// Initialize 'add new address' dropdowns for logged-in
+		let selectedProvinceNew = null, selectedDistrictNew = null, selectedWardNew = null;
+		function composeNewFullAddress(){
+			const parts = [];
+			const detail = newAddressDetailInput?.value?.trim();
+			if (detail) parts.push(detail);
+			if (selectedWardNew) parts.push(selectedWardNew);
+			if (selectedDistrictNew) parts.push(selectedDistrictNew);
+			if (selectedProvinceNew) parts.push(selectedProvinceNew);
+			if (newFullAddressInput) newFullAddressInput.value = parts.join(', ');
+		}
+
+		if (provinceSelectNew && districtSelectNew && wardSelectNew){
+			loadProvinces(provinceSelectNew);
+			provinceSelectNew.addEventListener('change', (e)=>{
+				const code = e.target.value;
+				const opt = e.target.options[e.target.selectedIndex];
+				selectedProvinceNew = opt?.dataset?.name || '';
+				if (code){
+					loadDistricts(districtSelectNew, code);
+					wardSelectNew.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+					wardSelectNew.disabled = true;
+				} else {
+					districtSelectNew.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
+					districtSelectNew.disabled = true;
+					wardSelectNew.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+					wardSelectNew.disabled = true;
+					selectedDistrictNew = null; selectedWardNew = null;
+				}
+				composeNewFullAddress();
+			});
+			districtSelectNew.addEventListener('change', (e)=>{
+				const code = e.target.value;
+				const opt = e.target.options[e.target.selectedIndex];
+				selectedDistrictNew = opt?.dataset?.name || '';
+				if (code){
+					loadWards(wardSelectNew, code);
+				} else {
+					wardSelectNew.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+					wardSelectNew.disabled = true;
+					selectedWardNew = null;
+				}
+				composeNewFullAddress();
+			});
+			wardSelectNew.addEventListener('change', (e)=>{
+				const opt = e.target.options[e.target.selectedIndex];
+				selectedWardNew = opt?.dataset?.name || '';
+				composeNewFullAddress();
+			});
+			if (newAddressDetailInput) newAddressDetailInput.addEventListener('input', composeNewFullAddress);
+		}
+
+		// Add address toggle (only if logged in UI exists)
+		if (addAddressToggleBtn && addAddressForm && newAddressInput && addAddressStatus) {
+			addAddressToggleBtn.addEventListener('click', () => {
+				addAddressForm.classList.toggle('d-none');
+				newAddressInput.value = '';
+				setStatus(addAddressStatus, '');
+			});
+			if (cancelAddAddressBtn) {
+				cancelAddAddressBtn.addEventListener('click', () => {
+					addAddressForm.classList.add('d-none');
+					newAddressInput.value = '';
+					setStatus(addAddressStatus, '');
+				});
 			}
-		});
+			addAddressForm.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const val = newAddressInput.value.trim();
+				if (!val) { setStatus(addAddressStatus, 'Địa chỉ không được trống.', 'warning'); return; }
+				setStatus(addAddressStatus, 'Đang lưu...', 'info');
+				try {
+					const resp = await fetch('/api/users/addresses/me', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						credentials: 'include',
+						body: JSON.stringify({ address: val })
+					});
+					if (!resp.ok) throw new Error();
+					addresses.push({ address: val });
+					selectedAddressId = addresses[addresses.length - 1].address;
+					renderAddresses();
+					addAddressForm.classList.add('d-none');
+					setStatus(addAddressStatus, 'Đã thêm địa chỉ.', 'success');
+				} catch (e) {
+					setStatus(addAddressStatus, 'Lỗi thêm địa chỉ.', 'danger');
+				}
+			});
+		}
+
+		// Guest inputs should trigger state validation
+		if (guestEmailInput) guestEmailInput.addEventListener('input', updateConfirmState);
+		if (guestAddressDetailInput) guestAddressDetailInput.addEventListener('input', () => { composeGuestFullAddress(); updateConfirmState(); });
 
 		// Confirm order
 		confirmOrderBtn.addEventListener('click', async () => {
@@ -461,14 +734,52 @@
 			confirmOrderBtn.disabled = true;
 			const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
 			const variants = cartItems.map(i => ({ variantId: i.variantId, quantity: i.quantity }));
-			const addrObj = addresses.find(a => (a._id || a.id || a.addressId || a.address) === selectedAddressId);
-			const addressText = addrObj?.address || null;
+			let addressText = null;
+			let finalUserId = null;
+
+			if (isLoggedIn) {
+				const addrObj = addresses.find(a => (a._id || a.id || a.addressId || a.address) === selectedAddressId);
+				addressText = addrObj?.address || null;
+				finalUserId = (userIdInCommon && userIdInCommon !== 'anonymous') ? userIdInCommon : null;
+			} else {
+				const guestEmail = guestEmailInput?.value?.trim();
+				const guestAddress = guestFullAddressInput?.value?.trim();
+				if (!guestEmail || !guestAddress) {
+					setStatus(guestInfoStatus, 'Vui lòng nhập email và địa chỉ giao hàng.', 'warning');
+					confirmOrderBtn.disabled = false;
+					return;
+				}
+				addressText = guestAddress;
+				// Register anonymous user to obtain userId
+				try {
+					const regResp = await fetch('/api/auth/register', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						credentials: 'include',
+						body: JSON.stringify({ email: guestEmail, address: guestAddress, isAnonymous: true })
+					});
+					const regJson = await regResp.json().catch(() => ({}));
+					const regData = regJson?.data || regJson?.user || regJson;
+					finalUserId = regData?._id || regData?.id || regJson?.userId || null;
+					// Nếu email đã tồn tại, API có thể trả lỗi nhưng vẫn kèm userId -> vẫn tiếp tục
+					if (!finalUserId) {
+						const msg = regJson?.message || regJson?.error || 'Không lấy được userId sau đăng ký/kiểm tra email';
+						throw new Error(msg);
+					}
+				} catch (e) {
+					setStatus(orderStatus, e.message || 'Không thể tạo/tìm tài khoản ẩn danh.', 'danger');
+					confirmOrderBtn.disabled = false;
+					return;
+				}
+			}
+
 			const payload = {
 				variants,
 				shippingMethodId: selectedShippingMethodId,
 				isUseUserPoint: loyaltyPointsApplied,
 				address: addressText
 			};
+			if (finalUserId) payload.userId = finalUserId;
 			if (couponId) {
 				payload.couponId = couponId;
 			}

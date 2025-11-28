@@ -11,7 +11,7 @@ orderRouter.patch("/status/:orderId", authJwtAdmin, orderController.updateStatus
 
 orderRouter.post("/", orderController.createOrder);
 orderRouter.get("/me", authJwt, orderController.getMyOrders);
-orderRouter.get("/:orderId", authJwt, orderController.getOrderById);
+orderRouter.get("/:orderId", orderController.getOrderById);
 
 
 export default orderRouter;
