@@ -39,8 +39,9 @@ class RateDao implements CRUD {
         const result = await Rate.updateOne({ _id: id, deletedAt: null }, { $set: item });
         return result.modifiedCount > 0;
     }
-    async findBy(query: Partial<any>): Promise<any | null> {
-        return await Rate.find({ ...query, deletedAt: null }).exec();
+    async findBy(query: Partial<any>): Promise<IRate[]> {
+        const rates = await Rate.find({ ...query, deletedAt: null }).exec();
+        return rates.map(rate => rate.toObject() as IRate);
     }
 
     async findOneBy(query: Partial<any>): Promise<IRate | null> {

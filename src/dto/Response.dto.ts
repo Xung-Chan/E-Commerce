@@ -101,6 +101,7 @@ interface DetailOrderResponse {
         status: string;
         createdAt: Date;
     }[],
+    nextStatus: string[];
 
     items:
     {

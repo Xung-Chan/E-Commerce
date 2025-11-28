@@ -92,11 +92,19 @@ const productService = {
     getProductById: async (id: string) => {
         const product = await productDao.readById(id);
         if (!product) {
-            throw new ApiError(404, "Not Found", "Product not found");
+            throw new ApiError(404, "Not Found", ErrorDictionary.PRODUCT_NOT_FOUND);
         }
         const variants = await variantService.getVariantsByProductId(id);
         return {
-            ...product,
+            productId: product._id.toString(),
+            name: product.name,
+            description: product.description,
+            images: product.images,
+            brandId: product.brandId,
+            categoryId: product.categoryId,
+            discount: product.discount,
+            rate: product.rate.toFixed(1),
+            soldCount: product.soldCount,
             variants: variants.map(variant => ({
                 ...variant,
                 discountPrice: product.discount ? variant.price - (variant.price * product.discount) / 100 : variant.price

@@ -25,6 +25,9 @@ const authController = {
         const result = await authService.loginWithGoogle(token);
 
         res.cookie("token", result.accessToken, { httpOnly: true });
+        if (result.role === 'admin') {
+            return res.redirect("/admin/dashboard");
+        }
         return res.redirect("/");
     }),
 

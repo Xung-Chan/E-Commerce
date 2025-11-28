@@ -1,5 +1,5 @@
 import { CreateRateDto } from "../dto/Create.dto.js";
-import { rateDao } from "../daos/Rate.dao.js";
+import { IRate, rateDao } from "../daos/Rate.dao.js";
 import { productDao } from "../daos/Product.dao.js";
 import ApiError from "../utils/ApiError.js";
 import { CreateRatingRequest } from "../dto/Request.dto.js";
@@ -24,6 +24,10 @@ class RateService {
             throw new ApiError(409, "Conflict", "Bạn đã đánh giá sản phẩm này rồi");
         }
 
+        const productRates = await rateDao.findBy({ productId: data.productId });
+        const totalRates = productRates.reduce((sum: number, rate: IRate) => sum + rate.rate, 0);
+        const newAverageRate = (totalRates + data.rate) / (productRates.length + 1);
+        await productDao.patchById(data.productId, { rate: newAverageRate });
         const createdRate = await rateDao.create(
             {
                 userId: data.userId,
@@ -32,6 +36,8 @@ class RateService {
                 rate: data.rate,
             }
         );
+
+
         ioServer.to(`product_${data.productId}`).emit("newRate", createdRate);
 
         if (!createdRate) {

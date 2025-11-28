@@ -12,12 +12,8 @@ import { createOrder } from '../middleware/validate.js';
 
 const orderController = {
     createOrder: expressAsyncHandler(async (req: Request, res: Response) => {
-        const userId = (req as any).userId;
-
-        if (!userId) {
-            throw new ApiError(401, "Unauthorized", "No token provided");
-        }
         const {
+            userId,
             variants,
             shippingMethodId,
             couponId,

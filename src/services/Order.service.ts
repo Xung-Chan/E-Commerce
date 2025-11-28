@@ -1,6 +1,7 @@
 import { cartItemDao } from "../daos/CartItem.dao.js";
 import { orderDao } from "../daos/Order.dao.js";
 import { orderItemDao } from '../daos/OrderItem.dao.js';
+import { productDao } from "../daos/Product.dao.js";
 import { userDao } from "../daos/User.dao.js";
 import { variantDao } from "../daos/Variant.dao.js";
 import { CreateOrderDto } from "../dto/Create.dto.js";
@@ -17,6 +18,25 @@ import productService from "./Product.service.js";
 import shippingMethodService from "./ShippingMethod.service.js";
 
 class OrderService {
+    private getNextStatus(currentStatus: string): string[] {
+        const statusOrder = [
+            OrderStatus.PENDING,
+            OrderStatus.PROCESSING,
+            OrderStatus.SHIPPING,
+            OrderStatus.DELIVERED,
+        ];
+        const currentIndex = statusOrder.indexOf(currentStatus as OrderStatus);
+        if (currentIndex === -1 || currentIndex === statusOrder.length - 1) {
+            return [];
+        }
+        let nextStatuses: string[] = [OrderStatus.CANCELED];
+        const nextStatus = statusOrder[currentIndex + 1];
+        if (currentIndex + 1 < statusOrder.length && nextStatus) {
+            nextStatuses.push(nextStatus.toString());
+        }
+        return nextStatuses;
+    }
+
     async createOrder(data: CreateOrderRequest) {
         let totalPrice = 0;
         let totalDiscount = 0;
@@ -57,6 +77,7 @@ class OrderService {
                 userId: data.userId,
                 variantId: item.variantId
             });
+
             if (existingCartItem) {
                 await cartItemDao.deleteById(existingCartItem._id.toString());
             }
@@ -257,6 +278,7 @@ class OrderService {
                 status: sh.status,
                 createdAt: sh.createdAt
             })),
+            nextStatus: this.getNextStatus(order.currentStatus),
             items: orderItemInfos,
             totalPrice: order.totalPrice,
             totalDiscount: order.totalDiscount,
@@ -277,7 +299,20 @@ class OrderService {
         return orderDao.deleteById(id);
     }
 
+    private async increaseProductSoldCount(orderId: string) {
+        const orderItems = await orderItemDao.findBy({ orderId: orderId });
+        await Promise.all(orderItems.map(async (item) => {
+            const variant = await variantDao.readById(item.variantId.toString());
+            if (!variant) return;
+            const product = await productDao.readById(variant.productId.toString());
+            if (!product) return;
+            await productDao.patchById(product._id.toString(), {
+                soldCount: (product.soldCount || 0) + item.quantity
+            });
+        }));
+    }
 
+    
     //UPDATE
     async updateStatusById(id: string, status: string) {
         const validStatuses = Object.values(OrderStatus).map(s => s.toString());
@@ -288,6 +323,14 @@ class OrderService {
         const order = await orderDao.readById(id);
         if (!order) {
             throw new ApiError(404, "Not Found", ErrorDictionary.ORDER_NOT_FOUND);
+        }
+        const validNextStatuses = this.getNextStatus(order.currentStatus);
+        if (!validNextStatuses.includes(status)) {
+            throw new ApiError(400, "Bad Request", "Trạng thái kế tiếp không hợp lệ");
+        }
+
+        if (status === OrderStatus.DELIVERED) {
+            await this.increaseProductSoldCount(id);
         }
 
         await statusHistoryDao.create({
