@@ -88,7 +88,8 @@ const orderController = {
         if (!userId) {
             throw new ApiError(401, "Unauthorized", ErrorDictionary.UNAUTHORIZED);
         }
-        const orders = await orderService.getOrdersByQuery({ userId });
+        const query: OrderQuery = req.query;
+        const orders = await orderService.getOrdersByQuery({ ...query, userId });
         res.status(200).json(new ApiResponse(true, 200, "Orders fetched successfully", orders));
     }),
 

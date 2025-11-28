@@ -28,17 +28,35 @@ interface CartResponse {
     total: number;
 }
 
-interface StatisticResponse {
+interface SimpleStatisticResponse {
     totalUsers: number;
     newUsers: number;
     totalOrders: number;
     revenue: number;
-    topProducts: Array<{
+    topProducts: {
         productId: string,
         productName: string,
         sold: number,
+    }[];
+    revenueByMonth: {
+        unit: string,
+        values: number[]
+        xaxis: string[]
+    }
+}
 
-    }>
+interface AdvancedStatisticResponse {
+    totalOrders: {
+        unit: string,
+        value: number[],
+        xaxis: string[]
+    },
+    totalRevenue: {
+        unit: string,
+        value: number[],
+        xaxis: string[]
+    },
+
 }
 
 interface UserResponse {
@@ -98,11 +116,20 @@ interface DetailOrderResponse {
     shippingMethod: string;
 }
 
+interface RateResponse {
+    id: string;
+    userId: string;
+    productId: string;
+    fullName: string;
+    rate: number;
+    createdAt: Date;
+}
+
 export {
     LoginResponseDto
 };
 export type {
-    CartResponse, DetailOrderResponse, OutlineOrderResponse, StatisticResponse,
-    UserResponse
+    CartResponse, DetailOrderResponse, OutlineOrderResponse, SimpleStatisticResponse, AdvancedStatisticResponse,
+    UserResponse, RateResponse
 };
 

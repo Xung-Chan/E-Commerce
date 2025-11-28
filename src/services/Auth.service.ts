@@ -4,13 +4,17 @@ import jwt from "jsonwebtoken";
 
 import ApiError from "../utils/ApiError.js";
 import { sendMail } from "./Mail.service.js";
-import { userDao, UserStatus } from "../daos/User.dao.js";
+import { IUser, userDao, UserStatus } from "../daos/User.dao.js";
 import { TokenPayload } from "../utils/jwt.js";
 import { tokenService } from "./Token.service.js";
 import { CreateUserDto } from "../dto/Create.dto.js";
 import { LoginRequest } from "../dto/Request.dto.js";
 import { LoginResponseDto } from "../dto/Response.dto.js";
 import { ErrorDictionary } from "../middleware/errorDictionary.js";
+import { OAuth2Client } from "google-auth-library";
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 
 function generateTemporaryPassword(): string {
@@ -29,11 +33,16 @@ function generateTemporaryPassword(): string {
     return password.split('').sort(() => 0.5 - Math.random()).join('');
 }
 
+
+
 const authService = {
     login: async (data: LoginRequest): Promise<LoginResponseDto> => {
         const user = await userDao.findOne({ email: data.email });
         if (!user) {
             throw new ApiError(404, "Not Found", "Tài khoản không tồn tại");
+        }
+        if (user.status == UserStatus.INACTIVE) {
+            throw new ApiError(403, "Forbidden", "Tài khoản của bạn chưa được kích hoạt");
         }
         const isMatch = bcrypt.compareSync(data.password, user.password);
         if (!isMatch) {
@@ -44,9 +53,7 @@ const authService = {
             throw new ApiError(403, "Forbidden", "Tài khoản của bạn đã bị khóa");
         }
 
-        if (user.status == UserStatus.INACTIVE) {
-            throw new ApiError(403, "Forbidden", "Tài khoản của bạn chưa được kích hoạt");
-        }
+
 
         const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user._id.toString(), email: user.email, role: user.role });
         await tokenService.saveToken(user._id.toString(), refreshToken);
@@ -54,7 +61,32 @@ const authService = {
     },
 
 
-    register: async (userData: CreateUserDto, isAnonymous: boolean = false): Promise<any> => {
+    loginWithGoogle: async (token: string): Promise<LoginResponseDto> => {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        if (!payload || !payload.email) {
+            throw new ApiError(400, "Bad Request", "Invalid Google token");
+        }
+
+        let user = await userDao.findOne({ email: payload.email });
+        if (!user) {
+            throw new ApiError(404, "Not Found", "Tài khoản không tồn tại. Vui lòng đăng ký tài khoản trước khi đăng nhập bằng Google.");
+        }
+        if (user.status == UserStatus.INACTIVE) {
+            throw new ApiError(403, "Forbidden", "Tài khoản của bạn chưa được kích hoạt");
+        }
+        if (user.status == UserStatus.BANNED) {
+            throw new ApiError(403, "Forbidden", "Tài khoản của bạn đã bị khóa");
+        }
+        const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user._id.toString(), email: user.email, role: user.role });
+        await tokenService.saveToken(user._id.toString(), refreshToken);
+        return new LoginResponseDto(accessToken, refreshToken, user.role);
+    },
+
+    register: async (userData: CreateUserDto, isAnonymous: boolean = false): Promise<IUser> => {
         const temporaryPassword = generateTemporaryPassword();
         console.log("Temporary Password:", temporaryPassword);
         const hashedPassword = bcrypt.hashSync(temporaryPassword, 10);
@@ -64,6 +96,13 @@ const authService = {
             const user = await userDao.createAnonymous(userData);
             return user;
         }
+
+        const existingUser = await userDao.findOne({ email: userData.email });
+        if (existingUser) {
+            await authService.activateAccount(userData.email);
+            return existingUser;
+        }
+
         const user = await userDao.create(userData);
         const payload: TokenPayload = {
             userId: user._id.toString(),
@@ -78,8 +117,28 @@ const authService = {
         return user;
     },
 
-    activeAccount: async (token: string): Promise<void> => {
-
+    activateAccount: async (email: string): Promise<void> => {
+        const user = await userDao.findOne({ email });
+        if (!user) {
+            throw new ApiError(404, "Not Found", "Tài khoản không tồn tại");
+        }
+        if (user.status == UserStatus.BANNED) {
+            throw new ApiError(403, "Forbidden", "Tài khoản của bạn đã bị khóa");
+        }
+        if (user.status == UserStatus.ACTIVE) {
+            throw new ApiError(400, "Bad Request", "Tài khoản đã được kích hoạt");
+        }
+        const payload: TokenPayload = {
+            userId: user._id.toString(),
+            email: user.email,
+            role: user.role,
+            type: 'reset'
+        };
+        const token = jwt.sign(payload, process.env.SECRET_KEY as string, { expiresIn: '5m' });
+        console.log(token);
+        const link = `${process.env.BASE_URL}/reset-password?token=${token}`;
+        await tokenService.saveToken(user._id.toString(), token);
+        sendMail(email, link, "active");
 
     },
 
@@ -117,7 +176,16 @@ const authService = {
                 throw new ApiError(401, "Unauthorized", ErrorDictionary.INVALID_OR_EXPIRED_TOKEN);
             }
             const hashedPassword = bcrypt.hashSync(newPassword, 10);
-            const result = await userDao.patchById(userId, { password: hashedPassword });
+            let newData: {
+                password: string; role?: string;
+                status?: UserStatus;
+            } = {
+                password: hashedPassword
+            }
+            if (payload.role === 'anonymous') {
+                newData = { password: hashedPassword, role: 'user', status: UserStatus.ACTIVE };
+            }
+            const result = await userDao.patchById(userId, newData);
             await tokenService.markUsedToken(tokenInstance._id);
             if (!result) {
                 throw new ApiError(500, "Internal Server Error", ErrorDictionary.PASSWORD_UPDATE_FAILED);

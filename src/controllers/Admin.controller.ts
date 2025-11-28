@@ -5,20 +5,21 @@ import userService from "../services/User.service.js";
 import orderService from "../services/Order.service.js";
 import ApiResponse from "../utils/Api.response.js";
 import ApiError from "../utils/ApiError.js";
-import { IUser } from "../daos/User.dao.js"; 
+import { IUser } from "../daos/User.dao.js";
 import couponService from "../services/Coupon.service.js";
 import { UpdateCouponDto } from "../dto/Update.dto.js";
 import productService from "../services/Product.service.js";
 import { CreateProductRequest } from "../dto/Request.dto.js";
 
 import bcrypt from "bcryptjs";
+import statisticsService from "../services/Statistics.service.js";
 
 const adminController = {
     //users-management
     getAllUsersHandler: async (queryParams: any = {}) => {
         const filter: any = {};
         if (queryParams.role) {
-            filter.role = queryParams.role; 
+            filter.role = queryParams.role;
         }
         if (queryParams.status) {
             filter.status = queryParams.status;
@@ -28,10 +29,10 @@ const adminController = {
             const searchRegex = new RegExp(queryParams.q, 'i');
             filter.$or = [
                 { fullName: searchRegex },
-                { email: searchRegex }, 
+                { email: searchRegex },
             ];
         }
-        const users = await userService.getAllUsersForAdmin(filter); 
+        const users = await userService.getAllUsersForAdmin(filter);
         return users;
     },
 
@@ -59,15 +60,15 @@ const adminController = {
         if (updateData.password) {
             const hashedPassword = bcrypt.hashSync(updateData.password, 10);
             updateData.password = hashedPassword;
-        } 
-        const success = await userService.updateUserById(userId, updateData); 
+        }
+        const success = await userService.updateUserById(userId, updateData);
         return success;
     },
-    
+
     //coupons-management
     getAllCouponsHandler: async (queryParams: any = {}) => {
-        const couponPaginationResult = await couponService.getCouponByQuery(queryParams); 
-        return couponPaginationResult; 
+        const couponPaginationResult = await couponService.getCouponByQuery(queryParams);
+        return couponPaginationResult;
     },
 
     deleteCouponHandler: async (couponId: string): Promise<boolean> => {
@@ -80,18 +81,18 @@ const adminController = {
         return newCoupon;
     },
     updateCouponStatusHandler: async (couponId: string, status: string): Promise<boolean> => {
-        const success = await couponService.updateCouponStatusById(couponId, status); 
+        const success = await couponService.updateCouponStatusById(couponId, status);
         return success;
     },
     updateCouponDetailHandler: async (couponId: string, data: UpdateCouponDto): Promise<boolean> => {
-        const success = await couponService.updateCouponById(couponId, data); 
+        const success = await couponService.updateCouponById(couponId, data);
         return success;
     },
 
     //products-management
     getAllProductsHandler: async (queryParams: any = {}) => {
         const filter: any = {};
-        
+
         if (queryParams.q) {
             const searchRegex = new RegExp(queryParams.q, 'i');
             filter.$or = [
@@ -99,14 +100,14 @@ const adminController = {
             ];
         }
         if (queryParams.categoryId) filter.categoryId = queryParams.categoryId;
-        if (queryParams.brandId) filter.brandId = queryParams.brandId; 
+        if (queryParams.brandId) filter.brandId = queryParams.brandId;
 
-        const products = await productService.getProductsForAdmin(filter); 
+        const products = await productService.getProductsForAdmin(filter);
         return products;
     },
 
     getProductByIdHandler: async (productId: string) => {
-        const productDetail = await productService.getProductDetailForAdmin(productId); 
+        const productDetail = await productService.getProductDetailForAdmin(productId);
         return productDetail;
     },
 
@@ -114,6 +115,15 @@ const adminController = {
         const productData: CreateProductRequest = req.body;
         const product = await productService.createProduct(productData);
         res.status(201).json({ success: true, message: "Sản phẩm đã được tạo thành công.", product });
+    }),
+
+
+    getSimpleStatisticsHandler: expressAsyncHandler(async (req: Request, res: Response) => {
+        const statistics = await statisticsService.getSimpleStatistic();
+
+        return res.render("statistic", {
+            statistics: statistics
+        })
     }),
 };
 

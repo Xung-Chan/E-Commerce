@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Thống kê doanh thu</h1>
+        <div class="card">
+            <div class="card-body">
+                <div id="revenueChart" width="200" height="200"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const statistics = {{{ json statistics }}}; // helper json convert array
+        console.log(statistics);
+        const categories = statistics.revenueByMonth.xaxis.map(month => `Tháng ${month}`);
+        const options = {
+            chart: {
+                type: 'line'
+            },
+            series: [
+                {
+                    name: statistics.revenueByMonth.unit,
+                    data: statistics.revenueByMonth.values
+                }
+            ],
+            xaxis: {
+                categories: categories
+            },
+            colors: ['#FF4560'],
+            tooltip: {
+                y: {
+                    formatter: (val) => val.toLocaleString('vi-VN')
+                }
+            },
+        }
+
+        const chart = new ApexCharts(document.getElementById('revenueChart'), options)
+        chart.render()
+    </script>
+</body>
+
+</html>

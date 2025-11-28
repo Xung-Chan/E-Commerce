@@ -44,6 +44,7 @@ interface ProductQuery extends QueryUrl {
 interface OrderQuery extends QueryUrl {
     userId?: string;
     couponId?: string;
+    status?: string;
 }
 
 interface CouponQuery extends QueryUrl {

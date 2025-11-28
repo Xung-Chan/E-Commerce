@@ -63,7 +63,7 @@ const User = mongoose.model("User", UserSchema)
 
 class UserDao implements CRUD {
 
-    async patchById(id: string, item: Partial<IUser>): Promise<boolean> {
+    async patchById(id: string, item: Partial<any>): Promise<boolean> {
         return await User.updateOne({ _id: id, deletedAt: null }, { $set: item }).then(result => result.modifiedCount > 0);
     }
 

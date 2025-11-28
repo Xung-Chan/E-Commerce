@@ -10,7 +10,7 @@ import ApiError from "../utils/ApiError.js";
 import { Pagination, ProductQuery } from "../utils/Pagination.js";
 import SortOption from "../utils/SortOption.js";
 import variantService from "./Variant.service.js";
-import categoryService from "./Category.service.js"; 
+import categoryService from "./Category.service.js";
 import brandService from "./Brand.service.js";
 
 const productService = {
@@ -207,68 +207,65 @@ const productService = {
             sort: { soldCount: -1 },
         }
         const products = await productDao.findBy({}, options);
-        const datas = products.map(async product => {
-            const variants = await variantService.getVariantsByProductId(product._id.toString());
-            return {
-                ...product,
-                variants: variants
-            };
-        })
 
-        return datas
+        return products.map(product => ({
+            productId: product._id.toString(),
+            productName: product.name,
+            sold: product.soldCount
+        }));
     },
 
     //admin
 
     getProductsForAdmin: async (filter: any = {}): Promise<any[]> => {
-        const products = await productDao.findBy(filter); 
+        const products = await productDao.findBy(filter);
 
         const mappedProducts = await Promise.all(products.map(async product => {
             const productId = product._id.toString();
-  
+
             const variants = await variantService.getVariantsByProductId(productId);
             const totalStock = variants.reduce((sum, v) => sum + v.stock, 0);
- 
+
             const category = await categoryService.getCategoryById(product.categoryId.toString());
             const categoryName = category ? category.name : 'N/A';
 
             const brand = await brandService.getBrandById(product.brandId.toString());
-            const brandName = brand ? brand.name : 'N/A'; 
+            const brandName = brand ? brand.name : 'N/A';
             return {
                 id: productId,
                 name: product.name,
                 image: product.images[0] || '/img/placeholder.jpg',
                 price: product.minPrice,
                 categoryName: categoryName,
-                brandName: brandName, 
+                brandName: brandName,
                 stockQuantity: totalStock,
                 status: totalStock > 0 ? 'Active' : 'Hết hàng',
             };
         }));
-        
+
         return mappedProducts;
     },
     getProductDetailForAdmin: async (id: string) => {
-        const product = await productDao.readById(id); 
+        const product = await productDao.readById(id);
         if (!product) {
             throw new ApiError(404, "Not Found", "Product not found");
         }
-        
+
         const brand = await brandService.getBrandById(product.brandId.toString());
         const category = await categoryService.getCategoryById(product.categoryId.toString());
         const variants = await variantService.getVariantsByProductId(id);
 
         return {
             ...product,
-            brandName: brand ? brand.name : 'N/A', 
+            brandName: brand ? brand.name : 'N/A',
             categoryName: category ? category.name : 'N/A',
-            
+
             variants: variants.map(variant => ({
                 ...variant,
                 discountPrice: product.discount ? variant.price - (variant.price * product.discount) / 100 : variant.price
             }))
         };
     },
-    
+
 };
 export default productService;
