@@ -28,6 +28,8 @@ interface UpdateProductDto {
     discount?: number;
     minPrice?: number;
     maxPrice?: number;
+    rate?: number;
+    soldCount?: number;
 }
 interface UpdateCouponDto {
     discount?: number;

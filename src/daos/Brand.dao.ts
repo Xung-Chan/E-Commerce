@@ -2,6 +2,8 @@ import mongoose, { InferSchemaType, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateBrandDto } from "../dto/Create.dto.js";
 import { WithId } from "../utils/WithId.js";
+
+
 const BrandSchema = new Schema({
     name: {
         type: String,

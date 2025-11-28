@@ -114,7 +114,7 @@ class OrderDao implements CRUD {
             {
                 $group: {
                     _id: null,
-                    totalRevenue: { $sum: "$totalPay" }
+                    totalRevenue: { $sum: { $subtract: ["$totalPay", "$shippingFee"] } }
                 }
             }
         ]).exec();

@@ -11,6 +11,15 @@ interface CreateBrandDto {
     description: string;
     image: string;
 }
+
+interface CreateImportDto {
+    adminId: string;
+    variantId: string;
+    quantity: number;
+    price: number;
+}
+
+
 interface CreateCategoryDto {
     name: string;
     description: string;
@@ -84,5 +93,6 @@ export type {
     CreateProductDto,
     CreateCartItemDto,
     CreateVariantDto,
-    CreateOrderItemDto
+    CreateOrderItemDto,
+    CreateImportDto
 };

@@ -135,31 +135,45 @@
 
 
         <div class="row g-4 d-flex align-items-stretch">
-            {{#if showUserRatingForm}}
-            <div class="col-auto mb-3 d-flex align-items-stretch">
-                <form id="ratingForm" class="card flex-fill" style="min-width:220px; width:auto;">
-                    <div class="card-body d-flex flex-row align-items-center gap-3">
-                        <span class="me-2 text-nowrap">Đánh giá của bạn:</span>
-                        <div class="rating-stars" style="font-size:1.7rem;">
-                            {{#each ../stars}}
-                            <input type="radio" class="d-none" name="rating" id="star{{this}}" value="{{this}}">
-                            <label for="star{{this}}" class="star-label"
-                                style="cursor:pointer; color:#ccc; margin:0 2px;">★</label>
-                            {{/each}}
+            {{#if isLoggedIn}}
+                {{#if userRating}}
+                <div class="col-auto mb-3 d-flex align-items-stretch">
+                    <div class="card flex-fill p-3" style="min-width:260px; width:auto;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:44px; height:44px; background:#fff7e6; border:1px solid #ffe8b0;">
+                                <span class="text-warning" style="font-size:1.2rem;">★</span>
+                            </div>
+                            <div>
+                                <div class="fw-semibold mb-1">Cảm ơn bạn đã đánh giá</div>
+                                <div style="letter-spacing:2px;">
+                                    {{#each stars}}
+                                        {{#if (lte this ../userRating.rate)}}
+                                            <span class="text-warning" style="font-size:1.2rem;">★</span>
+                                        {{else}}
+                                            <span class="text-secondary" style="font-size:1.2rem;">★</span>
+                                        {{/if}}
+                                    {{/each}}
+                                </div>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-warning ms-3">Gửi đánh giá</button>
-                    </div>
-                </form>
-            </div>
-            {{else if userRating}}
-            <div class="col-auto mb-3 d-flex align-items-stretch">
-                <div class="card flex-fill p-3" style="min-width:220px; width:auto;">
-                    <div class="d-flex flex-column gap-2">
-                        <div>Bạn đã đánh giá: <strong>{{userRating.rate}}</strong> ★</div>
-                        <button type="button" class="btn btn-outline-danger" id="deleteRatingBtn" data-rating-id="{{userRating._id}}">Xóa đánh giá</button>
                     </div>
                 </div>
-            </div>
+                {{else}}
+                <div class="col-auto mb-3 d-flex align-items-stretch">
+                    <form id="ratingForm" class="card flex-fill" style="min-width:220px; width:auto;">
+                        <div class="card-body d-flex flex-row align-items-center gap-3">
+                            <span class="me-2 text-nowrap">Đánh giá của bạn:</span>
+                            <div class="rating-stars" style="font-size:1.7rem;">
+                                {{#each stars}}
+                                <input type="radio" class="d-none" name="rating" id="star{{this}}" value="{{this}}">
+                                <label for="star{{this}}" class="star-label" style="cursor:pointer; color:#ccc; margin:0 2px;">★</label>
+                                {{/each}}
+                            </div>
+                            <button type="submit" class="btn btn-warning ms-3">Gửi đánh giá</button>
+                        </div>
+                    </form>
+                </div>
+                {{/if}}
             {{/if}}
 
 
@@ -459,10 +473,50 @@
     (function(){
         const productId = '{{product._id}}';
         const commentsList = document.getElementById('commentsList');
-        const ratingForm = document.getElementById('ratingForm');
         const commentForm = document.getElementById('commentForm');
         const ratingDisplayBox = document.querySelector('.display-5.fw-bold');
         const starLabelsGroups = document.querySelectorAll('.rating-stars');
+        const isLoggedIn = {{#if isLoggedIn}}true{{else}}false{{/if}};
+
+        // ratingForm accessor and attach helpers
+        const getRatingForm = () => document.getElementById('ratingForm');
+        function attachRatingFormHandler(){
+            const ratingForm = getRatingForm();
+            if(!ratingForm) return;
+            if (ratingForm._attached) return;
+            ratingForm._attached = true;
+            ratingForm.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                const checked = ratingForm.querySelector('input[name="rating"]:checked');
+                if(!checked){ return; }
+                const rateVal = Number(checked.value);
+                const btn = ratingForm.querySelector('button[type="submit"]');
+                if(btn) btn.disabled = true;
+                try {
+                    const resp = await fetch('/api/ratings', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ productId, rate: rateVal })
+                    });
+                    if(resp.ok){
+                        // reload or update UI after successful rate
+                        // prefer reload to get consistent server-side state (comments/ratings)
+                        location.reload();
+                    } else if (resp.status === 401) {
+                        alert('Vui lòng đăng nhập để đánh giá.');
+                    } else {
+                        const err = await resp.json().catch(()=>null);
+                        alert(err?.message || 'Không thể gửi đánh giá');
+                    }
+                } catch (err) {
+                    console.error('Rate submit failed', err);
+                    alert('Lỗi khi gửi đánh giá');
+                } finally { if(btn) btn.disabled=false; }
+            });
+        }
+
+        // Không hỗ trợ xóa đánh giá từ giao diện
 
         function formatDate(d){
             try { return new Date(d).toLocaleString('vi-VN'); } catch { return d || ''; }
@@ -521,41 +575,58 @@
             });
         }
 
-        if(ratingForm){
-            ratingForm.addEventListener('submit', async (e)=>{
-                e.preventDefault();
-                const checked = ratingForm.querySelector('input[name="rating"]:checked');
-                if(!checked){ return; }
-                const rateVal = Number(checked.value);
-                const btn = ratingForm.querySelector('button[type="submit"]');
-                if(btn) btn.disabled = true;
-                try {
-                    const resp = await fetch('/api/ratings', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        credentials: 'include',
-                        body: JSON.stringify({ productId, rate: rateVal })
-                    });
-                    if(resp.ok){ /* Wait for socket event to update average */ }
-                } catch {} finally { if(btn) btn.disabled=false; }
-            });
-        }
+        // Attach rating handler to existing DOM (if server rendered it)
+        attachRatingFormHandler();
 
-        const deleteRatingBtn = document.getElementById('deleteRatingBtn');
-        if(deleteRatingBtn){
-            deleteRatingBtn.addEventListener('click', async ()=>{
-                const id = deleteRatingBtn.getAttribute('data-rating-id');
-                if(!id) return;
-                deleteRatingBtn.disabled = true;
-                try {
-                    const resp = await fetch(`/api/ratings/${id}`, { method: 'DELETE', credentials: 'include' });
-                    if(resp.ok){
-                        location.reload();
+        // If user is logged in, ask backend whether this user already rated this product
+        if(isLoggedIn && productId){
+            (async ()=>{
+                try{
+                    const resp = await fetch(`/api/ratings/me/${productId}`, { credentials: 'include' });
+                    if(!resp.ok) {
+                        return;
                     }
-                } catch(e) {} finally {
-                    deleteRatingBtn.disabled = false;
+                    const json = await resp.json();
+                    const myRate = json?.data || null;
+                    if(myRate){
+                        // If server didn't render userRating block (no element), replace ratingForm with display
+                        const rf = getRatingForm();
+                        if(rf){
+                            // helper to render stars (5 total)
+                            const renderStars = (count)=>{
+                                const total = 5; const n = Math.max(0, Math.min(total, Number(count)||0));
+                                let html = '';
+                                for(let i=0;i<total;i++){
+                                    const filled = i < n;
+                                    html += `<span class="${filled? 'text-warning':'text-secondary'}" style="font-size:1.2rem;">★</span>`;
+                                }
+                                return html;
+                            };
+                            const wrapper = document.createElement('div');
+                            wrapper.className = 'col-auto mb-3 d-flex align-items-stretch';
+                            wrapper.innerHTML = `
+                                <div class="card flex-fill p-3" style="min-width:260px; width:auto;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:44px; height:44px; background:#fff7e6; border:1px solid #ffe8b0;">
+                                            <span class="text-warning" style="font-size:1.2rem;">★</span>
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold mb-1">Cảm ơn bạn đã đánh giá</div>
+                                            <div style="letter-spacing:2px;">${renderStars(myRate.rate)}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            rf.parentNode.replaceChild(wrapper, rf);
+                        }
+                    } else {
+                        // not rated: ensure rating form exists and attach handler
+                        attachRatingFormHandler();
+                    }
+                } catch(e){
+                    console.warn('Failed to fetch user rating', e);
                 }
-            });
+            })();
         }
     })();
 </script>

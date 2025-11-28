@@ -1,250 +1,114 @@
-<div class="container py-5" id="orderHistoriesPage">
-	<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-		<h2 class="fw-bold m-0">Lịch sử đơn hàng</h2>
-		<div class="d-flex gap-2 align-items-center flex-wrap">
-			<select class="form-select" id="statusFilter" style="min-width:160px;">
-				<option value="">Tất cả trạng thái</option>
-				<option value="pending">Chờ xử lý</option>
-				<option value="processing">Đang xử lý</option>
-				<option value="shipping">Đang giao</option>
-				<option value="completed">Hoàn thành</option>
-				<option value="cancelled">Đã hủy</option>
-			</select>
-			<select class="form-select" id="sortSelect" style="min-width:160px;">
-				<option value="createdAt_desc">Mới nhất</option>
-				<option value="createdAt_asc">Cũ nhất</option>
-				<option value="totalPay_desc">Tổng tiền cao</option>
-				<option value="totalPay_asc">Tổng tiền thấp</option>
-			</select>
-			<button class="btn btn-outline-secondary" id="refreshBtn">Làm mới</button>
-		</div>
-	</div>
+<div class="container py-4">
+  <h2 class="fw-bold mb-3">Lịch sử đơn hàng</h2>
 
-	<div class="card shadow-sm mb-4">
-		<div class="card-header bg-white fw-semibold">Danh sách đơn hàng</div>
-		<div class="card-body p-0">
-			<div id="ordersLoading" class="p-3 text-muted small">Đang tải dữ liệu...</div>
-			<div id="ordersEmpty" class="p-3 text-muted small d-none">Bạn chưa có đơn hàng nào.</div>
-			<div class="table-responsive">
-				<table class="table table-hover align-middle m-0" id="ordersTable">
-					<thead class="table-light">
-						<tr>
-							<th style="min-width:110px;">Mã đơn</th>
-							<th style="min-width:130px;">Ngày đặt</th>
-							<th style="min-width:140px;">Trạng thái</th>
-							<th class="text-end" style="min-width:140px;">Tổng thanh toán</th>
-							<th style="min-width:120px;">Phương thức</th>
-							<th style="min-width:80px;">Chi tiết</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+  {{#if errorMessage}}
+    <div class="alert alert-danger">{{errorMessage}}</div>
+  {{/if}}
 
-	<!-- Pagination -->
-	<nav class="d-flex justify-content-center" id="ordersPagination" aria-label="Phân trang" style="display:none;">
-		<ul class="pagination mb-0"></ul>
-	</nav>
+  <form id="filtersForm" class="card mb-6">
+    <div class="card-body row g-3 align-items-end">
+      <div class="col-sm-6 col-md-6">
+        <label for="status" class="form-label">Trạng thái</label>
+        <select class="form-select" id="status" name="status">
+          <option value="" {{#unless query.status}}selected{{/unless}}>Tất cả</option>
+          <option value="pending" {{#if (eq query.status "pending")}}selected{{/if}}>Đang xử lý</option>
+          <option value="confirmed" {{#if (eq query.status "confirmed")}}selected{{/if}}>Đã xác nhận</option>
+          <option value="shipping" {{#if (eq query.status "shipping")}}selected{{/if}}>Đang giao</option>
+          <option value="completed" {{#if (eq query.status "completed")}}selected{{/if}}>Hoàn tất</option>
+          <option value="canceled" {{#if (eq query.status "canceled")}}selected{{/if}}>Đã hủy</option>
+        </select>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <label for="sortOrder" class="form-label">Thời gian đặt</label>
+        <select class="form-select" id="sortOrder" name="sortOrder">
+          <option value="desc" {{#if (eq query.sortOrder "desc")}}selected{{/if}}>Giảm dần</option>
+          <option value="asc" {{#if (eq query.sortOrder "asc")}}selected{{/if}}>Tăng dần</option>
+        </select>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <label for="limit" class="form-label">Mỗi trang</label>
+        <select class="form-select" id="limit" name="limit">
+          <option value="5" {{#if (eq query.limit 5)}}selected{{/if}}>5</option>
+          <option value="10" {{#if (eq query.limit 10)}}selected{{/if}}>10</option>
+          <option value="20" {{#if (eq query.limit 20)}}selected{{/if}}>20</option>
+        </select>
+      </div>
+      <div class="col-12 d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary">Áp dụng</button>
+      </div>
+    </div>
+  </form>
+
+  {{#if orders.length}}
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Trạng thái</th>
+              <th>Sản phẩm</th>
+              <th>Tổng</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each orders}}
+              <tr>
+                <td><span class="text-muted">{{this.id}}</span></td>
+                <td><span class="badge bg-secondary text-capitalize">{{this.currentStatus}}</span></td>
+                <td>
+                  {{#each this.items}}
+                    <div class="small text-muted">- {{this.productName}} ({{this.distinctFeature}}) x{{this.quantity}}</div>
+                  {{/each}}
+                </td>
+                <td><strong>{{formatPrice this.totalPrice}} VNĐ</strong></td>
+                <td class="text-end">
+                  <a href="/order/result/{{this.id}}" class="btn btn-outline-primary btn-sm">Chi tiết</a>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <nav class="mt-3 d-flex justify-content-center">
+      <ul class="pagination mb-0">
+        {{#unless isFirstPage}}
+          <li class="page-item"><a class="page-link" href="?page={{prevPage}}{{#if baseQueryString}}&{{baseQueryString}}{{/if}}">Trước</a></li>
+        {{/unless}}
+        {{#each pages}}
+          <li class="page-item {{#if this.active}}active{{/if}}">
+            <a class="page-link" href="?page={{this.number}}{{#if ../baseQueryString}}&{{../baseQueryString}}{{/if}}">{{this.number}}</a>
+          </li>
+        {{/each}}
+        {{#unless isLastPage}}
+          <li class="page-item"><a class="page-link" href="?page={{nextPage}}{{#if baseQueryString}}&{{baseQueryString}}{{/if}}">Tiếp</a></li>
+        {{/unless}}
+      </ul>
+    </nav>
+  {{else}}
+    <div class="alert alert-info">Bạn chưa có đơn hàng nào.</div>
+  {{/if}}
 </div>
 
-<template id="orderRowTemplate">
-	<tr class="order-row" data-order-id="">
-		<td class="order-code fw-semibold small"></td>
-		<td class="order-date small text-muted"></td>
-		<td class="order-status"></td>
-		<td class="order-total text-end fw-semibold text-danger"></td>
-		<td class="order-payment small"></td>
-		<td class="order-actions text-center">
-			<button class="btn btn-sm btn-outline-primary details-btn">Xem</button>
-		</td>
-	</tr>
-	<tr class="order-details-row d-none">
-		<td colspan="6" class="bg-light p-0">
-			<div class="p-3 border-top">
-				<div class="d-flex justify-content-between mb-2 flex-wrap gap-2">
-					<div class="small"><strong>Mã đơn:</strong> <span class="dt-code"></span></div>
-					<div class="small"><strong>Ngày đặt:</strong> <span class="dt-date"></span></div>
-					<div class="small"><strong>Trạng thái hiện tại:</strong> <span class="dt-status fw-semibold"></span></div>
-					<div class="small"><strong>Vận chuyển:</strong> <span class="dt-shippingMethod"></span></div>
-					<div class="small"><strong>Thanh toán:</strong> <span class="dt-paymentMethod"></span></div>
-				</div>
-				<div class="small mb-2"><strong>Địa chỉ giao hàng:</strong> <span class="dt-address"></span></div>
-				<div class="table-responsive mb-2">
-					<table class="table table-sm table-borderless mb-0">
-						<thead>
-							<tr class="small text-muted">
-								<th style="min-width:200px;">Sản phẩm</th>
-								<th style="min-width:120px;">Cấu hình</th>
-								<th style="min-width:70px;" class="text-center">SL</th>
-								<th style="min-width:120px;" class="text-end">Đơn giá</th>
-								<th style="min-width:120px;" class="text-end">Tổng</th>
-							</tr>
-						</thead>
-						<tbody class="dt-items"></tbody>
-					</table>
-				</div>
-				<div class="d-flex justify-content-end">
-					<div class="small text-end">
-						<div>Tạm tính: <span class="dt-subtotal fw-semibold"></span></div>
-						<div>Giảm giá: <span class="dt-discount text-success"></span></div>
-						<div>Phí vận chuyển: <span class="dt-shippingFee"></span></div>
-						<div class="fw-bold mt-1">Phải trả: <span class="dt-totalPay text-danger"></span></div>
-					</div>
-				</div>
-			</div>
-		</td>
-	</tr>
-</template>
-
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-	// Expect server passes orders array & pagination info optionally
-	const orders = Array.isArray(window.__ORDERS__) ? window.__ORDERS__ : ({{{json orders}}} || []); // if helper exists
-	const pagination = ({{{json pagination}}} || null) || window.__ORDERS_PAGINATION__ || null;
-	const tbody = document.querySelector('#ordersTable tbody');
-	const loadingEl = document.getElementById('ordersLoading');
-	const emptyEl = document.getElementById('ordersEmpty');
-	const paginationNav = document.getElementById('ordersPagination');
-	const paginationUl = paginationNav?.querySelector('ul');
-	const statusFilter = document.getElementById('statusFilter');
-	const sortSelect = document.getElementById('sortSelect');
-	const refreshBtn = document.getElementById('refreshBtn');
-	const rowTpl = document.getElementById('orderRowTemplate');
-
-	function formatPrice(n){ return (n||0).toLocaleString('vi-VN') + ' VND'; }
-	function formatDate(d){ try { return new Date(d).toLocaleString('vi-VN'); } catch { return d || ''; } }
-	function paymentLabel(code){
-		switch(code){
-			case 'cash_on_delivery': return 'COD';
-			case 'credit': return 'Thẻ';
-			default: return code || '—';
-		}
-	}
-	function statusBadge(st){
-		const map = { pending:'secondary', processing:'info', shipping:'primary', completed:'success', cancelled:'danger'};
-		const cls = map[st] || 'secondary';
-		return `<span class="badge bg-${cls} small">${st||'—'}</span>`;
-	}
-
-	function applyFilters(source){
-		let list = source.slice();
-		const st = statusFilter.value;
-		if(st) list = list.filter(o => o.currentStatus === st || o.status === st);
-		const sort = sortSelect.value;
-		list.sort((a,b)=>{
-			switch(sort){
-				case 'createdAt_desc': return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-				case 'createdAt_asc': return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-				case 'totalPay_desc': return (b.totalPay||b.totalPrice||0) - (a.totalPay||a.totalPrice||0);
-				case 'totalPay_asc': return (a.totalPay||a.totalPrice||0) - (b.totalPay||b.totalPrice||0);
-				default: return 0;
-			}
-		});
-		return list;
-	}
-
-	function renderPagination(totalPages, currentPage){
-		if(!paginationUl) return;
-		if(totalPages <= 1){ paginationNav.style.display='none'; return; }
-		paginationUl.innerHTML='';
-		for(let i=1;i<=totalPages;i++){
-			const li = document.createElement('li');
-			li.className = 'page-item' + (i===currentPage?' active':'');
-			li.innerHTML = `<a class="page-link" href="?page=${i}">${i}</a>`;
-			paginationUl.appendChild(li);
-		}
-		paginationNav.style.display='flex';
-	}
-
-	function renderOrders(list){
-		tbody.innerHTML='';
-		if(!list.length){ emptyEl.classList.remove('d-none'); return; }
-		emptyEl.classList.add('d-none');
-		list.forEach(order => {
-			const frag = rowTpl.content.cloneNode(true);
-			const row = frag.querySelector('tr.order-row');
-			const detailsRow = frag.querySelector('tr.order-details-row');
-			row.dataset.orderId = order._id || order.id;
-			row.querySelector('.order-code').textContent = order.code || order.orderCode || (order._id||'');
-			row.querySelector('.order-date').textContent = formatDate(order.createdAt || order.date);
-			row.querySelector('.order-status').innerHTML = statusBadge(order.currentStatus || order.status);
-			row.querySelector('.order-total').textContent = formatPrice(order.totalPay || order.totalPrice);
-			row.querySelector('.order-payment').textContent = paymentLabel(order.paymentMethod);
-
-			// Fill details
-			detailsRow.querySelector('.dt-code').textContent = order.code || order.orderCode || order._id || '';
-			detailsRow.querySelector('.dt-date').textContent = formatDate(order.createdAt || order.date);
-			detailsRow.querySelector('.dt-status').textContent = order.currentStatus || order.status || '';
-			detailsRow.querySelector('.dt-shippingMethod').textContent = order.shippingMethod || '—';
-			detailsRow.querySelector('.dt-paymentMethod').textContent = paymentLabel(order.paymentMethod);
-			detailsRow.querySelector('.dt-address').textContent = order.shippingAddress || order.address || '—';
-			detailsRow.querySelector('.dt-subtotal').textContent = formatPrice(order.totalPrice || order.subtotal);
-			detailsRow.querySelector('.dt-discount').textContent = formatPrice(order.totalDiscount || order.discount || 0);
-			detailsRow.querySelector('.dt-shippingFee').textContent = formatPrice(order.shippingFee || 0);
-			detailsRow.querySelector('.dt-totalPay').textContent = formatPrice(order.totalPay || order.totalPrice);
-
-			const itemsTbody = detailsRow.querySelector('.dt-items');
-			const items = Array.isArray(order.items) ? order.items : (order.orderItems || []);
-			if(items.length){
-				items.forEach(it => {
-					const tr = document.createElement('tr');
-					tr.innerHTML = `
-						<td class="small">${it.productName || it.name || it.productId || ''}</td>
-						<td class="small">${it.distinctFeature || it.variantFeature || ''}</td>
-						<td class="small text-center">${it.quantity || 0}</td>
-						<td class="small text-end">${formatPrice(it.price)}</td>
-						<td class="small text-end">${formatPrice((it.price||0)*(it.quantity||0))}</td>
-					`;
-					itemsTbody.appendChild(tr);
-				});
-			} else {
-				const tr = document.createElement('tr');
-				tr.innerHTML = '<td colspan="5" class="small text-muted">Không có sản phẩm trong đơn / sẽ tải sau.</td>';
-				itemsTbody.appendChild(tr);
-			}
-
-			// Expand / collapse
-			const btn = row.querySelector('.details-btn');
-			btn.addEventListener('click', () => {
-				const open = !detailsRow.classList.contains('d-none');
-				document.querySelectorAll('.order-details-row').forEach(r => r.classList.add('d-none'));
-				if(open){
-					detailsRow.classList.add('d-none');
-					btn.textContent = 'Xem';
-				} else {
-					detailsRow.classList.remove('d-none');
-					btn.textContent = 'Đóng';
-				}
-			});
-
-			tbody.appendChild(frag);
-		});
-	}
-
-	function initialRender(){
-		loadingEl.style.display='none';
-		const filtered = applyFilters(orders);
-		renderOrders(filtered);
-		if(pagination){
-			renderPagination(pagination.totalPages || 1, pagination.page || 1);
-		}
-	}
-
-	statusFilter.addEventListener('change', () => {
-		renderOrders(applyFilters(orders));
-	});
-	sortSelect.addEventListener('change', () => {
-		renderOrders(applyFilters(orders));
-	});
-	refreshBtn.addEventListener('click', () => {
-		// Simple refresh by reloading page (could implement AJAX fetch)
-		location.reload();
-	});
-
-	try { initialRender(); } catch(e){
-		loadingEl.textContent = 'Lỗi hiển thị dữ liệu.';
-	}
-});
+(function(){
+  const form = document.getElementById('filtersForm');
+  if(!form) return;
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const params = new URLSearchParams(window.location.search);
+    const status = form.status.value || '';
+    // sortBy removed per request
+    const sortOrder = form.sortOrder.value || 'desc';
+    const limit = form.limit.value || '10';
+    params.set('page', '1');
+    if(status) params.set('status', status); else params.delete('status');
+    params.set('sortOrder', sortOrder);
+    params.set('limit', limit);
+    window.location.search = params.toString();
+  });
+})();
 </script>
