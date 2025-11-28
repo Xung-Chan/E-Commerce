@@ -91,13 +91,17 @@ const authService = {
         console.log("Temporary Password:", temporaryPassword);
         const hashedPassword = bcrypt.hashSync(temporaryPassword, 10);
         userData.password = hashedPassword;
+
+        const existingUser = await userDao.findOne({ email: userData.email });
+
         if (isAnonymous) {
-            console.log("Registering anonymous user");
+            if (existingUser) {
+                return existingUser;
+            }
             const user = await userDao.createAnonymous(userData);
             return user;
         }
 
-        const existingUser = await userDao.findOne({ email: userData.email });
         if (existingUser) {
             await authService.activateAccount(userData.email);
             return existingUser;
