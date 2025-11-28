@@ -38,7 +38,7 @@ const UserSchema = new Schema({
                 required: true
             }
         }],
-        required: true
+        default: []
     },
     status: {
         type: String,
@@ -96,7 +96,7 @@ class UserDao implements CRUD {
                 email: item.email,
                 password: item.password,
                 fullName: item.fullName,
-                addresses: [{ address: item.address }],
+                addresses: item.address ? [{ address: item.address }] : [],
                 cart: [],
             });
             return user;

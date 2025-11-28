@@ -12,6 +12,7 @@ import SortOption from "../utils/SortOption.js";
 import variantService from "./Variant.service.js";
 import categoryService from "./Category.service.js";
 import brandService from "./Brand.service.js";
+import { importDao } from "../daos/Import.dao.js";
 
 const productService = {
     createProduct: async (data: CreateProductRequest) => {
@@ -34,15 +35,20 @@ const productService = {
             minPrice: minPrice,
             maxPrice: maxPrice
         });
-        data.variants.forEach(async (variant) => {
+        await Promise.all(data.variants.map(async (variant) => {
             const variantData: CreateVariantDto = {
                 productId: product._id.toString(),
                 distinctFeature: variant.distinctFeature,
                 price: variant.price,
                 stock: variant.stock,
             };
-            await variantService.createVariant(variantData);
-        });
+            const createdVariant = await variantService.createVariant(variantData);
+            await importDao.create({
+                variantId: createdVariant._id.toString(),
+                quantity: variant.stock,
+                price: variant.importPrice
+            });
+        }));
         return product;
     },
 

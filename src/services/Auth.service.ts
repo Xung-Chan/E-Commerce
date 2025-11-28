@@ -1,3 +1,4 @@
+import { create } from 'express-handlebars';
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
@@ -12,6 +13,7 @@ import { LoginRequest } from "../dto/Request.dto.js";
 import { LoginResponseDto } from "../dto/Response.dto.js";
 import { ErrorDictionary } from "../middleware/errorDictionary.js";
 import { OAuth2Client } from "google-auth-library";
+import userService from "./User.service.js";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
@@ -35,8 +37,8 @@ function generateTemporaryPassword(): string {
 
 
 
-const authService = {
-    login: async (data: LoginRequest): Promise<LoginResponseDto> => {
+class AuthService {
+    async login(data: LoginRequest): Promise<LoginResponseDto> {
         const user = await userDao.findOne({ email: data.email });
         if (!user) {
             throw new ApiError(404, "Not Found", "Tài khoản không tồn tại");
@@ -58,10 +60,10 @@ const authService = {
         const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user._id.toString(), email: user.email, role: user.role });
         await tokenService.saveToken(user._id.toString(), refreshToken);
         return new LoginResponseDto(accessToken, refreshToken, user.role);
-    },
+    }
 
 
-    loginWithGoogle: async (token: string): Promise<LoginResponseDto> => {
+    async loginWithGoogle(token: string): Promise<LoginResponseDto> {
         const ticket = await client.verifyIdToken({
             idToken: token,
             audience: GOOGLE_CLIENT_ID,
@@ -73,7 +75,11 @@ const authService = {
 
         let user = await userDao.findOne({ email: payload.email });
         if (!user) {
-            throw new ApiError(404, "Not Found", "Tài khoản không tồn tại. Vui lòng đăng ký tài khoản trước khi đăng nhập bằng Google.");
+            user = await this.register({
+                email: payload.email,
+                fullName: payload.name || "Google User",
+            }, false)
+
         }
         if (user.status == UserStatus.INACTIVE) {
             throw new ApiError(403, "Forbidden", "Tài khoản của bạn chưa được kích hoạt");
@@ -84,9 +90,9 @@ const authService = {
         const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user._id.toString(), email: user.email, role: user.role });
         await tokenService.saveToken(user._id.toString(), refreshToken);
         return new LoginResponseDto(accessToken, refreshToken, user.role);
-    },
+    }
 
-    register: async (userData: CreateUserDto, isAnonymous: boolean = false): Promise<IUser> => {
+    async register(userData: CreateUserDto, isAnonymous: boolean = false): Promise<IUser> {
         const temporaryPassword = generateTemporaryPassword();
         console.log("Temporary Password:", temporaryPassword);
         const hashedPassword = bcrypt.hashSync(temporaryPassword, 10);
@@ -103,8 +109,16 @@ const authService = {
         }
 
         if (existingUser) {
+
+            if (existingUser.status !== UserStatus.INACTIVE) {
+                throw new ApiError(409, "Conflict", "Email đã tồn tại trong hệ thống.");
+            }
+            await userDao.patchById(existingUser._id.toString(), {
+                fullName: userData.fullName,
+            });
             await authService.activateAccount(userData.email);
-            return existingUser;
+            const user = await userDao.readById(existingUser._id.toString());
+            return user as IUser;
         }
 
         const user = await userDao.create(userData);
@@ -119,9 +133,9 @@ const authService = {
         await tokenService.saveToken(user._id.toString(), token);
         sendMail(user.email, link, "register", { template_password: temporaryPassword });
         return user;
-    },
+    }
 
-    activateAccount: async (email: string): Promise<void> => {
+    async activateAccount(email: string): Promise<void> {
         const user = await userDao.findOne({ email });
         if (!user) {
             throw new ApiError(404, "Not Found", "Tài khoản không tồn tại");
@@ -144,9 +158,9 @@ const authService = {
         await tokenService.saveToken(user._id.toString(), token);
         sendMail(email, link, "active");
 
-    },
+    }
 
-    forgotPassword: async (email: string): Promise<void> => {
+    async forgotPassword(email: string): Promise<void> {
         const user = await userDao.findOne({ email });
         if (!user) {
             throw new ApiError(404, "Not Found", "Tài khoản không tồn tại");
@@ -165,10 +179,10 @@ const authService = {
         const link = `${process.env.BASE_URL}/reset-password?token=${token}`;
         await tokenService.saveToken(user._id.toString(), token);
         sendMail(email, link, "reset");
-    },
+    }
 
 
-    resetPassword: async (token: string, newPassword: string): Promise<void> => {
+    async resetPassword(token: string, newPassword: string): Promise<void> {
         try {
             const payload: TokenPayload = await tokenService.verifyToken(token);
             if (payload.type !== 'reset') {
@@ -197,10 +211,10 @@ const authService = {
         } catch (err) {
             throw new ApiError(400, "Bad Request", ErrorDictionary.INVALID_OR_EXPIRED_TOKEN);
         }
-    },
+    }
 
 
-    changePassword: async (userId: string, oldPassword: string, newPassword: string): Promise<boolean> => {
+    async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<boolean> {
         const user = await userDao.readById(userId);
         if (!user) {
             throw new ApiError(404, "Not Found", ErrorDictionary.USER_NOT_FOUND);
@@ -212,10 +226,10 @@ const authService = {
         const hashedPassword = bcrypt.hashSync(newPassword, 10);
         const result = await userDao.patchById(userId, { password: hashedPassword });
         return result;
-    },
+    }
 
 
-    refreshToken: async (refreshToken: string): Promise<LoginResponseDto> => {
+    async refreshToken(refreshToken: string): Promise<LoginResponseDto> {
         console.log(refreshToken);
         try {
             const tokenPayload: TokenPayload = await tokenService.verifyToken(refreshToken);
@@ -242,4 +256,5 @@ const authService = {
     }
 
 }
+const authService = new AuthService();
 export default authService;

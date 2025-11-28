@@ -11,10 +11,6 @@ const ImportSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Variant",
     },
-    adminId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-    },
 
     quantity: {
         type: Number,
@@ -64,7 +60,6 @@ class ImportDao {
             {
                 $match: {
                     ...filter,
-
                 }
             },
             {

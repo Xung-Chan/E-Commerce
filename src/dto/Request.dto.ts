@@ -12,6 +12,7 @@ interface CreateProductRequest {
     variants: {
         distinctFeature: string;
         price: number;
+        importPrice: number;
         stock: number;
     }[];
 }
