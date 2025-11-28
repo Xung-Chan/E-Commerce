@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
 
 interface CreateUserDto {
     email: string;
-    password: string | null;
+    password?: string | null;
     fullName: string;
-    address: string;
+    address?: string;
 }
 interface CreateBrandDto {
     name: string;
@@ -13,7 +12,6 @@ interface CreateBrandDto {
 }
 
 interface CreateImportDto {
-    adminId: string;
     variantId: string;
     quantity: number;
     price: number;
@@ -83,16 +81,6 @@ interface CreateOrderItemDto {
     discount?: number;
 }
 export type {
-    CreateUserDto,
-    CreateBrandDto,
-    CreateCategoryDto,
-    CreateCommentDto,
-    CreateRateDto,
-    CreateCouponDto,
-    CreateOrderDto,
-    CreateProductDto,
-    CreateCartItemDto,
-    CreateVariantDto,
-    CreateOrderItemDto,
-    CreateImportDto
+    CreateBrandDto, CreateCartItemDto, CreateCategoryDto,
+    CreateCommentDto, CreateCouponDto, CreateImportDto, CreateOrderDto, CreateOrderItemDto, CreateProductDto, CreateRateDto, CreateUserDto, CreateVariantDto
 };
