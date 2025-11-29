@@ -70,19 +70,10 @@
                         <td>{{formatDate this.createdAt}}</td>
                         <td>{{formatDate this.updatedAt}}</td>
                         <td>{{this.currentStatus}}</td>
-                        <td>
-                            <a href="/admin/orders/{{this.id}}" class="btn btn-sm btn-info me-2" title="Xem chi tiết">
+                        <td class="text-center">
+                            <a href="/admin/orders/{{this.id}}" class="btn btn-sm btn-info" title="Xem chi tiết">
                                 <i class="bi bi-eye-fill"></i>
                             </a>
-
-                            <a href="/admin/orders/{{this.id}}/edit" class="btn btn-sm btn-warning me-2"
-                                title="Chỉnh sửa">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-
-                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{this.id}}" title="Xóa">
-                                <i class="bi bi-trash"></i>
-                            </button>
                         </td>
                     </tr>
                     {{/each}}

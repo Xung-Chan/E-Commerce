@@ -206,6 +206,16 @@ const adminController = {
         });
     }),
 
+    getOrderDetailHandler: async (orderId: string) => {
+        const order = await orderService.getOrderById(orderId);
+        return order;
+    },
+
+    updateOrderStatusHandler: async (orderId: string, status: string) => {
+        const success = await orderService.updateStatusById(orderId, status);
+        return success;
+    },
+
     
     //categories-management
     getAllCategoriesHandler: async () => {

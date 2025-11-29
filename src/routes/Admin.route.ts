@@ -360,6 +360,39 @@ router.get("/advanced-statistic", authJwtAdmin,
 router.get("/orders", authJwtAdmin, adminController.getOrdersManagementPage
 );
 
+router.get("/orders/:orderId", authJwtAdmin, async (req: Request, res: Response) => {
+    try {
+        const orderId = req.params.orderId!;
+        const order = await adminController.getOrderDetailHandler(orderId);
+        
+        res.render("admin/order-detail", {
+            layout: "admin",
+            title: "Chi tiết đơn hàng",
+            order: order
+        });
+    } catch (error: any) {
+        console.error("Lỗi khi xem chi tiết đơn hàng:", error);
+        res.status(404).send(`<h1>404 Not Found</h1><p>${error.message || 'Không tìm thấy đơn hàng.'}</p><a href="/admin/orders">Quay lại</a>`);
+    }
+});
+
+router.patch("/api/orders/:orderId/status", authJwtAdmin, async (req: Request, res: Response) => {
+    const orderId = req.params.orderId!;
+    const { status } = req.body;
+
+    try {
+        const success = await adminController.updateOrderStatusHandler(orderId, status);
+        
+        if (success) {
+            return res.status(200).json({ success: true, message: `Trạng thái đã được cập nhật thành ${status}.` });
+        } else {
+            return res.status(400).json({ success: false, message: "Không tìm thấy đơn hàng hoặc không có thay đổi." });
+        }
+    } catch (error: any) {
+        console.error("Lỗi khi cập nhật trạng thái đơn hàng:", error);
+        return res.status(error.statusCode || 400).json({ success: false, message: error.message || "Lỗi cập nhật server." });
+    }
+});
 
 
 export default router;
