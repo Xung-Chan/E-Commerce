@@ -36,11 +36,32 @@
                             {{/if}}
                         </div>
                         <div class="mb-5">
-                            <label for="address" class="form-label fw-semibold">Địa chỉ giao hàng</label>
-                            <input type="text"
-                                class="form-control {{#if (hasFieldError errors 'address')}}is-invalid{{/if}}"
-                                id="address" name="address" placeholder="Nhập địa chỉ giao hàng"
-                                value="{{#if formData}}{{formData.address}}{{/if}}" required>
+                            <label class="form-label fw-semibold">Địa chỉ giao hàng</label>
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-4">
+                                    <label class="form-label small">Tỉnh/Thành phố</label>
+                                    <select class="form-select form-select-sm" id="provinceSelect" required>
+                                        <option value="">-- Chọn tỉnh/thành phố --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Quận/Huyện</label>
+                                    <select class="form-select form-select-sm" id="districtSelect" disabled required>
+                                        <option value="">-- Chọn quận/huyện --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Phường/Xã</label>
+                                    <select class="form-select form-select-sm" id="wardSelect" disabled required>
+                                        <option value="">-- Chọn phường/xã --</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Địa chỉ chi tiết (số nhà, tên đường)</label>
+                                <input type="text" class="form-control form-control-sm" id="addressDetail" placeholder="Ví dụ: 123 Đường ABC" required>
+                            </div>
+                            <input type="hidden" name="address" id="fullAddressInput" value="{{#if formData}}{{formData.address}}{{/if}}">
                             {{#if (getFieldError errors 'address')}}
                             <div class="invalid-feedback">{{getFieldError errors 'address'}}</div>
                             {{/if}}
@@ -72,5 +93,135 @@
                 toastBootstrap.hide();
             }, 5000);
         }
+
+        // Address dropdowns (same behavior as profile)
+        const API_BASE = 'https://api.mysupership.vn/v1/partner/areas';
+        const provinceSelect = document.getElementById('provinceSelect');
+        const districtSelect = document.getElementById('districtSelect');
+        const wardSelect = document.getElementById('wardSelect');
+        const addressDetail = document.getElementById('addressDetail');
+        const fullAddressInput = document.getElementById('fullAddressInput');
+        const registerForm = document.getElementById('registerForm');
+
+        let provinces = [];
+        let districts = [];
+        let wards = [];
+        let selectedProvince = null;
+        let selectedDistrict = null;
+        let selectedWard = null;
+
+        async function loadProvinces() {
+            try {
+                const response = await fetch(`${API_BASE}/province`);
+                const json = await response.json();
+                provinces = json?.results || json?.data || [];
+                provinceSelect.innerHTML = '<option value="">-- Chọn tỉnh/thành phố --</option>';
+                provinces.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p.code || p.id;
+                    option.textContent = p.name;
+                    option.dataset.name = p.name;
+                    provinceSelect.appendChild(option);
+                });
+            } catch (e) { }
+        }
+
+        async function loadDistricts(provinceCode) {
+            try {
+                const response = await fetch(`${API_BASE}/district?province=${provinceCode}`);
+                const json = await response.json();
+                districts = json?.results || json?.data || [];
+                districtSelect.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
+                districtSelect.disabled = false;
+                wardSelect.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+                wardSelect.disabled = true;
+                selectedDistrict = null;
+                selectedWard = null;
+                districts.forEach(d => {
+                    const option = document.createElement('option');
+                    option.value = d.code || d.id;
+                    option.textContent = d.name;
+                    option.dataset.name = d.name;
+                    districtSelect.appendChild(option);
+                });
+            } catch (e) { }
+        }
+
+        async function loadWards(districtCode) {
+            try {
+                const response = await fetch(`${API_BASE}/commune?district=${districtCode}`);
+                const json = await response.json();
+                wards = json?.results || json?.data || [];
+                wardSelect.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+                wardSelect.disabled = false;
+                selectedWard = null;
+                wards.forEach(w => {
+                    const option = document.createElement('option');
+                    option.value = w.code || w.id;
+                    option.textContent = w.name;
+                    option.dataset.name = w.name;
+                    wardSelect.appendChild(option);
+                });
+            } catch (e) { }
+        }
+
+        function updateFullAddress() {
+            const parts = [];
+            const detail = addressDetail.value.trim();
+            if (detail) parts.push(detail);
+            if (selectedWard) parts.push(selectedWard);
+            if (selectedDistrict) parts.push(selectedDistrict);
+            if (selectedProvince) parts.push(selectedProvince);
+            fullAddressInput.value = parts.join(', ');
+        }
+
+        provinceSelect.addEventListener('change', (e) => {
+            const code = e.target.value;
+            const option = e.target.options[e.target.selectedIndex];
+            selectedProvince = option?.dataset?.name || '';
+            if (code) {
+                loadDistricts(code);
+            } else {
+                districtSelect.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
+                districtSelect.disabled = true;
+                wardSelect.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+                wardSelect.disabled = true;
+                selectedDistrict = null;
+                selectedWard = null;
+            }
+            updateFullAddress();
+        });
+
+        districtSelect.addEventListener('change', (e) => {
+            const code = e.target.value;
+            const option = e.target.options[e.target.selectedIndex];
+            selectedDistrict = option?.dataset?.name || '';
+            if (code) {
+                loadWards(code);
+            } else {
+                wardSelect.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+                wardSelect.disabled = true;
+                selectedWard = null;
+            }
+            updateFullAddress();
+        });
+
+        wardSelect.addEventListener('change', (e) => {
+            const option = e.target.options[e.target.selectedIndex];
+            selectedWard = option?.dataset?.name || '';
+            updateFullAddress();
+        });
+
+        addressDetail.addEventListener('input', updateFullAddress);
+
+        registerForm.addEventListener('submit', (e) => {
+            updateFullAddress();
+            if (!fullAddressInput.value.trim()) {
+                e.preventDefault();
+                alert('Vui lòng nhập đầy đủ địa chỉ');
+            }
+        });
+
+        loadProvinces();
     });
 </script>

@@ -421,6 +421,49 @@
             });
         }
 
+        // Đặt hàng ngay -> chuyển thẳng sang checkout với món hàng hiện tại
+        const orderNowBtn = document.getElementById('orderNowBtn');
+        if (orderNowBtn) {
+            orderNowBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                clampQty();
+
+                const selectedBtn = document.querySelector('.variant-btn.btn-primary');
+                if (!selectedBtn) {
+                    alert('Vui lòng chọn cấu hình sản phẩm');
+                    return;
+                }
+                const variantId = selectedBtn.getAttribute('data-variant-id');
+                const price = Number(selectedBtn.dataset.price || 0);
+                const distinctFeature = selectedBtn.dataset.feature || '';
+                const qty = Math.max(1, Number(qtyInput?.value || '1'));
+
+                // Lấy tên sản phẩm từ DOM để tránh lỗi escape chuỗi
+                const nameEl = document.querySelector('h2.fw-bold');
+                const productName = (nameEl?.textContent || '').trim() || 'Sản phẩm';
+
+                if (!variantId) {
+                    alert('Vui lòng chọn cấu hình sản phẩm');
+                    return;
+                }
+
+                // Đóng gói item theo định dạng checkout đang dùng
+                const item = {
+                    variantId: variantId,
+                    productName: productName,
+                    distinctFeature: distinctFeature,
+                    quantity: qty,
+                    price: price
+                };
+
+                try {
+                    sessionStorage.setItem('checkoutItems', JSON.stringify([item]));
+                } catch {}
+
+                window.location.href = '/checkout';
+            });
+        }
+
         // Hàm cập nhật số lượng giỏ hàng
         async function updateCartBadge() {
             try {
