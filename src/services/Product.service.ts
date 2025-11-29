@@ -222,11 +222,19 @@ const productService = {
         }
         const products = await productDao.findBy({}, options);
 
-        return products.map(product => ({
-            productId: product._id.toString(),
-            productName: product.name,
-            sold: product.soldCount
-        }));
+        return products.map(product => {
+            let image = 'https://placehold.co/56x56?text=No+Img';
+            if (product.images[0]) {
+                image = product.images[0];
+            }
+
+            return {
+                productId: product._id.toString(),
+                productName: product.name,
+                image: image,
+                sold: product.soldCount
+            }
+        });
     },
 
     //admin

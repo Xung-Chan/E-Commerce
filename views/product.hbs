@@ -196,7 +196,7 @@
         <div class="row g-4 align-items-start">
             <div class="col-12">
                 <div id="commentsList" class="d-flex flex-column gap-3">
-                    {{#if comments.length}}
+                    {{#if (isGreaterThan comments.length 0)}}
                     {{#each comments}}
                     <div class="p-3 border rounded bg-light">
                         <div class="d-flex justify-content-between mb-1">
@@ -247,7 +247,7 @@
                         </ul>
                     </nav>
                     {{else}}
-                    <div class="text-muted small">Chưa có bình luận.</div>
+                        <div class="text-muted small">Chưa có bình luận.</div>
                     {{/if}}
                 </div>
             </div>
@@ -588,32 +588,36 @@
             });
         }
 
-        function onNewComment(comment){
-            if(!commentsList) return;
+       function onNewComment(comment) {
+            if (!commentsList) return;
             const wrapper = document.createElement('div');
             wrapper.className = 'p-3 border rounded bg-light';
             const type = comment.type || 'neutral';
-            let classSummary = 'mt-2';
-            if(type === 'positive'){
-                classSummary = 'text-success mt-2';
-            } 
-            else if (type === 'negative'){
-                classSummary = 'text-danger mt-2';
-            } 
+            let classSummary = `
+                    <span class="bg-secondary mt-2 px-2 rounded">
+                        <span class="badge text-white">`;
+            if (type === 'positive') {
+                classSummary = `<span class="mt-2 px-2 bg-success rounded">
+                                    <span class="badge text-white">`;
+            }
+            else if (type === 'negative') {
+                classSummary = `<span class="mt-2 px-2 bg-danger rounded">
+                                    <span class="badge text-black">`;
+            }
             wrapper.innerHTML = `
-                <div class="d-flex justify-content-between mb-1">
-                    <strong>${comment.fullName || comment.userName || 'Người dùng'}</strong>
-                    <span class="text-muted small">${formatDate(comment.createdAt || comment.date)}</span>
-                </div>
-                <div>${comment.content}</div>
-                <div class="${classSummary}">
-                        
-                            <span class="badge">${comment.summary}</span>
-                </div>
-            `;
+                    <div class="d-flex justify-content-between mb-1">
+                        <strong>${comment.fullName || comment.userName || 'Người dùng'}</strong>
+                        <span class="text-muted small">${formatDate(comment.createdAt || comment.date)}</span>
+                    </div>
+                    <div>${comment.content}</div>
+                    <div>
+                    ${classSummary}
+                            
+                                ${comment.summary}</span>
+                    </div>
+                `;
             commentsList.prepend(wrapper);
-        }
-
+    }
         function onNewRating(rating){
             const avg = rating.averageRate || rating.newAverage || rating.rate || null;
             if(avg !== null && ratingDisplayBox){

@@ -79,9 +79,15 @@ class SatisticsService {
         const totalProfit = totalRevenue - totalImportCost;
         switch (period) {
             case StatisticPeriod.NEAREST_30_DAYS: {
-                const endDate = new Date();
-                const startDate = new Date();
+                let endDate = new Date();
+                let startDate = new Date();
                 startDate.setDate(startDate.getDate() - 30);
+                if (interval?.startDate) {
+                    startDate = interval.startDate;
+                }
+                if (interval?.endDate) {
+                    endDate = interval.endDate;
+                }
                 for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
                     const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0);
                     const dayEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59);
@@ -96,9 +102,15 @@ class SatisticsService {
                 break;
             }
             case StatisticPeriod.DAY: {
-                const endDate = new Date();
-                const startDate = new Date();
+                let endDate = new Date();
+                let startDate = new Date();
                 startDate.setDate(1);
+                if (interval?.startDate) {
+                    startDate = interval.startDate;
+                }
+                if (interval?.endDate) {
+                    endDate = interval.endDate;
+                }
                 for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
                     const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0);
                     const dayEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59);
@@ -114,9 +126,15 @@ class SatisticsService {
 
             }
             case StatisticPeriod.MONTH: {
-                const endDate = new Date();
-                const startDate = new Date();
+                let endDate = new Date();
+                let startDate = new Date();
                 startDate.setMonth(0);
+                if (interval?.startDate) {
+                    startDate = interval.startDate;
+                }
+                if (interval?.endDate) {
+                    endDate = interval.endDate;
+                }
                 for (let m = 0; m < 12; m++) {
                     const monthStart = new Date(startDate.getFullYear(), m, 1, 0, 0, 0);
                     const monthEnd = new Date(startDate.getFullYear(), m + 1, 0, 23, 59, 59);
@@ -131,9 +149,15 @@ class SatisticsService {
                 break;
             }
             case StatisticPeriod.QUARTER: {
-                const endDate = new Date();
-                const startDate = new Date();
+                let endDate = new Date();
+                let startDate = new Date();
                 startDate.setMonth(0);
+                if (interval?.startDate) {
+                    startDate = interval.startDate;
+                }
+                if (interval?.endDate) {
+                    endDate = interval.endDate;
+                }
                 for (let q = 0; q < 4; q++) {
                     const quarterStart = new Date(startDate.getFullYear(), q * 3, 1, 0, 0, 0);
                     const quarterEnd = new Date(startDate.getFullYear(), q * 3 + 3, 0, 23, 59, 59);

@@ -11,12 +11,7 @@ import ApiResponse from "../utils/Api.response.js";
 const router = Router();
 
 //dashboard
-router.get("/dashboard", authJwtAdmin, async (req: Request, res: Response) => {
-    res.render("admin/dashboard", {
-        title: "Dashboard",
-        layout: "admin"
-    });
-});
+router.get("/dashboard", authJwtAdmin, adminController.getDashboard);
 
 //users-management
 router.get("/users", authJwtAdmin, async (req: Request, res: Response) => {
@@ -287,6 +282,10 @@ router.get("/products/:id/edit", authJwtAdmin, async (req: Request, res: Respons
 
 router.get("/statistics/simple", authJwtAdmin,
     adminController.getSimpleStatisticsHandler
+);
+
+router.get("/advanced-statistic", authJwtAdmin,
+    adminController.renderAdvancedStatisticsPage
 );
 
 

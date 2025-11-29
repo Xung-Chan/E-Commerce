@@ -107,6 +107,7 @@ app.engine(
             subtract: (a: number, b: number) => a - b,
             gt: (a: number, b: number) => a > b,
             isEqual: (a: any, b: any) => String(a) === String(b),
+            isGreaterThan: (a: number, b: number) => a > b,
             buildPageQuery: (obj: Record<string, unknown>, page: number) => {
                 const queryObj = obj || {};
                 const filteredObj = Object.fromEntries(

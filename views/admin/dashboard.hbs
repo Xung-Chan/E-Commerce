@@ -1,3 +1,5 @@
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 <div class="row mb-4">
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-start-primary shadow h-100 py-2">
@@ -7,7 +9,7 @@
                         <div class="text-xs fw-bold text-primary text-uppercase mb-1">
                             Tổng Người Dùng
                         </div>
-                        <div class="h5 mb-0 fw-bold text-gray-800">1,234</div> 
+                        <div class="h5 mb-0 fw-bold text-gray-800">{{totalUsers}}</div>
                     </div>
                     <div class="col-auto">
                         <i class="bi bi-people-fill fa-2x text-gray-300 fs-1"></i>
@@ -23,9 +25,9 @@
                 <div class="row align-items-center">
                     <div class="col me-2">
                         <div class="text-xs fw-bold text-success text-uppercase mb-1">
-                            Doanh Thu Tháng
+                            Doanh Thu Tích Lũy
                         </div>
-                        <div class="h5 mb-0 fw-bold text-gray-800">40,000,000 VNĐ</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">{{formatPrice revenue}} VNĐ</div>
                     </div>
                     <div class="col-auto">
                         <i class="bi bi-currency-dollar fa-2x text-gray-300 fs-1"></i>
@@ -41,11 +43,11 @@
                 <div class="row align-items-center">
                     <div class="col me-2">
                         <div class="text-xs fw-bold text-info text-uppercase mb-1">
-                            Đơn Hàng Mới (Tuần)
+                            Tổng Đơn Hàng
                         </div>
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
-                                <div class="h5 mb-0 me-3 fw-bold text-gray-800">85</div>
+                                <div class="h5 mb-0 me-3 fw-bold text-gray-800">{{totalOrders}}</div>
                             </div>
                         </div>
                     </div>
@@ -63,9 +65,9 @@
                 <div class="row align-items-center">
                     <div class="col me-2">
                         <div class="text-xs fw-bold text-warning text-uppercase mb-1">
-                            Cảnh Báo Cần Xử Lý
+                            Người dùng mới trong tháng
                         </div>
-                        <div class="h5 mb-0 fw-bold text-gray-800">18</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">{{newUsers}}</div>
                     </div>
                     <div class="col-auto">
                         <i class="bi bi-exclamation-triangle-fill fa-2x text-gray-300 fs-1"></i>
@@ -77,102 +79,124 @@
 </div>
 
 <style>
-    .border-start-primary { border-left: 0.25rem solid #4e73df!important; }
-    .border-start-success { border-left: 0.25rem solid #1cc88a!important; }
-    .border-start-info { border-left: 0.25rem solid #36b9cc!important; }
-    .border-start-warning { border-left: 0.25rem solid #f6c23e!important; }
-    .text-gray-300 { color: #dee2e6!important; }
+    .border-start-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+
+    .border-start-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+
+    .border-start-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+
+    .border-start-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+
+    .text-gray-300 {
+        color: #dee2e6 !important;
+    }
 </style>
 
 <div class="row mb-4">
-    <div class="col-lg-8 mb-4">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 fw-bold text-primary">Biểu Đồ Doanh Thu Tổng Quan</h6>
-            </div>
-            <div class="card-body">
-                <div style="height: 300px;">
-                    <p class="text-center text-muted pt-5">
-                        [Image of a line chart showing monthly revenue trends]
-                        <br>
-                        Biểu đồ được render bằng JavaScript (ví dụ: Chart.js)
-                    </p>
-                </div>
-            </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 fw-bold text-primary">Biểu Đồ Lợi Nhuận Và Doanh Thu Tích Lũy</h6>
+        </div>
+        <div class="card-body">
+            <div id="revenueChart"></div>
         </div>
     </div>
 
-    <div class="col-lg-4 mb-4">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 fw-bold text-primary">Thông Báo & Nhiệm Vụ</h6>
-            </div>
-            <div class="card-body">
-                <div class="alert alert-warning" role="alert">
-                    <h5 class="alert-heading"><i class="bi bi-bell-fill"></i> Sắp hết hạn!</h5>
-                    <p>Cần gia hạn chứng chỉ SSL cho domain chính trong 7 ngày tới.</p>
-                    <hr>
-                    <p class="mb-0 text-end"><a href="/admin/settings" class="alert-link">Kiểm tra ngay</a></p>
-                </div>
-                <div class="alert alert-info" role="alert">
-                    <i class="bi bi-check-circle-fill"></i> Đã phê duyệt 5 bài viết mới.
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="row">
     <div class="col-lg-12">
         <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 fw-bold text-primary">Đơn Hàng Gần Đây</h6>
+            <div class="card-header py-3 d-flex align-items-center justify-content-between">
+                <h6 class="m-0 fw-bold text-primary">Top 10 Sản Phẩm Bán Chạy</h6>
+                <a href="/admin/products" class="btn btn-sm btn-outline-primary">Xem tất cả sản phẩm</a>
             </div>
             <div class="card-body">
+                {{#if topProducts}}
                 <div class="table-responsive">
-                    <table class="table table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-hover table-bordered" id="topProductsTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Mã Đơn</th>
-                                <th>Khách Hàng</th>
-                                <th>Ngày Đặt</th>
-                                <th>Tổng Tiền</th>
-                                <th>Trạng Thái</th>
-                                <th>Thao Tác</th>
+                                <th style="width:60px">Top</th>
+                                <th>Ảnh</th>
+                                <th>Mã sản phẩm</th>
+                                <th>Sản Phẩm</th>
+                                <th class="text-center">Bán Ra</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {{#each topProducts}}
                             <tr>
-                                <td>#ORD1005</td>
-                                <td>Nguyễn Văn A</td>
-                                <td>25/11/2025</td>
-                                <td>1,500,000</td>
-                                <td><span class="badge bg-success">Đã giao</span></td>
-                                <td><a href="#" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a></td>
+                                <td>{{add @index 1}}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{this.image}}"
+                                            style=" width:56px;height:56px;object-fit:cover;border-radius:6px;"
+                                            onerror="this.onerror=null;this.src='https://placehold.co/56x56?text=No+Img';">
+                                    </div>
+                                </td>
+                                <td>{{this.productId}}</td>
+                                <td class="text-center align-middle">{{this.productName}}</td>
+                                <td class="text-center align-middle">{{this.sold}}</td>
                             </tr>
-                            <tr>
-                                <td>#ORD1004</td>
-                                <td>Trần Thị B</td>
-                                <td>24/11/2025</td>
-                                <td>500,000</td>
-                                <td><span class="badge bg-warning text-dark">Đang xử lý</span></td>
-                                <td><a href="#" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>#ORD1003</td>
-                                <td>Lê Văn C</td>
-                                <td>23/11/2025</td>
-                                <td>3,200,000</td>
-                                <td><span class="badge bg-danger">Đã hủy</span></td>
-                                <td><a href="#" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a></td>
-                            </tr>
-                            </tbody>
+                            {{/each}}
+                        </tbody>
                     </table>
                 </div>
-                <div class="text-end mt-3">
-                    <a href="/admin/orders" class="btn btn-primary">Xem tất cả đơn hàng &rarr;</a>
-                </div>
+                {{else}}
+                <div class="text-center text-muted">Không có sản phẩm bán chạy để hiển thị.</div>
+                {{/if}}
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const accumulatedRevenue = {{{ json accumulatedRevenue }}};
+    const accumulatedProfit = {{{ json accumulatedProfit }}};
+    var options = {
+        series: [
+            {
+                name: accumulatedRevenue.name,
+                data: accumulatedRevenue.values
+            }
+            , {
+                name: accumulatedProfit.name,
+                data: accumulatedProfit.values
+            }
+        ],
+        chart: {
+            height: 350,
+            type: 'area'
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth',
+            width: [3, 3],
+            dashArray: [0, 8]
+        },
+        xaxis: {
+            type: 'datetime',
+            categories: accumulatedRevenue.xaxis
+        },
+        tooltip: {
+            y: {
+                formatter: (val) => val.toLocaleString('vi-VN') + " VND"
+            }
+        },
+    }
+
+
+    const chart = new ApexCharts(document.getElementById('revenueChart'), options)
+    chart.render()
+</script>

@@ -1,86 +1,232 @@
-<!DOCTYPE html>
-<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-</head>
+<div class="card mb-4">
+    <div class="card-body">
+        <form action="/admin/advanced-statistic" method="get">
+            <span class="d-flex justify-content-end">
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label class="form-label small mb-1">Bắt đầu</label>
+                        <input id="filterStart" type="date" class="form-control" name="startDate" disabled />
+                    </div>
+                    <div class="col-auto">
+                        <label class="form-label small mb-1">Kết thúc</label>
+                        <input id="filterEnd" type="date" class="form-control" name="endDate" disabled />
+                    </div>
+                    <div class="col-auto">
+                        <label class="form-label small mb-1">Phân tích theo</label>
+                        <select id="filterGranularity" class="form-select" name="period">
+                            <option value="30_days">30 ngày gần nhất</option>
+                            <option value="day">Ngày</option>
+                            <option value="month">Tháng</option>
+                            <option value="quarter">Quý</option>
+                        </select>
+                    </div>
+                    <div class="col-auto align-self-end">
+                        <button id="applyFilters" class="btn btn-primary">Áp dụng</button>
+                        <a href="/admin/advanced-statistic" class="btn btn-outline-secondary ms-2">Đặt lại</a>
+                    </div>
+                </div>
+            </span>
+        </form>
+    </div>
+</div>
 
-<body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Thống kê doanh thu</h1>
-        <div class="card">
-            <div class="card-body">
-                <div id="revenue-profit-chart" width="200" height="200"></div>
+<div class="row">
+    <div class="col-lg-7 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Lợi nhuận & Doanh thu</strong>
+                <small class="text-muted">Biểu đồ theo lựa chọn</small>
             </div>
-        </div>
-        <h1 class="mb-4">Thống kê đơn hàng</h1>
-        <div class="card">
             <div class="card-body">
-                <div id="orders-chart" width="200" height="200"></div>
+                <div id="revenue-profit-chart" style="min-height:320px"></div>
             </div>
         </div>
     </div>
-    <script>
-        const revenue = {{{ json revenue }}}; // helper json convert array
-        const profit = {{{ json profit }}}; // helper json convert array
+    <div class="col-lg-5 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Đơn hàng</strong>
+                <small class="text-muted">Số lượng đơn</small>
+            </div>
+            <div class="card-body">
+                <div id="orders-chart" style="min-height:320px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const revenue = {{{ json revenue }}}; // helper json convert array
+    const profit = {{{ json profit }}}; // helper json convert array
 
-        const revenueProfitOptions = {
-            chart: {
-                type: 'line'
-            },
-            series: [
-                {
-                    name: "Lợi nhuận",
-                    data: revenue.values
-                }
-                , {
-                    name: "Doanh thu",
-                    data: profit.values
-                }
-            ],
-            xaxis: {
-                categories: revenue.xaxis
-            },
-            colors: ['#FF4560', '#00E396'],
-            stroke: {
-                width: [3, 3],
-                dashArray: [0, 8] // series 1 solid, series 2 dashed
-            },
-            tooltip: {
-                y: {
-                    formatter: (val) => val.toLocaleString('vi-VN') + " VND"
-                }
-            },
+    const revenueProfitOptions = {
+        chart: {
+            height: 350,
+
+            type: 'area'
+        },
+        series: [
+            {
+                name: "Lợi nhuận",
+                data: revenue.values
+            }
+            , {
+                name: "Doanh thu",
+                data: profit.values
+            }
+        ],
+        xaxis: {
+            categories: revenue.xaxis
+        },
+        dataLabels: {
+            enabled: false
+        },
+        colors: ['#FF4560', '#00E396'],
+        stroke: {
+            curve: 'smooth',
+            width: [3, 3],
+            dashArray: [0, 8] // series 1 solid, series 2 dashed
+        },
+        tooltip: {
+            y: {
+                formatter: (val) => val.toLocaleString('vi-VN') + " VND"
+            }
+        },
+    }
+    const orders = {{{ json orders }}}; // helper json convert array
+    const ordersOptions = {
+        chart: {
+            height: 350,
+
+            type: 'bar'
+        },
+        series: [
+            {
+                name: "Đơn hàng",
+                data: orders.values
+            }
+        ],
+        xaxis: {
+            categories: orders.xaxis
+        },
+        colors: ['#008FFB'],
+        tooltip: {
+            y: {
+                formatter: (val) => val.toLocaleString('vi-VN') + " Đơn"
+            }
+        },
+    }
+
+    // helpers to aggregate and filter data client-side
+    function parseDateLabel(label) {
+        // Attempt to parse common date formats.
+        const d = new Date(label);
+        if (!isNaN(d.getTime())) return d;
+        // fallback: try YYYY-MM-DD in label
+        const m = label.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+        if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+        return null;
+    }
+
+    function groupByGranularity(xaxis, values, granularity) {
+        const map = new Map();
+        for (let i = 0; i < xaxis.length; i++) {
+            const lbl = xaxis[i];
+            const date = parseDateLabel(lbl);
+            let key = lbl;
+            if (date && granularity === 'month') {
+                key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+            } else if (date && granularity === 'quarter') {
+                const q = Math.floor(date.getMonth() / 3) + 1;
+                key = `${date.getFullYear()}-Q${q}`;
+            } else if (date && granularity === 'day') {
+                key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            }
+            const val = Number(values[i]) || 0;
+            if (!map.has(key)) map.set(key, 0);
+            map.set(key, map.get(key) + val);
         }
-        const orders = {{{ json orders }}}; // helper json convert array
-        const ordersOptions = {
-            chart: {
-                type: 'bar'
-            },
-            series: [
-                {
-                    name: "Đơn hàng",
-                    data: orders.values
-                }
-            ],
-            xaxis: {
-                categories: orders.xaxis
-            },
-            colors: ['#008FFB'],
-            tooltip: {
-                y: {
-                    formatter: (val) => val.toLocaleString('vi-VN') + " Đơn"
-                }
-            },
+        const resX = Array.from(map.keys());
+        const resV = Array.from(map.values());
+        return { xaxis: resX, values: resV };
+    }
+
+    function filterRange(xaxis, seriesObjects, startDate, endDate) {
+        // seriesObjects: array of {name, data}
+        const indices = [];
+        for (let i = 0; i < xaxis.length; i++) {
+            const d = parseDateLabel(xaxis[i]);
+            if (!d) continue;
+            if (startDate && d < startDate) continue;
+            if (endDate && d > endDate) continue;
+            indices.push(i);
+        }
+        if (indices.length === 0) return null;
+        const newX = indices.map(i => xaxis[i]);
+        const newSeries = seriesObjects.map(s => ({ name: s.name, data: indices.map(i => s.data[i] || 0) }));
+        return { xaxis: newX, series: newSeries };
+    }
+
+    const revenueProfitChart = new ApexCharts(document.getElementById('revenue-profit-chart'), revenueProfitOptions)
+    const ordersChart = new ApexCharts(document.getElementById('orders-chart'), ordersOptions)
+    revenueProfitChart.render()
+    ordersChart.render()
+
+    // UI elements
+    const startInput = document.getElementById('filterStart');
+    const endInput = document.getElementById('filterEnd');
+    const granSelect = document.getElementById('filterGranularity');
+    const applyBtn = document.getElementById('applyFilters');
+    const resetBtn = document.getElementById('resetFilters');
+
+    function applyFilters() {
+        const startVal = startInput.value ? new Date(startInput.value) : null;
+        const endVal = endInput.value ? new Date(endInput.value) : null;
+        const gran = granSelect.value || 'day';
+
+        // Orders chart: single series
+        const ordersFiltered = filterRange(orders.xaxis, [{ name: 'Đơn hàng', data: orders.values }], startVal, endVal);
+        if (ordersFiltered) {
+            const grouped = groupByGranularity(ordersFiltered.xaxis, ordersFiltered.series[0].data, gran);
+            ordersChart.updateOptions({ xaxis: { categories: grouped.xaxis } }, false, true);
+            ordersChart.updateSeries([{ name: 'Đơn hàng', data: grouped.values }], true);
+        } else {
+            ordersChart.updateOptions({ xaxis: { categories: [] } }, false, true);
+            ordersChart.updateSeries([{ name: 'Đơn hàng', data: [] }], true);
         }
 
-        const revenueProfitChart = new ApexCharts(document.getElementById('revenue-profit-chart'), revenueProfitOptions)
-        const ordersChart = new ApexCharts(document.getElementById('orders-chart'), ordersOptions)
-        revenueProfitChart.render()
-        ordersChart.render()
-    </script>
-</body>
+        // Revenue & Profit: two series
+        const rpFiltered = filterRange(revenue.xaxis, [{ name: 'Lợi nhuận', data: revenue.values }, { name: 'Doanh thu', data: profit.values }], startVal, endVal);
+        if (rpFiltered) {
+            const g1 = groupByGranularity(rpFiltered.xaxis, rpFiltered.series[0].data, gran);
+            const g2 = groupByGranularity(rpFiltered.xaxis, rpFiltered.series[1].data, gran);
+            // align xaxis by using g1 keys (they should match if dates aligned)
+            const x = g1.xaxis;
+            revenueProfitChart.updateOptions({ xaxis: { categories: x } }, false, true);
+            revenueProfitChart.updateSeries([
+                { name: 'Lợi nhuận', data: g1.values },
+                { name: 'Doanh thu', data: g2.values }
+            ], true);
+        } else {
+            revenueProfitChart.updateOptions({ xaxis: { categories: [] } }, false, true);
+            revenueProfitChart.updateSeries([{ name: 'Lợi nhuận', data: [] }, { name: 'Doanh thu', data: [] }], true);
+        }
+    }
 
-</html>
+    applyBtn.addEventListener('click', applyFilters);
+    document.addEventListener("DOMContentLoaded", () => {
+        const granSelect1 = document.getElementById("filterGranularity");
+        granSelect1.addEventListener("change", () => {
+            console.log("Granularity changed:", granSelect1.value);
+            if (granSelect1.value === "day") {
+                startInput.disabled = false;
+                endInput.disabled = false;
+            }
+            else {
+                startInput.disabled = true;
+                endInput.disabled = true;
+            }
+        });
+    });
+</script>

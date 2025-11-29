@@ -37,6 +37,7 @@ interface SimpleStatisticResponse {
     topProducts: {
         productId: string,
         productName: string,
+        image: string,
         sold: number,
     }[];
     accumulatedRevenue: {

@@ -106,6 +106,22 @@ const adminController = {
         return products;
     },
 
+    getDashboard: expressAsyncHandler(async (req: Request, res: Response) => {
+        const statistics = await statisticsService.getSimpleStatistic();
+        res.render("admin/dashboard", {
+            title: "Dashboard",
+            layout: "admin",
+            totalUsers: statistics.totalUsers,
+            totalOrders: statistics.totalOrders,
+            newUsers: statistics.newUsers,
+            revenue: statistics.revenue,
+            profit: statistics.profit,
+            topProducts: statistics.topProducts,
+            accumulatedRevenue: statistics.accumulatedRevenue,
+            accumulatedProfit: statistics.accumulatedProfit
+        });
+    }),
+
     getProductByIdHandler: async (productId: string) => {
         const productDetail = await productService.getProductDetailForAdmin(productId);
         return productDetail;
@@ -121,31 +137,61 @@ const adminController = {
     getSimpleStatisticsHandler: expressAsyncHandler(async (req: Request, res: Response) => {
         const statistics = await statisticsService.getSimpleStatistic();
 
-        // res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
-        return res.render("admin/statistic", {
-            accumulatedRevenue: statistics.accumulatedRevenue,
-            accumulatedProfit: statistics.accumulatedProfit,
-            totalUsers: statistics.totalUsers,
-            newUsers: statistics.newUsers,
-            totalOrders: statistics.totalOrders,
-            revenue: statistics.revenue,
-            topProducts: statistics.topProducts,
-            layout: "admin"
-        })
+        res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
+        // return res.render("admin/statistic", {
+        //     accumulatedRevenue: statistics.accumulatedRevenue,
+        //     accumulatedProfit: statistics.accumulatedProfit,
+        //     totalUsers: statistics.totalUsers,
+        //     newUsers: statistics.newUsers,
+        //     totalOrders: statistics.totalOrders,
+        //     revenue: statistics.revenue,
+        //     topProducts: statistics.topProducts,
+        //     layout: "admin"
+        // })
     }),
 
-    getAdvancedStatisticsHandler: expressAsyncHandler(async (req: Request, res: Response) => {
-        const period = req.query.period as string || StatisticPeriod.NEAREST_30_DAYS
-        console.log("Period:", period);
-        const statistics = await statisticsService.getAdvancedStatistic(period);
-        // res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
-        return res.render("admin/advanced-statistic", {
+    renderAdvancedStatisticsPage: expressAsyncHandler(async (req: Request, res: Response) => {
+        const query = req.query;
+        const period = query.period as string || StatisticPeriod.NEAREST_30_DAYS
+        let interval: {
+            startDate: Date,
+            endDate: Date
+        } | null = null;
+
+        if (query.startDate && query.endDate) {
+            interval = {
+                startDate: new Date(query.startDate as string),
+                endDate: new Date(query.endDate as string)
+            }
+        }
+
+        const statistics = await statisticsService.getAdvancedStatistic(period, interval);
+
+        res.render("admin/advanced-statistic", {
+            layout: "admin",
+            title: "Thống kê nâng cao",
             revenue: statistics.revenues,
             profit: statistics.profits,
             orders: statistics.orders,
             totalProfit: statistics.totalProfit,
-            layout: "admin"
         })
+    },),
+
+    getAdvancedStatisticsHandler: expressAsyncHandler(async (req: Request, res: Response) => {
+        const query = req.query;
+        const period = query.period as string || StatisticPeriod.NEAREST_30_DAYS
+        let interval: {
+            startDate: Date,
+            endDate: Date
+        } | null = null;
+        if (query.startDate && query.endDate) {
+            interval = {
+                startDate: new Date(query.startDate as string),
+                endDate: new Date(query.endDate as string)
+            }
+        }
+        const statistics = await statisticsService.getAdvancedStatistic(period, interval);
+        res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
     })
 }
 
