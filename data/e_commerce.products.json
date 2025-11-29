@@ -1,314 +1,2082 @@
 [
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fb0"
+      "$oid": "300000000000000000000001"
     },
-    "name": "PC AMD GAMING PRO",
+    "name": "Asrock Phoenix G1",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1b"
+      "$oid": "100000000000000000000002"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Mẫu PC Gaming sử dụng CPU AMD Ryzen 7 7700, card đồ họa NVIDIA GeForce RTX 5070 12GB, RAM 16GB và SSD 512GB, mang lại hiệu suất chơi game mượt mà và khả năng xử lý đa nhiệm tốt với giá cả phải chăng và khả năng nâng cấp linh hoạt.",
+    "description": "PC Gaming Asrock Phoenix G1 mang đến trải nghiệm chơi game mượt mà với cấu hình cân bằng. Trang bị bo mạch chủ Asrock chất lượng cao, hệ thống tản nhiệt hiệu quả giúp máy hoạt động ổn định trong thời gian dài. Thiết kế case RGB đẹp mắt, sang trọng phù hợp với mọi không gian làm việc. Khả năng nâng cấp linh hoạt với 2 khe RAM và nhiều khe mở rộng. Lựa chọn hoàn hảo cho game thủ mới bắt đầu với mức giá phải chăng.",
     "images": [
-      "/img/product_pc_amd_gaming_pro_1.jpg",
-      "/img/product_pc_amd_gaming_pro_2.jpg",
-      "/img/product_pc_amd_gaming_pro_3.jpg",
-      "/img/product_pc_amd_gaming_pro_4.jpg",
-      "/img/product_pc_amd_gaming_pro_5.jpg"
+      "/img/PC_Gaming_001_1.jpg",
+      "/img/PC_Gaming_001_2.jpg",
+      "/img/PC_Gaming_001_3.jpg",
+      "/img/PC_Gaming_001_4.jpg",
+      "/img/PC_Gaming_001_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 28990000,
-    "maxPrice": 33990000,
-    "createdAt": "2025-09-17T00:00:08.000Z"
+    "minPrice": 10480000,
+    "maxPrice": 12760000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fb1"
+      "$oid": "300000000000000000000002"
     },
-    "name": "PC AMD GAMING SUPER LUXURY",
+    "name": "MSI Starter Alpha",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1b"
+      "$oid": "100000000000000000000006"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Mẫu PC Gaming cao cấp sử dụng CPU AMD Ryzen 9 9950X, card đồ họa NVIDIA GeForce RTX 5080 16GB, RAM 32GB và SSD 1TB, mang lại hiệu suất chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
+    "description": "MSI Starter Alpha là bộ PC gaming tối ưu cho người mới bắt đầu với mức giá cạnh tranh nhất. Sử dụng linh kiện MSI chính hãng đảm bảo chất lượng và độ bền cao trong quá trình sử dụng. Cấu hình entry-level nhưng đủ mạnh để chiến các tựa game phổ biến ở mức cài đặt trung bình. Hệ thống làm mát thông minh giúp kiểm soát nhiệt độ hiệu quả ngay cả khi chơi game liên tục. Kèm theo bảo hành chính hãng và hỗ trợ kỹ thuật tận tình từ MSI.",
     "images": [
-      "/img/product_pc_amd_gaming_super_luxury_1.jpg",
-      "/img/product_pc_amd_gaming_super_luxury_2.jpg",
-      "/img/product_pc_amd_gaming_super_luxury_3.jpg",
-      "/img/product_pc_amd_gaming_super_luxury_4.jpg",
-      "/img/product_pc_amd_gaming_super_luxury_5.jpg"
+      "/img/PC_Gaming_002_1.jpg",
+      "/img/PC_Gaming_002_2.jpg",
+      "/img/PC_Gaming_002_3.jpg",
+      "/img/PC_Gaming_002_4.jpg",
+      "/img/PC_Gaming_002_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 26680000,
-    "maxPrice": 26680000,
-    "createdAt": "2025-09-17T00:00:09.000Z"
+    "minPrice": 8990000,
+    "maxPrice": 11490000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fb2"
+      "$oid": "300000000000000000000003"
     },
-    "name": "PC AMD ULTRA GAMING",
+    "name": "Asus TUF Warrior",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1b"
+      "$oid": "100000000000000000000003"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Mẫu PC Gaming cao cấp sử dụng CPU AMD Ryzen 9 9950X, card đồ họa NVIDIA GeForce RTX 5080 16GB, RAM 32GB và SSD 1TB, mang lại hiệu suất chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
+    "description": "Asus TUF Warrior được thiết kế theo tiêu chuẩn quân đội với độ bền vượt trội. Trang bị card đồ họa rời giúp xử lý mượt mà các tựa game AAA ở cài đặt medium-high. Bo mạch chủ TUF Gaming với công nghệ bảo vệ nguồn điện và khả năng ép xung an toàn. Case thiết kế chắc chắn với hệ thống quạt tối ưu đảm bảo luồng khí mát hiệu quả. Phù hợp cho game thủ yêu cầu sự ổn định và bền bỉ trong mọi trận đấu căng thẳng.",
     "images": [
-      "/img/product_pc_amd_ultra_gaming_1.jpg",
-      "/img/product_pc_amd_ultra_gaming_2.jpg",
-      "/img/product_pc_amd_ultra_gaming_3.jpg",
-      "/img/product_pc_amd_ultra_gaming_4.jpg",
-      "/img/product_pc_amd_ultra_gaming_5.jpg"
+      "/img/PC_Gaming_003_1.jpg",
+      "/img/PC_Gaming_003_2.jpg",
+      "/img/PC_Gaming_003_3.jpg",
+      "/img/PC_Gaming_003_4.jpg",
+      "/img/PC_Gaming_003_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 39990000,
-    "maxPrice": 45990000,
-    "createdAt": "2025-09-17T00:00:09.000Z"
+    "minPrice": 13200000,
+    "maxPrice": 16800000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fa9"
+      "$oid": "300000000000000000000004"
     },
-    "name": "PC GAMING HIGH PERFORMANCE",
+    "name": "Gigabyte Radeon Elite",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1b"
+      "$oid": "100000000000000000000004"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Mẫu PC Gaming cao cấp với cấu hình mạnh mẽ, card đồ họa rời và thiết kế tối ưu cho trải nghiệm chơi game mượt mà bao gồm các linh kiện chất lượng cao như CPU Intel Core i5, card đồ họa NVIDIA GeForce RTX 4070, RAM 16GB và SSD 512GB với khả năng nâng cấp linh hoạt.",
+    "description": "Gigabyte Radeon Elite sử dụng card đồ họa AMD Radeon mang lại hiệu năng gaming ấn tượng. Công nghệ WINDFORCE của Gigabyte giúp tản nhiệt tối ưu cho cả CPU và GPU. Thiết kế RGB Fusion 2.0 cho phép tùy chỉnh ánh sáng theo sở thích cá nhân. Bo mạch chủ Gigabyte với chất lượng linh kiện cao cấp đảm bảo độ ổn định lâu dài. Lựa chọn tuyệt vời cho những ai yêu thích hệ sinh thái AMD với giá thành hợp lý.",
     "images": [
-      "/img/product_pc_gaming_high_performance_1.jpg",
-      "/img/product_pc_gaming_high_performance_2.jpg",
-      "/img/product_pc_gaming_high_performance_3.jpg",
-      "/img/product_pc_gaming_high_performance_4.jpg",
-      "/img/product_pc_gaming_high_performance_5.jpg"
+      "/img/PC_Gaming_004_1.jpg",
+      "/img/PC_Gaming_004_2.jpg",
+      "/img/PC_Gaming_004_3.jpg",
+      "/img/PC_Gaming_004_4.jpg",
+      "/img/PC_Gaming_004_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 26680000,
-    "maxPrice": 67600000,
-    "createdAt": "2025-09-17T00:00:01.000Z"
+    "minPrice": 14500000,
+    "maxPrice": 19500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fac"
+      "$oid": "300000000000000000000005"
     },
-    "name": "PC GAMING MINIMAL EXPERIENCE",
+    "name": "MSI Dragon Strike",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1a"
+      "$oid": "100000000000000000000006"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Mẫu PC Gaming giá rẻ với cấu hình cơ bản, card đồ họa NVIDIA GeForce RTX 3050 6GB, CPU Intel Core i5-11400F, RAM 16GB và SSD 256GB, mang lại trải nghiệm chơi game mượt mà ở độ phân giải Full HD với khả năng nâng cấp linh hoạt trong tương lai.",
+    "description": "MSI Dragon Strike mang biểu tượng con rồng đặc trưng của MSI với thiết kế gaming đậm chất. Trang bị công nghệ Mystic Light cho phép đồng bộ RGB với các thiết bị ngoại vi MSI khác. Cấu hình được tối ưu hóa để chơi game ở độ phân giải Full HD mượt mà. Hệ thống âm thanh Nahimic Audio mang đến trải nghiệm nghe sống động trong game. Bảo hành toàn cầu từ MSI cùng dịch vụ chăm sóc khách hàng chuyên nghiệp.",
     "images": [
-      "/img/product_pc_gaming_minimal_experience_1.jpg",
-      "/img/product_pc_gaming_minimal_experience_2.jpg",
-      "/img/product_pc_gaming_minimal_experience_3.jpg",
-      "/img/product_pc_gaming_minimal_experience_4.jpg",
-      "/img/product_pc_gaming_minimal_experience_5.jpg"
+      "/img/PC_Gaming_005_1.jpg",
+      "/img/PC_Gaming_005_2.jpg",
+      "/img/PC_Gaming_005_3.jpg",
+      "/img/PC_Gaming_005_4.jpg",
+      "/img/PC_Gaming_005_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 10990000,
-    "maxPrice": 12800000,
-    "createdAt": "2025-09-17T00:00:04.000Z"
+    "minPrice": 13800000,
+    "maxPrice": 17500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fad"
+      "$oid": "300000000000000000000006"
     },
-    "name": "PC GAMING PERFORMANCE BALANCE",
+    "name": "Asus ROG Strix Pro",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1b"
+      "$oid": "100000000000000000000003"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Mẫu PC Gaming với cấu hình cân bằng, card đồ họa NVIDIA GeForce RTX 4060 8GB, CPU Intel Core i5-12400F, RAM 16GB và SSD 512GB, mang lại trải nghiệm chơi game mượt mà và khả năng nâng cấp linh hoạt trong tương lai.",
+    "description": "Asus ROG Strix Pro thuộc dòng sản phẩm gaming cao cấp Republic of Gamers nổi tiếng. Tích hợp card đồ họa RTX với khả năng ray tracing và DLSS cho đồ họa siêu thực. Bo mạch chủ ROG với tản nhiệt VRM mạnh mẽ cho phép ép xung CPU an toàn. Thiết kế Aura Sync RGB độc đáo tạo nên vẻ đẹp thẩm mỹ cao cho setup gaming. Hiệu năng mạnh mẽ đủ sức chiến mọi tựa game AAA ở cài đặt cao nhất hiện nay.",
     "images": [
-      "/img/product_pc_gaming_performance_balance_1.jpg",
-      "/img/product_pc_gaming_performance_balance_2.jpg",
-      "/img/product_pc_gaming_performance_balance_3.jpg",
-      "/img/product_pc_gaming_performance_balance_4.jpg",
-      "/img/product_pc_gaming_performance_balance_5.jpg"
+      "/img/PC_Gaming_006_1.jpg",
+      "/img/PC_Gaming_006_2.jpg",
+      "/img/PC_Gaming_006_3.jpg",
+      "/img/PC_Gaming_006_4.jpg",
+      "/img/PC_Gaming_006_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 20990000,
-    "maxPrice": 24990000,
-    "createdAt": "2025-09-17T00:00:05.000Z"
+    "minPrice": 15200000,
+    "maxPrice": 21500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3faa"
+      "$oid": "300000000000000000000007"
     },
-    "name": "PC GAMING RX 6600 CHALENGER 8GB",
+    "name": "Gigabyte Aorus Fighter",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1b"
+      "$oid": "100000000000000000000004"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Mẫu PC Gaming với card đồ họa AMD Radeon RX 6600 8GB, CPU AMD Ryzen 5 3600, RAM 16GB và SSD 512GB, mang lại hiệu suất chơi game mượt mà và khả năng xử lý đa nhiệm tốt với giá cả phải chăng và khả năng nâng cấp linh hoạt.",
+    "description": "Gigabyte Aorus Fighter mang DNA của dòng Aorus gaming chuyên nghiệp với hiệu năng vượt trội. Bo mạch chủ Aorus với khả năng ép xung mạnh mẽ và hệ thống nguồn điện 12+2 phase. Card đồ họa Radeon RX series với công nghệ AMD FidelityFX cho chất lượng hình ảnh xuất sắc. Hệ thống tản nhiệt kép với ống dẫn nhiệt đảm bảo nhiệt độ luôn ở mức an toàn. Thiết kế RGB Fusion 2.0 với hàng triệu màu sắc tùy chỉnh theo phong cách riêng.",
     "images": [
-      "/img/product_pc_gaming_rx6600_challenger_1.jpg",
-      "/img/product_pc_gaming_rx6600_challenger_2.jpg",
-      "/img/product_pc_gaming_rx6600_challenger_3.jpg",
-      "/img/product_pc_gaming_rx6600_challenger_4.jpg",
-      "/img/product_pc_gaming_rx6600_challenger_5.jpg"
+      "/img/PC_Gaming_007_1.jpg",
+      "/img/PC_Gaming_007_2.jpg",
+      "/img/PC_Gaming_007_3.jpg",
+      "/img/PC_Gaming_007_4.jpg",
+      "/img/PC_Gaming_007_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 15690000,
-    "maxPrice": 21000000,
-    "createdAt": "2025-09-17T00:00:02.000Z"
+    "minPrice": 14900000,
+    "maxPrice": 19200000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3faf"
+      "$oid": "300000000000000000000008"
     },
-    "name": "PC ULTRA GAMING",
+    "name": "MSI Ventus Champion",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b24"
+      "$oid": "100000000000000000000006"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Mẫu PC Gaming cao cấp với cấu hình siêu khỏe, card đồ họa NVIDIA GeForce RTX 5070 Ti 16GB, CPU Intel Core i5 14600KF, RAM 16GB và SSD 512GB, mang lại trải nghiệm chơi game mượt mà, đáp ứng mọi nhu cầu giải trí và làm việc đa nhiệm.",
+    "description": "MSI Ventus Champion trang bị card đồ họa GeForce RTX với kiến trúc Ampere tiên tiến. Công nghệ TORX Fan 4.0 giúp tăng áp suất không khí và giảm thiểu tiếng ồn hiệu quả. Bo mạch chủ MSI MAG series với Audio Boost và LAN Gaming cho trải nghiệm chơi game tối ưu. RAM DDR5 tốc độ cao hỗ trợ đa nhiệm mượt mà và giảm độ trễ trong game. Phù hợp cho streamer và content creator cần hiệu năng ổn định.",
     "images": [
-      "/img/product_pc_gaming_ultra_1.jpg",
-      "/img/product_pc_gaming_ultra_2.jpg",
-      "/img/product_pc_gaming_ultra_3.jpg",
-      "/img/product_pc_gaming_ultra_4.jpg",
-      "/img/product_pc_gaming_ultra_5.jpg"
+      "/img/PC_Gaming_008_1.jpg",
+      "/img/PC_Gaming_008_2.jpg",
+      "/img/PC_Gaming_008_3.jpg",
+      "/img/PC_Gaming_008_4.jpg",
+      "/img/PC_Gaming_008_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 27990000,
-    "maxPrice": 32990000,
-    "createdAt": "2025-09-17T00:00:07.000Z"
+    "minPrice": 16500000,
+    "maxPrice": 24800000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fab"
+      "$oid": "300000000000000000000009"
     },
-    "name": "PC GAMING ULTRA PERFORMANCE",
+    "name": "Gigabyte Gaming Storm",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1f"
+      "$oid": "100000000000000000000004"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b32"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Mẫu PC Gaming cao cấp với cấu hình siêu khỏe, card đồ họa NVIDIA GeForce RTX 5080 16GB, CPU Intel Core Ultra 7 265KF, RAM 32GB và SSD 512GB, mang lại trải nghiệm chơi game đỉnh cao với khả năng xử lý đồ họa tuyệt vời và hiệu suất đa nhiệm vượt trội.",
+    "description": "Gigabyte Gaming Storm là cơn bão hiệu năng với card đồ họa Radeon RX 6000 series mạnh mẽ. Smart Access Memory giúp CPU truy xuất toàn bộ VRAM của GPU tăng hiệu năng đáng kể. Bo mạch chủ Gaming series với Ultra Durable Technology đảm bảo độ bền cao. Case được thiết kế tối ưu luồng khí với nhiều vị trí lắp quạt và RGB strips. Lựa chọn lý tưởng cho game thủ muốn chiến game ở độ phân giải 2K mượt mà.",
     "images": [
-      "/img/product_pc_gaming_ultra_performance_1.jpg",
-      "/img/product_pc_gaming_ultra_performance_2.jpg",
-      "/img/product_pc_gaming_ultra_performance_3.jpg",
-      "/img/product_pc_gaming_ultra_performance_4.jpg",
-      "/img/product_pc_gaming_ultra_performance_5.jpg"
+      "/img/PC_Gaming_009_1.jpg",
+      "/img/PC_Gaming_009_2.jpg",
+      "/img/PC_Gaming_009_3.jpg",
+      "/img/PC_Gaming_009_4.jpg",
+      "/img/PC_Gaming_009_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 64990000,
-    "maxPrice": 72000000,
-    "createdAt": "2025-09-17T00:00:03.000Z"
+    "minPrice": 17800000,
+    "maxPrice": 23500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fb3"
+      "$oid": "300000000000000000000010"
     },
-    "name": "Workstation Đồ Họa 2D - Edit Video Cơ Bản",
+    "name": "Asus Prime Vanguard",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1b"
+      "$oid": "100000000000000000000003"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b34"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Workstation chuyên dụng cho đồ họa 2D và chỉnh sửa video cơ bản, trang bị CPU Intel Core i5-12400F, RAM 16GB, ổ cứng SSD 512GB và card đồ họa NVIDIA RTX 3060 12GB, mang lại hiệu suất ổn định và khả năng xử lý mượt mà các tác vụ thiết kế và chỉnh sửa hình ảnh.",
+    "description": "Asus Prime Vanguard kết hợp hoàn hảo giữa hiệu năng và độ ổn định vượt trội. Sử dụng bo mạch chủ Prime series với linh kiện chất lượng cao và công nghệ bảo vệ toàn diện. Trang bị GPU RTX 3060 Ti cho hiệu suất gaming tuyệt vời ở mức giá hợp lý. Hệ thống nguồn 80+ Bronze hiệu suất cao đảm bảo cung cấp điện ổn định cho toàn hệ thống. Thiết kế gọn gàng, chuyên nghiệp phù hợp cho cả gaming và làm việc sáng tạo.",
     "images": [
-      "/img/product_workstation_graphics_2d_1.jpg",
-      "/img/product_workstation_graphics_2d_2.jpg",
-      "/img/product_workstation_graphics_2d_3.jpg",
-      "/img/product_workstation_graphics_2d_4.jpg",
-      "/img/product_workstation_graphics_2d_5.jpg"
+      "/img/PC_Gaming_010_1.jpg",
+      "/img/PC_Gaming_010_2.jpg",
+      "/img/PC_Gaming_010_3.jpg",
+      "/img/PC_Gaming_010_4.jpg",
+      "/img/PC_Gaming_010_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 17990000,
-    "maxPrice": 21990000,
-    "createdAt": "2025-09-17T00:00:01.100Z"
+    "minPrice": 18500000,
+    "maxPrice": 26500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fb4"
+      "$oid": "300000000000000000000011"
     },
-    "name": "Workstation Đồ Họa 3D - Render Cơ Bản",
+    "name": "MSI Hawk Predator",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b24"
+      "$oid": "100000000000000000000006"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b34"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Workstation chuyên dụng cho đồ họa 3D và render cơ bản, trang bị CPU Intel Core i5-14600KF, RAM 16GB, ổ cứng SSD 512GB và card đồ họa NVIDIA RTX 3060 12GB, mang lại hiệu suất ổn định và khả năng xử lý mượt mà các tác vụ thiết kế và dựng hình 3D.",
+    "description": "MSI Hawk Predator săn mồi cho game thủ chuyên nghiệp với cấu hình cao cấp. Card đồ họa Radeon RX 6900 XT mang lại hiệu năng đỉnh cao cho gaming 4K. Bo mảch chủ MPG series với khả năng ép xung và tùy biến linh hoạt qua Dragon Center. RAM DDR5 dung lượng lớn hỗ trợ đa tác vụ và streaming đồng thời không giật lag. Hệ thống tản nhiệt nước AIO giúp CPU hoạt động mát mẻ ngay cả khi ép xung cao.",
     "images": [
-      "/img/product_workstation_graphics_3d_1.jpg",
-      "/img/product_workstation_graphics_3d_2.jpg",
-      "/img/product_workstation_graphics_3d_3.jpg",
-      "/img/product_workstation_graphics_3d_4.jpg",
-      "/img/product_workstation_graphics_3d_5.jpg"
+      "/img/PC_Gaming_011_1.jpg",
+      "/img/PC_Gaming_011_2.jpg",
+      "/img/PC_Gaming_011_3.jpg",
+      "/img/PC_Gaming_011_4.jpg",
+      "/img/PC_Gaming_011_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 22990000,
-    "maxPrice": 26990000,
-    "createdAt": "2025-09-17T00:00:02.100Z"
+    "minPrice": 17200000,
+    "maxPrice": 28900000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   },
   {
     "_id": {
-      "$oid": "68cbff992bdc353b4acc3fb5"
+      "$oid": "300000000000000000000012"
     },
-    "name": "Workstation Render - Edit Video Nâng Cao",
+    "name": "Asus TUF Titan",
     "brandId": {
-      "$oid": "68ca42a308e9904136cc0b1f"
+      "$oid": "100000000000000000000003"
     },
     "categoryId": {
-      "$oid": "68ca511408e9904136cc0b34"
+      "$oid": "200000000000000000000001"
     },
-    "description": "Workstation cao cấp cho render và chỉnh sửa video nâng cao, trang bị CPU Intel Core i9-14900KF, RAM 32GB, ổ cứng SSD 512GB và card đồ họa NVIDIA RTX 5060 8GB, mang lại hiệu suất vượt trội và khả năng xử lý mượt mà các tác vụ đồ họa phức tạp và render video chất lượng cao.",
+    "description": "Asus TUF Titan mang lại sức mạnh tuyệt đối với GPU RTX 3080 thế hệ Ampere. Công nghệ DLSS 2.0 giúp tăng FPS lên gấp đôi mà vẫn giữ được chất lượng hình ảnh cao. Bo mạch chủ TUF Gaming Plus với SafeSlot Core+ bảo vệ card đồ họa khỏi tổn thương vật lý. Nguồn điện 80+ Gold 750W đảm bảo cung cấp điện ổn định cho hệ thống hiệu năng cao. Thiết kế quân đội bền bỉ cùng bảo hành 3 năm từ Asus Việt Nam.",
     "images": [
-      "/img/product_workstation_render_edit_video_1.jpg",
-      "/img/product_workstation_render_edit_video_2.jpg",
-      "/img/product_workstation_render_edit_video_3.jpg",
-      "/img/product_workstation_render_edit_video_4.jpg",
-      "/img/product_workstation_render_edit_video_5.jpg"
+      "/img/PC_Gaming_012_1.jpg",
+      "/img/PC_Gaming_012_2.jpg",
+      "/img/PC_Gaming_012_3.jpg",
+      "/img/PC_Gaming_012_4.jpg",
+      "/img/PC_Gaming_012_5.jpg"
     ],
     "soldCount": 0,
     "rate": 0,
     "discount": 0,
-    "minPrice": 29990000,
-    "maxPrice": 34990000,
-    "createdAt": "2025-09-17T00:00:03.100Z"
+    "minPrice": 22500000,
+    "maxPrice": 32500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000013"
+    },
+    "name": "Gigabyte Aorus Master",
+    "brandId": {
+      "$oid": "100000000000000000000004"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000001"
+    },
+    "description": "Gigabyte Aorus Master là kiệt tác của dòng gaming cao cấp Aorus với thiết kế đẳng cấp. Bo mạch chủ Aorus Master series với VRM 16+2 phase cho khả năng ép xung vượt bậc. Card đồ họa Radeon RX 6950 XT tận dụng Infinity Cache để đạt FPS cao nhất. Hệ thống tản nhiệt 360mm AIO với quạt RGB giúp kiểm soát nhiệt độ tối ưu. Trang bị SSD NVMe Gen 4 tốc độ đọc/ghi siêu nhanh giảm thiểu thời gian nạp game.",
+    "images": [
+      "/img/PC_Gaming_013_1.jpg",
+      "/img/PC_Gaming_013_2.jpg",
+      "/img/PC_Gaming_013_3.jpg",
+      "/img/PC_Gaming_013_4.jpg",
+      "/img/PC_Gaming_013_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 21800000,
+    "maxPrice": 31200000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000014"
+    },
+    "name": "MSI Aegis Supreme",
+    "brandId": {
+      "$oid": "100000000000000000000006"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000001"
+    },
+    "description": "MSI Aegis Supreme là lá chắn tối thượng cho game thủ hàng đầu với RTX 3080 Ti siêu mạnh. Công nghệ Ray Tracing thế hệ thứ 2 mang đến ánh sáng và phản chiếu chân thực như đời thực. Bo mạch chủ MEG series cao cấp với Audio Boost HD và 2.5G LAN cho trải nghiệm gaming không giới hạn. RAM DDR5 64GB cho phép chạy mượt mà các ứng dụng nặng và đa nhiệm phức tạp. Case Aegis thiết kế độc đáo với RGB bánh xe màu Mystic Light.",
+    "images": [
+      "/img/PC_Gaming_014_1.jpg",
+      "/img/PC_Gaming_014_2.jpg",
+      "/img/PC_Gaming_014_3.jpg",
+      "/img/PC_Gaming_014_4.jpg",
+      "/img/PC_Gaming_014_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 24200000,
+    "maxPrice": 35800000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000015"
+    },
+    "name": "Gigabyte Vision Elite",
+    "brandId": {
+      "$oid": "100000000000000000000004"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000001"
+    },
+    "description": "Gigabyte Vision Elite kết hợp giữa hiệu năng gaming và khả năng sáng tạo nội dung chuyên nghiệp. Card đồ họa RX 7800 XT hỗ trợ tốt cho cả render và gaming ở độ phân giải 2K-4K. Bo mạch chủ Vision series với thiết kế trắng bạc sang trọng, tinh tế độc đáo. Trang bị Thunderbolt 4 cho kết nối thiết bị ngoại vi và truyền dữ liệu tốc độ cao. Phù hợp cho designer và gamer cần một máy làm được nhiều việc.",
+    "images": [
+      "/img/PC_Gaming_015_1.jpg",
+      "/img/PC_Gaming_015_2.jpg",
+      "/img/PC_Gaming_015_3.jpg",
+      "/img/PC_Gaming_015_4.jpg",
+      "/img/PC_Gaming_015_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 26500000,
+    "maxPrice": 33500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000016"
+    },
+    "name": "Asus ROG Maximus",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000001"
+    },
+    "description": "Asus ROG Maximus đại diện cho đỉnh cao của dòng Republic of Gamers cao cấp. Bo mạch chủ Maximus Hero với AI Overclocking giúp tự động ép xung đạt hiệu suất tối ưu. GPU RTX 4070 hỗ trợ DLSS 3.0 Frame Generation cho FPS vượt trội trong game. Nguồn 850W 80+ Platinum hiệu suất siêu cao tiết kiệm điện năng. Hệ thống âm thanh SupremeFX và Intel WiFi 6E cho kết nối không dây ổn định.",
+    "images": [
+      "/img/PC_Gaming_016_1.jpg",
+      "/img/PC_Gaming_016_2.jpg",
+      "/img/PC_Gaming_016_3.jpg",
+      "/img/PC_Gaming_016_4.jpg",
+      "/img/PC_Gaming_016_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 29800000,
+    "maxPrice": 38500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000017"
+    },
+    "name": "MSI Prestige Dynasty",
+    "brandId": {
+      "$oid": "100000000000000000000006"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000001"
+    },
+    "description": "MSI Prestige Dynasty mang thiết kế sang trọng cho game thủ đẳng cấp. Card đồ họa Radeon RX 7900 XT với kiến trúc RDNA 3 tiên tiến cho hiệu năng vượt bậc. Bo mạch chủ Prestige series tối ưu cho cả gaming và content creation chuyên nghiệp. SSD Gen 4 NVMe dung lượng lớn 2TB cho phép lưu trữ hàng trăm tựa game. Case chống ồn và chống bụi với kính cường lực tempered glass 2 mặt.",
+    "images": [
+      "/img/PC_Gaming_017_1.jpg",
+      "/img/PC_Gaming_017_2.jpg",
+      "/img/PC_Gaming_017_3.jpg",
+      "/img/PC_Gaming_017_4.jpg",
+      "/img/PC_Gaming_017_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 28500000,
+    "maxPrice": 39800000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000018"
+    },
+    "name": "Gigabyte Aorus Xtreme",
+    "brandId": {
+      "$oid": "100000000000000000000004"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000001"
+    },
+    "description": "Gigabyte Aorus Xtreme là phiên bản cực đoan dành cho những người đam mê hiệu năng tối đa. GPU RTX 4070 Ti Aorus Master với tản nhiệt WATERFORCE AIO tích hợp. Bo mạch chủ Aorus Xtreme với đèn LED zone lighting và lớn chắn nhiệt kim loại nguyên khối. RAM DDR5 OC tốc độ 6000MHz+ cho băng thông cực lớn. Nguồn Titanium 1000W modular cao cấp với dây bọc sleeved thẩm mỹ.",
+    "images": [
+      "/img/PC_Gaming_018_1.jpg",
+      "/img/PC_Gaming_018_2.jpg",
+      "/img/PC_Gaming_018_3.jpg",
+      "/img/PC_Gaming_018_4.jpg",
+      "/img/PC_Gaming_018_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 32500000,
+    "maxPrice": 42500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000019"
+    },
+    "name": "Asus ProArt Creator",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000001"
+    },
+    "description": "Asus ProArt Creator kết hợp sức mạnh gaming và khả năng sáng tạo đỉnh cao. GPU Radeon RX 7900 XTX hỗ trợ mạnh mẽ cho render 3D và chỉnh sửa video 8K. Bo mạch chủ ProArt với nhiều cổng Thunderbolt 4 và 10GbE LAN cho truyền tải dữ liệu nhanh. RAM 64GB DDR5 ECC hỗ trợ cho các dự án lớn và đa nhiệm phức tạp. Thiết kế chuyên nghiệp với chất liệu cao cấp và khả năng nâng cấp linh hoạt.",
+    "images": [
+      "/img/PC_Gaming_019_1.jpg",
+      "/img/PC_Gaming_019_2.jpg",
+      "/img/PC_Gaming_019_3.jpg",
+      "/img/PC_Gaming_019_4.jpg",
+      "/img/PC_Gaming_019_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 30500000,
+    "maxPrice": 45500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000020"
+    },
+    "name": "MSI Godlike Ultimate",
+    "brandId": {
+      "$oid": "100000000000000000000006"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000001"
+    },
+    "description": "MSI Godlike Ultimate là đỉnh cao tuyệt đối của dòng gaming enthusiast. GPU RTX 4080 SUPRIM Liquid X với tản nhiệt nước tích hợp cho hiệu năng khủng. Bo mạch chủ MEG Godlike với Dynamic Dashboard II LCD hiển thị thông số thời gian thực. RAM DDR5 128GB cho những tác vụ nặng nhất, không gì làm khó được. Case Gungnir full tower với hệ thống tản nhiệt toàn diện và RGB đầy màu sắc.",
+    "images": [
+      "/img/PC_Gaming_020_1.jpg",
+      "/img/PC_Gaming_020_2.jpg",
+      "/img/PC_Gaming_020_3.jpg",
+      "/img/PC_Gaming_020_4.jpg",
+      "/img/PC_Gaming_020_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 35800000,
+    "maxPrice": 52500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000021"
+    },
+    "name": "Intel NUC Office Lite",
+    "brandId": {
+      "$oid": "100000000000000000000005"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Intel NUC Office Lite là giải pháp văn phòng tiết kiệm chi phí nhất cho doanh nghiệp vừa và nhỏ. Sử dụng CPU Intel Celeron tiêu thụ điện thấp nhưng vẫn đảm bảo hoàn thành tốt các tác vụ văn phòng cơ bản. Thiết kế gọn nhẹ tiết kiệm không gian làm việc hiệu quả. Tích hợp WiFi và Bluetooth sẵn giảm bớt dây cáp rối rắm. Phù hợp cho nhân viên làm việc với Office, Email và duyệt web cơ bản.",
+    "images": [
+      "/img/PC_Office_001_1.jpg",
+      "/img/PC_Office_001_2.jpg",
+      "/img/PC_Office_001_3.jpg",
+      "/img/PC_Office_001_4.jpg",
+      "/img/PC_Office_001_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 4200000,
+    "maxPrice": 5500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000022"
+    },
+    "name": "Asus ExpertCenter D5",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Asus ExpertCenter D5 đưức thiết kế dành riêng cho môi trường văn phòng chuyên nghiệp. Bo mạch chủ Asus chuẩn doanh nghiệp với chất lượng linh kiện đồng nhất đảm bảo độ ổn định cao. Hỗ trợ nhiều cổng kết nối cho thiết bị ngoại vi văn phòng. Case nhỏ gọn với thiết kế chống bụi giúp bảo vệ linh kiện bên trong. Bảo hành 3 năm cùng hỗ trợ kỹ thuật chuyên nghiệp từ Asus Việt Nam.",
+    "images": [
+      "/img/PC_Office_002_1.jpg",
+      "/img/PC_Office_002_2.jpg",
+      "/img/PC_Office_002_3.jpg",
+      "/img/PC_Office_002_4.jpg",
+      "/img/PC_Office_002_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 4500000,
+    "maxPrice": 5800000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000023"
+    },
+    "name": "Intel Pentium ProDesk",
+    "brandId": {
+      "$oid": "100000000000000000000005"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Intel Pentium ProDesk mang lại hiệu năng văn phòng cải thiện với CPU Pentium Gold. Xử lý nhanh các tác vụ Excel, Word, PowerPoint và các phần mềm quản lý. SSD 256GB cho tốc độ khởi động nhanh và thời gian truy xuất dữ liệu giảm thiểu đáng kể. RAM 8GB đủ để mở nhiều tab trình duyệt và ứng dụng cùng lúc. Thiết kế case chắc chắn, dễ vệ sinh và bảo trì.",
+    "images": [
+      "/img/PC_Office_003_1.jpg",
+      "/img/PC_Office_003_2.jpg",
+      "/img/PC_Office_003_3.jpg",
+      "/img/PC_Office_003_4.jpg",
+      "/img/PC_Office_003_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 5200000,
+    "maxPrice": 7200000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000024"
+    },
+    "name": "Asus Vivo Mini PC",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Asus Vivo Mini PC là giải pháp tiết kiệm không gian tối ưu cho bàn làm việc. Kích thước siêu nhỏ nhưng vẫn đầy đủ cổng kết nối HDMI, USB, LAN. Công nghệ Intel văn phòng đảm bảo hoàn thành tốt công việc hàng ngày. Hỗ trợ VESA mount cho phép gắn sau màn hình tiết kiệm không gian tối đa. Tiêu thụ điện thấp giúp giảm chi phí vận hành cho doanh nghiệp.",
+    "images": [
+      "/img/PC_Office_004_1.jpg",
+      "/img/PC_Office_004_2.jpg",
+      "/img/PC_Office_004_3.jpg",
+      "/img/PC_Office_004_4.jpg",
+      "/img/PC_Office_004_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 5400000,
+    "maxPrice": 7500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000025"
+    },
+    "name": "AMD Athlon Office Plus",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "AMD Athlon Office Plus mang lại hiệu năng văn phòng vượt trội với giá thành cạnh tranh. CPU AMD Athlon với đồ họa tích hợp Radeon Vega cho khả năng hiển thị mượt mà. RAM 16GB giúp đa nhiệm hiệu quả giữa nhiều ứng dụng văn phòng. SSD 512GB cung cấp không gian lưu trữ rộng rãi cho tài liệu công việc. Lựa chọn lý tưởng cho SME cần nâng cấp hệ thống văn phòng hàng loạt.",
+    "images": [
+      "/img/PC_Office_005_1.jpg",
+      "/img/PC_Office_005_2.jpg",
+      "/img/PC_Office_005_3.jpg",
+      "/img/PC_Office_005_4.jpg",
+      "/img/PC_Office_005_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 5600000,
+    "maxPrice": 7800000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000026"
+    },
+    "name": "Intel Core i3 Business",
+    "brandId": {
+      "$oid": "100000000000000000000005"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Intel Core i3 Business đưa công nghệ hãng đầu vào môi trường doanh nghiệp. CPU Core i3 thế hệ mới với hiệu suất cao và tiêu thụ điện tối ưu. Chipset Intel hỗ trợ các công nghệ bảo mật doanh nghiệp như TPM 2.0. Bo mạch chủ chuẩn công nghiệp cho độ bền cao và thời gian hoạt động lâu dài. Phù hợp cho các vị trí văn phòng cần độ tin cậy cao.",
+    "images": [
+      "/img/PC_Office_006_1.jpg",
+      "/img/PC_Office_006_2.jpg",
+      "/img/PC_Office_006_3.jpg",
+      "/img/PC_Office_006_4.jpg",
+      "/img/PC_Office_006_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 5900000,
+    "maxPrice": 8200000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000027"
+    },
+    "name": "Asus Business D7",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Asus Business D7 là lựa chọn hoàn hảo cho doanh nghiệp vừa và nhỏ cần máy ổn định. Thiết kế case chắc chắn với khả năng chống va đập tốt. Hệ thống tản nhiệt hiệu quả giúp máy hoạt động êm ái không làm phiền. Các cổng kết nối được bố trí hợp lý dễ cắm rút thiết bị. Bảo hành onsite tại trụ sở công ty giảm thiểu thời gian ngừng hoạt động.",
+    "images": [
+      "/img/PC_Office_007_1.jpg",
+      "/img/PC_Office_007_2.jpg",
+      "/img/PC_Office_007_3.jpg",
+      "/img/PC_Office_007_4.jpg",
+      "/img/PC_Office_007_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 6100000,
+    "maxPrice": 8500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000028"
+    },
+    "name": "AMD Ryzen 3 ProWork",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "AMD Ryzen 3 ProWork mang hiệu năng đa nhân vào phân khúc văn phòng giá rẻ. CPU Ryzen 3 với 4 nhân 8 luồng xử lý nhiều tác vụ đồng thời mượt mà. Đồ họa Radeon Vega tích hợp cho khả năng hiển thị đa màn hình. Chipset AMD B550 ổn định và hỗ trợ PCIe 4.0 cho tương lai. Phù hợp cho nhân viên kế toán, nhân sự, quản lý cần đa nhiệm.",
+    "images": [
+      "/img/PC_Office_008_1.jpg",
+      "/img/PC_Office_008_2.jpg",
+      "/img/PC_Office_008_3.jpg",
+      "/img/PC_Office_008_4.jpg",
+      "/img/PC_Office_008_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 6300000,
+    "maxPrice": 8800000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000029"
+    },
+    "name": "Intel Productivity Pro",
+    "brandId": {
+      "$oid": "100000000000000000000005"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Intel Productivity Pro được tối ưu hóa cho năng suất làm việc tối đa. CPU Core i3 thế hệ 12 với kiến trúc hybrid cho hiệu năng vượt trội. RAM 16GB DDR4 cho phép mở hàng chục tab Chrome mà không giật. SSD NVMe tốc độ cao giúp khởi động Windows chỉ trong vài giây. Thiết kế gọn gàng, chuyên nghiệp phù hợp mọi môi trường văn phòng.",
+    "images": [
+      "/img/PC_Office_009_1.jpg",
+      "/img/PC_Office_009_2.jpg",
+      "/img/PC_Office_009_3.jpg",
+      "/img/PC_Office_009_4.jpg",
+      "/img/PC_Office_009_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 6500000,
+    "maxPrice": 9100000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000030"
+    },
+    "name": "Asus ExpertPC E9",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Asus ExpertPC E9 dành cho các chuyên gia văn phòng cần hiệu năng cao hơn. Bo mạch chủ Expert series với linh kiện chất lượng doanh nghiệp. Hỗ trợ đầy đủ các chuẩn bảo mật như Secure Boot, BitLocker. Khả năng nâng cấp RAM và ổ cứng dễ dàng khi cần. Điành cho quản lý, giám đốc cần máy làm việc ổn định, bảo mật.",
+    "images": [
+      "/img/PC_Office_010_1.jpg",
+      "/img/PC_Office_010_2.jpg",
+      "/img/PC_Office_010_3.jpg",
+      "/img/PC_Office_010_4.jpg",
+      "/img/PC_Office_010_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 6700000,
+    "maxPrice": 9400000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000031"
+    },
+    "name": "AMD Ryzen 5 OfficeMax",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "AMD Ryzen 5 OfficeMax mang lại sức mạnh đa nhân cho công việc văn phòng nặng. CPU Ryzen 5 6 nhân 12 luồng xử lý nhanh các bảng tính lớn và báo cáo phức tạp. RAM 16GB cho phép mở đồng thời nhiều phần mềm quản lý không bị giật lag. SSD 512GB NVMe giảm thời gian chờ khi mở file lớn. Lựa chọn tốt cho phòng kế toán, tài chính cần xử lý dữ liệu nhiều.",
+    "images": [
+      "/img/PC_Office_011_1.jpg",
+      "/img/PC_Office_011_2.jpg",
+      "/img/PC_Office_011_3.jpg",
+      "/img/PC_Office_011_4.jpg",
+      "/img/PC_Office_011_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 6900000,
+    "maxPrice": 9700000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000032"
+    },
+    "name": "Intel Core i5 Enterprise",
+    "brandId": {
+      "$oid": "100000000000000000000005"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Intel Core i5 Enterprise là chuẩn mực doanh nghiệp vừa và lớn trên toàn thế giới. CPU Core i5 thế hệ 12 với Performance cores và Efficient cores tối ưu. Công nghệ Intel vPro hỗ trợ quản lý từ xa và bảo mật nâng cao. Chipset Intel Q670 chuẩn doanh nghiệp với các tính năng quản trị IT. Phù hợp cho các tập đoàn lớn cần triển khai hàng loạt máy trạm.",
+    "images": [
+      "/img/PC_Office_012_1.jpg",
+      "/img/PC_Office_012_2.jpg",
+      "/img/PC_Office_012_3.jpg",
+      "/img/PC_Office_012_4.jpg",
+      "/img/PC_Office_012_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 7100000,
+    "maxPrice": 10000000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000033"
+    },
+    "name": "Asus Prime Business",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Asus Prime Business kết hợp độ tin cậy và hiệu năng cho doanh nghiệp. Bo mạch chủ Prime series với 5X Protection III bảo vệ toàn diện. Hỗ trợ nhiều chuẩn kết nối cho thiết bị văn phòng đa dạng. UEFI BIOS thân thiện dễ cài đặt và quản lý. Bảo hành 3 năm cùng dịch vụ kỹ thuật chuyên nghiệp tại Việt Nam.",
+    "images": [
+      "/img/PC_Office_013_1.jpg",
+      "/img/PC_Office_013_2.jpg",
+      "/img/PC_Office_013_3.jpg",
+      "/img/PC_Office_013_4.jpg",
+      "/img/PC_Office_013_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 7300000,
+    "maxPrice": 10300000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000034"
+    },
+    "name": "AMD WorkStation Lite",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "AMD WorkStation Lite cung cấp hiệu năng văn phòng cao cấp với giá cạnh tranh. CPU Ryzen 5 PRO với các tính năng bảo mật doanh nghiệp tích hợp. Đồ họa Radeon Pro cho khả năng xử lý đồ họa cơ bản và hiển thị nhiều màn hình. ECC memory option cho độ chính xác dữ liệu cao. Phù hợp cho kỹ sư thiết kế, kiến trúc sư cần máy ổn định.",
+    "images": [
+      "/img/PC_Office_014_1.jpg",
+      "/img/PC_Office_014_2.jpg",
+      "/img/PC_Office_014_3.jpg",
+      "/img/PC_Office_014_4.jpg",
+      "/img/PC_Office_014_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 7500000,
+    "maxPrice": 10600000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000035"
+    },
+    "name": "Intel vPro Station",
+    "brandId": {
+      "$oid": "100000000000000000000005"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Intel vPro Station được thiết kế đặc biệt cho doanh nghiệp cần quản lý tập trung. Công nghệ Intel vPro cho phép quản trị viên kiểm soát từ xa ngay cả khi máy tắt. Intel AMT giúp khắc phục sự cố nhanh chóng không cần đến tận nưi. Chipset Q series với tính năng bảo mật hàng đầu. Lựa chọn chuẩn cho các tập đoàn xuyên quốc gia và doanh nghiệp lớn.",
+    "images": [
+      "/img/PC_Office_015_1.jpg",
+      "/img/PC_Office_015_2.jpg",
+      "/img/PC_Office_015_3.jpg",
+      "/img/PC_Office_015_4.jpg",
+      "/img/PC_Office_015_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 7700000,
+    "maxPrice": 10900000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000036"
+    },
+    "name": "Asus Pro E10",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Asus Pro E10 là giải pháp văn phòng cao cấp cho thị trường doanh nghiệp. Bo mạch chủ Pro WS chuẩn workstation với độ bền vượt trội. Hỗ trợ ECC RAM cho độ chính xác dữ liệu tối đa. Nhiều khe mở rộng PCIe cho thiết bị chuyên dụng. Chứng nhận ISV từ các hãng phần mềm chuyên nghiệp hàng đầu.",
+    "images": [
+      "/img/PC_Office_016_1.jpg",
+      "/img/PC_Office_016_2.jpg",
+      "/img/PC_Office_016_3.jpg",
+      "/img/PC_Office_016_4.jpg",
+      "/img/PC_Office_016_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 7900000,
+    "maxPrice": 11200000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000037"
+    },
+    "name": "AMD PRO Desktop",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "AMD PRO Desktop mang công nghệ AMD PRO tiên tiến vào môi trường văn phòng. CPU Ryzen PRO với AMD GuardMI bảo mật cấp phần cứng. Dash management cho phép IT quản lý tập trung qua mạng. RAM 16GB DDR4 hỗ trợ đủ cho các ứng dụng doanh nghiệp. Lựa chọn lý tưởng cho công ty muốn tận dụng hệ sinh thái AMD.",
+    "images": [
+      "/img/PC_Office_017_1.jpg",
+      "/img/PC_Office_017_2.jpg",
+      "/img/PC_Office_017_3.jpg",
+      "/img/PC_Office_017_4.jpg",
+      "/img/PC_Office_017_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 8100000,
+    "maxPrice": 11500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000038"
+    },
+    "name": "Intel Optimus Work",
+    "brandId": {
+      "$oid": "100000000000000000000005"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Intel Optimus Work tối ưu hóa cho hiệu suất làm việc tối đa mỗi ngày. CPU Core i5 thế hệ 13 với khả năng đa nhiệm vượt trội. Intel UHD Graphics hỗ trợ đến 3 màn hình đồng thời. SSD NVMe Gen 4 512GB cho tốc độ truy xuất dữ liệu siêu nhanh. Thiết kế modular dễ nâng cấp và bảo trì giảm chi phí TCO.",
+    "images": [
+      "/img/PC_Office_018_1.jpg",
+      "/img/PC_Office_018_2.jpg",
+      "/img/PC_Office_018_3.jpg",
+      "/img/PC_Office_018_4.jpg",
+      "/img/PC_Office_018_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 8300000,
+    "maxPrice": 11800000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000039"
+    },
+    "name": "Asus Commercial PC",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Asus Commercial PC được thiết kế đặc biệt cho thương mại và bán lẻ. Bo mạch chủ Commercial series với độ bền được kiểm nghiệm nghiêm ngặt. Hỗ trợ dual display cho quầy thanh toán và quản lý. Khả năng chạy 24/7 liên tục không nghỉ. Phù hợp cho cửa hàng, siêu thị, nhà hàng cần máy POS ổn định.",
+    "images": [
+      "/img/PC_Office_019_1.jpg",
+      "/img/PC_Office_019_2.jpg",
+      "/img/PC_Office_019_3.jpg",
+      "/img/PC_Office_019_4.jpg",
+      "/img/PC_Office_019_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 8500000,
+    "maxPrice": 12100000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000040"
+    },
+    "name": "Intel Core i5 Premium",
+    "brandId": {
+      "$oid": "100000000000000000000005"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000002"
+    },
+    "description": "Intel Core i5 Premium là phiên bản cao cấp nhất trong dòng văn phòng. CPU Core i5 thế hệ mới nhất với hiệu năng đỉnh cao. RAM 16GB DDR5 tốc độ cao cho băng thông vượt trội. SSD 512GB NVMe Gen 4 cho tốc độ đọc/ghi siêu nhanh. Thiết kế cao cấp với chất liệu kim loại sang trọng cho giám đốc và quản lý cấp cao.",
+    "images": [
+      "/img/PC_Office_020_1.jpg",
+      "/img/PC_Office_020_2.jpg",
+      "/img/PC_Office_020_3.jpg",
+      "/img/PC_Office_020_4.jpg",
+      "/img/PC_Office_020_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 8700000,
+    "maxPrice": 12400000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000041"
+    },
+    "name": "Nvidia Quadro WS Entry",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia Quadro WS Entry là máy trạm workstation chuyên nghiệp cho người mới bắt đầu. Card đồ họa Quadro P2000 với driver được tối ưu cho các phần mềm CAD, 3D chuyên nghiệp. ECC RAM đảm bảo độ chính xác tuyệt đối cho công việc kỹ thuật. CPU Xeon ổn định cho khả năng render và tính toán lâu dài. Chứng nhận ISV từ AutoCAD, SolidWorks, Revit đảm bảo tương thích hoàn hảo.",
+    "images": [
+      "/img/Workstation_001_1.jpg",
+      "/img/Workstation_001_2.jpg",
+      "/img/Workstation_001_3.jpg",
+      "/img/Workstation_001_4.jpg",
+      "/img/Workstation_001_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 22500000,
+    "maxPrice": 38500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000042"
+    },
+    "name": "Nvidia RTX A4000 Pro",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia RTX A4000 Pro mang công nghệ RTX Ampere vào workstation chuyên nghiệp. GPU RTX A4000 16GB với RT cores và Tensor cores cho AI và ray tracing. Hỗ trợ render thới gian thực với OptiX và các engine render chuyên nghiệp. RAM DDR4 ECC 64GB cho khả năng xử lý dữ liệu lớn. Phù hợp cho kiến trúc sư, kỹ sư cơ khí, designer 3D chuyên nghiệp.",
+    "images": [
+      "/img/Workstation_002_1.jpg",
+      "/img/Workstation_002_2.jpg",
+      "/img/Workstation_002_3.jpg",
+      "/img/Workstation_002_4.jpg",
+      "/img/Workstation_002_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 25800000,
+    "maxPrice": 45500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000043"
+    },
+    "name": "Nvidia RTX A5500 Studio",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia RTX A5500 Studio dành cho studio thiết kế và hãng sản xuất nội dung chuyên nghiệp. GPU RTX A5500 24GB VRAM cho phép xử lý cảnh 3D phức tạp và texture độ phân giải cao. Hỗ trợ NVLink để kết nối nhiều GPU tăng hiệu năng. CPU Xeon W series cho khả năng đa nhân mạnh mẽ. Lựa chọn cho các dự án phim ảnh, kiến trúc, xây dựng quy mô lớn.",
+    "images": [
+      "/img/Workstation_003_1.jpg",
+      "/img/Workstation_003_2.jpg",
+      "/img/Workstation_003_3.jpg",
+      "/img/Workstation_003_4.jpg",
+      "/img/Workstation_003_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 28500000,
+    "maxPrice": 48500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000044"
+    },
+    "name": "AMD Radeon Pro W6800",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "AMD Radeon Pro W6800 mang kiến trúc RDNA 2 vào thế giới workstation. GPU Radeon Pro W6800 32GB với băng thông nhớ cực cao cho xử lý dữ liệu lớn. Hỗ trợ đa màn hình 8K cho thiết kế đồ họa chuyên sâu. AMD Infinity Cache giúp tăng hiệu suất render đáng kể. Phù hợp cho designer đồ họa, video editor, colorist chuyên nghiệp.",
+    "images": [
+      "/img/Workstation_004_1.jpg",
+      "/img/Workstation_004_2.jpg",
+      "/img/Workstation_004_3.jpg",
+      "/img/Workstation_004_4.jpg",
+      "/img/Workstation_004_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 26500000,
+    "maxPrice": 42500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000045"
+    },
+    "name": "Nvidia RTX A6000 Elite",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia RTX A6000 Elite là giải pháp workstation cao cấp cho các dự án phức tạp nhất. GPU RTX A6000 48GB cho khả năng xử lý cảnh 3D và scene khổng lồ không giới hạn. RAM ECC 128GB cho các dự án BIM, simulation phức tạp. Storage NVMe RAID cho độ tin cậy dữ liệu cao nhất. Lựa chọn chuẩn cho studio VFX, kiến trúc lớn, trung tâm nghiên cứu.",
+    "images": [
+      "/img/Workstation_005_1.jpg",
+      "/img/Workstation_005_2.jpg",
+      "/img/Workstation_005_3.jpg",
+      "/img/Workstation_005_4.jpg",
+      "/img/Workstation_005_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 32500000,
+    "maxPrice": 65500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000046"
+    },
+    "name": "AMD Radeon Pro W7800",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "AMD Radeon Pro W7800 là workstation tiến tiến với kiến trúc RDNA 3 mới nhất. GPU Radeon Pro W7800 với DisplayPort 2.1 hỗ trợ màn hình 8K 165Hz. AI Accelerators tích hợp giúp tăng tốc các tác vụ AI và machine learning. Chipset AMD TRX50 hỗ trợ PCIe 5.0 và DDR5 cho băng thông khủng. Phù hợp cho content creator cần công nghệ tiên tiến nhất.",
+    "images": [
+      "/img/Workstation_006_1.jpg",
+      "/img/Workstation_006_2.jpg",
+      "/img/Workstation_006_3.jpg",
+      "/img/Workstation_006_4.jpg",
+      "/img/Workstation_006_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 29500000,
+    "maxPrice": 52500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000047"
+    },
+    "name": "Nvidia RTX 6000 Ada",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia RTX 6000 Ada Generation là đỉnh cao tuyệt đối của công nghệ workstation hiện đại. GPU Ada Lovelace với 48GB GDDR6 cho hiệu năng render vượt bậc. RT cores thế hệ 3 và Tensor cores thế hệ 4 cho AI tiên tiến. Hỗ trợ DLSS 3 và các công nghệ AI generative mới nhất. Lựa chọn cho studio hàng đầu thế giới và các tổ chức nghiên cứu đỉnh cao.",
+    "images": [
+      "/img/Workstation_007_1.jpg",
+      "/img/Workstation_007_2.jpg",
+      "/img/Workstation_007_3.jpg",
+      "/img/Workstation_007_4.jpg",
+      "/img/Workstation_007_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 35500000,
+    "maxPrice": 72500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000048"
+    },
+    "name": "AMD Pro W7900 Flagship",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "AMD Pro W7900 Flagship là sản phẩm cao cấp nhất của AMD cho workstation. GPU Radeon Pro W7900 với 48GB memory cho các dự án khổng lồ. Chipset AMD TRX50 hỗ trợ CPU Threadripper PRO đến 96 nhân. ECC memory đến 2TB cho các bài toán simulation phức tạp. Phù hợp cho nghiên cứu khoa học, dỏ dàng AI, studio VFX hàng đầu.",
+    "images": [
+      "/img/Workstation_008_1.jpg",
+      "/img/Workstation_008_2.jpg",
+      "/img/Workstation_008_3.jpg",
+      "/img/Workstation_008_4.jpg",
+      "/img/Workstation_008_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 38500000,
+    "maxPrice": 68500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000049"
+    },
+    "name": "Nvidia Quadro Titan WS",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia Quadro Titan WS là workstation siêu mạnh cho các dự án đặc biệt phức tạp. Dual GPU RTX 6000 Ada trong cấu hình NVLink cho hiệu năng gấp đôi. CPU Xeon W Sapphire Rapids đến 56 nhân cho đa nhiệm cực mạnh. RAM ECC DDR5 512GB hỗ trợ các dự án khổng lồ nhất. Hệ thống tản nhiệt nước custom cho hiệu năng bền vững 24/7.",
+    "images": [
+      "/img/Workstation_009_1.jpg",
+      "/img/Workstation_009_2.jpg",
+      "/img/Workstation_009_3.jpg",
+      "/img/Workstation_009_4.jpg",
+      "/img/Workstation_009_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 42500000,
+    "maxPrice": 58500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000050"
+    },
+    "name": "AMD Threadripper Extreme",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "AMD Threadripper Extreme mang sức mạnh đa nhân tuyệt đối cho workstation. CPU Threadripper PRO 7995WX 96 nhân 192 luồng cho render song song khủng. Dual Radeon Pro W7900 trong cấu hình Crossfire cho hiệu năng đồ họa vô địch. RAM ECC DDR5 1TB cho các bài toán CFD, FEA phức tạp nhất. Lựa chọn cho viện nghiên cứu, studio VFX, công ty kỹ thuật hàng đầu.",
+    "images": [
+      "/img/Workstation_010_1.jpg",
+      "/img/Workstation_010_2.jpg",
+      "/img/Workstation_010_3.jpg",
+      "/img/Workstation_010_4.jpg",
+      "/img/Workstation_010_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 45500000,
+    "maxPrice": 75500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000051"
+    },
+    "name": "Nvidia Studio Creator Max",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia Studio Creator Max được tối ưu cho content creator chuyên nghiệp cần hiệu năng cao nhất. GPU RTX A5000 24GB cho video editing 8K và rendering 3D nặng. CPU Intel Core i9 Extreme Edition cho multi-threading vượt trội. RAM 64GB DDR5 cho phép mở đồng thời DaVinci Resolve, After Effects, Blender. Storage 4TB NVMe RAID 0 cho tốc độ đọc/ghi cực nhanh cần thiết cho video 8K RAW.",
+    "images": [
+      "/img/Workstation_011_1.jpg",
+      "/img/Workstation_011_2.jpg",
+      "/img/Workstation_011_3.jpg",
+      "/img/Workstation_011_4.jpg",
+      "/img/Workstation_011_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 43500000,
+    "maxPrice": 62500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000052"
+    },
+    "name": "AMD Creator Station Pro",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "AMD Creator Station Pro kết hợp sức mạnh Ryzen Threadripper và Radeon Pro. CPU Threadripper 64 nhân cho render song song nhiều projects cùng lúc. GPU Radeon Pro W6800 32GB cho color grading và VFX chuyên sâu. RAM 128GB ECC DDR4 đảm bảo không bị crash khi làm việc với file lớn. Phù hợp cho studio video production, post-production và broadcasting.",
+    "images": [
+      "/img/Workstation_012_1.jpg",
+      "/img/Workstation_012_2.jpg",
+      "/img/Workstation_012_3.jpg",
+      "/img/Workstation_012_4.jpg",
+      "/img/Workstation_012_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 48500000,
+    "maxPrice": 78500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000053"
+    },
+    "name": "Nvidia AI Workstation",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia AI Workstation chuyên biệt cho AI research và deep learning. GPU RTX A6000 48GB với Tensor cores cho training model AI. CPU Xeon W-3400 series cho data preprocessing và inference nhanh. RAM 256GB ECC cho việc load toàn bộ dataset vào memory. NVMe storage 8TB cho lưu trữ dataset lớn và trained models. CUDA và cuDNN tối ưu sẵn cho TensorFlow, PyTorch.",
+    "images": [
+      "/img/Workstation_013_1.jpg",
+      "/img/Workstation_013_2.jpg",
+      "/img/Workstation_013_3.jpg",
+      "/img/Workstation_013_4.jpg",
+      "/img/Workstation_013_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 52500000,
+    "maxPrice": 98500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000054"
+    },
+    "name": "AMD Scientific Computing",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "AMD Scientific Computing dành cho các bài toán khoa học tính toán phức tạp. CPU EPYC 96 nhân cho simulation CFD, FEA quy mô lớn. GPU Radeon Instinct MI250X cho HPC và scientific computing. RAM 512GB ECC DDR4 cho các bài toán yêu cầu memory cực lớn. Hỗ trợ ROCm stack cho GPGPU computing với AMD. Phù hợp cho trường đại học, viện nghiên cứu.",
+    "images": [
+      "/img/Workstation_014_1.jpg",
+      "/img/Workstation_014_2.jpg",
+      "/img/Workstation_014_3.jpg",
+      "/img/Workstation_014_4.jpg",
+      "/img/Workstation_014_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 55500000,
+    "maxPrice": 125500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000055"
+    },
+    "name": "Nvidia DGX Workstation",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia DGX Workstation là đỉnh cao AI workstation cho doanh nghiệp. Quad RTX 6000 Ada trong cấu hình NVLink cho 192GB VRAM tổng cộng. CPU Dual Xeon Platinum cho khả năng xử lý song song khủng. RAM 1TB ECC DDR5 cho các model AI quy mô lớn nhất. NVMe storage 16TB RAID 10 cho dataset và checkpoint. Lựa chọn cho AI lab, research center hàng đầu.",
+    "images": [
+      "/img/Workstation_015_1.jpg",
+      "/img/Workstation_015_2.jpg",
+      "/img/Workstation_015_3.jpg",
+      "/img/Workstation_015_4.jpg",
+      "/img/Workstation_015_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 48500000,
+    "maxPrice": 82500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000056"
+    },
+    "name": "AMD HPC Superstation",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "AMD HPC Superstation mang khả năng supercomputing vào workstation. Dual EPYC 128-core cho 256 nhân 512 luồng tổng cộng. Quad Radeon Instinct MI300X cho compute cực mạnh. RAM 2TB ECC DDR5 cho các bài toán simulation khổng lồ. NVMe storage 32TB trong cấu hình RAID cho throughput cực cao. Dành cho các tổ chức cần computing power cấp supercomputer.",
+    "images": [
+      "/img/Workstation_016_1.jpg",
+      "/img/Workstation_016_2.jpg",
+      "/img/Workstation_016_3.jpg",
+      "/img/Workstation_016_4.jpg",
+      "/img/Workstation_016_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 58500000,
+    "maxPrice": 135500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000057"
+    },
+    "name": "Nvidia Omniverse Station",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia Omniverse Station được tối ưu hóa cho Omniverse và USD workflows. Triple RTX 6000 Ada cho real-time ray tracing cực phức tạp. CPU Threadripper PRO 96-core cho asset compilation và simulation. RAM 512GB ECC cho các cảnh virtual production khổng lồ. NVMe RAID 0 16TB cho streaming texture và geometry data. Lựa chọn chuẩn cho studio sử dụng Omniverse platform.",
+    "images": [
+      "/img/Workstation_017_1.jpg",
+      "/img/Workstation_017_2.jpg",
+      "/img/Workstation_017_3.jpg",
+      "/img/Workstation_017_4.jpg",
+      "/img/Workstation_017_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 52500000,
+    "maxPrice": 88500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000058"
+    },
+    "name": "AMD Medical Imaging WS",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "AMD Medical Imaging WS chuyên dụng cho y khoa và xử lý hình ảnh chẩn đoán. GPU Radeon Pro W6900 cho reconstruction CT/MRI với độ phân giải cao. CPU EPYC với ECC memory đảm bảo độ chính xác tối đa. Chứng nhận DICOM và các chuẩn y tế quốc tế. RAM 256GB ECC cho xử lý volume data lớn. Phù hợp cho bệnh viện, phòng chẩn đoán hình ảnh.",
+    "images": [
+      "/img/Workstation_018_1.jpg",
+      "/img/Workstation_018_2.jpg",
+      "/img/Workstation_018_3.jpg",
+      "/img/Workstation_018_4.jpg",
+      "/img/Workstation_018_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 54500000,
+    "maxPrice": 112500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000059"
+    },
+    "name": "Nvidia VFX Mega Station",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "Nvidia VFX Mega Station là giải pháp tối thượng cho studio VFX hàng đầu thế giới. Quad RTX 6000 Ada Generation cho real-time rendering phim blockbuster. CPU Dual Xeon W-3500 cho compositing và simulation phức tạp. RAM 1TB ECC DDR5 cho scene có hàng triệu polygons. Storage 64TB NVMe RAID 10 cho 8K uncompressed footage. Chứng nhận từ Autodesk, Foundry, SideFX cho Flame, Nuke, Houdini.",
+    "images": [
+      "/img/Workstation_019_1.jpg",
+      "/img/Workstation_019_2.jpg",
+      "/img/Workstation_019_3.jpg",
+      "/img/Workstation_019_4.jpg",
+      "/img/Workstation_019_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 68500000,
+    "maxPrice": 145500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000060"
+    },
+    "name": "AMD Ultimate Render Farm",
+    "brandId": {
+      "$oid": "100000000000000000000001"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000003"
+    },
+    "description": "AMD Ultimate Render Farm mang sức mạnh render farm vào một workstation duy nhất. Dual Threadripper PRO 96-core cho 192 nhân render đồng thời. Quad Radeon Pro W7900 cho GPU rendering Cycles, Octane, Redshift. RAM 2TB ECC DDR5 cho các scene animation quy mô feature film. Storage 128TB trong RAID 60 cho texture library khổng lồ. Lựa chọn cho studio animation, VFX cần render power tối đa.",
+    "images": [
+      "/img/Workstation_020_1.jpg",
+      "/img/Workstation_020_2.jpg",
+      "/img/Workstation_020_3.jpg",
+      "/img/Workstation_020_4.jpg",
+      "/img/Workstation_020_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 72500000,
+    "maxPrice": 285500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000061"
+    },
+    "name": "Kingston ValueRAM 8GB",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Kingston ValueRAM 8GB DDR4 là giải pháp RAM phổ thông với giá cả phải chăng nhất. Tốc độ 2666MHz đủ cho nhu cầu văn phòng và gaming nhẹ. Chất lượng Kingston được kiểm nghiệm nghiêm ngặt đảm bảo tương thích. Bảo hành chính hãng trọn đời từ nhà sản xuất. Lựa chọn lý tưởng cho nâng cấp RAM bù cho máy cũ hay build PC giá rẻ.",
+    "images": [
+      "/img/PC_Hardware_001_1.jpg",
+      "/img/PC_Hardware_001_2.jpg",
+      "/img/PC_Hardware_001_3.jpg",
+      "/img/PC_Hardware_001_4.jpg",
+      "/img/PC_Hardware_001_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 580000,
+    "maxPrice": 1150000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000062"
+    },
+    "name": "Corsair Vengeance 16GB",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Corsair Vengeance 16GB DDR4 là dòng RAM phổ biến cho gaming và đa nhiệm. Tốc độ 3200MHz cho hiệu năng tốt trong game và ứng dụng. Thiết kế tản nhiệt nhôm giúp RAM chạy mát hơn khi ép xung. XMP profile sẵn dễ dàng cài đặt tốc độ cao nhất. Phù hợp cho gamer và người dùng cần hiệu năng ổn định.",
+    "images": [
+      "/img/PC_Hardware_002_1.jpg",
+      "/img/PC_Hardware_002_2.jpg",
+      "/img/PC_Hardware_002_3.jpg",
+      "/img/PC_Hardware_002_4.jpg",
+      "/img/PC_Hardware_002_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 650000,
+    "maxPrice": 1250000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000063"
+    },
+    "name": "Crucial Ballistix 32GB",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Crucial Ballistix 32GB DDR4 kit cho người dùng power user và content creator. Tốc độ 3600MHz với timing thấp cho hiệu năng đỉnh cao. Micron E-die chips cho khả năng ép xung tốt vượt trội. RGB lighting tùy chỉnh qua phần mềm cho setup đẹp mắt. Lựa chọn cho những ai cần RAM dung lượng lớn cho video editing và 3D rendering.",
+    "images": [
+      "/img/PC_Hardware_003_1.jpg",
+      "/img/PC_Hardware_003_2.jpg",
+      "/img/PC_Hardware_003_3.jpg",
+      "/img/PC_Hardware_003_4.jpg",
+      "/img/PC_Hardware_003_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 3200000,
+    "maxPrice": 8500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000064"
+    },
+    "name": "G.Skill Trident Z5 RGB",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "G.Skill Trident Z5 RGB là RAM DDR5 cao cấp cho platform Intel thế hệ 12 trở lên. Tốc độ 6000MHz cho băng thông khủng vượt trội. Thiết kế tản nhiệt nhôm cao cấp với RGB addressable đẹp mắt. Intel XMP 3.0 và AMD EXPO ready cho cài đặt dễ dàng. Dành cho enthusiast muốn hiệu năng tối đa cho system mới nhất.",
+    "images": [
+      "/img/PC_Hardware_004_1.jpg",
+      "/img/PC_Hardware_004_2.jpg",
+      "/img/PC_Hardware_004_3.jpg",
+      "/img/PC_Hardware_004_4.jpg",
+      "/img/PC_Hardware_004_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 2800000,
+    "maxPrice": 7200000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000065"
+    },
+    "name": "WD Blue SSD 500GB",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "WD Blue SSD 512GB SATA là giải pháp nâng cấp SSD giá rẻ nhất cho máy cũ. Tốc độ đọc 560MB/s nhanh hơn hẳn HDD truyền thống. Công nghệ 3D NAND độ bền cao và tiêu thụ điện thấp. Kết nối SATA III tương thích với mọi máy cũ. Phù hợp cho nâng cấp laptop cũ hoặc làm ổ ứng dụng cho PC.",
+    "images": [
+      "/img/PC_Hardware_005_1.jpg",
+      "/img/PC_Hardware_005_2.jpg",
+      "/img/PC_Hardware_005_3.jpg",
+      "/img/PC_Hardware_005_4.jpg",
+      "/img/PC_Hardware_005_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 3500000,
+    "maxPrice": 8500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000066"
+    },
+    "name": "Samsung 980 PRO 1TB",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Samsung 980 PRO 1TB NVMe PCIe 4.0 là SSD cao cấp cho gaming và workstation. Tốc độ đọc 7000MB/s và ghi 5000MB/s cực nhanh. Công nghệ V-NAND thế hệ mới nhất của Samsung cho độ bền và hiệu năng đỉnh cao. Heatsink tích hợp giúp kiểm soát nhiệt khi hoạt động cao tải. Lựa chọn cho gamer và creator cần tốc độ truy xuất dữ liệu nhanh nhất.",
+    "images": [
+      "/img/PC_Hardware_006_1.jpg",
+      "/img/PC_Hardware_006_2.jpg",
+      "/img/PC_Hardware_006_3.jpg",
+      "/img/PC_Hardware_006_4.jpg",
+      "/img/PC_Hardware_006_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 3200000,
+    "maxPrice": 9500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000067"
+    },
+    "name": "Crucial P5 Plus 2TB",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Crucial P5 Plus 2TB NVMe Gen 4 mang dung lượng lớn với hiệu năng cao. Tốc độ đọc 6600MB/s cho phép nạp game và ứng dụng siêu nhanh. Micron 3D NAND với độ bền cao và TBW lớn cho tuổi thọ dài. Dynamic Write Acceleration cho hiệu năng ghi ổn định. Phù hợp cho lưu trữ thư viện game, video project và dataset lớn.",
+    "images": [
+      "/img/PC_Hardware_007_1.jpg",
+      "/img/PC_Hardware_007_2.jpg",
+      "/img/PC_Hardware_007_3.jpg",
+      "/img/PC_Hardware_007_4.jpg",
+      "/img/PC_Hardware_007_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 1800000,
+    "maxPrice": 5500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000068"
+    },
+    "name": "Seagate FireCuda 530",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Seagate FireCuda 530 là SSD NVMe PCIe 4.0 cao cấp dành cho gaming extreme. Tốc độ đọc đến 7300MB/s đứng top trong phân khúc. Heatsink Seagate thiết kế đẹp mắt và hiệu quả cao. Rescue Data Recovery Services miễn phí 3 năm giúp khôi phục dữ liệu khi cần. Dành cho gamer và enthusiast muốn tốc độ tối đa cho PC gaming.",
+    "images": [
+      "/img/PC_Hardware_008_1.jpg",
+      "/img/PC_Hardware_008_2.jpg",
+      "/img/PC_Hardware_008_3.jpg",
+      "/img/PC_Hardware_008_4.jpg",
+      "/img/PC_Hardware_008_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 1500000,
+    "maxPrice": 6200000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000069"
+    },
+    "name": "Asus TUF B550M-PLUS",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Asus TUF B550M-PLUS là bo mạch chủ Micro-ATX cho AMD Ryzen phổ thông và đáng tin cậy. Hỗ trợ Ryzen 5000 series với PCIe 4.0 cho GPU và SSD. VRM 8+2 phase với tản nhiệt tốt cho khả năng ép xung nhẹ. Kích thước nhỏ gọn phù hợp cho case compact. Phù hợp cho build PC gaming vừa phải với bộ vi xử lý AMD.",
+    "images": [
+      "/img/PC_Hardware_009_1.jpg",
+      "/img/PC_Hardware_009_2.jpg",
+      "/img/PC_Hardware_009_3.jpg",
+      "/img/PC_Hardware_009_4.jpg",
+      "/img/PC_Hardware_009_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 850000,
+    "maxPrice": 2500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000070"
+    },
+    "name": "MSI MAG B660 TOMAHAWK",
+    "brandId": {
+      "$oid": "100000000000000000000006"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "MSI MAG B660 TOMAHAWK là mainboard ATX cho Intel thế hệ 12 với tính năng phong phú. Hỗ trợ DDR4 và DDR5 linh hoạt theo ngân sách. VRM 12+1+1 phase mạnh mẽ cho Core i5, i7 chạy ổn định. Mystic Light RGB và Audio Boost cho trải nghiệm gaming tốt. Lựa chọn tốt cho build gaming Intel platform với bộ chipset mainstream.",
+    "images": [
+      "/img/PC_Hardware_010_1.jpg",
+      "/img/PC_Hardware_010_2.jpg",
+      "/img/PC_Hardware_010_3.jpg",
+      "/img/PC_Hardware_010_4.jpg",
+      "/img/PC_Hardware_010_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 1200000,
+    "maxPrice": 3500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000071"
+    },
+    "name": "Gigabyte X670 AORUS Elite",
+    "brandId": {
+      "$oid": "100000000000000000000004"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Gigabyte X670 AORUS Elite là mainboard cao cấp cho AMD Ryzen 7000 series mới nhất. Chipset X670 hỗ trợ PCIe 5.0 cho GPU và SSD tương lai. VRM 16+2+2 phase mạnh mẽ cho Ryzen 9 ép xung cao. DDR5 support với tốc độ đến 6600MHz+. RGB Fusion 2.0 và Q-Flash Plus cho tiện ích và thẩm mỹ. Dành cho enthusiast build PC AMD platform mới nhất.",
+    "images": [
+      "/img/PC_Hardware_011_1.jpg",
+      "/img/PC_Hardware_011_2.jpg",
+      "/img/PC_Hardware_011_3.jpg",
+      "/img/PC_Hardware_011_4.jpg",
+      "/img/PC_Hardware_011_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 950000,
+    "maxPrice": 2800000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000072"
+    },
+    "name": "Asrock Z790 Pro RS",
+    "brandId": {
+      "$oid": "100000000000000000000002"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Asrock Z790 Pro RS là mainboard Intel Z790 với giá cả cạnh tranh cho thế hệ 13, 14. Hỗ trợ DDR5 và PCIe 5.0 cho linh kiện thế hệ mới. VRM 14 phase cho Core i5, i7 ép xung ổn định. Polychrome RGB và 2.5G LAN cho gaming experience tốt. Lựa chọn tốt cho build Intel platform với chipset cao cấp giá phải chăng.",
+    "images": [
+      "/img/PC_Hardware_012_1.jpg",
+      "/img/PC_Hardware_012_2.jpg",
+      "/img/PC_Hardware_012_3.jpg",
+      "/img/PC_Hardware_012_4.jpg",
+      "/img/PC_Hardware_012_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 850000,
+    "maxPrice": 2100000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000073"
+    },
+    "name": "Asus ROG STRIX B650-A",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Asus ROG STRIX B650-A mang thiết kế trắng tinh tế cho AMD Ryzen 7000. Bo mạch chủ ROG Strix với tính năng gaming chuyên biệt. VRM 14+2 power stages cho ép xung Ryzen 7, 9 mạnh mẽ. PCIe 5.0 M.2 slot cho SSD thế hệ mới. WiFi 6E và 2.5Gb LAN cho kết nối mạng tối ưu. Dành cho gamer muốn build AMD platform đẹp và mạnh.",
+    "images": [
+      "/img/PC_Hardware_013_1.jpg",
+      "/img/PC_Hardware_013_2.jpg",
+      "/img/PC_Hardware_013_3.jpg",
+      "/img/PC_Hardware_013_4.jpg",
+      "/img/PC_Hardware_013_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 2800000,
+    "maxPrice": 5800000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000074"
+    },
+    "name": "MSI MEG Z690 UNIFY",
+    "brandId": {
+      "$oid": "100000000000000000000006"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "MSI MEG Z690 UNIFY là mainboard cao cấp cho Intel thế hệ 12, 13 với thiết kế toàn bố đen. VRM 19 phase 90A premium cho Core i9 ép xung cực mạnh. Hỗ trợ DDR5 overclocking đến 6666MHz+. PCIe 5.0 slots cho GPU và storage tương lai. Thiết kế không RGB cho người thích phong cách trang nhã. Dành cho overclocker và enthusiast cần hiệu năng tối đa.",
+    "images": [
+      "/img/PC_Hardware_014_1.jpg",
+      "/img/PC_Hardware_014_2.jpg",
+      "/img/PC_Hardware_014_3.jpg",
+      "/img/PC_Hardware_014_4.jpg",
+      "/img/PC_Hardware_014_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 1850000,
+    "maxPrice": 3500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000075"
+    },
+    "name": "Cooler Master V850 Gold",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Cooler Master V850 Gold là nguồn điện 850W 80+ Gold cho PC gaming cao cấp. Hiệu suất 90%+ giúp tiết kiệm điện và giảm nhiệt thải. Fully modular design cho cable management dễ dàng. Quạt 135mm hoạt động êm ái với chế độ Hybrid Mode. Phù hợp cho system với RTX 4070, 4080 hoặc Radeon 7900 series.",
+    "images": [
+      "/img/PC_Hardware_015_1.jpg",
+      "/img/PC_Hardware_015_2.jpg",
+      "/img/PC_Hardware_015_3.jpg",
+      "/img/PC_Hardware_015_4.jpg",
+      "/img/PC_Hardware_015_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 12500000,
+    "maxPrice": 18500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000076"
+    },
+    "name": "Corsair RM1000x Shift",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Corsair RM1000x Shift là nguồn 1000W 80+ Gold với thiết kế connector xoay 90độ. Cổng cắm xoay giúp cable routing gọn gàng hơn trong case. Fully modular với dây sleeved cao cấp sẵn. 105đC Japanese capacitors cho độ bền và ổn định cao. Lựa chọn cho build high-end với RTX 4090 hoặc dual GPU setup.",
+    "images": [
+      "/img/PC_Hardware_016_1.jpg",
+      "/img/PC_Hardware_016_2.jpg",
+      "/img/PC_Hardware_016_3.jpg",
+      "/img/PC_Hardware_016_4.jpg",
+      "/img/PC_Hardware_016_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 13500000,
+    "maxPrice": 16500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000077"
+    },
+    "name": "Seasonic PRIME TX-1000",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Seasonic PRIME TX-1000 là nguồn 1000W 80+ Titanium hiệu suất cao nhất thị trường. Hiệu suất 94%+ tiết kiệm điện năng tối đa. Hybrid Fan Control cho hoạt động bé tiếng và mát. Premium Hybrid Fan Control cho fanless mode ở tải thấp. Lựa chọn cho workstation và PC enthusiast cần độ ổn định tốt nhất.",
+    "images": [
+      "/img/PC_Hardware_017_1.jpg",
+      "/img/PC_Hardware_017_2.jpg",
+      "/img/PC_Hardware_017_3.jpg",
+      "/img/PC_Hardware_017_4.jpg",
+      "/img/PC_Hardware_017_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 14500000,
+    "maxPrice": 18500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000078"
+    },
+    "name": "EVGA SuperNOVA 1200 P6",
+    "brandId": {
+      "$oid": "100000000000000000000007"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "EVGA SuperNOVA 1200 P6 là nguồn 1200W 80+ Platinum cho system hiệu năng cực cao. 12VHPWR connector sẵn cho RTX 4090 không cần adapter. ECO Mode cho quạt chỉ quay khi cần thiết. Fully modular với khả năng đảo chiều dây linh hoạt. Dành cho system dual GPU hoặc workstation cần công suất lớn và ổn định.",
+    "images": [
+      "/img/PC_Hardware_018_1.jpg",
+      "/img/PC_Hardware_018_2.jpg",
+      "/img/PC_Hardware_018_3.jpg",
+      "/img/PC_Hardware_018_4.jpg",
+      "/img/PC_Hardware_018_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 12500000,
+    "maxPrice": 16500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000079"
+    },
+    "name": "Thermaltake Toughpower GF3",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Thermaltake Toughpower GF3 1650W là nguồn công suất khủng cho workstation extreme. 80+ Gold với 1650W cho dual RTX 6000 Ada hoặc system đa GPU. PCIe 5.0 ready với native 12VHPWR connectors. Hydraulic bearing fan cho tuổi thọ 10 năm+. Lựa chọn cho render farm, mining rig, hoặc AI training workstation cần công suất khủng.",
+    "images": [
+      "/img/PC_Hardware_019_1.jpg",
+      "/img/PC_Hardware_019_2.jpg",
+      "/img/PC_Hardware_019_3.jpg",
+      "/img/PC_Hardware_019_4.jpg",
+      "/img/PC_Hardware_019_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 28500000,
+    "maxPrice": 48500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
+  },
+  {
+    "_id": {
+      "$oid": "300000000000000000000080"
+    },
+    "name": "Be Quiet! Dark Power 13",
+    "brandId": {
+      "$oid": "100000000000000000000003"
+    },
+    "categoryId": {
+      "$oid": "200000000000000000000004"
+    },
+    "description": "Be Quiet! Dark Power 13 1000W là nguồn siêu êm cho PC enthusiast cần yên tĩnh. 80+ Titanium hiệu suất cao nhất giảm nhiệt thải. SilentWings 4 fan technology cho tiếng ồn thấp nhất thị trường. 12VHPWR ready cho GPU thế hệ mới. Lựa chọn hoàn hảo cho build silent PC cao cấp với RTX 4080, 4090 hoặc workstation yêu cầu yên tĩnh.",
+    "images": [
+      "/img/PC_Hardware_020_1.jpg",
+      "/img/PC_Hardware_020_2.jpg",
+      "/img/PC_Hardware_020_3.jpg",
+      "/img/PC_Hardware_020_4.jpg",
+      "/img/PC_Hardware_020_5.jpg"
+    ],
+    "soldCount": 0,
+    "rate": 0,
+    "discount": 0,
+    "minPrice": 4500000,
+    "maxPrice": 8500000,
+    "createdAt": "2025-11-01T00:00:00.000Z"
   }
 ]
