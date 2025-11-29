@@ -1,4 +1,5 @@
-import mongoose, { InferSchemaType, Schema } from "mongoose";
+import { create } from 'express-handlebars';
+import mongoose, { InferSchemaType, QueryOptions, Schema } from "mongoose";
 import CRUD from "../utils/CRUD.interface.js";
 import { CreateCommentDto } from "../dto/Create.dto.js";
 import { WithId } from "../utils/WithId.js";
@@ -26,6 +27,17 @@ const CommentSchema = new Schema({
         required: true
     },
 
+    summary: {
+        type: String,
+        default: ""
+    },
+
+    type: {
+        type: String,
+        enum: ["positive", "neutral", "negative"],
+        default: "neutral"
+    },
+
     deletedAt: {
         type: Date,
         default: null
@@ -38,20 +50,23 @@ const CommentSchema = new Schema({
 })
 
 const Comment = mongoose.model("Comment", CommentSchema);
-class CommentDao implements CRUD {
+class CommentDao {
 
     async patchById(id: string, item: Partial<any>): Promise<boolean> {
         const result = await Comment.updateOne({ _id: id, deletedAt: null }, { $set: item });
         return result.modifiedCount > 0;
     }
 
-    async findBy(query: Partial<any>): Promise<IComment[]> {
-        return Comment.find({
+    async findBy(query: Partial<any>, options: QueryOptions): Promise<IComment[]> {
+        const comments = await Comment.find({
             ...query,
             deletedAt: null
-        }).exec();
+        }, null, options).exec();
+        return comments.map(c => c.toObject() as IComment);
     }
-
+    async count(query: Partial<any>): Promise<number> {
+        return await Comment.countDocuments({ ...query, deletedAt: null }).lean().exec();
+    }
     async create(item: CreateCommentDto): Promise<any> {
         return await Comment.create(item);
     }
@@ -66,8 +81,9 @@ class CommentDao implements CRUD {
     }
 
     async list(): Promise<IComment[]> {
-        return Comment.find().exec();
+        const comments = await Comment.find().exec();
+        return comments.map(c => c.toObject() as IComment);
     }
 }
 export const commentDao = new CommentDao();
-export type IComment = WithId<InferSchemaType<typeof CommentSchema>>;
+export type IComment = WithId<InferSchemaType<typeof CommentSchema>> & { createdAt: Date };

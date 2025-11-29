@@ -41,6 +41,12 @@ interface ProductQuery extends QueryUrl {
     maxPrice?: string;
     rating?: string;
 }
+
+interface CommentQuery extends QueryUrl {
+    productId: string;
+    type?: "positive" | "neutral" | "negative";
+}
+
 interface OrderQuery extends QueryUrl {
     userId?: string;
     couponId?: string;
@@ -56,7 +62,8 @@ export type {
     QueryUrl,
     ProductQuery,
     OrderQuery,
-    CouponQuery
+    CouponQuery,
+    CommentQuery
 };
 
 export {

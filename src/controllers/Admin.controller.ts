@@ -12,7 +12,7 @@ import productService from "../services/Product.service.js";
 import { CreateProductRequest } from "../dto/Request.dto.js";
 
 import bcrypt from "bcryptjs";
-import statisticsService from "../services/Statistics.service.js";
+import statisticsService, { StatisticPeriod } from "../services/Statistics.service.js";
 
 const adminController = {
     //users-management
@@ -121,10 +121,32 @@ const adminController = {
     getSimpleStatisticsHandler: expressAsyncHandler(async (req: Request, res: Response) => {
         const statistics = await statisticsService.getSimpleStatistic();
 
-        return res.render("statistic", {
-            statistics: statistics
+        // res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
+        return res.render("admin/statistic", {
+            accumulatedRevenue: statistics.accumulatedRevenue,
+            accumulatedProfit: statistics.accumulatedProfit,
+            totalUsers: statistics.totalUsers,
+            newUsers: statistics.newUsers,
+            totalOrders: statistics.totalOrders,
+            revenue: statistics.revenue,
+            topProducts: statistics.topProducts,
+            layout: "admin"
         })
     }),
-};
+
+    getAdvancedStatisticsHandler: expressAsyncHandler(async (req: Request, res: Response) => {
+        const period = req.query.period as string || StatisticPeriod.NEAREST_30_DAYS
+        console.log("Period:", period);
+        const statistics = await statisticsService.getAdvancedStatistic(period);
+        // res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
+        return res.render("admin/advanced-statistic", {
+            revenue: statistics.revenues,
+            profit: statistics.profits,
+            orders: statistics.orders,
+            totalProfit: statistics.totalProfit,
+            layout: "admin"
+        })
+    })
+}
 
 export default adminController;

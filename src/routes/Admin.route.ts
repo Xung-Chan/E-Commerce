@@ -289,4 +289,9 @@ router.get("/statistics/simple", authJwtAdmin,
     adminController.getSimpleStatisticsHandler
 );
 
+
+router.get("/statistics/advanced", authJwtAdmin,
+    adminController.getAdvancedStatisticsHandler
+);
+
 export default router;

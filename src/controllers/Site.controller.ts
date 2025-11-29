@@ -5,6 +5,7 @@ import { apiUrl, createApi, unwrap } from "../utils/ApiClient.js";
 import { LoginResponseDto } from "../dto/Response.dto.js";
 import ApiResponse from "../utils/Api.response.js";
 import { IUser } from "../daos/User.dao.js";
+import { IComment } from "../daos/Comment.dao.js";
 
 const siteController = {
     // --- LOGIN ---
@@ -454,11 +455,13 @@ const siteController = {
             let comments: any[] = [];
             try {
                 const commentsRes = await api.get(`${apiUrl}/api/comments/product/${productId}`);
-                const rawComments = unwrap<any[]>(commentsRes) || [];
+                const rawComments = unwrap<Pagination<IComment>>(commentsRes).datas || [];
                 comments = rawComments.map(c => ({
-                    name: c.fullName || c.name || 'Người dùng',
+                    name: c.fullName,
                     content: c.content,
-                    date: c.createdAt || c.date || '',
+                    date: c.createdAt,
+                    type: c.type,
+                    summary: c.summary
                 }));
             } catch (e) {
                 comments = [];
@@ -587,7 +590,7 @@ const siteController = {
     // --- ORDER HISTORY ---
     orderHistory: async (req: Request, res: Response) => {
         const commonData = await getCommonViewData(req);
-        
+
         if (!commonData.isLoggedIn) {
             return res.redirect('/login');
         }

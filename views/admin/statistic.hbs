@@ -9,7 +9,7 @@
 
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Thống kê doanh thu</h1>
+        <h1 class="mb-4">Doanh thu và lợi nhuận tích lũy</h1>
         <div class="card">
             <div class="card-body">
                 <div id="revenueChart" width="200" height="200"></div>
@@ -17,26 +17,33 @@
         </div>
     </div>
     <script>
-        const statistics = {{{ json statistics }}}; // helper json convert array
-        console.log(statistics);
-        const categories = statistics.revenueByMonth.xaxis.map(month => `Tháng ${month}`);
+        const accumulatedRevenue = {{{ json accumulatedRevenue }}};
+        const accumulatedProfit = {{{ json accumulatedProfit }}};
         const options = {
             chart: {
                 type: 'line'
             },
             series: [
                 {
-                    name: statistics.revenueByMonth.unit,
-                    data: statistics.revenueByMonth.values
+                    name: accumulatedRevenue.name,
+                    data: accumulatedRevenue.values
+                }
+                , {
+                    name: accumulatedProfit.name,
+                    data: accumulatedProfit.values
                 }
             ],
             xaxis: {
-                categories: categories
+                categories: accumulatedRevenue.xaxis
             },
-            colors: ['#FF4560'],
+            colors: ['#008FFB', '#00E396'],
+            stroke: {
+                width: [3, 3],
+                dashArray: [0, 8]
+            },
             tooltip: {
                 y: {
-                    formatter: (val) => val.toLocaleString('vi-VN')
+                    formatter: (val) => val.toLocaleString('vi-VN') + " VND"
                 }
             },
         }

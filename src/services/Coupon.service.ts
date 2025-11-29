@@ -21,6 +21,7 @@ class CouponService {
             }
         }
     }
+    
     async createCoupon(data: CreateCouponDto): Promise<ICoupon> {
         if (!data.code) {
             data.code = await this.generateCouponCode();
