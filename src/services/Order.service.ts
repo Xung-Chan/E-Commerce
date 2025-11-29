@@ -312,7 +312,7 @@ class OrderService {
         }));
     }
 
-    
+
     //UPDATE
     async updateStatusById(id: string, status: string) {
         const validStatuses = Object.values(OrderStatus).map(s => s.toString());
@@ -345,6 +345,7 @@ class OrderService {
         const totalRevenue = await orderDao.sumRevenue();
         return totalRevenue;
     }
+
 
 };
 const orderService = new OrderService();

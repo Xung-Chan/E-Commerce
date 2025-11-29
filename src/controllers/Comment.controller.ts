@@ -1,10 +1,9 @@
+import { Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
-import e, { Request, Response } from "express";
-import { CreateCommentDto } from "../dto/Create.dto.js";
+import { ErrorDictionary } from "../middleware/errorDictionary.js";
 import commentService from "../services/Comment.service.js";
 import ApiResponse from "../utils/Api.response.js";
 import ApiError from "../utils/ApiError.js";
-import { CreateCommentRequest } from "../dto/Request.dto.js";
 const commentController = {
 
     createComment: expressAsyncHandler(async (req: Request, res: Response) => {
@@ -40,10 +39,10 @@ const commentController = {
     getCommentsByProductId: expressAsyncHandler(async (req: Request, res: Response) => {
         const productId = req.params.productId;
         if (!productId) {
-            res.status(400).json(new ApiResponse(false, 400, "Product ID is required", null));
-            return;
+            throw new ApiError(400, "Product not found", ErrorDictionary.PRODUCT_NOT_FOUND);
         }
-        const comments = await commentService.getCommentsByProductId(productId);
+        const query = req.query;
+        const comments = await commentService.getCommentsByProductId({ productId, ...query });
         res.status(200).json(new ApiResponse(true, 200, "Comments fetched successfully", comments));
     }),
 

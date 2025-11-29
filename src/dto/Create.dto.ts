@@ -28,6 +28,8 @@ interface CreateCommentDto {
     fullName?: string;
     productId: string;
     content: string;
+    summary: string;
+    type: "positive" | "neutral" | "negative";
 }
 interface CreateCouponDto {
     code?: string;

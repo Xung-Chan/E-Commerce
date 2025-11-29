@@ -102,7 +102,7 @@ const productService = {
         }
         const variants = await variantService.getVariantsByProductId(id);
         return {
-            productId: product._id.toString(),
+            _id: product._id.toString(),
             name: product.name,
             description: product.description,
             images: product.images,

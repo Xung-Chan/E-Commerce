@@ -33,12 +33,20 @@ interface SimpleStatisticResponse {
     newUsers: number;
     totalOrders: number;
     revenue: number;
+    profit: number;
     topProducts: {
         productId: string,
         productName: string,
         sold: number,
     }[];
-    revenueByMonth: {
+    accumulatedRevenue: {
+        name: string,
+        unit: string,
+        values: number[]
+        xaxis: string[]
+    },
+    accumulatedProfit: {
+        name: string,
         unit: string,
         values: number[]
         xaxis: string[]
@@ -46,16 +54,25 @@ interface SimpleStatisticResponse {
 }
 
 interface AdvancedStatisticResponse {
-    totalOrders: {
+    totalProfit: number,
+    orders: {
         unit: string,
-        value: number[],
+        name: string,
+        values: number[],
         xaxis: string[]
     },
-    totalRevenue: {
+    revenues: {
         unit: string,
-        value: number[],
+        name: string,
+        values: number[],
         xaxis: string[]
     },
+    profits: {
+        unit: string,
+        name: string,
+        values: number[],
+        xaxis: string[]
+    }
 
 }
 

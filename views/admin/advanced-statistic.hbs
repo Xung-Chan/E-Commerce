@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Thống kê doanh thu</h1>
+        <div class="card">
+            <div class="card-body">
+                <div id="revenue-profit-chart" width="200" height="200"></div>
+            </div>
+        </div>
+        <h1 class="mb-4">Thống kê đơn hàng</h1>
+        <div class="card">
+            <div class="card-body">
+                <div id="orders-chart" width="200" height="200"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const revenue = {{{ json revenue }}}; // helper json convert array
+        const profit = {{{ json profit }}}; // helper json convert array
+
+        const revenueProfitOptions = {
+            chart: {
+                type: 'line'
+            },
+            series: [
+                {
+                    name: "Lợi nhuận",
+                    data: revenue.values
+                }
+                , {
+                    name: "Doanh thu",
+                    data: profit.values
+                }
+            ],
+            xaxis: {
+                categories: revenue.xaxis
+            },
+            colors: ['#FF4560', '#00E396'],
+            stroke: {
+                width: [3, 3],
+                dashArray: [0, 8] // series 1 solid, series 2 dashed
+            },
+            tooltip: {
+                y: {
+                    formatter: (val) => val.toLocaleString('vi-VN') + " VND"
+                }
+            },
+        }
+        const orders = {{{ json orders }}}; // helper json convert array
+        const ordersOptions = {
+            chart: {
+                type: 'bar'
+            },
+            series: [
+                {
+                    name: "Đơn hàng",
+                    data: orders.values
+                }
+            ],
+            xaxis: {
+                categories: orders.xaxis
+            },
+            colors: ['#008FFB'],
+            tooltip: {
+                y: {
+                    formatter: (val) => val.toLocaleString('vi-VN') + " Đơn"
+                }
+            },
+        }
+
+        const revenueProfitChart = new ApexCharts(document.getElementById('revenue-profit-chart'), revenueProfitOptions)
+        const ordersChart = new ApexCharts(document.getElementById('orders-chart'), ordersOptions)
+        revenueProfitChart.render()
+        ordersChart.render()
+    </script>
+</body>
+
+</html>

@@ -55,7 +55,7 @@ const OrderSchema = new Schema({
     }
 }, {
     versionKey: false,
-    timestamps: { createdAt: 'createdAt' },
+    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
 })
 const Order = mongoose.model("Order", OrderSchema)
 class OrderDao implements CRUD {
@@ -100,7 +100,7 @@ class OrderDao implements CRUD {
         let filter = {};
         if (interval) {
             filter = {
-                createdAt: { $gte: interval.start, $lte: interval.end }
+                updatedAt: { $gte: interval.start, $lte: interval.end }
             };
         }
         const result = await Order.aggregate([
@@ -124,6 +124,16 @@ class OrderDao implements CRUD {
         }
 
         return result[0].totalRevenue;
+    }
+
+    async countOrders(interval: { start: Date; end: Date } | null = null): Promise<number> {
+        let filter = {};
+        if (interval) {
+            filter = {
+                updatedAt: { $gte: interval.start, $lte: interval.end }
+            };
+        }
+        return await Order.countDocuments({ ...filter, deletedAt: null }).exec();
     }
 }
 export const orderDao = new OrderDao();
