@@ -14,6 +14,7 @@ import categoryService from "./Category.service.js";
 import brandService from "./Brand.service.js";
 import { importDao } from "../daos/Import.dao.js";
 
+
 const productService = {
     createProduct: async (data: CreateProductRequest) => {
         const brand = await brandDao.readById(data.brandId);
@@ -238,9 +239,18 @@ const productService = {
     },
 
     //admin
-
-    getProductsForAdmin: async (filter: any = {}): Promise<any[]> => {
-        const products = await productDao.findBy(filter);
+    getProductsForAdmin: async (filter: any = {}, sortOptions: any = {}, sortStockParam?: string): Promise<any[]> => {
+        
+        let products = await productDao.findBy(filter);
+        
+        if (sortOptions.minPrice) {
+            if (sortOptions.minPrice === 1) { 
+                products.sort((a, b) => a.minPrice - b.minPrice);
+            } 
+            else if (sortOptions.minPrice === -1) { 
+                products.sort((a, b) => b.maxPrice - a.maxPrice); 
+            }
+        }
 
         const mappedProducts = await Promise.all(products.map(async product => {
             const productId = product._id.toString();
@@ -253,20 +263,32 @@ const productService = {
 
             const brand = await brandService.getBrandById(product.brandId.toString());
             const brandName = brand ? brand.name : 'N/A';
+            
             return {
                 id: productId,
                 name: product.name,
                 image: product.images[0] || '/img/placeholder.jpg',
-                price: product.minPrice,
+                price: product.minPrice, 
                 categoryName: categoryName,
                 brandName: brandName,
                 stockQuantity: totalStock,
-                status: totalStock > 0 ? 'Active' : 'Hết hàng',
+                status: totalStock > 0 ? 'Active' : 'Hết hàng', 
             };
         }));
 
-        return mappedProducts;
+        let finalProducts = mappedProducts;
+
+        if (sortStockParam) {
+            if (sortStockParam === 'stock_asc') {
+                finalProducts.sort((a, b) => a.stockQuantity - b.stockQuantity);
+            } else if (sortStockParam === 'stock_desc') {
+                finalProducts.sort((a, b) => b.stockQuantity - a.stockQuantity);
+            }
+        }
+        
+        return finalProducts;
     },
+
     getProductDetailForAdmin: async (id: string) => {
         const product = await productDao.readById(id);
         if (!product) {
@@ -276,18 +298,53 @@ const productService = {
         const brand = await brandService.getBrandById(product.brandId.toString());
         const category = await categoryService.getCategoryById(product.categoryId.toString());
         const variants = await variantService.getVariantsByProductId(id);
+        
+        const variantsWithImportPrice = await Promise.all(variants.map(async variant => {
+            const latestImportRecord = await importDao.getLatestByVariantId(variant._id.toString());
+            
+            const importPrice = latestImportRecord ? latestImportRecord.price : 0;
+            
+            return {
+                ...variant,
+                importPrice: importPrice, 
+                discountPrice: product.discount ? variant.price - (variant.price * product.discount) / 100 : variant.price
+            };
+        }));
 
         return {
             ...product,
             brandName: brand ? brand.name : 'N/A',
             categoryName: category ? category.name : 'N/A',
+            brandId: product.brandId.toString(),
+            categoryId: product.categoryId.toString(),
 
-            variants: variants.map(variant => ({
-                ...variant,
-                discountPrice: product.discount ? variant.price - (variant.price * product.discount) / 100 : variant.price
-            }))
+            variants: variantsWithImportPrice,
         };
     },
+
+    deleteProductByIdAdmin: async (id: string) => {
+        const product = await productDao.readById(id);
+        if (!product) {
+            throw new ApiError(404, "Not Found", ErrorDictionary.PRODUCT_NOT_FOUND); 
+        }
+
+        const variants = await variantDao.findBy({ productId: id });
+
+        await Promise.all(variants.map(async (variant) => {
+
+             await variantDao.deleteById(variant._id.toString());
+        }));
+
+        const result = await productDao.deleteById(id);
+        
+        if (result === null) {
+             throw new ApiError(500, "Internal Server Error", "Xóa sản phẩm thất bại.");
+        }
+        
+        return result; 
+    },
+
+
 
 };
 export default productService;

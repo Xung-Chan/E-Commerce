@@ -76,6 +76,16 @@ class ImportDao {
 
         return result[0].totalImportPrice;
     }
+    
+    async getLatestByVariantId(variantId: string): Promise<IImport | null> {
+        const importRecord = await Import.findOne({ 
+            variantId: variantId 
+        })
+        .sort({ createdAt: -1 }) 
+        .exec();
+
+        return importRecord ? (importRecord.toObject() as IImport) : null;
+    }
 
 }
 export const importDao = new ImportDao();
