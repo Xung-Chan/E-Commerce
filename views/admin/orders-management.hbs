@@ -4,41 +4,54 @@
 
 <div class="card shadow mb-4">
     <div class="card-body">
-        <form class="row g-3 align-items-center" method="GET" action="/admin/products">
-            <div class="col-md-3">
-                <input type="text" class="form-control" name="q" placeholder="Tìm kiếm theo Tên, Mã SKU..."
-                    value="{{query.q}}">
-            </div>
+        <form id="filterForm" class="row g-3 align-items-center" method="GET" action="/admin/orders">
+            <div class="d-flex justify-content-end">
 
-            <div class="col-md-2">
-                <select class="form-select" name="categoryId">
-                    <option value="" selected>Danh Mục</option>
-                    <option value="1" {{#if (isEqual query.categoryId '1' )}}selected{{/if}}>Điện Thoại</option>
-                    <option value="2" {{#if (isEqual query.categoryId '2' )}}selected{{/if}}>Máy Tính Bảng</option>
-                </select>
-            </div>
+                <div class="flex-fill mx-2">
+                    <select class="form-select" name="status">
+                        <option value="" selected>Trạng Thái</option>
+                        <option value="pending" {{#if (isEqual query.status 'pending' )}}selected{{/if}}>Đang chờ
+                        </option>
+                        <option value="processing" {{#if (isEqual query.status 'processing' )}}selected{{/if}}>Đang xử
+                            lý
+                        </option>
+                        <option value="shipping" {{#if (isEqual query.status 'shipping' )}}selected{{/if}}>Đang giao
+                            hàng
+                        </option>
+                        <option value="delivered" {{#if (isEqual query.status 'delivered' )}}selected{{/if}}>Đang hoàn
+                            thành
+                        </option>
+                    </select>
+                </div>
 
-            <div class="col-md-2">
-                <select class="form-select" name="brandId">
-                    <option value="" selected>Thương Hiệu</option>
-                    <option value="A" {{#if (isEqual query.brandId 'A' )}}selected{{/if}}>Samsung</option>
-                    <option value="B" {{#if (isEqual query.brandId 'B' )}}selected{{/if}}>Apple</option>
-                </select>
-            </div>
 
-            <div class="col-md-3">
-                <select class="form-select" name="status">
-                    <option value="" selected>Trạng Thái</option>
-                    <option value="Active" {{#if (isEqual query.status 'Active' )}}selected{{/if}}>Đang bán</option>
-                    <option value="Hết hàng" {{#if (isEqual query.status 'Hết hàng' )}}selected{{/if}}>Hết hàng</option>
-                </select>
-            </div>
 
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="bi bi-search"></i> Tìm Kiếm
-                </button>
-            </div>
+
+                <input type="hidden" name="sortBy" id="sortByHidden" value="">
+                <input type="hidden" name="sortOrder" id="sortOrderHidden" value="desc">
+                <div class="flex-fill mx-2">
+                    <select class="form-select " id="sortPreset">
+                        <option value="" selected>Sắp xếp</option>
+                        <option value="createdAt-desc" {{#if (isEqual query.sortBy 'createdAt' )}}{{#if (isEqual
+                            query.sortOrder 'desc' )}}selected{{/if}}{{/if}}>Đơn mới nhất</option>
+                        <option value="createdAt-asc" {{#if (isEqual query.sortBy 'createdAt' )}}{{#if (isEqual
+                            query.sortOrder 'asc' )}}selected{{/if}}{{/if}}>Đơn cũ nhất</option>
+                        <option value="updatedAt-desc" {{#if (isEqual query.sortBy 'updatedAt' )}}{{#if (isEqual
+                            query.sortOrder 'desc' )}}selected{{/if}}{{/if}}>Vừa cập nhật</option>
+                    </select>
+                </div>
+
+
+
+                <div class="col-md-2 mx-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-funnel"></i> Lọc
+                    </button>
+                </div>
+                <div class="col-md-2 mx-2">
+                    <a href="/admin/orders" class="btn btn-secondary w-100 ">Reset</a>
+                </div>
+                </span>
         </form>
     </div>
 </div>
@@ -69,9 +82,9 @@
                         <td>{{formatPrice this.totalPrice}}</td>
                         <td>{{formatDate this.createdAt}}</td>
                         <td>{{formatDate this.updatedAt}}</td>
-                        <td>{{this.currentStatus}}</td>
-                        <td class="text-center">
-                            <a href="/admin/orders/{{this.id}}" class="btn btn-sm btn-info" title="Xem chi tiết">
+                        <td>{{{statusBadge this.currentStatus}}}</td>
+                        <td>
+                            <a href="/admin/orders/{{this.id}}" class="btn btn-sm btn-info me-2" title="Xem chi tiết">
                                 <i class="bi bi-eye-fill"></i>
                             </a>
                         </td>
@@ -85,42 +98,23 @@
                 </tbody>
             </table>
         </div>
-        <nav aria-label="Page navigation" class="mt-3">
-            {{#if pagination}}
-            {{#with pagination}}
-            {{#if (gt totalPages 1)}}
-            <ul class="pagination justify-content-end">
-
-                <li class="page-item {{#if (isEqual page 1)}}disabled{{/if}}">
-                    {{#if (isEqual page 1)}}
-                    <a class="page-link" href="#" aria-label="Previous">Trước</a>
-                    {{else}}
-                    <a class="page-link" href="/admin/products?{{buildPageQuery ../query (subtract page 1)}}"
-                        aria-label="Previous">Trước</a>
-                    {{/if}}
-                </li>
-
-                {{#times totalPages}}
-                {{#with (add 1 this) as |currentPage|}}
-                <li class="page-item {{#if (isEqual currentPage page)}}active{{/if}}">
+        <nav class="mt-3 d-flex justify-content-center">
+            <ul class="pagination mb-0">
+                {{#if hasPrevPage}}
+                <li class="page-item"><a class="page-link"
+                        href="?page={{prevPage}}{{#if baseQueryString}}&{{baseQueryString}}{{/if}}">Trước</a></li>
+                {{/if}}
+                {{#each pages}}
+                <li class="page-item {{#if this.active}}active{{/if}}">
                     <a class="page-link"
-                        href="/admin/products?{{buildPageQuery ../query currentPage}}">{{currentPage}}</a>
+                        href="?page={{this.number}}{{#if ../baseQueryString}}&{{../baseQueryString}}{{/if}}">{{this.number}}</a>
                 </li>
-                {{/with}}
-                {{/times}}
-
-                <li class="page-item {{#if (isEqual page totalPages)}}disabled{{/if}}">
-                    {{#if (isEqual page totalPages)}}
-                    <a class="page-link" href="#" aria-label="Next">Sau</a>
-                    {{else}}
-                    <a class="page-link" href="/admin/products?{{buildPageQuery ../query (add page 1)}}"
-                        aria-label="Next">Sau</a>
-                    {{/if}}
-                </li>
+                {{/each}}
+                {{#if hasNextPage}}
+                <li class="page-item"><a class="page-link"
+                        href="?page={{nextPage}}{{#if baseQueryString}}&{{baseQueryString}}{{/if}}">Tiếp</a></li>
+                {{/if}}
             </ul>
-            {{/if}}
-            {{/with}}
-            {{/if}}
         </nav>
     </div>
 </div>
@@ -162,3 +156,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const f = document.getElementById('filterForm');
+        if (!f) return;
+
+
+        // Xử lý thay đổi sắp xếp
+        const sortPreset = document.getElementById('sortPreset');
+        const sortByHidden = document.getElementById('sortByHidden');
+        const sortOrderHidden = document.getElementById('sortOrderHidden');
+        sortPreset.addEventListener('change', () => {
+            const val = sortPreset.value;
+            const [field, order] = val.split('-');
+            sortByHidden.value = field;
+            sortOrderHidden.value = order;
+        });
+
+    });
+</script>

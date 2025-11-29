@@ -285,10 +285,30 @@ const adminController = {
         const query = req.query;
 
         const orders = await orderService.getOrdersByQuery(query);
+        const { page = '1', limit = '10', status = '', sortBy = 'updatedAt', sortOrder = 'desc' } = (req.query || {}) as any;
+
+        const filteredQuery: Record<string, string> = {};
+        Object.entries({ status, sortBy, sortOrder, limit }).forEach(([k, v]) => {
+            if (v !== undefined && v !== null && String(v) !== '') filteredQuery[k] = String(v);
+        });
+        const baseQueryString = Object.entries(filteredQuery)
+            .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+            .join('&');
+        const pages = Array.from({ length: orders.totalPages }, (_, i) => ({
+            number: i + 1,
+            active: i + 1 === orders.page
+        }));
         res.render("admin/orders-management", {
             layout: "admin",
             title: "Quản lý đơn hàng",
-            orders: orders.datas
+            query: query,
+            orders: orders.datas,
+            hasPrevPage: orders.hasPrevPage,
+            hasNextPage: orders.hasNextPage,
+            prevPage: orders.prevPage,
+            nextPage: orders.nextPage,
+            pages: pages,
+            baseQueryString: baseQueryString
         });
     }),
 
