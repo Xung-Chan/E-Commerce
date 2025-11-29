@@ -204,7 +204,39 @@ const adminController = {
             title: "Quản lý đơn hàng",
             orders: orders.datas
         });
-    })
+    }),
+
+    
+    //categories-management
+    getAllCategoriesHandler: async () => {
+        const categories = await categoryService.getAllCategories();
+        return categories;
+    },
+
+    createCategoryHandler: async (data: any, imagePath?: string) => {
+        if (imagePath) {
+            data.image = imagePath;
+        }
+        // Chuyển đổi landingPageDisplay thành boolean
+        data.landingPageDisplay = data.landingPageDisplay === 'true' || data.landingPageDisplay === true;
+        const newCategory = await categoryService.createCategory(data);
+        return newCategory;
+    },
+
+    updateCategoryHandler: async (categoryId: string, data: any, imagePath?: string) => {
+        if (imagePath) {
+            data.image = imagePath;
+        }
+        // Chuyển đổi landingPageDisplay thành boolean
+        data.landingPageDisplay = data.landingPageDisplay === 'true' || data.landingPageDisplay === true;
+        const success = await categoryService.updateCategoryById(categoryId, data);
+        return success;
+    },
+
+    deleteCategoryHandler: async (categoryId: string) => {
+        const success = await categoryService.deleteCategoryById(categoryId);
+        return success;
+    }
 }
 
 export default adminController;
