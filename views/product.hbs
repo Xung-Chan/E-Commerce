@@ -203,11 +203,27 @@
                             <strong>{{#if name}}{{name}}{{else}}Người dùng ẩn danh{{/if}}</strong>
                             <span class="text-muted small">
                                 {{#if date}}
-                                {{date}}
+                                {{formatDate date}}
                                 {{/if}}
                             </span>
                         </div>
                         <div>{{content}}</div>
+
+                        {{#if (isEqual type "positive")}}
+                            <span class="mt-2 px-2 bg-success rounded">
+                                <span class="badge text-white">{{summary}}</span>
+                            </span>
+                        {{/if}}
+                        {{#if (isEqual type "negative")}}
+                            <span class="mt-2 px-2 bg-danger rounded">
+                                <span class="badge text-black">{{summary}}</span>
+                            </span>
+                        {{/if}}
+                        {{#if (isEqual type "neutral")}}
+                            <span class="bg-secondary mt-2 px-2 rounded">
+                                <span class="badge text-white">{{summary}}</span>
+                            </span>
+                        {{/if}}
                     </div>
                     {{/each}}
                     <!-- Phân trang -->
@@ -576,12 +592,24 @@
             if(!commentsList) return;
             const wrapper = document.createElement('div');
             wrapper.className = 'p-3 border rounded bg-light';
+            const type = comment.type || 'neutral';
+            let classSummary = 'mt-2';
+            if(type === 'positive'){
+                classSummary = 'text-success mt-2';
+            } 
+            else if (type === 'negative'){
+                classSummary = 'text-danger mt-2';
+            } 
             wrapper.innerHTML = `
                 <div class="d-flex justify-content-between mb-1">
                     <strong>${comment.fullName || comment.userName || 'Người dùng'}</strong>
                     <span class="text-muted small">${formatDate(comment.createdAt || comment.date)}</span>
                 </div>
                 <div>${comment.content}</div>
+                <div class="${classSummary}">
+                        
+                            <span class="badge">${comment.summary}</span>
+                </div>
             `;
             commentsList.prepend(wrapper);
         }
