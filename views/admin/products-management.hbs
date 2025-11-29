@@ -8,40 +8,55 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <form class="row g-3 align-items-center" method="GET" action="/admin/products">
-                    <div class="col-md-3">
-                        <input type="text" class="form-control" name="q" placeholder="Tìm kiếm theo Tên, Mã SKU..." value="{{query.q}}">
-                    </div>
-                    
-                    <div class="col-md-2">
-                        <select class="form-select" name="categoryId">
-                            <option value="" selected>Danh Mục</option>
-                            <option value="1" {{#if (isEqual query.categoryId '1')}}selected{{/if}}>Điện Thoại</option>
-                            <option value="2" {{#if (isEqual query.categoryId '2')}}selected{{/if}}>Máy Tính Bảng</option>
-                        </select>
-                    </div>
-                    
-                    <div class="col-md-2">
-                        <select class="form-select" name="brandId">
-                            <option value="" selected>Thương Hiệu</option>
-                            <option value="A" {{#if (isEqual query.brandId 'A')}}selected{{/if}}>Samsung</option>
-                            <option value="B" {{#if (isEqual query.brandId 'B')}}selected{{/if}}>Apple</option>
-                        </select>
-                    </div>
-                    
-                    <div class="col-md-3">
-                        <select class="form-select" name="status">
-                            <option value="" selected>Trạng Thái</option>
-                            <option value="Active" {{#if (isEqual query.status 'Active')}}selected{{/if}}>Đang bán</option>
-                            <option value="Hết hàng" {{#if (isEqual query.status 'Hết hàng')}}selected{{/if}}>Hết hàng</option>
-                        </select>
-                    </div>
-                    
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="bi bi-search"></i> Tìm Kiếm
-                        </button>
-                    </div>
-                </form>
+    
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="q" placeholder="Tìm kiếm theo Tên, ID Sản phẩm..." value="{{query.q}}">
+                </div>
+                
+               <div class="col-md-2">
+                    <select class="form-select" name="categoryId">
+                        <option value="" selected>Danh Mục</option>
+                        {{#each categories}}
+                            <option value="{{this.id}}" {{#if (isEqual ../query.categoryId this.id)}}selected{{/if}}>
+                                {{this.name}}
+                            </option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <select class="form-select" name="brandId">
+                        <option value="" selected>Thương Hiệu</option>
+                        {{#each brands}}
+                            <option value="{{this.id}}" {{#if (isEqual ../query.brandId this.id)}}selected{{/if}}>
+                                {{this.name}}
+                            </option>
+                        {{/each}}
+                    </select>
+                </div>
+                                
+                <div class="col-md-2">
+                    <select class="form-select" name="sortPrice">
+                        <option value="" selected>Sắp xếp Giá</option>
+                        <option value="minPrice_asc" {{#if (isEqual query.sortPrice 'minPrice_asc')}}selected{{/if}}>Giá: Thấp -> Cao</option>
+                        <option value="minPrice_desc" {{#if (isEqual query.sortPrice 'minPrice_desc')}}selected{{/if}}>Giá: Cao -> Thấp</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <select class="form-select" name="sortStock">
+                        <option value="" selected>Sắp xếp Kho</option>
+                        <option value="stock_asc" {{#if (isEqual query.sortStock 'stock_asc')}}selected{{/if}}>Kho: Thấp -> Cao</option>
+                        <option value="stock_desc" {{#if (isEqual query.sortStock 'stock_desc')}}selected{{/if}}>Kho: Cao -> Thấp</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -170,3 +185,83 @@
             </div>
         </div>
     </div>
+<div class="row mt-4">
+    <div class="col-12">
+        <nav aria-label="Product pagination">
+            <ul class="pagination justify-content-center">
+                
+                <li class="page-item {{#unless pagination.prevUrl}}disabled{{/unless}}">
+                    <a class="page-link" href="{{#if pagination.prevUrl}}{{pagination.prevUrl}}{{else}}javascript:void(0){{/if}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                
+                {{#if (gt pagination.totalPages 1)}}
+                    {{#each pagination.pages}}
+                        <li class="page-item {{#if this.isCurrent}}active{{/if}}">
+                            <a class="page-link" href="{{this.url}}">{{this.page}}</a>
+                        </li>
+                    {{/each}}
+                {{/if}}
+                
+                <li class="page-item {{#unless pagination.nextUrl}}disabled{{/unless}}">
+                    <a class="page-link" href="{{#if pagination.nextUrl}}{{pagination.nextUrl}}{{else}}javascript:void(0){{/if}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="text-center text-muted mt-2">
+            Tổng số: {{pagination.totalProducts}} sản phẩm. (Trang {{pagination.currentPage}} / {{pagination.totalPages}})
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-id');
+                
+                if (confirm(`Bạn có chắc chắn muốn xóa sản phẩm ID: ${productId} không? Hành động này không thể hoàn tác.`)) {
+                    fetch(`/api/products/${productId}`, {
+                        method: 'DELETE',
+
+                    })
+                    .then(response => {
+                        const contentLength = response.headers.get('content-length');
+                        const isBodyEmpty = contentLength === '0' || contentLength === null;
+
+                        if (response.ok && isBodyEmpty) {
+                            return null;
+                        }
+                        
+                        return response.json()
+                            .catch(() => {
+                                if (!response.ok) {
+                                    throw new Error(`Lỗi Server (Status ${response.status})`);
+                                }
+                                return null; 
+                            })
+                            .then(errorData => {
+                                if (!response.ok) {
+                                     throw new Error(errorData?.message || `Lỗi Server: Không tìm thấy thông báo lỗi chi tiết (Status ${response.status})`);
+                                }
+                                return errorData;
+                            });
+                    })
+                    .then(data => {
+                        alert((data && data.message) || 'Xóa sản phẩm thành công!');
+                        window.location.reload(); 
+                    })
+                    .catch(error => {
+                        alert(`Lỗi: ${error.message}`);
+                    });
+                }
+            });
+        });
+    });
+</script>

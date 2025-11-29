@@ -4,9 +4,11 @@ import adminController from "../controllers/Admin.controller.js";
 import { authJwtAdmin } from "../middleware/authJwt.middleware.js";
 import brandService from "../services/Brand.service.js";
 import categoryService from "../services/Category.service.js";
-
+import { uploadImage, uploadMultiple } from "../middleware/multer.middleware.js";
 import { IProduct } from "../daos/Product.dao.js";
 import ApiResponse from "../utils/Api.response.js";
+import { IBrand } from "../daos/Brand.dao.js"; 
+import { ICategory } from "../daos/Category.dao.js";
 
 const router = Router();
 
@@ -215,20 +217,79 @@ router.patch("/api/coupons/:id", authJwtAdmin, async (req: Request, res: Respons
 
 //products-management
 
+const buildPaginationUrl = (query: any, page: number) => {
+    const currentQuery = { ...query, page: page.toString() };
+    if (currentQuery.limit === '10') delete currentQuery.limit; 
+    if (currentQuery.page === '1') delete currentQuery.page;
+    
+    const queryString = Object.keys(currentQuery)
+        .filter(key => currentQuery[key] !== undefined && currentQuery[key] !== '')
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(currentQuery[key] as string)}`)
+        .join('&');
+    return `/admin/products${queryString ? '?' + queryString : ''}`;
+};
+
 router.get("/products", authJwtAdmin, async (req: Request, res: Response) => {
-    const products = await adminController.getAllProductsHandler(req.query);
-    res.render("admin/products-management", {
-        title: "Products",
-        products: products,
-        query: req.query || {},
-        layout: "admin"
-    });
+    try {
+        const result = await adminController.getAllProductsHandler(req.query);
+
+        const rawBrands: IBrand[] = await brandService.getAllBrands(); 
+        const brands = rawBrands.map((brand: IBrand) => ({ 
+            id: brand._id.toString(), 
+            name: brand.name 
+        }));
+        
+        const rawCategories: ICategory[] = await categoryService.getAllCategories();
+        const categories = rawCategories.map((category: ICategory) => ({ 
+            id: category._id.toString(), 
+            name: category.name 
+        }));
+
+        const prevPage = result.currentPage > 1 ? result.currentPage - 1 : null;
+        const nextPage = result.currentPage < result.totalPages ? result.currentPage + 1 : null;
+
+        const pagesArray = Array.from({ length: result.totalPages }, (_, i) => ({
+            page: i + 1,
+            isCurrent: i + 1 === result.currentPage,
+            url: buildPaginationUrl(req.query, i + 1)
+        }));
+
+        res.render("admin/products-management", {
+            title: "Products",
+            products: result.products,
+            brands: brands, 
+            categories: categories,
+            pagination: {
+                totalProducts: result.totalProducts, 
+                totalPages: result.totalPages,
+                currentPage: result.currentPage,
+                limit: result.limit,
+                prevUrl: prevPage ? buildPaginationUrl(req.query, prevPage) : null,
+                nextUrl: nextPage ? buildPaginationUrl(req.query, nextPage) : null,
+                pages: pagesArray,
+            },
+            query: req.query || {},
+            layout: "admin"
+        });
+    } catch (error) {
+        console.error("Lỗi khi tải trang quản lý sản phẩm:", error);
+        res.status(500).render("error/500", { title: "Lỗi Server", layout: "admin" });
+    }
 });
 
 router.get("/products/add", authJwtAdmin, async (req: Request, res: Response) => {
     try {
-        const brands = await brandService.getAllBrands();
-        const categories = await categoryService.getAllCategories();
+        const rawBrands = await brandService.getAllBrands();
+        const brands = rawBrands.map((brand: IBrand) => ({ 
+            id: brand._id.toString(), 
+            name: brand.name 
+        }));
+        
+        const rawCategories = await categoryService.getAllCategories();
+        const categories = rawCategories.map((category: ICategory) => ({ 
+            id: category._id.toString(), 
+            name: category.name 
+        }));
 
         res.render("admin/product-add", {
             title: `Thêm Sản Phẩm Mới`,
@@ -240,6 +301,38 @@ router.get("/products/add", authJwtAdmin, async (req: Request, res: Response) =>
     } catch (error: any) {
         console.error("Lỗi khi tải trang thêm sản phẩm:", error);
         res.status(500).send(`<h1>500 Internal Error</h1><p>${error.message || 'Lỗi tải dữ liệu cơ bản.'}</p><a href="/admin/products">Quay lại</a>`);
+    }
+});
+
+router.get("/products/:id/edit", authJwtAdmin, async (req: Request, res: Response) => {
+    const productId = req.params.id!;
+
+    try {
+        const product = await adminController.getProductByIdHandler(productId);
+
+        const rawBrands = await brandService.getAllBrands();
+        const brands = rawBrands.map((brand: IBrand) => ({ 
+            id: brand._id.toString(), 
+            name: brand.name 
+        }));
+        
+        const rawCategories = await categoryService.getAllCategories();
+        const categories = rawCategories.map((category: ICategory) => ({ 
+            id: category._id.toString(), 
+            name: category.name 
+        }));
+
+        res.render("admin/product-edit", {
+            title: `Chỉnh Sửa Sản Phẩm: ${product.name}`,
+            product: product,
+            brands: brands,
+            categories: categories,
+            layout: "admin"
+        });
+
+    } catch (error: any) {
+        console.error("Lỗi khi tải trang chỉnh sửa sản phẩm:", error);
+        res.status(404).send(`<h1>404 Not Found</h1><p>${error.message || 'Không tìm thấy sản phẩm cần chỉnh sửa.'}</p><a href="/admin/products">Quay lại</a>`);
     }
 });
 
@@ -262,26 +355,30 @@ router.get("/products/:id", authJwtAdmin, async (req: Request, res: Response) =>
 });
 
 
-router.get("/products/:id/edit", authJwtAdmin, async (req: Request, res: Response) => {
+router.post("/products", authJwtAdmin, 
+    uploadMultiple, 
+    adminController.createProductHandler
+);
+
+
+router.post("/products/:id/update", authJwtAdmin,
+    uploadImage('newImages', 5), 
+    adminController.updateProductHandler
+);
+
+router.delete("/api/products/:id", authJwtAdmin, async (req: Request, res: Response) => {
     const productId = req.params.id!;
-
     try {
-        const product = await adminController.getProductByIdHandler(productId);
-
-        const brands = await brandService.getAllBrands();
-        const categories = await categoryService.getAllCategories();
-
-        res.render("admin/product-edit", {
-            title: `Chỉnh Sửa Sản Phẩm: ${product.name}`,
-            product: product,
-            brands: brands,
-            categories: categories,
-            layout: "admin"
-        });
-
+        const success = await adminController.deleteProductHandler(productId);
+        if (success) {
+            return res.status(200).json({ success: true, message: "Sản phẩm đã được xóa thành công." });
+        } else {
+            return res.status(400).json({ success: false, message: "Không thể xóa sản phẩm." }); 
+        }
     } catch (error: any) {
-        console.error("Lỗi khi tải trang chỉnh sửa sản phẩm:", error);
-        res.status(404).send(`<h1>404 Not Found</h1><p>${error.message || 'Không tìm thấy sản phẩm cần chỉnh sửa.'}</p><a href="/admin/products">Quay lại</a>`);
+        console.error("Lỗi khi xóa sản phẩm:", error);
+        const statusCode = error.statusCode || 500;
+        return res.status(statusCode).json({ success: false, message: error.message || "Đã xảy ra lỗi server." });
     }
 });
 

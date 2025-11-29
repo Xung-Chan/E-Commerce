@@ -48,6 +48,7 @@ interface UpdateProductRequest {
     description?: string;
     images?: string[];
     discount?: number;
+    existingImages?: string[] | string;
     variants?: {
         id: string;
         distinctFeature?: string;

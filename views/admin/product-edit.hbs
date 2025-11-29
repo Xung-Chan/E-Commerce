@@ -1,239 +1,247 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold text-primary">{{title}}</h3> 
-    <a href="/admin/products/{{product._id}}" class="btn btn-secondary">
-        <i class="bi bi-eye-fill me-2"></i> Xem Chi Tiết
-    </a>
-</div>
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4 text-dark"><i class="bi bi-pencil-square me-2"></i> Chỉnh Sửa Sản Phẩm: {{product.name}}</h2>
 
-<form id="editProductForm" data-product-id="{{product._id}}">
-    
-    <div class="card shadow mb-4">
-        <div class="card-header py-3 bg-info text-white">
-            <h6 class="m-0 fw-bold">Thông tin cơ bản</h6>
-        </div>
-        <div class="card-body">
+        <form id="productForm" method="POST" action="/admin/products/{{product._id}}/update" enctype="multipart/form-data">            <input type="hidden" name="_method" value="PATCH"> 
+
             <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Tên Sản Phẩm</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{product.name}}" required>
-                    </div>
+                <div class="col-lg-9">
+                    <div class="card shadow mb-4">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h6 class="m-0 fw-bold">Thông Tin Chung</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="name" class="form-label required">Tên Sản Phẩm (*)</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{product.name}}" required>
+                            </div>
 
-                    <div class="mb-3">
-                        <label for="categoryId" class="form-label">Danh Mục</label>
-                        <select class="form-select" id="categoryId" name="categoryId" required>
-                            
-                            <option value="" disabled>--- Chọn Danh Mục ---</option> 
-                            
-                            {{#each categories}}
-                                <option value="{{this._id}}" {{#if (isEqual this._id ../product.categoryId)}}selected{{/if}}>
-                                    {{this.name}}
-                                </option>
-                            {{/each}}
-                        </select>
+                            <div class="mb-3">
+                                <label for="description" class="form-label required">Mô Tả Sản Phẩm (*)</label>
+                                <textarea class="form-control" id="description" name="description" rows="5" required>{{product.description}}</textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="images" class="form-label">Ảnh Sản Phẩm (Tối đa 5 ảnh) - **Để trống nếu không muốn thay đổi**</label>
+                                <input class="form-control" type="file" id="images" name="newImages" multiple accept="image/*"> 
+                                <small class="form-text text-muted">Tải ảnh mới sẽ thay thế ảnh cũ.</small>
+                                <div id="image-preview" class="mt-2 d-flex flex-wrap gap-2">
+                                    {{#each product.images}}
+                                        <div class="image-old-wrapper position-relative">
+                                            <img src="{{this}}" style="width: 100px; height: 100px; object-fit: cover;" class="rounded border" alt="Ảnh sản phẩm">
+                                            
+                                            <input type="hidden" name="existingImagesPlaceholder" value="{{this}}"> 
+
+                                            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 p-1 delete-old-image-btn" style="--bs-btn-padding-y: .2rem; --bs-btn-padding-x: .4rem; font-size: .65rem;"><i class="bi bi-x"></i></button>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
+                <div class="col-lg-3">
+                    <div class="card shadow mb-4">
+                        <div class="card-header bg-secondary text-white py-3">
+                            <h6 class="m-0 fw-bold">Thiết Lập</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="categoryId" class="form-label required">Danh Mục (*)</label>
+                                <select class="form-select" id="categoryId" name="categoryId" required>
+                                    <option value="">Chọn danh mục...</option>
+                                    {{#each categories}}
+                                        <option value="{{this.id}}" {{#if (isEqual this.id ../product.categoryId)}}selected{{/if}}>
+                                            {{this.name}}
+                                        </option>
+                                    {{/each}}
+                                </select>
+                            </div>
 
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="brandId" class="form-label">Thương Hiệu</label>
-                        <select class="form-select" id="brandId" name="brandId" required>
+                            <div class="mb-3">
+                                <label for="brandId" class="form-label required">Thương Hiệu (*)</label>
+                                <select class="form-select" id="brandId" name="brandId" required>
+                                    <option value="">Chọn thương hiệu...</option>
+                                    {{#each brands}}
+                                        <option value="{{this.id}}" {{#if (isEqual this.id ../product.brandId)}}selected{{/if}}>
+                                            {{this.name}}
+                                        </option>
+                                    {{/each}}
+                                </select>
+                            </div>
                             
-                            <option value="" disabled>--- Chọn Thương Hiệu ---</option> 
+                            <div class="mb-0">
+                                <label for="discount" class="form-label">Giảm Giá (%)</label>
+                                <input type="number" class="form-control" id="discount" name="discount" value="{{product.discount}}" min="0" max="50">
+                                <small class="form-text text-muted">Phần trăm giảm giá áp dụng cho tất cả variants.</small>
+                            </div>
                             
-                            {{#each brands}}
-                                <option value="{{this._id}}" {{#if (isEqual this._id ../product.brandId)}}selected{{/if}}>
-                                    {{this.name}}
-                                </option>
-                            {{/each}}
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="discount" class="form-label">Giảm giá (%)</label>
-                        <input type="number" class="form-control" id="discount" name="discount" value="{{product.discount}}" min="0" max="50">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label for="description" class="form-label">Mô Tả Sản Phẩm</label>
-                <textarea class="form-control" id="description" name="description" rows="4">{{product.description}}</textarea>
-            </div>
-            
-            <p class="text-muted">Lưu ý: Quản lý hình ảnh và giá min/max được xử lý tự động hoặc qua module riêng.</p>
-        </div>
-    </div>
-    
-    <div class="card shadow mb-4">
-        <div class="card-header py-3 bg-secondary text-white">
-            <h6 class="m-0 fw-bold">Biến thể & Tồn kho</h6>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered table-striped table-sm" id="variantsTable">
-                <thead>
-                    <tr>
-                        <th>Đặc điểm/Cấu hình</th>
-                        <th>Giá bán</th>
-                        <th>Tồn kho</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody id="variantsTableBody">
-                    {{#each product.variants}}
-                    <tr data-variant-id="{{this._id}}">
-                        <input type="hidden" name="variants[{{@index}}][id]" value="{{this._id}}"> 
-                        
-                        <td>
-                            <input type="text" class="form-control" name="variants[{{@index}}][distinctFeature]" value="{{this.distinctFeature}}" required>
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" name="variants[{{@index}}][price]" value="{{this.price}}" required min="0">
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" name="variants[{{@index}}][stock]" value="{{this.stock}}" required min="0">
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-danger delete-variant-btn" data-variant-id="{{this._id}}">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-            
-            <button type="button" id="addVariantBtn" class="btn btn-sm btn-outline-primary mt-3">
-                <i class="bi bi-plus-circle"></i> Thêm Biến Thể Mới
-            </button>
-        </div>
-    </div>
-
-    <button type="submit" class="btn btn-success btn-lg mb-5">
-        <i class="bi bi-check-circle-fill me-2"></i> Lưu Tất Cả Thay Đổi
-    </button>
-</form>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('editProductForm');
-        const productId = form.dataset.productId;
-        const variantsTableBody = document.getElementById('variantsTableBody');
-        const addVariantBtn = document.getElementById('addVariantBtn');
-        let variantIndex = {{product.variants.length}};
-
-        // --- HÀM TẠO DÒNG VARIANT MỚI (Cho Add) ---
-        function createNewVariantRow(index) {
-            const newRow = document.createElement('tr');
-            newRow.setAttribute('data-new-variant', 'true');
-            newRow.innerHTML = `
-                <input type="hidden" name="variants[${index}][id]" value=""> 
-                <td><input type="text" class="form-control" name="variants[${index}][distinctFeature]" required></td>
-                <td><input type="number" class="form-control" name="variants[${index}][price]" required min="0"></td>
-                <td><input type="number" class="form-control" name="variants[${index}][stock]" required min="0"></td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-danger remove-new-variant-btn">
-                        <i class="bi bi-x-circle"></i>
+            <div class="card shadow mb-4">
+                <div class="card-header bg-warning text-dark py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 fw-bold">Quản Lý Biến Thể & Kho Hàng</h6>
+                    <button type="button" class="btn btn-sm btn-dark" id="addVariantBtn">
+                        <i class="bi bi-plus-circle me-1"></i> Thêm Biến Thể
                     </button>
-                </td>
-            `;
-            variantsTableBody.appendChild(newRow);
-            variantIndex++;
+                </div>
+                <div class="card-body">
+                    <div id="variantsContainer">
+                        </div>
+                </div>
+            </div>
+
+            <div class="mb-5 d-flex justify-content-end">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="bi bi-check-circle me-2"></i> Cập Nhật Sản Phẩm
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+const existingProduct = {{{json product}}}; 
+
+document.addEventListener('DOMContentLoaded', function() {
+    const variantsContainer = document.getElementById('variantsContainer');
+    const addVariantBtn = document.getElementById('addVariantBtn');
+    let variantCount = 0;
+    
+    function createVariantRow(index, variantData = {}) {
+        const idInput = variantData._id ? 
+            `<input type="hidden" name="variants[${index}][id]" value="${variantData._id}">` : 
+            ''; 
+            
+        const distinctFeature = variantData.distinctFeature || '';
+        const price = variantData.price || 1000;
+        const stock = variantData.stock || 0;
+       
+        const importPrice = variantData.importPrice || 1000;
+
+        return `
+            <div class="variant-row border p-3 rounded mb-3" data-index="${index}">
+                ${idInput} <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0 text-primary">Biến thể #${index + 1} ${variantData._id ? `(ID: ${variantData._id.substring(0, 8)}...)` : '(Mới)'}</h6>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-variant" data-variant-id="${variantData._id || ''}">
+                        <i class="bi bi-x-lg"></i> Xóa
+                    </button>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label">Đặc Trưng (Ví dụ: Màu Đen, 256GB, v.v.) (*)</label>
+                        <input type="text" class="form-control" name="variants[${index}][distinctFeature]" value="${distinctFeature}" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Giá Bán (VNĐ) (*)</label>
+                        <input type="number" class="form-control" name="variants[${index}][price]" value="${price}" required min="1000" placeholder="Giá niêm yết">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Tồn Kho (*)</label>
+                        <input type="number" class="form-control" name="variants[${index}][stock]" value="${stock}" required min="0" ${variantData._id ? '' : 'value="0"'}> 
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Giá Nhập (VNĐ)</label>
+                        <input type="number" class="form-control" name="variants[${index}][importPrice]" value="${importPrice}" min="1000" placeholder="Giá vốn" required> 
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    if (existingProduct && existingProduct.variants && existingProduct.variants.length > 0) {
+        existingProduct.variants.forEach((variant) => {
+            variantsContainer.insertAdjacentHTML('beforeend', createVariantRow(variantCount, variant));
+            variantCount++;
+        });
+    } else {
+         variantsContainer.insertAdjacentHTML('beforeend', '<div class="alert alert-info">Vui lòng thêm ít nhất một biến thể (ví dụ: Màu Đen, 128GB, v.v.)</div>');
+    }
+    
+    function reindexVariants() {
+        variantsContainer.querySelectorAll('.variant-row').forEach((row, newIndex) => {
+            const oldIndex = row.getAttribute('data-index');
+            
+            row.setAttribute('data-index', newIndex);
+            
+            row.innerHTML = row.innerHTML.replace(new RegExp(`variants\\[${oldIndex}\\]`, 'g'), `variants[${newIndex}]`);
+            
+            row.querySelector('h6').textContent = `Biến thể #${newIndex + 1}`;
+        });
+        variantCount = variantsContainer.querySelectorAll('.variant-row').length;
+        
+        if (variantCount === 0) {
+            variantsContainer.insertAdjacentHTML('beforeend', '<div class="alert alert-info">Vui lòng thêm ít nhất một biến thể (ví dụ: Màu Đen, 128GB, v.v.)</div>');
+        } else {
+             variantsContainer.querySelectorAll('.alert').forEach(alert => alert.style.display = 'none');
+        }
+    }
+
+
+    addVariantBtn.addEventListener('click', () => {
+        variantsContainer.insertAdjacentHTML('beforeend', createVariantRow(variantCount));
+        variantCount++;
+        variantsContainer.querySelectorAll('.alert').forEach(alert => alert.style.display = 'none');
+    });
+
+    variantsContainer.addEventListener('click', (e) => {
+        if (e.target.closest('.remove-variant')) {
+            const variantRow = e.target.closest('.variant-row');
+
+            variantRow.remove();
+            reindexVariants();
+        }
+    });
+
+
+    const imageInput = document.getElementById('images');
+    const imagePreviewContainer = document.getElementById('image-preview');
+
+    imageInput.addEventListener('change', (event) => {
+        imagePreviewContainer.innerHTML = '';
+        
+        const files = event.target.files;
+
+        if (files.length > 5) {
+            alert("Bạn chỉ có thể chọn tối đa 5 ảnh.");
+            imageInput.value = ''; 
+            return;
         }
         
-        // --- XỬ LÝ SỰ KIỆN NÚT ---
-        
-        // Nút Thêm Variant
-        addVariantBtn.addEventListener('click', function() {
-            createNewVariantRow(variantIndex);
-        });
-
-        // Xóa dòng Variant mới tạo (chưa có ID)
-        variantsTableBody.addEventListener('click', function(e) {
-            if (e.target.closest('.remove-new-variant-btn')) {
-                e.target.closest('tr').remove();
-            }
-            
-            // XỬ LÝ NÚT XÓA VARIANT CŨ (Cần API DELETE Variant)
-            if (e.target.closest('.delete-variant-btn')) {
-                e.preventDefault(); 
-                const button = e.target.closest('.delete-variant-btn');
-                const variantId = button.dataset.variantId;
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('image-new-wrapper', 'position-relative');
                 
-                if (confirm('Bạn có chắc chắn muốn xóa biến thể này?')) {
-                    // CẦN GỌI API DELETE VARIANT TẠI ĐÂY (Ví dụ: /api/variants/:id)
-                    alert('Chức năng xóa Variant cần triển khai API DELETE /api/variants/:id');
-                    // Tạm thời ẩn dòng trên UI
-                    button.closest('tr').style.opacity = '0.5';
-                }
-            }
-        });
-
-
-        // --- XỬ LÝ FORM SUBMIT (API PUT/PATCH) ---
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(form);
-            const data = {};
-            
-            // Chuyển đổi FormData thành cấu trúc JSON nested phù hợp với Express Body Parser
-            const productData = {};
-            const variantsArray = [];
-            
-            for (let [key, value] of formData.entries()) {
-                if (key.startsWith('variants[')) {
-                    // Lấy index và tên trường (distinctFeature, price, stock, id)
-                    const match = key.match(/variants\[(\d+)\]\[(\w+)\]/);
-                    if (match) {
-                        const index = parseInt(match[1]);
-                        const field = match[2];
-
-                        // Đảm bảo array[index] tồn tại
-                        if (!variantsArray[index]) {
-                            variantsArray[index] = {};
-                        }
-
-                        // Ép kiểu số
-                        if (field === 'price' || field === 'stock') {
-                            value = Number(value);
-                        }
-
-                        variantsArray[index][field] = value;
-                    }
-                } else {
-                    // Trường Product chính (name, discount, categoryId, brandId, description)
-                    productData[key] = value;
-                }
-            }
-            
-            // 3. Kết hợp Product và Variants
-            const fullUpdateData = {
-                ...productData,
-                variants: variantsArray.filter(v => v !== null) // Lọc bỏ các mục undefined
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '100px';
+                img.style.height = '100px';
+                img.style.objectFit = 'cover';
+                img.classList.add('rounded', 'border');
+                
+                wrapper.appendChild(img);
+                imagePreviewContainer.appendChild(wrapper);
             };
-            
-            // 4. Gọi API PUT (Route đã có: /api/products/:id)
-            try {
-                const response = await fetch(`/api/products/${productId}`, {
-                    method: 'PUT', // Dùng PUT/PATCH tùy theo API Product.route của bạn
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(fullUpdateData), 
-                    credentials: 'include'
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    alert(result.message || 'Cập nhật sản phẩm thành công!');
-                    window.location.href = `/admin/products/${productId}`; // Quay lại trang detail
-                } else {
-                    alert(`Lỗi: ${result.message || 'Cập nhật thất bại.'}`);
-                }
-            } catch (error) {
-                console.error('Lỗi API cập nhật sản phẩm:', error);
-                alert('Đã xảy ra lỗi hệ thống khi lưu.');
-            }
+            reader.readAsDataURL(file);
         });
     });
+
+    imagePreviewContainer.addEventListener('click', (e) => {
+        const deleteBtn = e.target.closest('.delete-old-image-btn');
+        if (deleteBtn) {
+            deleteBtn.closest('.image-old-wrapper').remove();
+            
+            if(imagePreviewContainer.querySelectorAll('.image-old-wrapper').length === 0 && imageInput.files.length === 0) {
+                
+            }
+        }
+    });
+
+    reindexVariants();
+});
 </script>
