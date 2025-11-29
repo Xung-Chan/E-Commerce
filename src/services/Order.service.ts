@@ -29,7 +29,7 @@ class OrderService {
         if (currentIndex === -1 || currentIndex === statusOrder.length - 1) {
             return [];
         }
-        let nextStatuses: string[] = [OrderStatus.CANCELED];
+        let nextStatuses: string[] = [OrderStatus.CANCELLED];
         const nextStatus = statusOrder[currentIndex + 1];
         if (currentIndex + 1 < statusOrder.length && nextStatus) {
             nextStatuses.push(nextStatus.toString());
@@ -227,7 +227,9 @@ class OrderService {
                 fullName: user.fullName,
                 totalPrice: order.totalPrice,
                 items: items,
-                currentStatus: order.currentStatus
+                currentStatus: order.currentStatus,
+                createdAt: order.createdAt,
+                updatedAt: order.updatedAt
             }
         }))
 
@@ -312,6 +314,18 @@ class OrderService {
         }));
     }
 
+    private async decreaseProductStock(orderId: string) {
+        const orderItems = await orderItemDao.findBy({ orderId: orderId });
+        await Promise.all(orderItems.map(async (item) => {
+            const variant = await variantDao.readById(item.variantId.toString());
+            if (!variant) return;
+            await variantDao.patchById(variant._id.toString(), {
+                stock: variant.stock + item.quantity
+            });
+        }));
+    }
+
+
 
     //UPDATE
     async updateStatusById(id: string, status: string) {
@@ -331,6 +345,10 @@ class OrderService {
 
         if (status === OrderStatus.DELIVERED) {
             await this.increaseProductSoldCount(id);
+        }
+
+        if (status === OrderStatus.CANCELLED) {
+            await this.decreaseProductStock(id);
         }
 
         await statusHistoryDao.create({

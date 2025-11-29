@@ -107,6 +107,7 @@ app.engine(
             subtract: (a: number, b: number) => a - b,
             gt: (a: number, b: number) => a > b,
             isEqual: (a: any, b: any) => String(a) === String(b),
+            isGreaterThan: (a: number, b: number) => a > b,
             buildPageQuery: (obj: Record<string, unknown>, page: number) => {
                 const queryObj = obj || {};
                 const filteredObj = Object.fromEntries(
@@ -128,6 +129,26 @@ app.engine(
                     options.data.root[variableName] = value;
                 } else if (this && this[variableName]) {
                     this[variableName] = value;
+                }
+            },
+            statusBadge: (status: string) => {
+                if (!status) return '';
+                const s = String(status).toUpperCase();
+                switch (s) {
+                    case 'PENDING':
+                        return `<span class="badge bg-warning text-dark"><i class="bi bi-clock me-1"></i> Chờ xử lý</span>`;
+                    case 'PROCESSING':
+                        return `<span class="badge bg-info text-dark"><i class="bi bi-gear me-1"></i> Đang xử lý</span>`;
+                    case 'SHIPPING':
+                    case 'SHIPPED':
+                        return `<span class="badge bg-primary"><i class="bi bi-truck me-1"></i> Đang giao</span>`;
+                    case 'DELIVERED':
+                        return `<span class="badge bg-success"><i class="bi bi-check2-circle me-1"></i> Đã giao</span>`;
+                    case 'CANCELLED':
+                    case 'CANCELED':
+                        return `<span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i> Đã hủy</span>`;
+                    default:
+                        return `<span class="badge bg-secondary">${status}</span>`;
                 }
             },
 

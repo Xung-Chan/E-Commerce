@@ -37,6 +37,7 @@ interface SimpleStatisticResponse {
     topProducts: {
         productId: string,
         productName: string,
+        image: string,
         sold: number,
     }[];
     accumulatedRevenue: {
@@ -103,6 +104,8 @@ interface OutlineOrderResponse {
     }[]
     ,
     currentStatus: OrderStatus;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 interface DetailOrderResponse {

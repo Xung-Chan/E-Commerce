@@ -11,6 +11,7 @@ import { UpdateCouponDto } from "../dto/Update.dto.js";
 import productService from "../services/Product.service.js";
 import { CreateProductRequest, UpdateProductRequest } from "../dto/Request.dto.js";
 import { UPLOAD_DIR } from "../services/Image.service.js";
+import categoryService from "../services/Category.service.js";
 
 import bcrypt from "bcryptjs";
 import statisticsService, { StatisticPeriod } from "../services/Statistics.service.js";
@@ -140,7 +141,21 @@ const adminController = {
         };
     },
 
-    
+    getDashboard: expressAsyncHandler(async (req: Request, res: Response) => {
+        const statistics = await statisticsService.getSimpleStatistic();
+        res.render("admin/dashboard", {
+            title: "Dashboard",
+            layout: "admin",
+            totalUsers: statistics.totalUsers,
+            totalOrders: statistics.totalOrders,
+            newUsers: statistics.newUsers,
+            revenue: statistics.revenue,
+            profit: statistics.profit,
+            topProducts: statistics.topProducts,
+            accumulatedRevenue: statistics.accumulatedRevenue,
+            accumulatedProfit: statistics.accumulatedProfit
+        });
+    }),
 
     getProductByIdHandler: async (productId: string) => {
         const productDetail = await productService.getProductDetailForAdmin(productId);
@@ -209,32 +224,135 @@ const adminController = {
     getSimpleStatisticsHandler: expressAsyncHandler(async (req: Request, res: Response) => {
         const statistics = await statisticsService.getSimpleStatistic();
 
-        // res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
-        return res.render("admin/statistic", {
-            accumulatedRevenue: statistics.accumulatedRevenue,
-            accumulatedProfit: statistics.accumulatedProfit,
-            totalUsers: statistics.totalUsers,
-            newUsers: statistics.newUsers,
-            totalOrders: statistics.totalOrders,
-            revenue: statistics.revenue,
-            topProducts: statistics.topProducts,
-            layout: "admin"
-        })
+        res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
+        // return res.render("admin/statistic", {
+        //     accumulatedRevenue: statistics.accumulatedRevenue,
+        //     accumulatedProfit: statistics.accumulatedProfit,
+        //     totalUsers: statistics.totalUsers,
+        //     newUsers: statistics.newUsers,
+        //     totalOrders: statistics.totalOrders,
+        //     revenue: statistics.revenue,
+        //     topProducts: statistics.topProducts,
+        //     layout: "admin"
+        // })
     }),
 
-    getAdvancedStatisticsHandler: expressAsyncHandler(async (req: Request, res: Response) => {
-        const period = req.query.period as string || StatisticPeriod.NEAREST_30_DAYS
-        console.log("Period:", period);
-        const statistics = await statisticsService.getAdvancedStatistic(period);
-        // res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
-        return res.render("admin/advanced-statistic", {
+    renderAdvancedStatisticsPage: expressAsyncHandler(async (req: Request, res: Response) => {
+        const query = req.query;
+        const period = query.period as string || StatisticPeriod.NEAREST_30_DAYS
+        let interval: {
+            startDate: Date,
+            endDate: Date
+        } | null = null;
+
+        if (query.startDate && query.endDate) {
+            interval = {
+                startDate: new Date(query.startDate as string),
+                endDate: new Date(query.endDate as string)
+            }
+        }
+
+        const statistics = await statisticsService.getAdvancedStatistic(period, interval);
+
+        res.render("admin/advanced-statistic", {
+            layout: "admin",
+            title: "Statistics",
             revenue: statistics.revenues,
             profit: statistics.profits,
             orders: statistics.orders,
             totalProfit: statistics.totalProfit,
-            layout: "admin"
         })
-    })
+    },),
+
+    getAdvancedStatisticsHandler: expressAsyncHandler(async (req: Request, res: Response) => {
+        const query = req.query;
+        const period = query.period as string || StatisticPeriod.NEAREST_30_DAYS
+        let interval: {
+            startDate: Date,
+            endDate: Date
+        } | null = null;
+        if (query.startDate && query.endDate) {
+            interval = {
+                startDate: new Date(query.startDate as string),
+                endDate: new Date(query.endDate as string)
+            }
+        }
+        const statistics = await statisticsService.getAdvancedStatistic(period, interval);
+        res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
+    }),
+
+    getOrdersManagementPage: expressAsyncHandler(async (req: Request, res: Response) => {
+        const query = req.query;
+
+        const orders = await orderService.getOrdersByQuery(query);
+        const { page = '1', limit = '10', status = '', sortBy = 'updatedAt', sortOrder = 'desc' } = (req.query || {}) as any;
+
+        const filteredQuery: Record<string, string> = {};
+        Object.entries({ status, sortBy, sortOrder, limit }).forEach(([k, v]) => {
+            if (v !== undefined && v !== null && String(v) !== '') filteredQuery[k] = String(v);
+        });
+        const baseQueryString = Object.entries(filteredQuery)
+            .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+            .join('&');
+        const pages = Array.from({ length: orders.totalPages }, (_, i) => ({
+            number: i + 1,
+            active: i + 1 === orders.page
+        }));
+        res.render("admin/orders-management", {
+            layout: "admin",
+            title: "Quản lý đơn hàng",
+            query: query,
+            orders: orders.datas,
+            hasPrevPage: orders.hasPrevPage,
+            hasNextPage: orders.hasNextPage,
+            prevPage: orders.prevPage,
+            nextPage: orders.nextPage,
+            pages: pages,
+            baseQueryString: baseQueryString
+        });
+    }),
+
+    getOrderDetailHandler: async (orderId: string) => {
+        const order = await orderService.getOrderById(orderId);
+        return order;
+    },
+
+    updateOrderStatusHandler: async (orderId: string, status: string) => {
+        const success = await orderService.updateStatusById(orderId, status);
+        return success;
+    },
+
+    
+    //categories-management
+    getAllCategoriesHandler: async () => {
+        const categories = await categoryService.getAllCategories();
+        return categories;
+    },
+
+    createCategoryHandler: async (data: any, imagePath?: string) => {
+        if (imagePath) {
+            data.image = imagePath;
+        }
+        // Chuyển đổi landingPageDisplay thành boolean
+        data.landingPageDisplay = data.landingPageDisplay === 'true' || data.landingPageDisplay === true;
+        const newCategory = await categoryService.createCategory(data);
+        return newCategory;
+    },
+
+    updateCategoryHandler: async (categoryId: string, data: any, imagePath?: string) => {
+        if (imagePath) {
+            data.image = imagePath;
+        }
+        // Chuyển đổi landingPageDisplay thành boolean
+        data.landingPageDisplay = data.landingPageDisplay === 'true' || data.landingPageDisplay === true;
+        const success = await categoryService.updateCategoryById(categoryId, data);
+        return success;
+    },
+
+    deleteCategoryHandler: async (categoryId: string) => {
+        const success = await categoryService.deleteCategoryById(categoryId);
+        return success;
+    }
 }
 
 export default adminController;

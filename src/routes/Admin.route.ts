@@ -2,6 +2,7 @@
 import { Router, Request, Response } from "express";
 import adminController from "../controllers/Admin.controller.js";
 import { authJwtAdmin } from "../middleware/authJwt.middleware.js";
+import { uploadSingle } from "../middleware/multer.middleware.js";
 import brandService from "../services/Brand.service.js";
 import categoryService from "../services/Category.service.js";
 import { uploadImage, uploadMultiple } from "../middleware/multer.middleware.js";
@@ -13,12 +14,7 @@ import { ICategory } from "../daos/Category.dao.js";
 const router = Router();
 
 //dashboard
-router.get("/dashboard", authJwtAdmin, async (req: Request, res: Response) => {
-    res.render("admin/dashboard", {
-        title: "Dashboard",
-        layout: "admin"
-    });
-});
+router.get("/dashboard", authJwtAdmin, adminController.getDashboard);
 
 //users-management
 router.get("/users", authJwtAdmin, async (req: Request, res: Response) => {
@@ -277,6 +273,70 @@ router.get("/products", authJwtAdmin, async (req: Request, res: Response) => {
     }
 });
 
+//categories-management
+router.get("/categories", authJwtAdmin, async (req: Request, res: Response) => {
+    try {
+        const categories = await adminController.getAllCategoriesHandler();
+        console.log("Categories:", categories);
+        res.render("admin/categories", {
+            title: "Categories",
+            categories: categories,
+            layout: "admin"
+        });
+    } catch (error) {
+        console.error("Lỗi khi tải danh mục:", error);
+        res.status(500).render("error/500", { title: "Lỗi Server", layout: "admin" });
+    }
+});
+
+router.post("/api/categories", authJwtAdmin, uploadSingle, async (req: Request, res: Response) => {
+    console.log("Calling create category");
+    try {
+        const categoryData = req.body;
+        const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
+        
+        const newCategory = await adminController.createCategoryHandler(categoryData, imagePath);
+        return res.status(201).json({ success: true, message: "Danh mục đã được tạo.", category: newCategory });
+    } catch (error: any) {
+        console.error("Lỗi tạo danh mục:", error);
+        return res.status(error.statusCode || 400).json({ success: false, message: error.message || "Lỗi tạo danh mục." });
+    }
+});
+
+router.patch("/api/categories/:categoryId", authJwtAdmin, uploadSingle, async (req: Request, res: Response) => {
+    console.log("Calling update category");
+    const categoryId = req.params.categoryId!;
+    const updateData = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
+
+    try {
+        const success = await adminController.updateCategoryHandler(categoryId, updateData, imagePath);
+
+        if (success) {
+            return res.status(200).json({ success: true, message: "Thông tin danh mục đã được cập nhật." });
+        } else {
+            return res.status(400).json({ success: false, message: "Không tìm thấy danh mục hoặc không có thay đổi." });
+        }
+    } catch (error: any) {
+        console.error("Lỗi khi cập nhật danh mục:", error);
+        return res.status(error.statusCode || 400).json({ success: false, message: error.message || "Lỗi cập nhật server." });
+    }
+});
+
+router.delete("/api/categories/:categoryId", authJwtAdmin, async (req: Request, res: Response) => {
+    try {
+        const success = await adminController.deleteCategoryHandler(req.params.categoryId!);
+        if (success) {
+            return res.status(200).json({ success: true, message: "Danh mục đã được xóa." });
+        } else {
+            return res.status(404).json({ success: false, message: "Không tìm thấy danh mục." });
+        }
+    } catch (error: any) {
+        console.error("Lỗi xóa danh mục:", error);
+        return res.status(error.statusCode || 500).json({ success: false, message: error.message || "Lỗi xóa server." });
+    }
+});
+
 router.get("/products/add", authJwtAdmin, async (req: Request, res: Response) => {
     try {
         const rawBrands = await brandService.getAllBrands();
@@ -386,9 +446,50 @@ router.get("/statistics/simple", authJwtAdmin,
     adminController.getSimpleStatisticsHandler
 );
 
-
 router.get("/statistics/advanced", authJwtAdmin,
     adminController.getAdvancedStatisticsHandler
 );
+
+router.get("/advanced-statistic", authJwtAdmin,
+    adminController.renderAdvancedStatisticsPage
+);
+
+router.get("/orders", authJwtAdmin, adminController.getOrdersManagementPage
+);
+
+router.get("/orders/:orderId", authJwtAdmin, async (req: Request, res: Response) => {
+    try {
+        const orderId = req.params.orderId!;
+        const order = await adminController.getOrderDetailHandler(orderId);
+        
+        res.render("admin/order-detail", {
+            layout: "admin",
+            title: "Chi tiết đơn hàng",
+            order: order
+        });
+    } catch (error: any) {
+        console.error("Lỗi khi xem chi tiết đơn hàng:", error);
+        res.status(404).send(`<h1>404 Not Found</h1><p>${error.message || 'Không tìm thấy đơn hàng.'}</p><a href="/admin/orders">Quay lại</a>`);
+    }
+});
+
+router.patch("/api/orders/:orderId/status", authJwtAdmin, async (req: Request, res: Response) => {
+    const orderId = req.params.orderId!;
+    const { status } = req.body;
+
+    try {
+        const success = await adminController.updateOrderStatusHandler(orderId, status);
+        
+        if (success) {
+            return res.status(200).json({ success: true, message: `Trạng thái đã được cập nhật thành ${status}.` });
+        } else {
+            return res.status(400).json({ success: false, message: "Không tìm thấy đơn hàng hoặc không có thay đổi." });
+        }
+    } catch (error: any) {
+        console.error("Lỗi khi cập nhật trạng thái đơn hàng:", error);
+        return res.status(error.statusCode || 400).json({ success: false, message: error.message || "Lỗi cập nhật server." });
+    }
+});
+
 
 export default router;

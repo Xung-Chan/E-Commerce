@@ -24,7 +24,7 @@ const commentService = {
                 "type":positive/neutral/negative,
                 "summary":...
             }
-
+            Hãy trả lời ngắn gọn trong khoảng 20 từ.
         `
 
 
@@ -93,7 +93,7 @@ const commentService = {
         const page = parseInt((query.page || "1"), 10);
         const limit = parseInt((query.limit || "10"), 10);
         const sortBy = query.sortBy || "createdAt";
-        const sortOrder = query.sortOrder === "desc" ? -1 : 1;
+        const sortOrder = query.sortOrder === "asc" ? 1 : -1;
         const options = {
             skip: (page - 1) * limit,
             limit: limit,

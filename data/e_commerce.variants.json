@@ -1,218 +1,1282 @@
 [
   {
     "productId": {
-      "$oid": "68cbff992bdc353b4acc3fa9"
+      "$oid": "300000000000000000000001"
     },
-    "distinctFeature": "Intel Core i5 12400F / RTX 4070 12GB / RAM 16GB / SSD 512GB",
-    "price": 26680000,
+    "distinctFeature": "RAM 16GB DDR4 / SSD 256GB / RTX 3050",
+    "price": 10480000,
     "stock": 5
   },
   {
     "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb1"
+      "$oid": "300000000000000000000001"
     },
-    "distinctFeature": "Intel Core i5 12400F / RTX 4070 12GB / RAM 16GB / SSD 512GB",
-    "price": 26680000,
+    "distinctFeature": "RAM 32GB DDR4 / SSD 512GB / RTX 3050",
+    "price": 12760000,
     "stock": 5
   },
   {
     "productId": {
-      "$oid": "68cbff992bdc353b4acc3fa9"
-    },
-    "distinctFeature": "Intel Core i7 13400F / RTX 4070 12GB / RAM 32GB / SSD 512GB",
-    "price": 28700000,
-    "stock": 3
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fa9"
-    },
-    "distinctFeature": "Intel Core i5 14500 / RTX 4070 12GB / RAM 32GB / SSD 1TB",
-    "price": 32900000,
-    "stock": 3
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3faa"
-    },
-    "distinctFeature": "Intel Core i5 12400F / RX 6600 8GB / RAM 16GB / SSD 512GB",
-    "price": 15690000,
+      "$oid": "300000000000000000000002"
+    },  
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB / RTX 3050",
+    "price": 8990000,
     "stock": 10
   },
   {
     "productId": {
-      "$oid": "68cbff992bdc353b4acc3faa"
+      "$oid": "300000000000000000000002"
     },
-    "distinctFeature": "Intel Core i5 12600KF / RX 6600 8GB / RAM 32GB / SSD 512GB",
-    "price": 18100000,
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB / RTX 3050",
+    "price": 11490000,
+    "stock": 8
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000003"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB / GTX 3050",
+    "price": 13200000,
+    "stock": 7
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000003"
+    },
+    "distinctFeature": "RAM 32GB DDR4 / SSD 1TB / RTX 3050",
+    "price": 16800000,
     "stock": 5
   },
   {
     "productId": {
-      "$oid": "68cbff992bdc353b4acc3faa"
+      "$oid": "300000000000000000000004"
     },
-    "distinctFeature": "Intel Core i5 14500 / RX 6600 8GB / RAM 32GB / SSD 1TB",
-    "price": 21000000,
-    "stock": 5
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fa9"
-    },
-    "distinctFeature": "Intel Core Ultra 7 265KF / RTX 5080 16GB / RAM 32GB / SSD 512GB",
-    "price": 59999000,
-    "stock": 2
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fa9"
-    },
-    "distinctFeature": "Intel Core Ultra 7 265KF / RTX 5080 16GB / RAM 64GB / SSD 1TB",
-    "price": 67600000,
-    "stock": 2
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fac"
-    },
-    "distinctFeature": "Intel Core i5 11400F / RTX 3050 6GB / RAM 16GB / SSD 256GB",
-    "price": 10990000,
-    "stock": 5
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fac"
-    },
-    "distinctFeature": "Intel Core i5 11400F / RTX 3050 6GB / RAM 32GB / SSD 512GB",
-    "price": 12800000,
-    "stock": 5
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fad"
-    },
-    "distinctFeature": "Intel Core i5 12400F / RTX 4060 8GB / RAM 16GB / SSD 512GB",
-    "price": 20990000,
-    "stock": 5
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fad"
-    },
-    "distinctFeature": "Intel Core i5 14500 / RTX 4060 8GB / RAM 32GB / SSD 1TB",
-    "price": 24990000,
-    "stock": 3
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fab"
-    },
-    "distinctFeature": "Intel Core Ultra 7 265KF / RTX 5080 16GB / RAM 32GB / SSD 512GB",
-    "price": 64990000,
-    "stock": 3
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fab"
-    },
-    "distinctFeature": "Intel Core Ultra 7 265KF / RTX 5080 16GB / RAM 64GB / SSD 1TB",
-    "price": 72000000,
-    "stock": 2
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3faf"
-    },
-    "distinctFeature": "Intel Core i5 14600KF / RTX 5070 Ti 16GB / RAM 16GB / SSD 512GB",
-    "price": 27990000,
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB / RX 6700",
+    "price": 14500000,
     "stock": 6
   },
   {
     "productId": {
-      "$oid": "68cbff992bdc353b4acc3faf"
+      "$oid": "300000000000000000000004"
     },
-    "distinctFeature": "Intel Core i5 14600KF / RTX 5070 Ti 16GB / RAM 32GB / SSD 1TB",
-    "price": 32990000,
-    "stock": 3
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb0"
-    },
-    "distinctFeature": "AMD Ryzen 7 7700 / RTX 5070 12GB / RAM 16GB / SSD 512GB",
-    "price": 28990000,
-    "stock": 6
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb0"
-    },
-    "distinctFeature": "AMD Ryzen 7 7700 / RTX 5070 12GB / RAM 32GB / SSD 1TB",
-    "price": 33990000,
-    "stock": 3
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb3"
-    },
-    "distinctFeature": "Intel Core i5 12400F / RTX 3060 12GB / RAM 16GB / SSD 512GB",
-    "price": 17990000,
-    "stock": 5
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb3"
-    },
-    "distinctFeature": "Intel Core i5 12400F / RTX 3060 12GB / RAM 32GB / SSD 1TB",
-    "price": 21990000,
-    "stock": 3
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb4"
-    },
-    "distinctFeature": "Intel Core i5 14600KF / RTX 3060 12GB / RAM 16GB / SSD 512GB",
-    "price": 22990000,
-    "stock": 5
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb4"
-    },
-    "distinctFeature": "Intel Core i5 14600KF / RTX 3060 12GB / RAM 32GB / SSD 1TB",
-    "price": 26990000,
-    "stock": 3
-  },
-  {
-    "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb5"
-    },
-    "distinctFeature": "Intel Core i9 14900KF / RTX 5060 8GB / RAM 32GB / SSD 512GB",
-    "price": 29990000,
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RX 6700 XT",
+    "price": 19500000,
     "stock": 4
   },
   {
     "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb5"
+      "$oid": "300000000000000000000005"
     },
-    "distinctFeature": "Intel Core i9 14900KF / RTX 5060 8GB / RAM 64GB / SSD 1TB",
-    "price": 34990000,
+    "distinctFeature": "RAM 16GB DDR4 / SSD 500GB / RTX 3060",
+    "price": 13800000,
+    "stock": 9
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000005"
+    },
+    "distinctFeature": "RAM 32GB DDR4 / SSD 1TB / RTX 3060",
+    "price": 17500000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000006"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB / RTX 3060",
+    "price": 15200000,
+    "stock": 7
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000006"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RTX 3060 Ti",
+    "price": 21500000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000007"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB / RX 6600 XT",
+    "price": 14900000,
+    "stock": 8
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000007"
+    },
+    "distinctFeature": "RAM 32GB DDR4 / SSD 1TB / RX 6600",
+    "price": 19200000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000008"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB / RTX 3070",
+    "price": 16500000,
+    "stock": 7
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000008"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RTX 3070",
+    "price": 24800000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000009"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB / RX 6700 XT",
+    "price": 17800000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000009"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RX 6800",
+    "price": 23500000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000010"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB / RTX 3080",
+    "price": 18500000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000010"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RTX 3080",
+    "price": 26500000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000011"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB / RTX 4060",
+    "price": 17200000,
+    "stock": 7
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000011"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RTX 4060",
+    "price": 28900000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000012"
+    },
+    "distinctFeature": "RAM 16GB DDR5 / SSD 512GB / RTX 3080",
+    "price": 22500000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000012"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RTX 3080",
+    "price": 32500000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000013"
+    },
+    "distinctFeature": "RAM 16GB DDR5 / SSD 512GB / RX 6800",
+    "price": 21800000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000013"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RX 6950 XT",
+    "price": 31200000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000014"
+    },
+    "distinctFeature": "RAM 16GB DDR5 / SSD 512GB / RTX 3070 Ti",
+    "price": 24200000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000014"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RTX 3080 Ti",
+    "price": 35800000,
     "stock": 2
   },
   {
     "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb2"
+      "$oid": "300000000000000000000015"
     },
-    "distinctFeature": "AMD Ryzen 9 9950X / RTX 5080 16GB / RAM 32GB / SSD 1TB",
-    "price": 39990000,
+    "distinctFeature": "RAM 16GB DDR5 / SSD 512GB / RX 6900 XT",
+    "price": 26500000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000015"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RX 7800 XT",
+    "price": 33500000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000016"
+    },
+    "distinctFeature": "RAM 16GB DDR5 / SSD 1TB / RTX 3080",
+    "price": 29800000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000016"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 2TB / RTX 4070",
+    "price": 38500000,
     "stock": 2
   },
   {
     "productId": {
-      "$oid": "68cbff992bdc353b4acc3fb2"
+      "$oid": "300000000000000000000017"
     },
-    "distinctFeature": "AMD Ryzen 9 9950X / RTX 5080 16GB / RAM 64GB / SSD 2TB",
-    "price": 45990000,
+    "distinctFeature": "RAM 16GB DDR5 / SSD 1TB / RX 6950 XT",
+    "price": 28500000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000017"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 2TB / RX 7900 XT",
+    "price": 39800000,
     "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000018"
+    },
+    "distinctFeature": "RAM 16GB DDR5 / SSD 1TB / RTX 3080 Ti",
+    "price": 32500000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000018"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 2TB / RTX 4070 Ti",
+    "price": 42500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000019"
+    },
+    "distinctFeature": "RAM 16GB DDR5 / SSD 1TB / RX 7800 XT",
+    "price": 30500000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000019"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 2TB / RX 7900 XTX",
+    "price": 45500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000020"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / RTX 4070",
+    "price": 35800000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000020"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / RTX 4080",
+    "price": 52500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000021"
+    },
+    "distinctFeature": "RAM 4GB DDR4 / SSD 128GB",
+    "price": 4200000,
+    "stock": 15
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000021"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 5500000,
+    "stock": 12
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000022"
+    },
+    "distinctFeature": "RAM 4GB DDR4 / SSD 128GB",
+    "price": 4500000,
+    "stock": 14
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000022"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 5800000,
+    "stock": 11
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000023"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 5200000,
+    "stock": 13
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000023"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 7200000,
+    "stock": 10
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000024"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 5400000,
+    "stock": 12
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000024"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 7500000,
+    "stock": 9
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000025"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 5600000,
+    "stock": 11
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000025"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 7800000,
+    "stock": 8
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000026"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 5900000,
+    "stock": 10
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000026"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 8200000,
+    "stock": 7
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000027"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 6100000,
+    "stock": 9
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000027"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 8500000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000028"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 6300000,
+    "stock": 8
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000028"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 8800000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000029"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 6500000,
+    "stock": 7
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000029"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 9100000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000030"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 6700000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000030"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 9400000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000031"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 6900000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000031"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 9700000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000032"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 7100000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000032"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 10000000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000033"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 7300000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000033"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 10300000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000034"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 7500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000034"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 10600000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000035"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 7700000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000035"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 10900000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000036"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 7900000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000036"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 11200000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000037"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 8100000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000037"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 11500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000038"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 8300000,
+    "stock": 0
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000038"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 11800000,
+    "stock": 0
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000039"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 8500000,
+    "stock": 0
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000039"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 12100000,
+    "stock": 0
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000040"
+    },
+    "distinctFeature": "RAM 8GB DDR4 / SSD 256GB",
+    "price": 8700000,
+    "stock": 0
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000040"
+    },
+    "distinctFeature": "RAM 16GB DDR4 / SSD 512GB",
+    "price": 12400000,
+    "stock": 0
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000041"
+    },
+    "distinctFeature": "RAM 32GB DDR4 / SSD 1TB / Quadro P2000",
+    "price": 22500000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000041"
+    },
+    "distinctFeature": "RAM 64GB DDR4 / SSD 2TB / RTX A4000",
+    "price": 38500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000042"
+    },
+    "distinctFeature": "RAM 32GB DDR4 / SSD 1TB / Quadro P4000",
+    "price": 25800000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000042"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / RTX A5000",
+    "price": 45500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000043"
+    },
+    "distinctFeature": "RAM 32GB DDR4 / SSD 1TB / Quadro RTX 4000",
+    "price": 28500000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000043"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / RTX A5500",
+    "price": 48500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000044"
+    },
+    "distinctFeature": "RAM 32GB DDR4 / SSD 1TB / Radeon Pro W5500",
+    "price": 26500000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000044"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / Radeon Pro W6800",
+    "price": 42500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000045"
+    },
+    "distinctFeature": "RAM 32GB DDR4 / SSD 1TB / Quadro RTX 5000",
+    "price": 32500000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000045"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / RTX A6000",
+    "price": 65500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000046"
+    },
+    "distinctFeature": "RAM 32GB DDR4 / SSD 1TB / Radeon Pro W5700",
+    "price": 29500000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000046"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / Radeon Pro W7800",
+    "price": 52500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000047"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / Quadro RTX 6000",
+    "price": 35500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000047"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / RTX 6000 Ada",
+    "price": 72500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000048"
+    },
+    "distinctFeature": "RAM 32GB DDR5 / SSD 1TB / Radeon Pro W6900",
+    "price": 38500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000048"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / Radeon Pro W7900",
+    "price": 68500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000049"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / RTX A4000",
+    "price": 42500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000049"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / RTX A5000",
+    "price": 58500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000050"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / RTX A5500",
+    "price": 45500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000050"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / RTX A6000",
+    "price": 75500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000051"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / Radeon Pro W6800",
+    "price": 43500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000051"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / Radeon Pro W7800",
+    "price": 62500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000052"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / RTX 4000 Ada",
+    "price": 48500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000052"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / RTX 5000 Ada",
+    "price": 78500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000053"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / Radeon Pro W7800",
+    "price": 52500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000053"
+    },
+    "distinctFeature": "RAM 256GB DDR5 / SSD 8TB / Radeon Pro W7900",
+    "price": 98500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000054"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / RTX 5000 Ada",
+    "price": 55500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000054"
+    },
+    "distinctFeature": "RAM 256GB DDR5 / SSD 8TB / RTX 6000 Ada",
+    "price": 125500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000055"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / Radeon Pro W6900",
+    "price": 48500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000055"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / Radeon Pro W7900",
+    "price": 82500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000056"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / RTX A6000",
+    "price": 58500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000056"
+    },
+    "distinctFeature": "RAM 256GB DDR5 / SSD 8TB / RTX 6000 Ada",
+    "price": 135500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000057"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / RTX 4000 Ada",
+    "price": 52500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000057"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / RTX 5000 Ada",
+    "price": 88500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000058"
+    },
+    "distinctFeature": "RAM 64GB DDR5 / SSD 2TB / Radeon Pro W7800",
+    "price": 54500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000058"
+    },
+    "distinctFeature": "RAM 256GB DDR5 / SSD 8TB / Radeon Pro W7900",
+    "price": 112500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000059"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / RTX A6000",
+    "price": 68500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000059"
+    },
+    "distinctFeature": "RAM 256GB DDR5 / SSD 8TB / RTX 6000 Ada",
+    "price": 145500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000060"
+    },
+    "distinctFeature": "RAM 128GB DDR5 / SSD 4TB / Radeon Pro W7900",
+    "price": 72500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000060"
+    },
+    "distinctFeature": "RAM 512GB DDR5 / SSD 16TB / Dual RTX 6000 Ada",
+    "price": 285500000,
+    "stock": 1
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000061"
+    },
+    "distinctFeature": "8GB DDR4 3200MHz",
+    "price": 580000,
+    "stock": 50
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000061"
+    },
+    "distinctFeature": "16GB DDR4 3200MHz",
+    "price": 1150000,
+    "stock": 40
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000062"
+    },
+    "distinctFeature": "256GB NVMe PCIe 3.0",
+    "price": 650000,
+    "stock": 45
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000062"
+    },
+    "distinctFeature": "512GB NVMe PCIe 4.0",
+    "price": 1250000,
+    "stock": 38
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000063"
+    },
+    "distinctFeature": "Intel Core i5-12400F",
+    "price": 3200000,
+    "stock": 20
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000063"
+    },
+    "distinctFeature": "Intel Core i7-13700K",
+    "price": 8500000,
+    "stock": 12
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000064"
+    },
+    "distinctFeature": "AMD Ryzen 5 5600",
+    "price": 2800000,
+    "stock": 22
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000064"
+    },
+    "distinctFeature": "AMD Ryzen 7 7700X",
+    "price": 7200000,
+    "stock": 14
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000065"
+    },
+    "distinctFeature": "GTX 3060 12GB",
+    "price": 3500000,
+    "stock": 18
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000065"
+    },
+    "distinctFeature": "RTX 3060 12GB",
+    "price": 8500000,
+    "stock": 10
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000066"
+    },
+    "distinctFeature": "RX 6600 XT 4GB",
+    "price": 3200000,
+    "stock": 16
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000066"
+    },
+    "distinctFeature": "RX 6700 XT 12GB",
+    "price": 9500000,
+    "stock": 8
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000067"
+    },
+    "distinctFeature": "B550M Micro ATX",
+    "price": 1800000,
+    "stock": 25
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000067"
+    },
+    "distinctFeature": "X670E ATX",
+    "price": 5500000,
+    "stock": 10
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000068"
+    },
+    "distinctFeature": "H610M Micro ATX",
+    "price": 1500000,
+    "stock": 28
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000068"
+    },
+    "distinctFeature": "Z790 ATX",
+    "price": 6200000,
+    "stock": 12
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000069"
+    },
+    "distinctFeature": "550W 80+ Bronze",
+    "price": 850000,
+    "stock": 35
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000069"
+    },
+    "distinctFeature": "850W 80+ Gold Modular",
+    "price": 2500000,
+    "stock": 20
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000070"
+    },
+    "distinctFeature": "120mm RGB AIO",
+    "price": 1200000,
+    "stock": 30
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000070"
+    },
+    "distinctFeature": "360mm RGB AIO",
+    "price": 3500000,
+    "stock": 15
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000071"
+    },
+    "distinctFeature": "Mid Tower ATX",
+    "price": 950000,
+    "stock": 40
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000071"
+    },
+    "distinctFeature": "Full Tower ATX RGB",
+    "price": 2800000,
+    "stock": 18
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000072"
+    },
+    "distinctFeature": "1TB HDD 7200RPM",
+    "price": 850000,
+    "stock": 42
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000072"
+    },
+    "distinctFeature": "4TB HDD 7200RPM",
+    "price": 2100000,
+    "stock": 25
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000073"
+    },
+    "distinctFeature": "32GB DDR5 5600MHz",
+    "price": 2800000,
+    "stock": 22
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000073"
+    },
+    "distinctFeature": "64GB DDR5 6000MHz",
+    "price": 5800000,
+    "stock": 12
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000074"
+    },
+    "distinctFeature": "1TB NVMe PCIe 4.0",
+    "price": 1850000,
+    "stock": 35
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000074"
+    },
+    "distinctFeature": "2TB NVMe PCIe 4.0",
+    "price": 3500000,
+    "stock": 20
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000075"
+    },
+    "distinctFeature": "RTX 3070 8GB",
+    "price": 12500000,
+    "stock": 8
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000075"
+    },
+    "distinctFeature": "RTX 4070 12GB",
+    "price": 18500000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000076"
+    },
+    "distinctFeature": "RX 6500 8GB",
+    "price": 13500000,
+    "stock": 7
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000076"
+    },
+    "distinctFeature": "RX 7800 XT 16GB",
+    "price": 16500000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000077"
+    },
+    "distinctFeature": "Intel Core i9-13900K",
+    "price": 14500000,
+    "stock": 6
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000077"
+    },
+    "distinctFeature": "Intel Core i9-14900K",
+    "price": 18500000,
+    "stock": 4
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000078"
+    },
+    "distinctFeature": "AMD Ryzen 9 7900X",
+    "price": 12500000,
+    "stock": 7
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000078"
+    },
+    "distinctFeature": "AMD Ryzen 9 7950X",
+    "price": 16500000,
+    "stock": 5
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000079"
+    },
+    "distinctFeature": "RTX 4080 16GB",
+    "price": 28500000,
+    "stock": 3
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000079"
+    },
+    "distinctFeature": "RTX 4090 24GB",
+    "price": 48500000,
+    "stock": 2
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000080"
+    },
+    "distinctFeature": "1200W 80+ Platinum Modular",
+    "price": 4500000,
+    "stock": 10
+  },
+  {
+    "productId": {
+      "$oid": "300000000000000000000080"
+    },
+    "distinctFeature": "1600W 80+ Titanium Modular",
+    "price": 8500000,
+    "stock": 5
   }
 ]

@@ -137,4 +137,4 @@ class OrderDao implements CRUD {
     }
 }
 export const orderDao = new OrderDao();
-export type IOrder = WithId<InferSchemaType<typeof OrderSchema>> & { createdAt: Date };
+export type IOrder = WithId<InferSchemaType<typeof OrderSchema>> & { createdAt: Date, updatedAt: Date };

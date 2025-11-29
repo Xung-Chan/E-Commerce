@@ -1,0 +1,178 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">Danh Sách Đơn Hàng</h3>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form id="filterForm" class="row g-3 align-items-center" method="GET" action="/admin/orders">
+            <div class="d-flex justify-content-end">
+
+                <div class="flex-fill mx-2">
+                    <select class="form-select" name="status">
+                        <option value="" selected>Trạng Thái</option>
+                        <option value="pending" {{#if (isEqual query.status 'pending' )}}selected{{/if}}>Đang chờ
+                        </option>
+                        <option value="processing" {{#if (isEqual query.status 'processing' )}}selected{{/if}}>Đang xử
+                            lý
+                        </option>
+                        <option value="shipping" {{#if (isEqual query.status 'shipping' )}}selected{{/if}}>Đang giao
+                            hàng
+                        </option>
+                        <option value="delivered" {{#if (isEqual query.status 'delivered' )}}selected{{/if}}>Đang hoàn
+                            thành
+                        </option>
+                    </select>
+                </div>
+
+
+
+
+                <input type="hidden" name="sortBy" id="sortByHidden" value="">
+                <input type="hidden" name="sortOrder" id="sortOrderHidden" value="desc">
+                <div class="flex-fill mx-2">
+                    <select class="form-select " id="sortPreset">
+                        <option value="" selected>Sắp xếp</option>
+                        <option value="createdAt-desc" {{#if (isEqual query.sortBy 'createdAt' )}}{{#if (isEqual
+                            query.sortOrder 'desc' )}}selected{{/if}}{{/if}}>Đơn mới nhất</option>
+                        <option value="createdAt-asc" {{#if (isEqual query.sortBy 'createdAt' )}}{{#if (isEqual
+                            query.sortOrder 'asc' )}}selected{{/if}}{{/if}}>Đơn cũ nhất</option>
+                        <option value="updatedAt-desc" {{#if (isEqual query.sortBy 'updatedAt' )}}{{#if (isEqual
+                            query.sortOrder 'desc' )}}selected{{/if}}{{/if}}>Vừa cập nhật</option>
+                    </select>
+                </div>
+
+
+
+                <div class="col-md-2 mx-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-funnel"></i> Lọc
+                    </button>
+                </div>
+                <div class="col-md-2 mx-2">
+                    <a href="/admin/orders" class="btn btn-secondary w-100 ">Reset</a>
+                </div>
+                </span>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 fw-bold text-primary">Bảng Đơn Hàng</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped" id="productTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Người Nhận</th>
+                        <th>Tổng tiền</th>
+                        <th>Ngày Tạo</th>
+                        <th>Cập Nhật Mới Nhất</th>
+                        <th>Trạng Thái</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each orders}}
+                    <tr>
+                        <td>{{this.id}}</td>
+                        <td>{{this.fullName}}</td>
+                        <td>{{formatPrice this.totalPrice}}</td>
+                        <td>{{formatDate this.createdAt}}</td>
+                        <td>{{formatDate this.updatedAt}}</td>
+                        <td>{{{statusBadge this.currentStatus}}}</td>
+                        <td>
+                            <a href="/admin/orders/{{this.id}}" class="btn btn-sm btn-info me-2" title="Xem chi tiết">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                    {{#unless orders.length}}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">Không tìm thấy đơn hàng nào.</td>
+                    </tr>
+                    {{/unless}}
+                </tbody>
+            </table>
+        </div>
+        <nav class="mt-3 d-flex justify-content-center">
+            <ul class="pagination mb-0">
+                {{#if hasPrevPage}}
+                <li class="page-item"><a class="page-link"
+                        href="?page={{prevPage}}{{#if baseQueryString}}&{{baseQueryString}}{{/if}}">Trước</a></li>
+                {{/if}}
+                {{#each pages}}
+                <li class="page-item {{#if this.active}}active{{/if}}">
+                    <a class="page-link"
+                        href="?page={{this.number}}{{#if ../baseQueryString}}&{{../baseQueryString}}{{/if}}">{{this.number}}</a>
+                </li>
+                {{/each}}
+                {{#if hasNextPage}}
+                <li class="page-item"><a class="page-link"
+                        href="?page={{nextPage}}{{#if baseQueryString}}&{{baseQueryString}}{{/if}}">Tiếp</a></li>
+                {{/if}}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addProductModalLabel"><i class="bi bi-box-seam me-2"></i> Thêm Sản Phẩm
+                    Nhanh</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Sử dụng modal này cho trường hợp cần thêm nhanh các trường cơ bản. Nếu sản phẩm có
+                    biến thể phức tạp, nên dùng trang chỉnh sửa riêng (/admin/products/add).</p>
+                <form id="quickProductForm">
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="productName" class="form-label">Tên Sản Phẩm <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="productSku" class="form-label">Mã SKU</label>
+                            <input type="text" class="form-control" id="productSku">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Giá Bán <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="productPrice" required placeholder="VNĐ">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" form="quickProductForm" class="btn btn-primary">Lưu Sản Phẩm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const f = document.getElementById('filterForm');
+        if (!f) return;
+
+
+        // Xử lý thay đổi sắp xếp
+        const sortPreset = document.getElementById('sortPreset');
+        const sortByHidden = document.getElementById('sortByHidden');
+        const sortOrderHidden = document.getElementById('sortOrderHidden');
+        sortPreset.addEventListener('change', () => {
+            const val = sortPreset.value;
+            const [field, order] = val.split('-');
+            sortByHidden.value = field;
+            sortOrderHidden.value = order;
+        });
+
+    });
+</script>
