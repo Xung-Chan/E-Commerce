@@ -284,13 +284,17 @@ router.get("/statistics/simple", authJwtAdmin,
     adminController.getSimpleStatisticsHandler
 );
 
+router.get("/statistics/advanced", authJwtAdmin,
+    adminController.getAdvancedStatisticsHandler
+);
+
 router.get("/advanced-statistic", authJwtAdmin,
     adminController.renderAdvancedStatisticsPage
 );
 
-
-router.get("/statistics/advanced", authJwtAdmin,
-    adminController.getAdvancedStatisticsHandler
+router.get("/orders", authJwtAdmin, adminController.getOrdersManagementPage
 );
+
+
 
 export default router;

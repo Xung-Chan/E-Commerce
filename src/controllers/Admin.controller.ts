@@ -169,7 +169,7 @@ const adminController = {
 
         res.render("admin/advanced-statistic", {
             layout: "admin",
-            title: "Thống kê nâng cao",
+            title: "Statistics",
             revenue: statistics.revenues,
             profit: statistics.profits,
             orders: statistics.orders,
@@ -192,6 +192,17 @@ const adminController = {
         }
         const statistics = await statisticsService.getAdvancedStatistic(period, interval);
         res.status(200).json(new ApiResponse(true, 200, "Lấy thống kê nâng cao thành công", statistics));
+    }),
+
+    getOrdersManagementPage: expressAsyncHandler(async (req: Request, res: Response) => {
+        const query = req.query;
+
+        const orders = await orderService.getOrdersByQuery(query);
+        res.render("admin/orders-management", {
+            layout: "admin",
+            title: "Quản lý đơn hàng",
+            orders: orders.datas
+        });
     })
 }
 

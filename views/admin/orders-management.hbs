@@ -1,0 +1,173 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">Danh Sách Đơn Hàng</h3>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form class="row g-3 align-items-center" method="GET" action="/admin/products">
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="q" placeholder="Tìm kiếm theo Tên, Mã SKU..."
+                    value="{{query.q}}">
+            </div>
+
+            <div class="col-md-2">
+                <select class="form-select" name="categoryId">
+                    <option value="" selected>Danh Mục</option>
+                    <option value="1" {{#if (isEqual query.categoryId '1' )}}selected{{/if}}>Điện Thoại</option>
+                    <option value="2" {{#if (isEqual query.categoryId '2' )}}selected{{/if}}>Máy Tính Bảng</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <select class="form-select" name="brandId">
+                    <option value="" selected>Thương Hiệu</option>
+                    <option value="A" {{#if (isEqual query.brandId 'A' )}}selected{{/if}}>Samsung</option>
+                    <option value="B" {{#if (isEqual query.brandId 'B' )}}selected{{/if}}>Apple</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select" name="status">
+                    <option value="" selected>Trạng Thái</option>
+                    <option value="Active" {{#if (isEqual query.status 'Active' )}}selected{{/if}}>Đang bán</option>
+                    <option value="Hết hàng" {{#if (isEqual query.status 'Hết hàng' )}}selected{{/if}}>Hết hàng</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Tìm Kiếm
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 fw-bold text-primary">Bảng Đơn Hàng</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped" id="productTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Người Nhận</th>
+                        <th>Tổng tiền</th>
+                        <th>Ngày Tạo</th>
+                        <th>Cập Nhật Mới Nhất</th>
+                        <th>Trạng Thái</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each orders}}
+                    <tr>
+                        <td>{{this.id}}</td>
+                        <td>{{this.fullName}}</td>
+                        <td>{{formatPrice this.totalPrice}}</td>
+                        <td>{{formatDate this.createdAt}}</td>
+                        <td>{{formatDate this.updatedAt}}</td>
+                        <td>{{this.currentStatus}}</td>
+                        <td>
+                            <a href="/admin/orders/{{this.id}}" class="btn btn-sm btn-info me-2" title="Xem chi tiết">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+
+                            <a href="/admin/orders/{{this.id}}/edit" class="btn btn-sm btn-warning me-2"
+                                title="Chỉnh sửa">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+
+                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{this.id}}" title="Xóa">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                    {{#unless orders.length}}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">Không tìm thấy đơn hàng nào.</td>
+                    </tr>
+                    {{/unless}}
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation" class="mt-3">
+            {{#if pagination}}
+            {{#with pagination}}
+            {{#if (gt totalPages 1)}}
+            <ul class="pagination justify-content-end">
+
+                <li class="page-item {{#if (isEqual page 1)}}disabled{{/if}}">
+                    {{#if (isEqual page 1)}}
+                    <a class="page-link" href="#" aria-label="Previous">Trước</a>
+                    {{else}}
+                    <a class="page-link" href="/admin/products?{{buildPageQuery ../query (subtract page 1)}}"
+                        aria-label="Previous">Trước</a>
+                    {{/if}}
+                </li>
+
+                {{#times totalPages}}
+                {{#with (add 1 this) as |currentPage|}}
+                <li class="page-item {{#if (isEqual currentPage page)}}active{{/if}}">
+                    <a class="page-link"
+                        href="/admin/products?{{buildPageQuery ../query currentPage}}">{{currentPage}}</a>
+                </li>
+                {{/with}}
+                {{/times}}
+
+                <li class="page-item {{#if (isEqual page totalPages)}}disabled{{/if}}">
+                    {{#if (isEqual page totalPages)}}
+                    <a class="page-link" href="#" aria-label="Next">Sau</a>
+                    {{else}}
+                    <a class="page-link" href="/admin/products?{{buildPageQuery ../query (add page 1)}}"
+                        aria-label="Next">Sau</a>
+                    {{/if}}
+                </li>
+            </ul>
+            {{/if}}
+            {{/with}}
+            {{/if}}
+        </nav>
+    </div>
+</div>
+
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addProductModalLabel"><i class="bi bi-box-seam me-2"></i> Thêm Sản Phẩm
+                    Nhanh</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Sử dụng modal này cho trường hợp cần thêm nhanh các trường cơ bản. Nếu sản phẩm có
+                    biến thể phức tạp, nên dùng trang chỉnh sửa riêng (/admin/products/add).</p>
+                <form id="quickProductForm">
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="productName" class="form-label">Tên Sản Phẩm <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="productSku" class="form-label">Mã SKU</label>
+                            <input type="text" class="form-control" id="productSku">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Giá Bán <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="productPrice" required placeholder="VNĐ">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" form="quickProductForm" class="btn btn-primary">Lưu Sản Phẩm</button>
+            </div>
+        </div>
+    </div>
+</div>

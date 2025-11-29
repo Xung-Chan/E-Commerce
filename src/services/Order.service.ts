@@ -227,7 +227,9 @@ class OrderService {
                 fullName: user.fullName,
                 totalPrice: order.totalPrice,
                 items: items,
-                currentStatus: order.currentStatus
+                currentStatus: order.currentStatus,
+                createdAt: order.createdAt,
+                updatedAt: order.updatedAt
             }
         }))
 

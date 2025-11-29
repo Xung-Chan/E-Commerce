@@ -104,6 +104,8 @@ interface OutlineOrderResponse {
     }[]
     ,
     currentStatus: OrderStatus;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 interface DetailOrderResponse {
