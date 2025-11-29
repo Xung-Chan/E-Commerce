@@ -10,6 +10,7 @@ import couponService from "../services/Coupon.service.js";
 import { UpdateCouponDto } from "../dto/Update.dto.js";
 import productService from "../services/Product.service.js";
 import { CreateProductRequest } from "../dto/Request.dto.js";
+import categoryService from "../services/Category.service.js";
 
 import bcrypt from "bcryptjs";
 import statisticsService, { StatisticPeriod } from "../services/Statistics.service.js";
@@ -146,7 +147,38 @@ const adminController = {
             totalProfit: statistics.totalProfit,
             layout: "admin"
         })
-    })
+    }),
+
+    //categories-management
+    getAllCategoriesHandler: async () => {
+        const categories = await categoryService.getAllCategories();
+        return categories;
+    },
+
+    createCategoryHandler: async (data: any, imagePath?: string) => {
+        if (imagePath) {
+            data.image = imagePath;
+        }
+        // Chuyển đổi landingPageDisplay thành boolean
+        data.landingPageDisplay = data.landingPageDisplay === 'true' || data.landingPageDisplay === true;
+        const newCategory = await categoryService.createCategory(data);
+        return newCategory;
+    },
+
+    updateCategoryHandler: async (categoryId: string, data: any, imagePath?: string) => {
+        if (imagePath) {
+            data.image = imagePath;
+        }
+        // Chuyển đổi landingPageDisplay thành boolean
+        data.landingPageDisplay = data.landingPageDisplay === 'true' || data.landingPageDisplay === true;
+        const success = await categoryService.updateCategoryById(categoryId, data);
+        return success;
+    },
+
+    deleteCategoryHandler: async (categoryId: string) => {
+        const success = await categoryService.deleteCategoryById(categoryId);
+        return success;
+    }
 }
 
 export default adminController;
