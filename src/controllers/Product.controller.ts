@@ -68,8 +68,8 @@ const productController = {
     }),
 
     getProductForLandingPage: expressAsyncHandler(async (req: Request, res: Response) => {
-        const bestSellers: Pagination<IProduct> = await productService.getProductsByTag("best-seller", { limit: "5" });
-        const newArrivals: Pagination<IProduct> = await productService.getProductsByTag("new-arrival", { limit: "5" });
+        const bestSellers: Pagination<IProduct> = await productService.getProductsByTag("best-seller", { limit: "8" });
+        const newArrivals: Pagination<IProduct> = await productService.getProductsByTag("new-arrival", { limit: "8" });
         const categories: ICategory[] = await categoryService.getCategoriesForLandingPage();
         const categoryProducts = [];
         for (const category of categories) {

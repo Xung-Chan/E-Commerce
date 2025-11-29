@@ -41,14 +41,14 @@ class CategoryDao implements CRUD {
         return Category.find({
             ...query,
             deletedAt: null
-        }).exec();
+        }).lean().exec();
     }
     async create(item: CreateCategoryDto): Promise<any> {
         const category = Category.create(item);
         return await category;
     }
     async readById(id: string): Promise<any | null> {
-        return Category.findById(id).exec();
+        return Category.findById(id).lean().exec();
     }
 
     async deleteById(id: string): Promise<boolean> {
@@ -56,8 +56,7 @@ class CategoryDao implements CRUD {
         return result.modifiedCount > 0;
     }
     async list(): Promise<any[]> {
-
-        return Category.find().exec();
+        return Category.find({ deletedAt: null }).lean().exec();
     }
 
 }

@@ -10,6 +10,7 @@ import couponService from "../services/Coupon.service.js";
 import { UpdateCouponDto } from "../dto/Update.dto.js";
 import productService from "../services/Product.service.js";
 import { CreateProductRequest } from "../dto/Request.dto.js";
+import categoryService from "../services/Category.service.js";
 
 import bcrypt from "bcryptjs";
 import statisticsService, { StatisticPeriod } from "../services/Statistics.service.js";
