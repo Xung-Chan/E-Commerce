@@ -77,16 +77,16 @@
 							<span id="subtotalDisplay">{{formatPrice order.totalPrice}} VND</span>
 						</li>
 						<li class="list-group-item d-flex justify-content-between">
-							<span>Tổng giảm giá:</span>
-							<span id="discountDisplay" class="text-success">-{{formatPrice order.totalDiscount}} VND</span>
-						</li>
-						<li class="list-group-item d-flex justify-content-between">
 							<span>Phí vận chuyển:</span>
 							<span id="shippingFeeDisplay">{{formatPrice order.shippingFee}} VND</span>
 						</li>
 						<li class="list-group-item d-flex justify-content-between">
 							<span>Thuế(10%):</span>
 							<span id="taxDisplay">{{formatPrice order.tax}} VND</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between">
+							<span>Tổng giảm giá:</span>
+							<span id="discountDisplay" class="text-success">-{{formatPrice order.totalDiscount}} VND</span>
 						</li>
 						<li class="list-group-item d-flex justify-content-between fw-bold text-danger">
 							<span>Tổng thanh toán:</span>

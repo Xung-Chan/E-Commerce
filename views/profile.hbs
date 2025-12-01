@@ -17,6 +17,10 @@
 					<label for="email" class="form-label">Email</label>
 					<input type="email" class="form-control" id="email" name="email" value="{{user.email}}" required>
 				</div>
+				<div class="mb-3">
+					<label for="points" class="form-label">Điểm tích lũy</label>
+					<input type="number"  readonly class="form-control" id="points" name="points" value="{{user.point}}" required>
+				</div>
 				<button type="submit" class="btn btn-primary">Lưu</button>
 			</form>
 

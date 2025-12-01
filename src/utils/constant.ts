@@ -1154,10 +1154,11 @@ export const order_template = (data: {
                                                 style="Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;color:#402218;font-size:14px">
                                                 Subtotal:
                                                 <br>Shipping:
-                                              </p>
-                                              <p class="es-m-txt-l"
+                                                </p>
+                                                <p class="es-m-txt-l"
                                                 style="Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;color:#402218;font-size:14px">
-                                                Discount:</p>
+                                                Tax:
+                                                <br>Discount:</p>
                                               <h3 class="es-m-txt-l"
                                                 style="Margin:0;font-family:Oswald, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#402218">
                                                 Order Total:</h3>
@@ -1186,8 +1187,9 @@ export const order_template = (data: {
                                                 style="Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;color:#402218;font-size:14px">
                                                 ${totalPrice} VND<br>
                                                 ${shippingFee} VND<br>
-                                                ${discount} VND<br>
-                                                ${tax} VND</p>
+                                                ${tax} VND<br>
+                                                - ${discount} VND<br>
+                                                </p>
                                               <h3 class="p_price"
                                                 style="Margin:0;font-family:Oswald, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#402218">
                                                 ${totalPay} VND<br></h3>
