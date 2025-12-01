@@ -110,7 +110,9 @@
 						<div class="input-group">
 							<input type="text" id="couponInput" class="form-control"
 								placeholder="Nhập mã (chưa hoạt động)">
-							<button class="btn btn-outline-primary" id="applyCouponBtn" disabled>Áp dụng</button>
+							<button class="btn btn-sm btn-outline-primary" id="applyCouponBtn" >Áp dụng</button>
+							<button class="btn btn-sm btn-outline-secondary d-none" id="removeCouponBtn">Bỏ áp
+								dụng</button>
 						</div>
 						<div id="couponStatus" class="small mt-2 text-muted">Tính năng coupon sẽ được triển khai sau.
 						</div>
@@ -486,6 +488,8 @@
 					couponDiscount = Math.round(subtotalNow * (couponPercentApplied / 100));
 					couponCode = inputCode;
 					setStatus(couponStatus, `Giảm ${couponPercentApplied}% (-${formatPrice(couponDiscount)})`, 'success');
+					removeCouponBtn.classList.remove('d-none');
+					applyCouponBtn.classList.add('d-none');
 				} else {
 					setStatus(couponStatus, 'Coupon không hợp lệ.', 'warning');
 				}
@@ -496,7 +500,17 @@
 			}
 			updateSummary();
 		});
-
+		removeCouponBtn.addEventListener('click', () => {
+			couponDiscount = 0;
+			couponId = null;
+			couponCode = '';
+			couponPercentApplied = null;
+			couponInput.value = '';
+			setStatus(couponStatus, 'Đã bỏ áp dụng coupon.', 'info');
+			removeCouponBtn.classList.add('d-none');
+			applyCouponBtn.classList.remove('d-none');
+			updateSummary();
+		});
 		applyPointsBtn.addEventListener('click', () => {
 			if (!userPoints) {
 				loyaltyStatus.textContent = 'Bạn không có điểm để áp dụng.';
