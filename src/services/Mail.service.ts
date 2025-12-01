@@ -52,6 +52,7 @@ export const sendMail = async (email: string, link: string, type: "reset" | "reg
             items: metaData.items,
             totalPrice: metaData.totalPrice,
             shippingFee: metaData.shippingFee,
+            tax: metaData.tax,
             discount: metaData.discount,
             totalPay: metaData.totalPay
           }

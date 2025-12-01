@@ -94,7 +94,7 @@ interface OutlineOrderResponse {
     id: string;
     userId: string;
     fullName: string;
-    totalPrice: number;
+    totalPay: number;
     items:
     {
         productName: string;
@@ -133,6 +133,7 @@ interface DetailOrderResponse {
     totalPrice: number;
     totalDiscount: number;
     shippingFee: number;
+    tax: number;
     totalPay: number;
     shippingMethod: string;
 }
