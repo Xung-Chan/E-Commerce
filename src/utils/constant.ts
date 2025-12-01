@@ -441,7 +441,8 @@ export const order_template = (data: {
   }[],
   totalPrice: number,
   shippingFee: number
-  discount: number
+  discount: number,
+  tax: number,
   totalPay: number
 }) => {
   const receiver = data.receiver;
@@ -452,6 +453,7 @@ export const order_template = (data: {
   const shippingFee = data.shippingFee.toLocaleString('vi-VN');
   const discount = data.discount.toLocaleString('vi-VN');
   const totalPay = data.totalPay.toLocaleString('vi-VN');
+  const tax = data.tax.toLocaleString('vi-VN');
 
   let orderItems = '';
   data.items.forEach(item => {
@@ -1184,7 +1186,8 @@ export const order_template = (data: {
                                                 style="Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;color:#402218;font-size:14px">
                                                 ${totalPrice} VND<br>
                                                 ${shippingFee} VND<br>
-                                                ${discount} VND</p>
+                                                ${discount} VND<br>
+                                                ${tax} VND</p>
                                               <h3 class="p_price"
                                                 style="Margin:0;font-family:Oswald, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#402218">
                                                 ${totalPay} VND<br></h3>

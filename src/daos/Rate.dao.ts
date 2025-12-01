@@ -48,8 +48,9 @@ class RateDao implements CRUD {
         const rate = await Rate.findOne({ ...query, deletedAt: null }).exec();
         return rate?.toObject() as IRate || null;
     }
-    async create(item: CreateRateDto): Promise<any> {
-        return await Rate.create(item);
+    async create(item: CreateRateDto): Promise<IRate> {
+        const rate = await Rate.create(item);
+        return rate.toObject() as IRate;
     }
     async readById(id: string): Promise<any | null> {
         return await Rate.findById(id).exec();

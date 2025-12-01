@@ -181,6 +181,10 @@
                             <span>Phí vận chuyển:</span>
                             <span>{{formatPrice order.shippingFee}} VND</span>
                         </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span>Thuế (10%):</span>
+                            <span>{{formatPrice order.tax}} VND</span>
+                        </li>
                         <li class="list-group-item d-flex justify-content-between px-0 fw-bold text-danger border-top">
                             <span>Tổng thanh toán:</span>
                             <span>{{formatPrice order.totalPay}} VND</span>

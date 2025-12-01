@@ -98,6 +98,7 @@
                 <div class="d-flex flex-wrap align-items-center gap-2 p-3 bg-light rounded shadow-sm">
                     <span class="fw-semibold text-primary"><i class="bi bi-funnel me-1"></i>Sắp xếp:</span>
                     <select class="form-select form-select-sm w-auto" id="sortPreset">
+                        <option value="" selected>Sắp xếp theo</option>
                         <option value="maxPrice-desc" {{#if (eq query.sortBy "maxPrice")}}{{#if (eq query.sortOrder "desc")}}selected{{/if}}{{/if}}>Giá cao nhất</option>
                         <option value="minPrice-asc" {{#if (eq query.sortBy "minPrice")}}{{#if (eq query.sortOrder "asc")}}selected{{/if}}{{/if}}>Giá thấp nhất</option>
                         <option value="name-asc" {{#if (eq query.sortBy "name")}}{{#if (eq query.sortOrder "asc")}}selected{{/if}}{{/if}}>Tên A-Z</option>

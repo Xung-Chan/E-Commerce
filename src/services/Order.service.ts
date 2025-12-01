@@ -169,6 +169,7 @@ class OrderService {
             totalPrice: order.totalPrice,
             shippingFee: order.shippingFee,
             discount: order.totalDiscount,
+            tax: tax,
             totalPay: order.totalPay
         }
         )
@@ -225,7 +226,7 @@ class OrderService {
                 id: order._id.toString(),
                 userId: order.userId.toString(),
                 fullName: user.fullName,
-                totalPrice: order.totalPrice,
+                totalPay: order.totalPay,
                 items: items,
                 currentStatus: order.currentStatus,
                 createdAt: order.createdAt,
@@ -285,6 +286,7 @@ class OrderService {
             totalPrice: order.totalPrice,
             totalDiscount: order.totalDiscount,
             shippingFee: order.shippingFee,
+            tax: order.tax,
             totalPay: order.totalPay,
             shippingMethod: order.shippingMethod
         };
@@ -345,6 +347,13 @@ class OrderService {
 
         if (status === OrderStatus.DELIVERED) {
             await this.increaseProductSoldCount(id);
+            const user = await userDao.readById(order.userId.toString());
+            if (!user) {
+                throw new ApiError(404, "Not Found", ErrorDictionary.USER_NOT_FOUND);
+            }
+            await userDao.patchById(order.userId.toString(), {
+                point: user.point + Math.floor(order.totalPay * 10 / 100000)
+            });
         }
 
         if (status === OrderStatus.CANCELLED) {

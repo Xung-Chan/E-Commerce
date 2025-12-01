@@ -10,7 +10,7 @@
 				<div class="card-body" id="addressSection">
 					{{#if user}}
 						<div id="addressesList" class="d-flex flex-column gap-2 mb-3"></div>
-						<button class="btn btn-sm btn-outline-primary" id="addAddressToggle">+ Thêm địa chỉ mới</button>
+						{{!-- <button class="btn btn-sm btn-outline-primary" id="addAddressToggle">+ Thêm địa chỉ mới</button>
 						<form id="addAddressForm" class="mt-3 d-none">
 							<div class="row g-2 mb-2">
 								<div class="col-md-4">
@@ -39,7 +39,7 @@
 							</div>
 							<input type="hidden" id="newFullAddressInput">
 							<div id="addAddressStatus" class="small mt-2"></div>
-						</form>
+						</form> --}}
 					{{else}}
 						<div class="mb-3">
 							<label for="guestEmailInput" class="form-label">Email liên hệ</label>
@@ -471,9 +471,9 @@
 				
 				const coupon = json?.data || json?.coupon || json || null;
 				if (!coupon) throw new Error('No coupon data');
-				
+				console.log('Coupon data:', coupon);
 				couponId = coupon._id;
-				if (coupon.maxUse >= coupon.used) {
+				if (coupon.maxUse <= coupon.used) {
 					setStatus(couponStatus, 'Coupon đã hết lượt sử dụng.', 'warning');
 					couponId = null; couponCode = ''; couponPercentApplied = null;
 				} else if (coupon.status == "inactive") {

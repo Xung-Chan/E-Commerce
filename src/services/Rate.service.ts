@@ -37,8 +37,13 @@ class RateService {
             }
         );
 
+        const ioRating = {
+            newRating: createdRate,
+            averageRate: newAverageRate
+        }
 
-        ioServer.to(`product_${data.productId}`).emit("newRate", createdRate);
+
+        ioServer.to(`product_${data.productId}`).emit("newRating", ioRating);
 
         if (!createdRate) {
             throw new Error("Failed to create rate");
