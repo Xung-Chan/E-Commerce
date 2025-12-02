@@ -13,5 +13,11 @@ RUN npm install
 # Copy application source code
 COPY . .
 
+
+
+RUN npm run css-build
+
+
+
 # Expose port (change if your app uses a different port)
 EXPOSE 8000
