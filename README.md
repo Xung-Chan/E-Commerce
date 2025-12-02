@@ -1,21 +1,52 @@
 # E-commerce
+
+## Get Google Key & Gemini Key
+
+Access: https://aistudio.google.com/api-keys and create API Key for Google Api Key
+
+Access: https://console.cloud.google.com/auth/overview , follow instruction and create Client ID and Client Secret
+
 ## Environment
 
 Create `.env` includes these variables:
-- SECRET_KEY
-- USER_EMAIL
-- USER_PASSWORD
-- PORT
-- BRAND
-- MONGODB_PORT
-- DB_NAME
-Example:
+
+SECRET_KEY
+
+GOOGLE_CLIENT_ID
+
+GOOGLE_CLIENT_SECRET
+
+GOOGLE_API_KEY
+
+USER_EMAIL
+
+USER_PASSWORD
+
+BASE_URL
+
+PORT
+
+BRAND
+
+MONGODB_PORT
+
+DB_NAME
+
+### Example:
 ```env
-SECRET_KEY=MAY_NHIN_CAI_CHO_GI
+SECRET_KEY="<YOUR SECRET KEY>"
 
-USER_EMAIL="<your mail>"
-USER_PASSWORD="<your password>"
+# google
+GOOGLE_CLIENT_ID="<YOUR GOOGLE CLIENT ID>"
+GOOGLE_CLIENT_SECRET="YOUR GOOGLE CLIENT SECRET"
 
+#GEMINI
+GOOGLE_API_KEY="YOUR GEMINI KEY"
+
+USER_EMAIL="<YOUR MAIL>"
+USER_PASSWORD="<YOUR MAIL PASSWORD>"
+
+BASE_URL=http://localhost:8000
 PORT=8000
 BRAND=E-Commerce
 
@@ -26,19 +57,13 @@ DB_NAME=e_commerce
 
 ## 📦 How to Start
 
-Open CMD at root
-
-**_Dev Environment_**
-
-```cmd
-docker-compose -f docker-compose.dev.yml up --build
-```
-**_Production Environment_**
+### Open CMD at root
 
 ```cmd
 docker-compose up --build
 ```
+ 
+### Default Admin Account 
+email: ```<your email in .env>```
 
-## List api
-
-**...coming soon...**
+password: ```admin```
