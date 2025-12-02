@@ -1,6 +1,5 @@
 node_modules/
 dist/
-public/uploads/
 public/img
 .env
 .vscode/

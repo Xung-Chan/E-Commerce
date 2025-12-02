@@ -7,7 +7,8 @@
     "dev": "nodemon",
     "build": "tsc --watch",
     "start": "node ./dist/index.js",
-    "css-mapper": "sass --watch resources/scss:public/css"
+    "css-mapper": "sass --watch resources/scss:public/css",
+    "css-build": "sass resources/scss:public/css"
   },
   "author": "",
   "license": "ISC",
