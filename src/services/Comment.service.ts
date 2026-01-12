@@ -6,7 +6,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { CommentQuery, Pagination } from "../utils/Pagination.js";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || "";
-// const GOOGLE_API_KEY = "AIzaSyDEFAuB4kCX_tA63SuZqhOS8vcP07scv58";
 
 const commentService = {
 
